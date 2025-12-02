@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_12_02_103054) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_12_02_112223) do
+>>>>>>> master
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +54,50 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_02_103054) do
     t.index ["organisation_id"], name: "index_categories_on_organisation_id"
   end
 
+  create_table "customers", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.bigint "organisation_id", null: false
+    t.string "company_name"
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_customers_on_email", unique: true
+    t.index ["organisation_id"], name: "index_customers_on_organisation_id"
+    t.index ["reset_password_token"], name: "index_customers_on_reset_password_token", unique: true
+  end
+
+  create_table "members", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.index ["email"], name: "index_members_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_members_on_reset_password_token", unique: true
+  end
+
+  create_table "org_members", force: :cascade do |t|
+    t.bigint "organisation_id", null: false
+    t.bigint "member_id", null: false
+    t.string "role"
+    t.datetime "joined_at"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_org_members_on_member_id"
+    t.index ["organisation_id"], name: "index_org_members_on_organisation_id"
+  end
+
   create_table "organisations", force: :cascade do |t|
     t.string "name"
     t.string "slug", null: false
@@ -84,4 +132,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_02_103054) do
   add_foreign_key "categories", "organisations"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "organisations"
+  add_foreign_key "customers", "organisations"
+  add_foreign_key "org_members", "members"
+  add_foreign_key "org_members", "organisations"
 end
