@@ -1,5 +1,5 @@
 class Bo::DashboardsController < Bo::BaseController
-  def index
-    @customers = policy_scope(current_organisation.customers)
+  def dashview
+    authorize current_member
   end
 end

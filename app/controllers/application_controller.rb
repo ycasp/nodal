@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate_member!
+  before_action :authenticate_user!
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :current_organisation
   include Pundit::Authorization
@@ -45,5 +46,23 @@ class ApplicationController < ActionController::Base
 
     slug = params[:org_slug]
     @current_organisation = Organisation.find_by(slug: slug)
+  end
+
+  def authenticate_user!
+    return current_member || current_customer
+  end
+
+  def check_customership
+    return if !current_customer.nil? && current_customer.organisation == current_organisation
+
+    flash[:alert]
+    redirect_to(root_path)
+  end
+
+  def check_belongs_to_company
+    return if (!current_customer.nil? && current_customer.organisation == current_organisation) || (!current_member.nil? && current_member.organisations.exists?(current_organisation.id))
+
+    flash[:alert]
+    redirect_to(root_path)
   end
 end
