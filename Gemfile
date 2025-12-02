@@ -97,3 +97,6 @@ gem "image_processing", "~> 1.2"
 
 # open uri
 gem 'open-uri'
+
+# gem for authorization
+gem 'pundit'
