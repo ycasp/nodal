@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_02_120250) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_02_112223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,20 +40,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_02_120250) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
-
-  create_table "addresses", force: :cascade do |t|
-    t.string "street_name"
-    t.string "street_nr"
-    t.string "postal_code"
-    t.string "city"
-    t.string "country"
-    t.string "address_type"
-    t.string "addressable_type", null: false
-    t.bigint "addressable_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -121,21 +107,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_02_120250) do
   create_table "products", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.string "name"
-    t.string "slug", null: false
+    t.string "slug"
     t.string "sku"
     t.text "description"
     t.integer "unit_price"
     t.string "unit_description"
     t.integer "min_quantity"
     t.string "min_quantity_type"
-    t.boolean "available", default: true, null: false
+    t.boolean "available"
     t.bigint "category_id", null: false
     t.json "product_attributes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["organisation_id"], name: "index_products_on_organisation_id"
-    t.index ["slug"], name: "index_products_on_slug", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
