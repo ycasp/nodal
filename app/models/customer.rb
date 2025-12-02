@@ -6,6 +6,7 @@ class Customer < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   belongs_to :organisation
+  has_many :orders, dependent: :destroy
   has_one :billing_address, -> { billing }, class_name: "Address", as: :addressable, dependent: :destroy
   has_many :shipping_addresses, -> { shipping }, class_name: "Address", as: :addressable, dependent: :destroy
 
