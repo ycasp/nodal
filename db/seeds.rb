@@ -12,6 +12,7 @@ require "open-uri"
 Product.destroy_all
 Category.destroy_all
 Member.destroy_all
+Customer.destroy_all
 Organisation.destroy_all
 
 puts "destroyed all"
@@ -54,5 +55,14 @@ product = Product.new(prod)
 img = URI.parse("https://cdn.pixabay.com/photo/2016/09/29/08/33/apple-1702316_1280.jpg").open
 product.photo.attach(io: img , filename: "apple.jpg", content_type: "image/jpeg")
 product.save!
+
+Customer.create!(
+  organisation: comp,
+  company_name: "Hans' Bakery",
+  contact_name: "Hans Hansensen",
+  email: "h@h.h",
+  password: "123123",
+  active: true
+)
 
 puts "no of orgs; #{Organisation.count}, no of cat: #{Category.count}, no of prod: #{Product.count}"

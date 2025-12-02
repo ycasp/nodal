@@ -13,11 +13,12 @@ Rails.application.routes.draw do
   scope ":org_slug" do
     # customer routes
     devise_for :customers, skip: [:registrations]
+    resources :products, only: :index
 
     # bo routes
     devise_for :members
     namespace :bo do
-      get "/", to: "dashboards#index"
+      get "/", to: "dashboards#dashview"
     end
   end
 end
