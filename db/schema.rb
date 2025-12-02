@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_01_161700) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_02_105034) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,32 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_161700) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "members", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.index ["email"], name: "index_members_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_members_on_reset_password_token", unique: true
+  end
+
+  create_table "org_members", force: :cascade do |t|
+    t.bigint "organisation_id", null: false
+    t.bigint "member_id", null: false
+    t.string "role"
+    t.datetime "joined_at"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_org_members_on_member_id"
+    t.index ["organisation_id"], name: "index_org_members_on_organisation_id"
+  end
+
   create_table "organisations", force: :cascade do |t|
     t.string "name"
     t.string "slug", null: false
@@ -54,4 +80,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_161700) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "org_members", "members"
+  add_foreign_key "org_members", "organisations"
 end
