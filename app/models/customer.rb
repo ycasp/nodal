@@ -6,6 +6,7 @@ class Customer < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   belongs_to :organisation
+  has_many :orders, dependent: :destroy
 
   validates :company_name, presence: true
   validates :contact_name, presence: true

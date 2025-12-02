@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_02_112223) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_02_141810) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_02_112223) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "street_name"
+    t.string "street_nr"
+    t.string "postal_code"
+    t.string "city"
+    t.string "country"
+    t.string "address_type"
+    t.string "addressable_type", null: false
+    t.bigint "addressable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -82,6 +96,34 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_02_112223) do
     t.index ["reset_password_token"], name: "index_members_on_reset_password_token", unique: true
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.integer "unit_price", null: false
+    t.integer "discount_amount", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "order_number", null: false
+    t.string "status", default: "in_process"
+    t.string "payment_status", default: "pending"
+    t.datetime "placed_at"
+    t.date "receive_on"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_orders_on_customer_id"
+    t.index ["order_number"], name: "index_orders_on_order_number", unique: true
+    t.index ["organisation_id"], name: "index_orders_on_organisation_id"
+  end
+
   create_table "org_members", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "member_id", null: false
@@ -107,26 +149,31 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_02_112223) do
   create_table "products", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.string "name"
-    t.string "slug"
+    t.string "slug", null: false
     t.string "sku"
     t.text "description"
     t.integer "unit_price"
     t.string "unit_description"
     t.integer "min_quantity"
     t.string "min_quantity_type"
-    t.boolean "available"
+    t.boolean "available", default: true, null: false
     t.bigint "category_id", null: false
     t.json "product_attributes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["organisation_id"], name: "index_products_on_organisation_id"
+    t.index ["slug"], name: "index_products_on_slug", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "categories", "organisations"
   add_foreign_key "customers", "organisations"
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "products"
+  add_foreign_key "orders", "customers"
+  add_foreign_key "orders", "organisations"
   add_foreign_key "org_members", "members"
   add_foreign_key "org_members", "organisations"
   add_foreign_key "products", "categories"
