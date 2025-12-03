@@ -2,7 +2,24 @@ class Bo::OrdersController < Bo::BaseController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   def index
-    @orders = policy_scope(Order)
+    @orders = policy_scope(Order).includes(:customer, :order_items)
+
+    # Search by order number or customer name
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @orders = @orders.joins(:customer).where(
+        "orders.order_number ILIKE :search OR customers.company_name ILIKE :search OR customers.contact_name ILIKE :search",
+        search: search_term
+      )
+    end
+
+    # Filter by status
+    @orders = @orders.where(status: params[:status]) if params[:status].present?
+
+    # Filter by payment status
+    @orders = @orders.where(payment_status: params[:payment_status]) if params[:payment_status].present?
+
+    @orders = @orders.order(created_at: :desc)
   end
 
   def show

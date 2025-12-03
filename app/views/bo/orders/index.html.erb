@@ -18,24 +18,25 @@
     </div>
   </div>
 
-  <!-- Search and Filters -->
-  <div class="card mb-4">
+  <!-- Search -->
+  <%= form_with url: bo_orders_path(org_slug: @current_organisation.slug), method: :get, class: "card mb-4", data: { turbo_frame: "_top" } do |f| %>
     <div class="card-body py-2">
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="flex-grow-1 me-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="flex-grow-1">
           <div class="input-group">
             <span class="input-group-text bg-transparent border-0">
               <i class="fa-solid fa-magnifying-glass text-muted"></i>
             </span>
-            <input type="text" class="form-control border-0" placeholder="Search orders...">
+            <%= f.text_field :search, value: params[:search], class: "form-control border-0", placeholder: "Search by order #, customer name..." %>
           </div>
         </div>
-        <button class="btn btn-outline-secondary">
-          <i class="fa-solid fa-filter me-1"></i> Filters
-        </button>
+        <%= f.submit "Search", class: "btn btn-primary" %>
+        <% if params[:search].present? %>
+          <%= link_to "Clear", bo_orders_path(org_slug: @current_organisation.slug), class: "btn btn-outline-secondary" %>
+        <% end %>
       </div>
     </div>
-  </div>
+  <% end %>
 
   <!-- Orders Table -->
   <div class="card">
