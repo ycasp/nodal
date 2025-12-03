@@ -1,0 +1,151 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
+      <% end %>
+      <div>
+        <h1 class="h3 mb-0">Edit Order</h1>
+        <div class="text-muted">
+          <span class="fw-bold text-dark"><%= @order.order_number %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <%= form_with model: @order, url: bo_order_path(org_slug: @current_organisation.slug, id: @order.id), method: :patch, class: "needs-validation" do |f| %>
+
+        <!-- Order Details -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Order Details</h5>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Order Number</label>
+                <input type="text" class="form-control" value="<%= @order.order_number %>" disabled>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Customer</label>
+                <input type="text" class="form-control" value="<%= @order.customer.company_name %>" disabled>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <%= f.label :status, class: "form-label" %>
+                <%= f.select :status, Order::STATUSES.map { |s| [s.titleize, s] }, {}, class: "form-select" %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :payment_status, "Payment Status", class: "form-label" %>
+                <%= f.select :payment_status, Order::PAYMENT_STATUSES.map { |s| [s.titleize, s] }, {}, class: "form-select" %>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <%= f.label :receive_on, "Delivery Date", class: "form-label" %>
+                <%= f.date_field :receive_on, class: "form-control" %>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Placed At</label>
+                <input type="text" class="form-control" value="<%= @order.placed_at&.strftime("%B %d, %Y %H:%M") || @order.created_at.strftime("%B %d, %Y %H:%M") %>" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Notes -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Order Notes</h5>
+            <%= f.text_area :notes, class: "form-control", rows: 4, placeholder: "Add notes about this order..." %>
+          </div>
+        </div>
+
+        <!-- Order Items (Read Only) -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-1">Order Items</h5>
+            <p class="text-muted small mb-3"><%= @order.order_items.count %> items in this order</p>
+
+            <div class="table-responsive">
+              <table class="table table-borderless align-middle mb-0">
+                <thead class="border-bottom">
+                  <tr>
+                    <th class="text-muted fw-normal">Product</th>
+                    <th class="text-muted fw-normal">SKU</th>
+                    <th class="text-muted fw-normal text-center">Qty</th>
+                    <th class="text-muted fw-normal text-end">Price</th>
+                    <th class="text-muted fw-normal text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @order.order_items.includes(:product).each do |item| %>
+                    <tr>
+                      <td><%= item.product.name %></td>
+                      <td class="text-muted"><%= item.product.sku || '-' %></td>
+                      <td class="text-center"><%= item.quantity %> <%= item.product.min_quantity_type %></td>
+                      <td class="text-end">$<%= number_with_precision(item.unit_price, precision: 2) %></td>
+                      <td class="text-end">$<%= number_with_precision(item.total_price, precision: 2) %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="border-top pt-3 mt-3">
+              <div class="d-flex justify-content-between fw-bold">
+                <span>Total</span>
+                <span>$<%= number_with_precision(@order.total_amount, precision: 2) %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex gap-2">
+          <%= f.submit "Save Changes", class: "btn btn-primary" %>
+          <%= link_to "Cancel", bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "btn btn-outline-secondary" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-4">
+      <!-- Client Information -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-user me-2"></i>Client Information
+          </h6>
+
+          <div class="mb-3">
+            <small class="text-muted">Client Name</small>
+            <div><%= @order.customer.contact_name %></div>
+          </div>
+
+          <div class="mb-3">
+            <small class="text-muted">Company</small>
+            <div><%= @order.customer.company_name %></div>
+          </div>
+
+          <div class="mb-2">
+            <i class="fa-solid fa-envelope text-muted me-2"></i>
+            <span><%= @order.customer.email %></span>
+          </div>
+
+          <% if @order.customer.contact_phone.present? %>
+            <div class="mb-2">
+              <i class="fa-solid fa-phone text-muted me-2"></i>
+              <span><%= @order.customer.contact_phone %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

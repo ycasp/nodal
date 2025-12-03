@@ -90,9 +90,9 @@
                 <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
                   <i class="fa-solid fa-eye"></i>
                 <% end %>
-                <button class="btn btn-sm btn-link text-muted">
+                <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
                   <i class="fa-solid fa-pen-to-square"></i>
-                </button>
+                <% end %>
                 <button class="btn btn-sm btn-link text-danger">
                   <i class="fa-solid fa-trash"></i>
                 </button>
