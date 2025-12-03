@@ -9,6 +9,8 @@
 #   end
 require "open-uri"
 
+OrderItem.destroy_all
+Order.destroy_all
 Product.destroy_all
 Category.destroy_all
 Member.destroy_all
@@ -56,7 +58,7 @@ img = URI.parse("https://cdn.pixabay.com/photo/2016/09/29/08/33/apple-1702316_12
 product.photo.attach(io: img , filename: "apple.jpg", content_type: "image/jpeg")
 product.save!
 
-Customer.create!(
+customer1 = Customer.create!(
   organisation: comp,
   company_name: "Hans' Bakery",
   contact_name: "Hans Hansensen",
@@ -65,4 +67,81 @@ Customer.create!(
   active: true
 )
 
-puts "no of orgs; #{Organisation.count}, no of cat: #{Category.count}, no of prod: #{Product.count}"
+customer2 = Customer.create!(
+  organisation: comp,
+  company_name: "Green Bowl Kitchen",
+  contact_name: "Maria Garcia",
+  email: "maria@greenbowl.com",
+  password: "123123",
+  active: true
+)
+
+customer3 = Customer.create!(
+  organisation: comp,
+  company_name: "Urban Eatery",
+  contact_name: "James Wilson",
+  email: "james@urbaneatery.com",
+  password: "123123",
+  active: true
+)
+
+# Create Orders
+order1 = Order.create!(
+  organisation: comp,
+  customer: customer2,
+  status: "in_process",
+  payment_status: "paid",
+  placed_at: 1.day.ago,
+  receive_on: 3.days.from_now.to_date
+)
+
+order2 = Order.create!(
+  organisation: comp,
+  customer: customer3,
+  status: "completed",
+  payment_status: "paid",
+  placed_at: 2.days.ago,
+  receive_on: Date.today
+)
+
+order3 = Order.create!(
+  organisation: comp,
+  customer: customer1,
+  status: "completed",
+  payment_status: "paid",
+  placed_at: 2.days.ago,
+  receive_on: 1.day.ago.to_date
+)
+
+order4 = Order.create!(
+  organisation: comp,
+  customer: customer2,
+  status: "in_process",
+  payment_status: "pending",
+  placed_at: 3.days.ago,
+  receive_on: 2.days.from_now.to_date
+)
+
+order5 = Order.create!(
+  organisation: comp,
+  customer: customer1,
+  status: "processed",
+  payment_status: "pending",
+  placed_at: 5.days.ago,
+  receive_on: Date.today
+)
+
+# Add order items
+[order1, order2, order3, order4, order5].each do |order|
+  rand(3..8).times do
+    OrderItem.create!(
+      order: order,
+      product: product,
+      quantity: rand(1..10),
+      unit_price: product.unit_price
+    )
+  end
+end
+
+puts "no of orgs: #{Organisation.count}, no of cat: #{Category.count}, no of prod: #{Product.count}"
+puts "no of customers: #{Customer.count}, no of orders: #{Order.count}, no of order_items: #{OrderItem.count}"
