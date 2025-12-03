@@ -16,9 +16,16 @@
     </div>
 
     <div class="d-flex gap-2 align-items-center">
-      <span class="badge bg-primary rounded-pill px-3 py-2">Premium</span>
+      <% if @customer.active? %>
+        <span class="badge bg-success rounded-pill px-3 py-2">Active</span>
+      <% else %>
+        <span class="badge bg-secondary rounded-pill px-3 py-2">Inactive</span>
+      <% end %>
       <%= link_to edit_bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-primary" do %>
-        <i class="fa-solid fa-pen-to-square"></i> Edit Client
+        <i class="fa-solid fa-pen-to-square"></i> Edit
+      <% end %>
+      <%= link_to bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-danger", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this customer?" } do %>
+        <i class="fa-solid fa-trash"></i> Delete
       <% end %>
     </div>
   </div>

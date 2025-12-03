@@ -10,9 +10,9 @@
     <a href="#" class="btn btn-outline-secondary">
       <i class="fa-solid fa-download"></i> Export
     </a>
-    <a href="#" class="btn btn-primary">
+    <%= link_to new_bo_customer_path(params[:org_slug]), class: "btn btn-primary" do %>
       <i class="fa-solid fa-plus"></i> Add New
-    </a>
+    <% end %>
   </div>
 </div>
 
@@ -43,7 +43,7 @@
         <th>Customer</th>
         <th>Company</th>
         <th>Contact</th>
-        <th>Discount</th>
+        <th>Status</th>
         <th>Total Spent</th>
         <th>Orders</th>
         <th>Actions</th>
@@ -64,7 +64,11 @@
             <small class="text-muted"><%= customer.contact_phone %></small>
           </td>
           <td>
-            <span class="badge rounded-pill bg-primary-subtle text-primary">Premium</span>
+            <% if customer.active? %>
+              <span class="badge rounded-pill bg-success-subtle text-success">Active</span>
+            <% else %>
+              <span class="badge rounded-pill bg-secondary-subtle text-secondary">Inactive</span>
+            <% end %>
           </td>
           <td>$0</td>
           <td>0</td>

@@ -15,6 +15,22 @@ class Bo::CustomersController < Bo::BaseController
     authorize @customer
   end
 
+  def new
+    @customer = Customer.new
+    authorize @customer
+  end
+
+  def create
+    @customer = Customer.new(customer_params)
+    @customer.organisation = current_organisation
+    authorize @customer
+    if @customer.save
+      redirect_to bo_customer_path(params[:org_slug], @customer), notice: "Customer created successfully."
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def edit
     @customer = Customer.find(params[:id])
     authorize @customer
@@ -40,7 +56,7 @@ class Bo::CustomersController < Bo::BaseController
   private
 
   def customer_params
-    params.require(:customer).permit(:company_name, :contact_name, :email, :contact_phone, :active)
+    params.require(:customer).permit(:company_name, :contact_name, :email, :contact_phone, :active, :password, :password_confirmation)
   end
 
 end
