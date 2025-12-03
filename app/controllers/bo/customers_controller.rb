@@ -1,7 +1,8 @@
 class Bo::CustomersController < Bo::BaseController
+  before_action :set_and_authorize_customer, only: [:show, :edit, :update, :destroy]
 
   def index
-    @customers = policy_scope(Customer)
+    @customers = policy_scope(current_organisation.customers)
     if params[:query].present?
       @customers = @customers.where(
         "company_name ILIKE :q OR contact_name ILIKE :q OR email ILIKE :q",
@@ -11,8 +12,6 @@ class Bo::CustomersController < Bo::BaseController
   end
 
   def show
-    @customer = Customer.find(params[:id])
-    authorize @customer
   end
 
   def new
@@ -32,13 +31,9 @@ class Bo::CustomersController < Bo::BaseController
   end
 
   def edit
-    @customer = Customer.find(params[:id])
-    authorize @customer
   end
 
   def update
-    @customer = Customer.find(params[:id])
-    authorize @customer
     if @customer.update(customer_params)
       redirect_to bo_customer_path(params[:org_slug], @customer), notice: "Customer updated successfully."
     else
@@ -47,8 +42,6 @@ class Bo::CustomersController < Bo::BaseController
   end
 
   def destroy
-    @customer = Customer.find(params[:id])
-    authorize @customer
     @customer.destroy
     redirect_to bo_customers_path(params[:org_slug]), status: :see_other, notice: "Customer deleted successfully."
   end
@@ -59,4 +52,8 @@ class Bo::CustomersController < Bo::BaseController
     params.require(:customer).permit(:company_name, :contact_name, :email, :contact_phone, :active, :password, :password_confirmation)
   end
 
+  def set_and_authorize_customer
+    @customer = current_organisation.customers.find(params[:id])
+    authorize @customer
+  end
 end

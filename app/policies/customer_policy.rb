@@ -1,25 +1,40 @@
 class CustomerPolicy < ApplicationPolicy
+
   def show?
-    true
+    user_works_for_records_organisation?
   end
 
   def update?
-    user.organisations.include?(record.organisation)
+    user_works_for_records_organisation?
   end
 
   def destroy?
-    user.organisations.include?(record.organisation)
+    user_works_for_records_organisation?
+  end
+
+  def new?
+    true
   end
 
   def create?
-    true
+    user_works_for_records_organisation?
   end
 
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
-      scope.all
+      number_of_distinct_organisations = scope.select("organisation_id").distinct.length
+      if number_of_distinct_organisations == 1
+        scope.all
+      else
+        redirect_to(root_path)
+      end
     end
+  end
 
+  private
+
+  def user_works_for_records_organisation?
+    return user.organisations.include?(record.organisation)
   end
 end
