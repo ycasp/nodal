@@ -65,4 +65,94 @@ Customer.create!(
   active: true
 )
 
-puts "no of orgs; #{Organisation.count}, no of cat: #{Category.count}, no of prod: #{Product.count}"
+Customer.create!(
+  organisation: comp,
+  company_name: "Maria's Café",
+  contact_name: "Maria Santos",
+  email: "maria@cafe.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "The Green Kitchen",
+  contact_name: "Oliver Green",
+  email: "oliver@greenkitchen.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "Nordic Delights",
+  contact_name: "Erik Lindqvist",
+  email: "erik@nordicdelights.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "Fresh & Co Restaurant",
+  contact_name: "Sophie Martin",
+  email: "sophie@freshandco.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "Urban Bistro",
+  contact_name: "James Chen",
+  email: "james@urbanbistro.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "Sunrise Hotel",
+  contact_name: "Anna Kowalski",
+  email: "anna@sunrisehotel.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "The Corner Deli",
+  contact_name: "Michael Brown",
+  email: "michael@cornerdeli.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "Golden Spoon Catering",
+  contact_name: "Isabella Romano",
+  email: "isabella@goldenspoon.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "Blue Ocean Fish Bar",
+  contact_name: "Thomas Fischer",
+  email: "thomas@blueocean.com",
+  password: "123123",
+  active: true
+)
+
+Customer.create!(
+  organisation: comp,
+  company_name: "Wholesome Eats",
+  contact_name: "Emma Wilson",
+  email: "emma@wholesomeeats.com",
+  password: "123123",
+  active: true
+)
+
+puts "no of orgs: #{Organisation.count}, no of cat: #{Category.count}, no of prod: #{Product.count}, no of customers: #{Customer.count}"

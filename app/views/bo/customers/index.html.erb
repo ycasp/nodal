@@ -1,0 +1,88 @@
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <h1>Customers</h1>
+    <p class="text-muted">Manage your customer database and pricing tiers</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="#" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-upload"></i> Import
+    </a>
+    <a href="#" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-download"></i> Export
+    </a>
+    <a href="#" class="btn btn-primary">
+      <i class="fa-solid fa-plus"></i> Add New
+    </a>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <%= form_with url: "#", method: :get, class: "flex-grow-1 me-3" do %>
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="fa-solid fa-magnifying-glass text-muted"></i>
+          </span>
+          <%= text_field_tag :query,
+                params[:query],
+                class: "form-control border-start-0",
+                placeholder: "Search customers..."
+          %>
+        </div>
+      <% end %>
+      <a href="#" class="btn btn-outline-secondary">
+        <i class="Search button"></i> Search
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Customer</th>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Discount</th>
+        <th>Total Spent</th>
+        <th>Orders</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @customers.each do |customer| %>
+        <tr>
+          <td>
+            <div class="fw-semibold"><%= customer.contact_name %></div>
+            <small class="text-muted">C<%= customer.id.to_s.rjust(3, '0') %></small>
+          </td>
+          <td><%= customer.company_name %></td>
+          <td>
+            <div><%= customer.email %></div>
+            <small class="text-muted"><%= customer.contact_phone %></small>
+          </td>
+          <td>
+            <span class="badge rounded-pill bg-primary-subtle text-primary">Premium</span>
+          </td>
+          <td>$0</td>
+          <td>0</td>
+          <td>
+            <div class="d-flex gap-2">
+              <a href="#" class="text-muted" title="View">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <a href="#" class="text-muted" title="Edit">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </a>
+              <a href="#" class="text-danger" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
