@@ -78,7 +78,7 @@
             <div class="col-md-4">
               <label class="form-label">Unit Price (cents) <span class="text-danger">*</span></label>
               <%= f.number_field :unit_price, class: "form-control", placeholder: "2499", required: true %>
-              <small class="text-muted">Price in cents (2499 = <%= Product::CURRENCY_SYMBOL %>24.99)</small>
+              <small class="text-muted">Price in euros > 24.99)</small>
             </div>
             <div class="col-md-4">
               <label class="form-label">Unit Description</label>
@@ -87,7 +87,7 @@
             <div class="col-md-4">
               <label class="form-label">Display Price</label>
               <div class="form-control bg-light">
-                <%= @product.formatted_price %>
+                <%= humanized_money_with_symbol(@product.price) %>
               </div>
             </div>
           </div>

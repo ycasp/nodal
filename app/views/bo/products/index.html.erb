@@ -63,7 +63,7 @@
           </td>
           <td><%= product.sku %></td>
           <td><%= product.category&.name %></td>
-          <td><%= product.formatted_price %></td>
+          <td><%= humanized_money_with_symbol(product.price) %></td>
           <td>
             <% stock = rand(20..500) %>
             <% unit = product.unit_description || 'units' %>

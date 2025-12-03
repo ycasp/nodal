@@ -9,20 +9,5 @@ class Product < ApplicationRecord
   validates :slug, uniqueness: true
   validates :name, presence: true
   validates :description, length: { minimum: 5, maximum: 150 }
-
-  CURRENCY_SYMBOL = "€"
-
-  def formatted_price
-    return "-" unless unit_price.present?
-    price = "#{CURRENCY_SYMBOL}#{'%.2f' % (unit_price / 100.0)}"
-    unit_description.present? ? "#{price}/#{unit_description}" : price
-  end
-
-  def price_in_cents
-    (unit_price || 0) / 100.0
-  end
-
-  def formatted_base_price
-    "#{CURRENCY_SYMBOL}#{'%.2f' % price_in_cents}"
-  end
+  monetize :unit_price, as: :price
 end

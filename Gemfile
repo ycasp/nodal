@@ -100,3 +100,6 @@ gem 'open-uri'
 
 # gem for authorization
 gem 'pundit'
+
+# gem for money handling
+gem 'money-rails', '~> 1.12'

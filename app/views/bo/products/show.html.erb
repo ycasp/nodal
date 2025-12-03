@@ -15,6 +15,11 @@
     <%= link_to edit_bo_product_path(params[:org_slug], @product), class: "btn btn-dark ms-2" do %>
       <i class="fa-solid fa-pen-to-square me-1"></i> Edit Product
     <% end %>
+    <%= link_to bo_product_path(params[:org_slug], @product),
+        class: "btn btn-outline-danger ms-2",
+        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete '#{@product.name}'? This action cannot be undone." } do %>
+      <i class="fa-solid fa-trash me-1"></i> Delete
+    <% end %>
   </div>
 </div>
 
@@ -39,7 +44,7 @@
       <div class="card-body d-flex justify-content-between align-items-start">
         <div>
           <small class="text-muted d-block">Base Price</small>
-          <h2 class="mb-0"><%= @product.formatted_base_price %></h2>
+          <h2 class="mb-0"><%= humanized_money_with_symbol(@product.price) %></h2>
           <small class="text-success"><i class="fa-solid fa-arrow-up"></i> 66.6%</small>
           <small class="text-muted">Margin</small>
         </div>
@@ -179,7 +184,7 @@
 
         <div>
           <small class="text-muted d-block">Cost Price</small>
-          <strong><%= Product::CURRENCY_SYMBOL %><%= '%.2f' % (@product.price_in_cents * 0.6) %></strong>
+          <strong><%= humanized_money_with_symbol(@product.price * 0.6) %></strong>
         </div>
       </div>
     </div>
@@ -195,7 +200,7 @@
             <strong>Standard</strong>
             <small class="text-muted d-block">0% discount</small>
           </div>
-          <strong><%= @product.formatted_base_price %></strong>
+          <strong><%= humanized_money_with_symbol(@product.price) %></strong>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -203,7 +208,7 @@
             <strong>Premium</strong>
             <small class="text-muted d-block">10% discount</small>
           </div>
-          <strong><%= Product::CURRENCY_SYMBOL %><%= '%.2f' % (@product.price_in_cents * 0.9) %></strong>
+          <strong><%= humanized_money_with_symbol(@product.price * 0.9) %></strong>
         </div>
 
         <div class="d-flex justify-content-between align-items-center">
@@ -211,7 +216,7 @@
             <strong>Enterprise</strong>
             <small class="text-muted d-block">15% discount</small>
           </div>
-          <strong><%= Product::CURRENCY_SYMBOL %><%= '%.2f' % (@product.price_in_cents * 0.85) %></strong>
+          <strong><%=humanized_money_with_symbol(@product.price * 0.85) %></strong>
         </div>
       </div>
     </div>
