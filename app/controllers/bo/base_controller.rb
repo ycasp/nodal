@@ -1,4 +1,5 @@
 class Bo::BaseController < ApplicationController
+  layout "bo"
   before_action :check_membership
 
   private

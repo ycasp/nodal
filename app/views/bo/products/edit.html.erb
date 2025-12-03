@@ -1,3 +1,5 @@
+<% content_for :bo_main_content do%>
+
 <div class="mb-4">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
@@ -77,7 +79,7 @@
           <div class="row g-3">
             <div class="col-md-4">
               <label class="form-label">Unit Price (cents) <span class="text-danger">*</span></label>
-              <%= f.number_field :unit_price, class: "form-control", placeholder: "2499", required: true %>
+              <%= f.number_field :price, class: "form-control", placeholder: "2499", required: true %>
               <small class="text-muted">Price in euros > 24.99)</small>
             </div>
             <div class="col-md-4">
@@ -179,4 +181,6 @@
       </div>
     </div>
   </div>
+<% end %>
+
 <% end %>

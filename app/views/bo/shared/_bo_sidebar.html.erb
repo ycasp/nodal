@@ -1,0 +1,33 @@
+<aside class="bo-sidebar">
+  <ul class="bo-sidebar-nav">
+    <li class="bo-sidebar-item active">
+      <%= link_to bo_path do %>
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+      <% end %>
+      <%= link_to bo_customers_path do %>
+        <i class="fa-solid fa-house"></i>
+        <span>Customer</span>
+      <% end %>
+      <%= link_to bo_products_path do %>
+        <i class="fa-solid fa-house"></i>
+        <span>Products</span>
+      <% end %>
+    </li>
+  </ul>
+
+  <ul class="bo-sidebar-nav-bottom">
+    <li class="bo-sidebar-item">
+      <%= link_to "#" do %>
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      <% end %>
+    </li>
+    <li class="bo-sidebar-item">
+      <%= link_to "#" do %>
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+      <% end %>
+    </li>
+  </ul>
+</aside>

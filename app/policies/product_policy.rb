@@ -41,8 +41,7 @@ class ProductPolicy < ApplicationPolicy
       if number_of_companies == 1
         scope.all
       else
-        flash[:alert]
-        redirect_to(root_path)
+        # raise an error
       end
     end
   end
