@@ -62,6 +62,6 @@ class Bo::ProductsController < Bo::BaseController
   end
 
   def product_params
-    params.require(:product).permit(:name, :slug, :sku, :description, :unit_price, :unit_description, :min_quantity, :min_quantity_type, :available, :category_id, :photo)
+    params.require(:product).permit(:name, :slug, :sku, :description, :price, :unit_description, :min_quantity, :min_quantity_type, :available, :category_id, :photo)
   end
 end
