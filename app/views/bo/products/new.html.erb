@@ -1,0 +1,124 @@
+<div class="mb-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_products_path(params[:org_slug]), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
+      <% end %>
+
+      <div class="rounded bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
+        <i class="fa-solid fa-box-open fa-lg"></i>
+      </div>
+
+      <div>
+        <h4 class="mb-0">New Product</h4>
+        <span class="text-muted">Add a new product to your catalog</span>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 align-items-center">
+      <%= link_to bo_products_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
+        Cancel
+      <% end %>
+      <button type="submit" form="product-form" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> Create Product
+      </button>
+    </div>
+  </div>
+</div>
+
+<%= form_with model: @product, url: bo_products_path(params[:org_slug]), method: :post, id: "product-form", multipart: true do |f| %>
+  <div class="row g-3">
+    <div class="col-md-8">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Basic Information</h5>
+
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label">Product Name <span class="text-danger">*</span></label>
+              <%= f.text_field :name, class: "form-control", placeholder: "Enter product name", required: true %>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">SKU</label>
+              <%= f.text_field :sku, class: "form-control", placeholder: "e.g., COF-ORG-001" %>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-12">
+              <label class="form-label">Description <span class="text-danger">*</span></label>
+              <%= f.text_area :description, class: "form-control", placeholder: "Enter product description", rows: 3, required: true %>
+              <small class="text-muted">5-150 characters</small>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label class="form-label">Category <span class="text-danger">*</span></label>
+              <%= f.collection_select :category_id, Category.where(organisation_id: Organisation.find_by(slug: params[:org_slug])&.id), :id, :name, { prompt: "Select a category" }, { class: "form-select", required: true } %>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Slug</label>
+              <%= f.text_field :slug, class: "form-control", placeholder: "product-url-slug" %>
+              <small class="text-muted">URL-friendly identifier (auto-generated if blank)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Pricing & Units</h5>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Unit Price (€) <span class="text-danger">*</span></label>
+              <%= f.number_field :unit_price, class: "form-control", placeholder: "24.99", required: true %>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Unit Description</label>
+              <%= f.text_field :unit_description, class: "form-control", placeholder: "e.g., lb, kg, L" %>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label class="form-label">Minimum Quantity</label>
+              <%= f.number_field :min_quantity, class: "form-control", placeholder: "1", min: 1, value: 1 %>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Minimum Quantity Type</label>
+              <%= f.text_field :min_quantity_type, class: "form-control", placeholder: "e.g., unit, pack, case" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Product Image</h5>
+
+          <div>
+            <label class="form-label">Upload Image</label>
+            <%= f.file_field :photo, class: "form-control", accept: "image/*" %>
+            <small class="text-muted">Recommended: 800x800 pixels, JPG or PNG</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Availability</h5>
+
+          <div class="form-check form-switch">
+            <%= f.check_box :available, class: "form-check-input", role: "switch", id: "availableSwitch", checked: true %>
+            <label class="form-check-label" for="availableSwitch">Available for Sale</label>
+          </div>
+          <small class="text-muted">Unavailable products won't appear in the catalog</small>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

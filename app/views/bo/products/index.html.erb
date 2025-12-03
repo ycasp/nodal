@@ -1,0 +1,107 @@
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <h1>Product Catalog</h1>
+    <p class="text-muted">Smart inventory with AI-powered insights</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="#" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-upload"></i> Import
+    </a>
+    <a href="#" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-download"></i> Export
+    </a>
+    <a href="#" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-gear"></i> Manage Properties
+    </a>
+<%= link_to new_bo_product_path(params[:org_slug]), class: "btn btn-primary" do %>
+      <i class="fa-solid fa-plus"></i> Add New
+    <% end %>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: bo_products_path(params[:org_slug]), method: :get, class: "d-flex align-items-center" do %>
+      <div class="input-group flex-grow-1 me-3">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa-solid fa-magnifying-glass text-muted"></i>
+        </span>
+        <%= text_field_tag :query,
+              params[:query],
+              class: "form-control border-start-0",
+              placeholder: "Search catalog..."
+        %>
+      </div>
+      <button type="submit" class="btn btn-outline-secondary me-2">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+      </button>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Product</th>
+        <th>SKU</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>AI Insights</th>
+        <th class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @products.each do |product| %>
+        <tr>
+          <td>
+            <%= link_to bo_product_path(params[:org_slug], product), class: "text-decoration-none text-dark" do %>
+              <div class="fw-semibold"><%= product.name %></div>
+              <small class="text-muted">P<%= product.id.to_s.rjust(3, '0') %></small>
+            <% end %>
+          </td>
+          <td><%= product.sku %></td>
+          <td><%= product.category&.name %></td>
+          <td><%= humanized_money_with_symbol(product.price) %></td>
+          <td>
+            <% stock = rand(20..500) %>
+            <% unit = product.unit_description || 'units' %>
+            <% if stock < 100 %>
+              <span class="badge rounded-pill bg-danger-subtle text-danger"><%= stock %> <%= unit %></span>
+            <% else %>
+              <span class="badge rounded-pill bg-success-subtle text-success"><%= stock %> <%= unit %></span>
+            <% end %>
+          </td>
+          <td>
+            <% insights = [
+              { text: "High demand - Reorder soon", color: "primary" },
+              { text: "Trending up 15%", color: "success" },
+              { text: "Low stock alert", color: "danger" },
+              { text: "Popular this week", color: "info" },
+              nil
+            ].sample %>
+            <% if insights %>
+              <span class="badge rounded-pill bg-<%= insights[:color] %>-subtle text-<%= insights[:color] %> border border-<%= insights[:color] %>-subtle">
+                <i class="fa-solid fa-chart-line me-1"></i><%= insights[:text] %>
+              </span>
+            <% end %>
+          </td>
+          <td>
+            <div class="d-flex gap-2 justify-content-end">
+              <%= link_to bo_product_path(params[:org_slug], product), class: "text-muted", title: "View" do %>
+                <i class="fa-solid fa-eye"></i>
+              <% end %>
+              <%= link_to edit_bo_product_path(params[:org_slug], product), class: "text-muted", title: "Edit" do %>
+                <i class="fa-solid fa-pen-to-square"></i>
+              <% end %>
+              <%= link_to bo_product_path(params[:org_slug], product), class: "text-danger", title: "Delete", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this product?" } do %>
+                <i class="fa-solid fa-trash"></i>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -9,4 +9,5 @@ class Product < ApplicationRecord
   validates :slug, uniqueness: true
   validates :name, presence: true
   validates :description, length: { minimum: 5, maximum: 150 }
+  monetize :unit_price, as: :price
 end
