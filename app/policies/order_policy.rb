@@ -11,7 +11,19 @@ class OrderPolicy < ApplicationPolicy
   def update?
     true
   end
-  
+
+  def new?
+    true
+  end
+
+  def create?
+    true
+  end
+
+  def destroy?
+    true
+  end
+
   class Scope < ApplicationPolicy::Scope
     def resolve
       scope.all

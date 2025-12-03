@@ -12,9 +12,9 @@
       <button class="btn btn-outline-secondary">
         <i class="fa-solid fa-download me-1"></i> Export
       </button>
-      <button class="btn btn-primary">
+      <%= link_to new_bo_order_path(org_slug: @current_organisation.slug), class: "btn btn-primary" do %>
         <i class="fa-solid fa-plus me-1"></i> Add New
-      </button>
+      <% end %>
     </div>
   </div>
 
@@ -93,9 +93,9 @@
                 <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
                   <i class="fa-solid fa-pen-to-square"></i>
                 <% end %>
-                <button class="btn btn-sm btn-link text-danger">
+                <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), method: :delete, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: "Are you sure you want to delete order #{order.order_number}?" } do %>
                   <i class="fa-solid fa-trash"></i>
-                </button>
+                <% end %>
               </td>
             </tr>
           <% end %>
