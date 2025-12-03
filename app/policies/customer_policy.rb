@@ -7,6 +7,10 @@ class CustomerPolicy < ApplicationPolicy
     user.organisations.include?(record.organisation)
   end
 
+  def destroy?
+    user.organisations.include?(record.organisation)
+  end
+
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve

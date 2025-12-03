@@ -30,6 +30,13 @@ class Bo::CustomersController < Bo::BaseController
     end
   end
 
+  def destroy
+    @customer = Customer.find(params[:id])
+    authorize @customer
+    @customer.destroy
+    redirect_to bo_customers_path(params[:org_slug]), status: :see_other, notice: "Customer deleted successfully."
+  end
+
   private
 
   def customer_params

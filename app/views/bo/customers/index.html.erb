@@ -76,9 +76,9 @@
               <%= link_to edit_bo_customer_path(params[:org_slug], customer), class: "text-muted", title: "Edit" do %>
                 <i class="fa-solid fa-pen-to-square"></i>
               <% end %>
-              <a href="#" class="text-danger" title="Delete">
+              <%= link_to bo_customer_path(params[:org_slug], customer), class: "text-danger", title: "Delete", data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } do %>
                 <i class="fa-solid fa-trash"></i>
-              </a>
+              <% end %>
             </div>
           </td>
         </tr>
