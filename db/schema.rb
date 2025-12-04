@@ -77,7 +77,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_02_141810) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_customers_on_email", unique: true
+    t.index ["email", "organisation_id"], name: "index_customers_on_email_and_organisation_id", unique: true
     t.index ["organisation_id"], name: "index_customers_on_organisation_id"
     t.index ["reset_password_token"], name: "index_customers_on_reset_password_token", unique: true
   end

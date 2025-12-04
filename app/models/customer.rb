@@ -2,8 +2,10 @@ class Customer < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   # Note: :registerable is excluded - Members create customer accounts
+  # Note: :validatable is excluded - email uniqueness is scoped to organisation
   devise :database_authenticatable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable,
+         authentication_keys: [:email, :organisation]
 
   belongs_to :organisation
   has_many :orders, dependent: :destroy
@@ -13,4 +15,30 @@ class Customer < ApplicationRecord
   validates :company_name, presence: true
   validates :contact_name, presence: true
   validates :active, inclusion: { in: [true, false] }
+
+  # Email validations (from Devise::Models::Validatable, with scoped uniqueness)
+  validates :email, presence: true, if: :email_required?
+  validates :email, uniqueness: { scope: :organisation_id, case_sensitive: true, allow_blank: true },
+                    if: :will_save_change_to_email?
+  validates :email, format: { with: Devise.email_regexp, allow_blank: true },
+                    if: :will_save_change_to_email?
+
+  # Password validations (from Devise::Models::Validatable)
+  validates :password, presence: true, if: :password_required?
+  validates :password, confirmation: true, if: :password_required?
+  validates :password, length: { within: Devise.password_length, allow_blank: true }
+
+  def self.find_for_authentication(warden_conditions)
+    where(organisation: warden_conditions[:organisation], email: warden_conditions[:email]).first
+  end
+
+  private
+
+  def password_required?
+    !persisted? || !password.nil? || !password_confirmation.nil?
+  end
+
+  def email_required?
+    true
+  end
 end
