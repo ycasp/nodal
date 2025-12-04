@@ -1,0 +1,7 @@
+Hello <%= @resource.contact_name %>,
+
+You have been invited to join <%= @resource.organisation.name %> on Nodal.
+
+Accept invitation: <%= accept_invitation_url(@resource, invitation_token: @token, org_slug: @resource.organisation.slug) %>
+
+If you don't want to accept the invitation, please ignore this email.
