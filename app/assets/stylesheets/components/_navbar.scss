@@ -1,47 +1,46 @@
-// Variables
-$navbar-height: 56px;
-$teal: #3ee8c8;
-$teal-dark: #14b8a6;
-$breakpoint-mobile: 768px;
+// Navbar Styles - Shopify-inspired clean design
+@import "../config/colors";
 
+$navbar-height: 64px;
+$breakpoint-mobile: 768px;
 
 .navbar {
   width: 100%;
   height: $navbar-height;
-  background: linear-gradient(to right, #5a6a7a, #7a8a9a, #9aabbb);
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 48px;
+  padding: 0 40px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
+  border-bottom: 1px solid #e5e5e5;
 
   .logo {
-    font-size: 1.35rem;
-    font-weight: 600;
-    color: $teal;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $dark;
     text-decoration: none;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.5px;
 
     &:hover {
-      opacity: 0.85;
+      color: $teal;
     }
   }
 
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 32px;
 
     a {
-      color: #ffffff;
+      color: $dark;
       text-decoration: none;
-      font-weight: 400;
-      font-size: 0.95rem;
+      font-weight: 500;
+      font-size: 0.9375rem;
       transition: color 0.2s ease;
-      padding: 16px 0;
 
       &:hover {
         color: $teal;
@@ -53,12 +52,11 @@ $breakpoint-mobile: 768px;
     position: relative;
 
     > a {
-      color: #ffffff;
+      color: $dark;
       text-decoration: none;
-      font-weight: 400;
-      font-size: 0.95rem;
+      font-weight: 500;
+      font-size: 0.9375rem;
       transition: color 0.2s ease;
-      padding: 16px 0;
       display: block;
 
       &:hover {
@@ -70,6 +68,39 @@ $breakpoint-mobile: 768px;
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
+    }
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .nav-login {
+      color: $dark;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $teal;
+      }
+    }
+
+    .nav-cta {
+      background: $teal;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: $teal-dark;
+      }
     }
   }
 
@@ -85,34 +116,18 @@ $breakpoint-mobile: 768px;
       display: block;
       width: 100%;
       height: 2px;
-      background-color: #ffffff;
+      background-color: $dark;
       border-radius: 1px;
       transition: all 0.3s ease;
     }
   }
 
   @media (max-width: $breakpoint-mobile) {
-    padding: 0 24px;
+    padding: 0 20px;
 
-    .nav-links {
+    .nav-links,
+    .nav-actions {
       display: none;
-      position: absolute;
-      top: $navbar-height;
-      left: 0;
-      width: 100%;
-      flex-direction: column;
-      background: linear-gradient(to bottom, #6a7a8a, #5a6a7a);
-      gap: 0;
-
-      a {
-        padding: 16px 24px;
-        width: 100%;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.05);
-        }
-      }
     }
 
     .menu-toggle {
@@ -122,6 +137,20 @@ $breakpoint-mobile: 768px;
     &.active {
       .nav-links {
         display: flex;
+        position: absolute;
+        top: $navbar-height;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 16px 0;
+        gap: 0;
+
+        a {
+          padding: 12px 24px;
+          width: 100%;
+        }
       }
 
       .menu-toggle span:nth-child(1) {
@@ -137,6 +166,4 @@ $breakpoint-mobile: 768px;
       }
     }
   }
-
-
 }
