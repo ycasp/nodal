@@ -1,6 +1,250 @@
-.alert {
+// Flash Alert Component
+// Modern glassmorphism design with progress indicator
+
+.flash-container {
   position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1000;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  width: calc(100% - 48px);
+}
+
+.alert {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem 1.25rem;
+  padding-right: 3rem;
+  border: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  font-weight: 500;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #1a1a2e;
+
+  &:hover {
+    transform: translateX(-4px);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 2px 4px rgba(0, 0, 0, 0.06),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  }
+
+  .alert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    margin-right: 14px;
+    flex-shrink: 0;
+
+    i {
+      font-size: 1.25rem;
+    }
+  }
+
+  .alert-content {
+    flex: 1;
+    min-width: 0;
+
+    .alert-title {
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+      opacity: 0.7;
+    }
+
+    .alert-message {
+      word-wrap: break-word;
+    }
+  }
+
+  .btn-close {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 8px;
+    opacity: 0.4;
+    transition: all 0.2s ease;
+    background-size: 10px;
+
+    &:hover {
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .alert-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: currentColor;
+    opacity: 0.25;
+    animation: progressShrink 5s linear forwards;
+    transform-origin: left;
+  }
+
+  &[data-paused="true"] .alert-progress {
+    animation-play-state: paused;
+  }
+
+  // Success variant (for notice)
+  &.alert-success {
+    border-left: 4px solid #10b981;
+
+    .alert-icon {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+      i { color: #10b981; }
+    }
+
+    .alert-title { color: #047857; }
+    .alert-progress { background: #10b981; }
+  }
+
+  // Info variant
+  &.alert-info {
+    border-left: 4px solid #3b82f6;
+
+    .alert-icon {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+      i { color: #3b82f6; }
+    }
+
+    .alert-title { color: #1d4ed8; }
+    .alert-progress { background: #3b82f6; }
+  }
+
+  // Warning variant
+  &.alert-warning {
+    border-left: 4px solid #f59e0b;
+
+    .alert-icon {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+      i { color: #f59e0b; }
+    }
+
+    .alert-title { color: #b45309; }
+    .alert-progress { background: #f59e0b; }
+  }
+
+  // Danger/Error variant (for alert)
+  &.alert-danger {
+    border-left: 4px solid #ef4444;
+
+    .alert-icon {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+      i { color: #ef4444; }
+    }
+
+    .alert-title { color: #b91c1c; }
+    .alert-progress { background: #ef4444; }
+  }
+}
+
+// Animations
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes progressShrink {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+.animate__fadeOutRight {
+  animation: fadeOutRight 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  .alert {
+    background: rgba(30, 30, 40, 0.92);
+    color: #f0f0f5;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+    .btn-close {
+      filter: invert(1);
+      &:hover { background-color: rgba(255, 255, 255, 0.1); }
+    }
+
+    &.alert-success .alert-title { color: #34d399; }
+    &.alert-info .alert-title { color: #60a5fa; }
+    &.alert-warning .alert-title { color: #fbbf24; }
+    &.alert-danger .alert-title { color: #f87171; }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 480px) {
+  .flash-container {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
+  }
+
+  .alert {
+    padding: 0.875rem 1rem;
+    padding-right: 2.5rem;
+    border-radius: 12px;
+
+    .alert-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      margin-right: 12px;
+      i { font-size: 1.125rem; }
+    }
+
+    .alert-content .alert-title { font-size: 0.6875rem; }
+  }
 }
