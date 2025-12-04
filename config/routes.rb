@@ -13,7 +13,11 @@ Rails.application.routes.draw do
   scope ":org_slug" do
     # customer routes
     devise_for :customers, skip: [:registrations]
-    resources :products, only: :index
+
+    # storefront (customer-facing)
+    scope module: :storefront do
+      resources :products, only: [:index, :show]
+    end
 
     # bo routes
     devise_for :members
