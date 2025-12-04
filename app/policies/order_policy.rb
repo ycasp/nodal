@@ -1,15 +1,18 @@
 class OrderPolicy < ApplicationPolicy
+  def index?
+    true
+  end
 
   def show?
-    user_works_for_records_organisation?
+    customer_owner? || member_of_organisation?
   end
 
   def edit?
-    user_works_for_records_organisation?
+    member_of_organisation?
   end
 
   def update?
-    user_works_for_records_organisation?
+    member_of_organisation?
   end
 
   def new?
@@ -17,27 +20,41 @@ class OrderPolicy < ApplicationPolicy
   end
 
   def create?
-    user_works_for_records_organisation?
+    member_of_organisation?
   end
 
   def destroy?
-    user_works_for_records_organisation?
+    member_of_organisation?
+  end
+
+  # Customer storefront actions
+  def place?
+    customer_owner? && record.draft?
+  end
+
+  def clear?
+    customer_owner? && record.draft?
   end
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      number_of_distinct_organisations = scope.select("organisation_id").distinct.length
-      if number_of_distinct_organisations <= 1
-        scope.all
+      if user.is_a?(Customer)
+        scope.where(customer: user)
+      elsif user.is_a?(Member)
+        scope.joins(:organisation).where(organisations: { id: user.organisation_ids })
       else
-        #redirect_to(root_path)
+        scope.none
       end
     end
   end
 
   private
 
-  def user_works_for_records_organisation?
-    return user.organisations.include?(record.organisation)
+  def member_of_organisation?
+    user.is_a?(Member) && user.organisations.include?(record.organisation)
+  end
+
+  def customer_owner?
+    user.is_a?(Customer) && record.customer == user
   end
 end

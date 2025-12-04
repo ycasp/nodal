@@ -13,10 +13,22 @@
         <li class="nav-item">
           <%= link_to "Products", products_path(org_slug: params[:org_slug]), class: "nav-link #{'active' if controller_name == 'products'}" %>
         </li>
+        <li class="nav-item">
+          <%= link_to "Orders", orders_path(org_slug: params[:org_slug]), class: "nav-link #{'active' if controller_name == 'orders'}" %>
+        </li>
       </ul>
 
       <div class="d-flex align-items-center gap-3">
         <% if current_customer %>
+          <!-- Cart Icon -->
+          <%= link_to cart_path(org_slug: params[:org_slug]), class: "btn btn-outline-primary position-relative #{'active' if controller_name == 'carts'}" do %>
+            <i class="fa-solid fa-cart-shopping"></i>
+            <% if cart_item_count > 0 %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= cart_item_count %>
+              </span>
+            <% end %>
+          <% end %>
           <span class="text-muted small">
             <i class="fa-regular fa-building me-1"></i>
             <%= current_customer.company_name %>

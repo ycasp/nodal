@@ -3,6 +3,16 @@ class Storefront::BaseController < ApplicationController
 
   before_action :authenticate_customer!
 
+  helper_method :current_cart, :cart_item_count
+
+  def current_cart
+    @current_cart ||= current_customer&.current_cart(current_organisation)
+  end
+
+  def cart_item_count
+    current_cart&.item_count || 0
+  end
+
   private
 
   def authenticate_customer!

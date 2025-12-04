@@ -1,0 +1,109 @@
+<%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
+  <i class="fa-solid fa-arrow-left me-2"></i>Back to products
+<% end %>
+
+<h1 class="mb-4">Your Cart</h1>
+
+<% if @order.order_items.empty? %>
+  <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body text-center py-5">
+      <i class="fa-solid fa-cart-shopping fa-4x text-muted mb-3"></i>
+      <h4>Your cart is empty</h4>
+      <p class="text-muted">Browse our products and add items to your cart.</p>
+      <%= link_to "Browse Products", products_path(org_slug: params[:org_slug]), class: "btn btn-primary" %>
+    </div>
+  </div>
+<% else %>
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body p-0">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4">Product</th>
+                <th class="text-center" style="width: 180px;">Quantity</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Total</th>
+                <th class="pe-4"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @order_items.each do |item| %>
+                <tr>
+                  <td class="ps-4">
+                    <div class="d-flex align-items-center">
+                      <% if item.product.photo.attached? %>
+                        <%= image_tag item.product.photo, class: "me-3", style: "width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" %>
+                      <% else %>
+                        <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 8px;">
+                          <i class="fa-solid fa-image text-muted"></i>
+                        </div>
+                      <% end %>
+                      <div>
+                        <div class="fw-medium"><%= item.product.name %></div>
+                        <small class="text-muted"><%= item.product.category&.name %></small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <%= form_with model: item, url: order_item_path(org_slug: params[:org_slug], id: item), method: :patch, local: true, class: "d-flex justify-content-center" do |f| %>
+                      <div class="input-group input-group-sm" style="width: 120px;">
+                        <%= f.number_field :quantity, min: item.product.min_quantity || 1, class: "form-control text-center" %>
+                        <button type="submit" class="btn btn-outline-secondary">
+                          <i class="fa-solid fa-sync"></i>
+                        </button>
+                      </div>
+                    <% end %>
+                  </td>
+                  <td class="text-end">
+                    <%= humanized_money_with_symbol(Money.new(item.unit_price, 'EUR')) %>
+                  </td>
+                  <td class="text-end fw-medium">
+                    <%= humanized_money_with_symbol(Money.new(item.total_price, 'EUR')) %>
+                  </td>
+                  <td class="text-end pe-4">
+                    <%= button_to order_item_path(org_slug: params[:org_slug], id: item), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Remove this item?" } do %>
+                      <i class="fa-solid fa-trash"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary" do %>
+          <i class="fa-solid fa-arrow-left me-2"></i>Continue Shopping
+        <% end %>
+        <%= button_to "Clear Cart", clear_cart_path(org_slug: params[:org_slug]), method: :delete, class: "btn btn-outline-danger", data: { turbo_confirm: "Are you sure you want to clear your cart?" } %>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Summary</h5>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Subtotal (<%= @order.item_count %> items)</span>
+            <span><%= humanized_money_with_symbol(Money.new(@order.total_amount, 'EUR')) %></span>
+          </div>
+
+          <hr>
+
+          <div class="d-flex justify-content-between mb-4">
+            <span class="fw-bold">Total</span>
+            <span class="fw-bold fs-5"><%= humanized_money_with_symbol(Money.new(@order.total_amount, 'EUR')) %></span>
+          </div>
+
+          <%= button_to place_cart_path(org_slug: params[:org_slug]), method: :post, class: "btn btn-primary w-100 btn-lg" do %>
+            <i class="fa-solid fa-check me-2"></i>Place Order
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
