@@ -32,13 +32,19 @@ class ProductPolicy < ApplicationPolicy
   private
 
   def belongs_to_organisation?
-    user.organisations.include?(record.organisation)
+    if user.is_a?(Member)
+      user.organisations.include?(record.organisation)
+    elsif user.is_a?(Customer)
+      user.organisation == record.organisation
+    else
+      false
+    end
   end
 
   class Scope < ApplicationPolicy::Scope
     def resolve
       number_of_companies = scope.select("organisation_id").distinct.length
-      if number_of_companies == 1
+      if number_of_companies <= 1
         scope.all
       else
         # raise an error

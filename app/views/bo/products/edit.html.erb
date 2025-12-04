@@ -77,20 +77,13 @@
           <h5 class="card-title mb-4">Pricing & Units</h5>
 
           <div class="row g-3">
-            <div class="col-md-4">
-              <label class="form-label">Unit Price (cents) <span class="text-danger">*</span></label>
-              <%= f.number_field :price, class: "form-control", placeholder: "2499", required: true %>
-              <small class="text-muted">Price in euros > 24.99)</small>
+            <div class="col-md-6">
+              <label class="form-label">Unit Price (€) <span class="text-danger">*</span></label>
+              <%= f.text_field :price, class: "form-control", placeholder: "24.99", required: true %>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <label class="form-label">Unit Description</label>
               <%= f.text_field :unit_description, class: "form-control", placeholder: "e.g., lb, kg, L" %>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Display Price</label>
-              <div class="form-control bg-light">
-                <%= humanized_money_with_symbol(@product.price) %>
-              </div>
             </div>
           </div>
 

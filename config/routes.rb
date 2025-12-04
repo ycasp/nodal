@@ -14,12 +14,17 @@ Rails.application.routes.draw do
     # customer routes
     devise_for :customers, skip: [:registrations],
                 controllers: { sessions: 'customers/sessions' }
-    resources :products, only: :index
+
+    # storefront (customer-facing)
+    scope module: :storefront do
+      resources :products, only: [:index, :show]
+    end
 
     # bo routes
     devise_for :members
     namespace :bo do
       get "/", to: "dashboards#dashview"
+      resources :orders
       resources :customers, only: [:index, :show, :new, :create, :edit, :update, :destroy]
       resources :products
     end

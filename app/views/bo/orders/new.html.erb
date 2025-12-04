@@ -1,0 +1,172 @@
+<% content_for :bo_main_content do%>
+
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_orders_path(org_slug: @current_organisation.slug), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
+      <% end %>
+      <div>
+        <h1 class="h3 mb-0">New Order</h1>
+        <p class="text-muted mb-0">Create a new order for a customer</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-9">
+      <%= form_with model: @order, url: bo_orders_path(org_slug: @current_organisation.slug), method: :post do |f| %>
+
+        <% if @order.errors.any? %>
+          <div class="alert alert-danger mb-4">
+            <h6 class="alert-heading">Please fix the following errors:</h6>
+            <ul class="mb-0">
+              <% @order.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Customer Selection -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Customer</h5>
+            <div class="mb-3">
+              <%= f.label :customer_id, "Select Customer", class: "form-label" %>
+              <%= f.collection_select :customer_id, @customers, :id, :company_name, { prompt: "Choose a customer..." }, { class: "form-select" } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="card mb-4" data-controller="order-items">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h5 class="card-title mb-0">Order Items</h5>
+              <button type="button" class="btn btn-outline-primary btn-sm" data-action="order-items#add">
+                <i class="fa-solid fa-plus me-1"></i> Add Item
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th style="width: 40%">Product</th>
+                    <th style="width: 15%">Quantity</th>
+                    <th style="width: 20%">Unit Price</th>
+                    <th style="width: 20%">Total</th>
+                    <th style="width: 5%"></th>
+                  </tr>
+                </thead>
+                <tbody data-order-items-target="container">
+                  <%= f.fields_for :order_items do |item_form| %>
+                    <%= render "order_items_fields", f: item_form, products: @products %>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="border-top pt-3 mt-3">
+              <div class="d-flex justify-content-end">
+                <div class="text-end">
+                  <span class="text-muted me-3">Order Total:</span>
+                  <strong class="fs-5">$<span data-order-items-target="total">0.00</span></strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <template data-order-items-target="template">
+            <tr>
+              <td>
+                <select name="order[order_items_attributes][NEW_INDEX][product_id]" class="form-select form-select-sm" data-action="change->order-items#updatePrice">
+                  <option value="">Select product...</option>
+                  <% @products.each do |product| %>
+                    <option value="<%= product.id %>" data-price="<%= product.price %>"><%= product.name %></option>
+                  <% end %>
+                </select>
+              </td>
+              <td>
+                <input type="number" name="order[order_items_attributes][NEW_INDEX][quantity]" class="form-control form-control-sm" value="1" min="1" data-quantity-field data-action="input->order-items#calculate">
+              </td>
+              <td>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text">$</span>
+                  <input type="number" name="order[order_items_attributes][NEW_INDEX][unit_price]" class="form-control form-control-sm" step="0.01" min="0" data-price-field data-action="input->order-items#calculate">
+                </div>
+              </td>
+              <td>
+                <span class="fw-medium">$<span data-line-total>0.00</span></span>
+              </td>
+              <td>
+                <button type="button" class="btn btn-sm btn-link text-danger p-0" data-action="order-items#remove">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </template>
+        </div>
+
+        <!-- Order Details -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Order Details</h5>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <%= f.label :status, class: "form-label" %>
+                <%= f.select :status, Order::STATUSES.map { |s| [s.titleize, s] }, { selected: "in_process" }, class: "form-select" %>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :payment_status, "Payment Status", class: "form-label" %>
+                <%= f.select :payment_status, Order::PAYMENT_STATUSES.map { |s| [s.titleize, s] }, { selected: "pending" }, class: "form-select" %>
+              </div>
+              <div class="col-md-4">
+                <%= f.label :receive_on, "Expected Delivery Date", class: "form-label" %>
+                <%= f.date_field :receive_on, class: "form-control", value: 3.days.from_now.to_date %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :notes, "Order Notes", class: "form-label" %>
+              <%= f.text_area :notes, class: "form-control", rows: 3, placeholder: "Add notes about this order..." %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex gap-2">
+          <%= f.submit "Create Order", class: "btn btn-primary" %>
+          <%= link_to "Cancel", bo_orders_path(org_slug: @current_organisation.slug), class: "btn btn-outline-secondary" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Right Column - Products Reference -->
+    <div class="col-lg-3">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="mb-3">
+            <i class="fa-solid fa-box me-2 text-primary"></i>Available Products
+          </h6>
+          <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+            <% @products.each do |product| %>
+              <div class="list-group-item px-0 py-2">
+                <div class="fw-medium small"><%= product.name %></div>
+                <div class="d-flex justify-content-between text-muted small">
+                  <span><%= product.sku || 'No SKU' %></span>
+                  <span>$<%= number_with_precision(product.price, precision: 2) %></span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% end %>

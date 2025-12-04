@@ -1,0 +1,112 @@
+<div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+  <div>
+    <h1 class="mb-1">Product Catalog</h1>
+    <p class="text-muted mb-0">Browse our products</p>
+  </div>
+</div>
+
+<div class="row">
+  <%# Sidebar with filters %>
+  <div class="col-lg-3 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title mb-3">Search</h6>
+        <%= form_with url: products_path(org_slug: params[:org_slug]), method: :get, local: true do %>
+          <% if params[:category].present? %>
+            <%= hidden_field_tag :category, params[:category] %>
+          <% end %>
+          <div class="input-group">
+            <%= text_field_tag :query, params[:query], class: "form-control", placeholder: "Search products..." %>
+            <button type="submit" class="btn btn-outline-secondary">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-body">
+        <h6 class="card-title mb-3">Categories</h6>
+        <div class="list-group list-group-flush">
+          <%= link_to products_path(org_slug: params[:org_slug], query: params[:query]),
+              class: "list-group-item list-group-item-action #{'active' if params[:category].blank?}" do %>
+            All Products
+          <% end %>
+          <% @categories.each do |category| %>
+            <%= link_to products_path(org_slug: params[:org_slug], category: category.id, query: params[:query]),
+                class: "list-group-item list-group-item-action #{'active' if params[:category].to_s == category.id.to_s}" do %>
+              <%= category.name %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% if params[:query].present? || params[:category].present? %>
+      <div class="mt-3">
+        <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary w-100" do %>
+          <i class="fa-solid fa-times me-1"></i>Clear filters
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Product grid %>
+  <div class="col-lg-9">
+    <% if @products.any? %>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+        <% @products.each do |product| %>
+          <div class="col">
+            <%= link_to product_path(org_slug: params[:org_slug], id: product), class: "text-decoration-none" do %>
+              <div class="card h-100 product-card">
+                <% if product.photo.attached? %>
+                  <%= image_tag product.photo, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
+                <% else %>
+                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fa-solid fa-image fa-3x text-muted"></i>
+                  </div>
+                <% end %>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="badge bg-secondary-subtle text-secondary"><%= product.category&.name %></span>
+                  </div>
+                  <h5 class="card-title text-dark"><%= product.name %></h5>
+                  <p class="card-text text-muted small"><%= truncate(product.description, length: 80) %></p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="h5 mb-0 text-primary"><%= humanized_money_with_symbol(product.price) %></span>
+                    <small class="text-muted"><%= product.unit_description %></small>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-5">
+        <i class="fa-solid fa-box-open fa-4x text-muted mb-3"></i>
+        <h4>No products found</h4>
+        <p class="text-muted">
+          <% if params[:query].present? || params[:category].present? %>
+            Try adjusting your search or filters.
+          <% else %>
+            No products are available at this time.
+          <% end %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+</style>

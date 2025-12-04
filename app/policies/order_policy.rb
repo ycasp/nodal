@@ -1,14 +1,14 @@
-class CustomerPolicy < ApplicationPolicy
+class OrderPolicy < ApplicationPolicy
 
   def show?
     user_works_for_records_organisation?
   end
 
-  def update?
+  def edit?
     user_works_for_records_organisation?
   end
 
-  def destroy?
+  def update?
     user_works_for_records_organisation?
   end
 
@@ -20,14 +20,17 @@ class CustomerPolicy < ApplicationPolicy
     user_works_for_records_organisation?
   end
 
+  def destroy?
+    user_works_for_records_organisation?
+  end
+
   class Scope < ApplicationPolicy::Scope
-    # NOTE: Be explicit about which records you allow access to!
     def resolve
       number_of_distinct_organisations = scope.select("organisation_id").distinct.length
       if number_of_distinct_organisations <= 1
         scope.all
       else
-        # 
+        #redirect_to(root_path)
       end
     end
   end

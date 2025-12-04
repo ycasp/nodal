@@ -1,0 +1,121 @@
+<% content_for :bo_main_content do%>
+
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <h1 class="h3 mb-1">Orders</h1>
+      <p class="text-muted mb-0">Track and manage all customer orders</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary">
+        <i class="fa-solid fa-upload me-1"></i> Import
+      </button>
+      <button class="btn btn-outline-secondary">
+        <i class="fa-solid fa-download me-1"></i> Export
+      </button>
+      <%= link_to new_bo_order_path(org_slug: @current_organisation.slug), class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus me-1"></i> Add New
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <%= form_with url: bo_orders_path(org_slug: @current_organisation.slug), method: :get, class: "d-flex align-items-center" do %>
+        <div class="input-group flex-grow-1 me-3">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="fa-solid fa-magnifying-glass text-muted"></i>
+          </span>
+          <%= text_field_tag :search, params[:search], class: "form-control border-start-0", placeholder: "Search orders..." %>
+        </div>
+        <button type="submit" class="btn btn-outline-secondary me-2">
+          <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
+        <% if params[:search].present? %>
+          <%= link_to "Clear", bo_orders_path(org_slug: @current_organisation.slug), class: "btn btn-outline-secondary" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+
+  <!-- Orders Table -->
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="text-muted fw-normal">Order ID</th>
+            <th class="text-muted fw-normal">Client</th>
+            <th class="text-muted fw-normal">Date</th>
+            <th class="text-muted fw-normal">Items</th>
+            <th class="text-muted fw-normal">Total</th>
+            <th class="text-muted fw-normal">Status</th>
+            <th class="text-muted fw-normal">Payment</th>
+            <th class="text-muted fw-normal text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @orders.each do |order| %>
+            <tr>
+              <td class="fw-medium"><%= order.order_number %></td>
+              <td>
+                <div><%= order.customer.company_name %></div>
+                <small class="text-muted"><%= order.customer.contact_name %></small>
+              </td>
+              <td><%= order.placed_at&.strftime("%m/%d/%Y") || order.created_at.strftime("%m/%d/%Y") %></td>
+              <td><%= order.order_items.count %></td>
+              <td>$<%= number_with_precision(order.total_amount, precision: 2, delimiter: ',') %></td>
+              <td>
+                <% status_class = case order.status
+                   when 'completed' then 'text-success'
+                   when 'in_process', 'processed' then 'text-primary'
+                   else 'text-warning'
+                   end %>
+                <span class="badge bg-light <%= status_class %>">
+                  <%= order.status.titleize %>
+                </span>
+              </td>
+              <td>
+                <% payment_class = case order.payment_status
+                   when 'paid' then 'text-success'
+                   when 'pending' then 'text-warning'
+                   when 'failed' then 'text-danger'
+                   when 'refunded' then 'text-info'
+                   else 'text-muted'
+                   end %>
+                <span class="<%= payment_class %>">
+                  <%= order.payment_status.titleize %>
+                </span>
+              </td>
+              <td class="text-end">
+                <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
+                  <i class="fa-solid fa-eye"></i>
+                <% end %>
+                <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+                <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: "Are you sure you want to delete order #{order.order_number}?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+
+          <% if @orders.empty? %>
+            <tr>
+              <td colspan="8" class="text-center py-4 text-muted">
+                No orders found
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<% end %>
