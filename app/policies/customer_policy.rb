@@ -24,10 +24,10 @@ class CustomerPolicy < ApplicationPolicy
     # NOTE: Be explicit about which records you allow access to!
     def resolve
       number_of_distinct_organisations = scope.select("organisation_id").distinct.length
-      if number_of_distinct_organisations == 1
+      if number_of_distinct_organisations <= 1
         scope.all
       else
-        redirect_to(root_path)
+        # 
       end
     end
   end
