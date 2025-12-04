@@ -43,3 +43,7 @@
 
 # debugging logs
 .byebug_history
+
+# .idae folder
+/.idea
+.idea
