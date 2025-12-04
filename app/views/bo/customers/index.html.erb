@@ -1,0 +1,96 @@
+<% content_for :bo_main_content do %>
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <h1>Customers</h1>
+    <p class="text-muted">Manage your customer database and pricing tiers</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="#" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-upload"></i> Import
+    </a>
+    <a href="#" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-download"></i> Export
+    </a>
+    <%= link_to new_bo_customer_path(params[:org_slug]), class: "btn btn-primary" do %>
+      <i class="fa-solid fa-plus"></i> Add New
+    <% end %>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: bo_customers_path(params[:org_slug]), method: :get, class: "d-flex align-items-center" do %>
+      <div class="input-group flex-grow-1 me-3">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa-solid fa-magnifying-glass text-muted"></i>
+        </span>
+        <%= text_field_tag :query,
+              params[:query],
+              class: "form-control border-start-0",
+              placeholder: "Search customers..."
+        %>
+      </div>
+      <button type="submit" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+      </button>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Customer</th>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th>Total Spent</th>
+        <th>Orders</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @customers.each do |customer| %>
+        <tr>
+          <td>
+            <%= link_to bo_customer_path(params[:org_slug], customer), class: "text-decoration-none text-dark" do %>
+              <div class="fw-semibold"><%= customer.contact_name %></div>
+              <small class="text-muted">C<%= customer.id.to_s.rjust(3, '0') %></small>
+            <% end %>
+          </td>
+          <td><%= customer.company_name %></td>
+          <td>
+            <div><%= customer.email %></div>
+            <small class="text-muted"><%= customer.contact_phone %></small>
+          </td>
+          <td>
+            <% if customer.active? %>
+              <span class="badge rounded-pill bg-success-subtle text-success">Active</span>
+            <% else %>
+              <span class="badge rounded-pill bg-secondary-subtle text-secondary">Inactive</span>
+            <% end %>
+          </td>
+          <td>$0</td>
+          <td>0</td>
+          <td>
+            <div class="d-flex gap-2">
+              <%= link_to bo_customer_path(params[:org_slug], customer), class: "text-muted", title: "View" do %>
+                <i class="fa-solid fa-eye"></i>
+              <% end %>
+              <%= link_to edit_bo_customer_path(params[:org_slug], customer), class: "text-muted", title: "Edit" do %>
+                <i class="fa-solid fa-pen-to-square"></i>
+              <% end %>
+              <%= link_to bo_customer_path(params[:org_slug], customer), class: "text-danger", title: "Delete", data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } do %>
+                <i class="fa-solid fa-trash"></i>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% end %>

@@ -1,0 +1,260 @@
+<% content_for :bo_main_content do %>
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div class="d-flex align-items-center gap-3">
+    <%= link_to bo_products_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+      <i class="fa-solid fa-arrow-left fa-lg"></i>
+    <% end %>
+    <div>
+      <h1 class="mb-0"><%= @product.name %></h1>
+      <span class="text-muted">SKU: <%= @product.sku %></span>
+    </div>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">Organic</span>
+    <span class="badge rounded-pill bg-info-subtle text-info border border-info-subtle">Fair Trade</span>
+    <span class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle">Best Seller</span>
+    <%= link_to edit_bo_product_path(params[:org_slug], @product), class: "btn btn-dark ms-2" do %>
+      <i class="fa-solid fa-pen-to-square me-1"></i> Edit Product
+    <% end %>
+    <%= link_to bo_product_path(params[:org_slug], @product),
+        class: "btn btn-outline-danger ms-2",
+        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete '#{@product.name}'? This action cannot be undone." } do %>
+      <i class="fa-solid fa-trash me-1"></i> Delete
+    <% end %>
+  </div>
+</div>
+
+<%# Stats Cards Row %>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body d-flex justify-content-between align-items-start">
+        <div>
+          <small class="text-muted d-block">Current Stock</small>
+          <h2 class="mb-0"><%= rand(200..500) %></h2>
+          <span class="text-muted"><%= @product.unit_description || 'units' %></span>
+        </div>
+        <div class="text-primary">
+          <i class="fa-solid fa-cube fa-2x opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body d-flex justify-content-between align-items-start">
+        <div>
+          <small class="text-muted d-block">Base Price</small>
+          <h2 class="mb-0"><%= humanized_money_with_symbol(@product.price) %></h2>
+          <small class="text-success"><i class="fa-solid fa-arrow-up"></i> 66.6%</small>
+          <small class="text-muted">Margin</small>
+        </div>
+        <div class="text-success">
+          <i class="fa-solid fa-dollar-sign fa-2x opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body d-flex justify-content-between align-items-start">
+        <div>
+          <small class="text-muted d-block">Total Sold</small>
+          <h2 class="mb-0"><%= number_with_delimiter(rand(500..2000)) %></h2>
+          <span class="text-muted">All-time units</span>
+        </div>
+        <div class="text-info">
+          <i class="fa-solid fa-chart-simple fa-2x opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-body d-flex justify-content-between align-items-start">
+        <div>
+          <small class="text-muted d-block">Total Revenue</small>
+          <h2 class="mb-0">$<%= number_with_delimiter(rand(20000..50000)) %></h2>
+          <small class="text-success"><i class="fa-solid fa-arrow-trend-up"></i></small>
+          <small class="text-muted">Lifetime revenue</small>
+        </div>
+        <div class="text-primary">
+          <i class="fa-solid fa-chart-line fa-2x opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <%# Left Column %>
+  <div class="col-lg-8">
+    <%# Product Information Card %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Product Information</h5>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Description</small>
+          <p class="mb-0"><%= @product.description %></p>
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <small class="text-muted d-block">Category</small>
+            <strong><%= @product.category&.name %></strong>
+          </div>
+          <div class="col-md-6 mb-3">
+            <small class="text-muted d-block">Unit of Measure</small>
+            <strong><%= @product.unit_description || '-' %></strong>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <small class="text-muted d-block">Shelf Life</small>
+            <strong>12 months</strong>
+          </div>
+          <div class="col-md-6 mb-3">
+            <small class="text-muted d-block">Reorder Point</small>
+            <strong>100 <%= @product.unit_description || 'units' %></strong>
+          </div>
+        </div>
+
+        <hr>
+
+        <div>
+          <small class="text-muted d-block">Storage Conditions</small>
+          <strong>Cool, dry place away from direct sunlight</strong>
+        </div>
+      </div>
+    </div>
+
+    <%# Sales History Card %>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Sales History</h5>
+        <p class="text-muted mb-4">Last 6 months performance</p>
+
+        <div class="d-flex align-items-end justify-content-between" style="height: 200px;">
+          <% months = %w[Jun Jul Aug Sep Oct Nov] %>
+          <% values = [170, 210, 195, 230, 200, 215] %>
+          <% max_val = values.max %>
+          <% months.each_with_index do |month, i| %>
+            <div class="d-flex flex-column align-items-center flex-grow-1">
+              <div class="bg-primary rounded" style="width: 40px; height: <%= (values[i].to_f / max_val * 160).to_i %>px;"></div>
+              <small class="text-muted mt-2"><%= month %></small>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="d-flex justify-content-start mt-3 text-muted small">
+          <div class="me-4">0</div>
+          <div class="me-4">60</div>
+          <div class="me-4">120</div>
+          <div class="me-4">180</div>
+          <div>240</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# Right Column %>
+  <div class="col-lg-4">
+    <%# Supplier Information Card %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Supplier Information</h5>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Supplier Name</small>
+          <strong>Blue Mountain Imports</strong>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Contact</small>
+          <strong>supply@bluemountain.com</strong>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Lead Time</small>
+          <strong>7-10 days</strong>
+        </div>
+
+        <div>
+          <small class="text-muted d-block">Cost Price</small>
+          <strong><%= humanized_money_with_symbol(@product.price * 0.6) %></strong>
+        </div>
+      </div>
+    </div>
+
+    <%# Pricing Tiers Card %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Pricing Tiers</h5>
+        <p class="text-muted mb-3">Client-specific pricing</p>
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div>
+            <strong>Standard</strong>
+            <small class="text-muted d-block">0% discount</small>
+          </div>
+          <strong><%= humanized_money_with_symbol(@product.price) %></strong>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div>
+            <strong>Premium</strong>
+            <small class="text-muted d-block">10% discount</small>
+          </div>
+          <strong><%= humanized_money_with_symbol(@product.price * 0.9) %></strong>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <strong>Enterprise</strong>
+            <small class="text-muted d-block">15% discount</small>
+          </div>
+          <strong><%=humanized_money_with_symbol(@product.price * 0.85) %></strong>
+        </div>
+      </div>
+    </div>
+
+    <%# Top Clients Card %>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Top Clients</h5>
+        <p class="text-muted mb-3">Biggest buyers</p>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <strong>Green Bowl Kitchen</strong>
+            <small class="text-muted d-block">145 units</small>
+          </div>
+          <strong>$3,623.55</strong>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <strong>Urban Eatery</strong>
+            <small class="text-muted d-block">98 units</small>
+          </div>
+          <strong>$2,449.02</strong>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <strong>Fresh & Co</strong>
+            <small class="text-muted d-block">76 units</small>
+          </div>
+          <strong>$1,899.24</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% end %>

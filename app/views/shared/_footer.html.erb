@@ -1,0 +1,77 @@
+<!-- Footer Section -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand Column -->
+      <div class="footer-brand">
+        <%= link_to "nodal", root_path, class: "footer-logo" %>
+        <p class="footer-tagline">The integration platform that scales with your business.</p>
+        <!-- Social Links -->
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter" data-placeholder="twitter-icon">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" aria-label="LinkedIn" data-placeholder="linkedin-icon">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="#" aria-label="GitHub" data-placeholder="github-icon">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Product Column -->
+      <div class="footer-column">
+        <h4>Product</h4>
+        <ul>
+          <li><%= link_to "Secure Integrations", "#" %></li>
+          <li><%= link_to "Observability", "#" %></li>
+          <li><%= link_to "Orchestration", "#" %></li>
+          <li><%= link_to "Pricing", "#" %></li>
+        </ul>
+      </div>
+
+      <!-- Solutions Column -->
+      <div class="footer-column">
+        <h4>Solutions</h4>
+        <ul>
+          <li><%= link_to "Finance & Payments", "#" %></li>
+          <li><%= link_to "Supply Chain", "#" %></li>
+          <li><%= link_to "Enterprise", "#" %></li>
+          <li><%= link_to "Startups", "#" %></li>
+        </ul>
+      </div>
+
+      <!-- Resources Column -->
+      <div class="footer-column">
+        <h4>Resources</h4>
+        <ul>
+          <li><%= link_to "Documentation", "#" %></li>
+          <li><%= link_to "API Reference", "#" %></li>
+          <li><%= link_to "Blog", "#" %></li>
+          <li><%= link_to "Status", "#" %></li>
+        </ul>
+      </div>
+
+      <!-- Company Column -->
+      <div class="footer-column">
+        <h4>Company</h4>
+        <ul>
+          <li><%= link_to "About", "#" %></li>
+          <li><%= link_to "Careers", "#" %></li>
+          <li><%= link_to "Contact", "#" %></li>
+          <li><%= link_to "Security", "#" %></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>&copy; <%= Date.current.year %> Nodal. All rights reserved.</p>
+      <div class="footer-legal">
+        <%= link_to "Privacy Policy", "#" %>
+        <%= link_to "Terms of Service", "#" %>
+      </div>
+    </div>
+  </div>
+</footer>

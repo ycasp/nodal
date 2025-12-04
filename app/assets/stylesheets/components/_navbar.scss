@@ -1,12 +1,142 @@
-.navbar-lewagon {
+// Variables
+$navbar-height: 56px;
+$teal: #3ee8c8;
+$teal-dark: #14b8a6;
+$breakpoint-mobile: 768px;
+
+
+.navbar {
+  width: 100%;
+  height: $navbar-height;
+  background: linear-gradient(to right, #5a6a7a, #7a8a9a, #9aabbb);
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  background: white;
-}
+  padding: 0 48px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
-}
+  .logo {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: $teal;
+    text-decoration: none;
+    letter-spacing: 0.5px;
 
-.navbar-lewagon .navbar-brand img {
-  width: 40px;
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+
+    a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 400;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+      padding: 16px 0;
+
+      &:hover {
+        color: $teal;
+      }
+    }
+  }
+
+  .dropdown-wrapper {
+    position: relative;
+
+    > a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 400;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+      padding: 16px 0;
+      display: block;
+
+      &:hover {
+        color: $teal;
+      }
+    }
+
+    &:hover .sidebar {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  .menu-toggle {
+    display: none;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+
+    span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: #ffffff;
+      border-radius: 1px;
+      transition: all 0.3s ease;
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0 24px;
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: $navbar-height;
+      left: 0;
+      width: 100%;
+      flex-direction: column;
+      background: linear-gradient(to bottom, #6a7a8a, #5a6a7a);
+      gap: 0;
+
+      a {
+        padding: 16px 24px;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.05);
+        }
+      }
+    }
+
+    .menu-toggle {
+      display: flex;
+    }
+
+    &.active {
+      .nav-links {
+        display: flex;
+      }
+
+      .menu-toggle span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .menu-toggle span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .menu-toggle span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+    }
+  }
+
+
 }
