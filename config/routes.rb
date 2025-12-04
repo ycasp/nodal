@@ -12,7 +12,8 @@ Rails.application.routes.draw do
   # routes for each organisation
   scope ":org_slug" do
     # customer routes
-    devise_for :customers, skip: [:registrations]
+    devise_for :customers, skip: [:registrations],
+                controllers: { sessions: 'customers/sessions' }
     resources :products, only: :index
 
     # bo routes

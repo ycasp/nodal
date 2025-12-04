@@ -3,6 +3,9 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :current_organisation
+
+  before_action :inject_into_slug
+
   include Pundit::Authorization
 
   # Pundit: allow-list approach
@@ -64,5 +67,11 @@ class ApplicationController < ActionController::Base
 
     flash[:alert]
     redirect_to(root_path)
+  end
+
+  def inject_into_slug
+    if params[:cusmter]
+      params[:cusmter][:org_slug] = params[:org_slug]
+    end
   end
 end

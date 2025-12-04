@@ -4,8 +4,8 @@ class Customer < ApplicationRecord
   # Note: :registerable is excluded - Members create customer accounts
   # Note: :validatable is excluded - email uniqueness is scoped to organisation
   devise :database_authenticatable,
-         :recoverable, :rememberable,
-         authentication_keys: [:email, :organisation]
+         :recoverable, :rememberable, #validatable,
+         authentication_keys: [:email, :organisation_id]
 
   belongs_to :organisation
   has_many :orders, dependent: :destroy
@@ -20,7 +20,7 @@ class Customer < ApplicationRecord
   validates :email, presence: true, if: :email_required?
   validates :email, uniqueness: { scope: :organisation_id, case_sensitive: true, allow_blank: true },
                     if: :will_save_change_to_email?
-  validates :email, format: { with: Devise.email_regexp, allow_blank: true },
+  validates :email, format: {with: Devise.email_regexp, allow_blank: true },
                     if: :will_save_change_to_email?
 
   # Password validations (from Devise::Models::Validatable)
@@ -28,8 +28,10 @@ class Customer < ApplicationRecord
   validates :password, confirmation: true, if: :password_required?
   validates :password, length: { within: Devise.password_length, allow_blank: true }
 
-  def self.find_for_authentication(warden_conditions)
-    where(organisation: warden_conditions[:organisation], email: warden_conditions[:email]).first
+  def self.find_for_database_authentication(warden_conditions)
+     raise
+     org = Organisation.find_by(slug: params[:org_slug])
+     where(organisation: org, email: warden_conditions[:email]).first
   end
 
   private
