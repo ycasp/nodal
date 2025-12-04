@@ -1,42 +1,61 @@
-<aside class="bo-sidebar">
+<aside class="bo-sidebar" data-controller="sidebar">
+  <!-- Logo/Brand -->
+  <div class="bo-sidebar-header">
+    <%= link_to bo_path, class: "bo-sidebar-brand" do %>
+      <span class="brand-icon">N</span>
+      <span class="brand-text">nodal</span>
+    <% end %>
+    <button class="sidebar-toggle" data-action="click->sidebar#toggle" aria-label="Toggle sidebar">
+      <i class="fa-solid fa-angles-left"></i>
+    </button>
+  </div>
+
+  <!-- Main Navigation -->
   <ul class="bo-sidebar-nav">
-    <li class="bo-sidebar-item active">
+    <li class="bo-sidebar-item <%= 'active' if current_page?(bo_path) %>" data-tooltip="Dashboard">
       <%= link_to bo_path do %>
-        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-grid-2"></i>
         <span>Dashboard</span>
       <% end %>
     </li>
-    <li class="bo-sidebar-item active">
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'customers' %>" data-tooltip="Customers">
       <%= link_to bo_customers_path do %>
-        <i class="fa-solid fa-house"></i>
-        <span>Customer</span>
+        <i class="fa-solid fa-users"></i>
+        <span>Customers</span>
       <% end %>
     </li>
-    <li class="bo-sidebar-item active">
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'products' %>" data-tooltip="Products">
       <%= link_to bo_products_path do %>
-        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-box"></i>
         <span>Products</span>
       <% end %>
     </li>
-    <li class="bo-sidebar-item active">
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'orders' %>" data-tooltip="Orders">
       <%= link_to bo_orders_path do %>
-        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-file-invoice"></i>
         <span>Orders</span>
       <% end %>
     </li>
   </ul>
 
+  <!-- Bottom Navigation -->
   <ul class="bo-sidebar-nav-bottom">
-    <li class="bo-sidebar-item">
+    <li class="bo-sidebar-item" data-tooltip="Profile">
       <%= link_to "#" do %>
-        <i class="fa-solid fa-user"></i>
+        <i class="fa-solid fa-circle-user"></i>
         <span>Profile</span>
       <% end %>
     </li>
-    <li class="bo-sidebar-item">
+    <li class="bo-sidebar-item" data-tooltip="Settings">
       <%= link_to "#" do %>
         <i class="fa-solid fa-gear"></i>
         <span>Settings</span>
+      <% end %>
+    </li>
+    <li class="bo-sidebar-item" data-tooltip="Log out">
+      <%= link_to destroy_member_session_path, data: { turbo_method: :delete } do %>
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Log out</span>
       <% end %>
     </li>
   </ul>
