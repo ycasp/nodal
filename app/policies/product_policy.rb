@@ -38,7 +38,7 @@ class ProductPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
       number_of_companies = scope.select("organisation_id").distinct.length
-      if number_of_companies == 1
+      if number_of_companies <= 1
         scope.all
       else
         # raise an error

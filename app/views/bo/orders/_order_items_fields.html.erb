@@ -1,0 +1,26 @@
+<tr data-new-record="<%= f.object.new_record? %>">
+  <td>
+    <%= f.select :product_id,
+        options_for_select(products.map { |p| [p.name, p.id, { 'data-price': p.unit_price }] }, f.object.product_id),
+        { prompt: "Select product..." },
+        { class: "form-select form-select-sm", data: { action: "change->order-items#updatePrice" } } %>
+  </td>
+  <td>
+    <%= f.number_field :quantity, class: "form-control form-control-sm", min: 1, value: f.object.quantity || 1, data: { quantity_field: true, action: "input->order-items#calculate" } %>
+  </td>
+  <td>
+    <div class="input-group input-group-sm">
+      <span class="input-group-text">$</span>
+      <%= f.number_field :unit_price, class: "form-control form-control-sm", step: 0.01, min: 0, data: { price_field: true, action: "input->order-items#calculate" } %>
+    </div>
+  </td>
+  <td>
+    <span class="fw-medium">$<span data-line-total><%= number_with_precision((f.object.quantity || 0) * (f.object.unit_price || 0), precision: 2) %></span></span>
+  </td>
+  <td>
+    <%= f.hidden_field :_destroy, value: "0" %>
+    <button type="button" class="btn btn-sm btn-link text-danger p-0" data-action="order-items#remove">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </td>
+</tr>

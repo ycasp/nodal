@@ -9,6 +9,8 @@
 #   end
 require "open-uri"
 
+OrderItem.destroy_all
+Order.destroy_all
 Product.destroy_all
 Category.destroy_all
 Member.destroy_all
@@ -201,7 +203,7 @@ end
 
 puts "Created #{Product.count} products"
 
-Customer.create!(
+customer1 = Customer.create!(
   organisation: comp,
   company_name: "Hans' Bakery",
   contact_name: "Hans Hansensen",

@@ -1,0 +1,312 @@
+<% content_for :bo_main_content do%>
+
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_orders_path(org_slug: @current_organisation.slug), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
+      <% end %>
+      <div>
+        <h1 class="h3 mb-0">Order</h1>
+        <div class="text-muted">
+          <span class="fw-bold text-dark"><%= @order.order_number %></span>
+          <span class="ms-2"><%= @order.placed_at&.strftime("%B %d, %Y") || @order.created_at.strftime("%B %d, %Y") %></span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+      <% status_class = case @order.status
+         when 'completed' then 'text-success'
+         when 'in_process', 'processed' then 'text-primary'
+         else 'text-warning'
+         end %>
+      <span class="badge bg-light <%= status_class %> px-3 py-2">
+        <%= @order.status.titleize %>
+      </span>
+      <% payment_class = case @order.payment_status
+         when 'paid' then 'text-success'
+         when 'pending' then 'text-warning'
+         when 'failed' then 'text-danger'
+         else 'text-info'
+         end %>
+      <span class="<%= payment_class %>">
+        Payment: <%= @order.payment_status.titleize %>
+      </span>
+      <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "btn btn-sm btn-outline-secondary" do %>
+        <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+      <% end %>
+      <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Are you sure you want to delete order #{@order.order_number}?" } do %>
+        <i class="fa-solid fa-trash me-1"></i> Delete
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Left Column -->
+    <div class="col-lg-8">
+      <!-- Order Items -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Order Items</h5>
+          <p class="text-muted small mb-3"><%= @order.order_items.count %> items in this order</p>
+
+          <div class="table-responsive">
+            <table class="table table-borderless align-middle mb-0">
+              <thead class="border-bottom">
+                <tr>
+                  <th class="text-muted fw-normal">Product</th>
+                  <th class="text-muted fw-normal">SKU</th>
+                  <th class="text-muted fw-normal text-center">Qty</th>
+                  <th class="text-muted fw-normal text-end">Price</th>
+                  <th class="text-muted fw-normal text-end">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @order.order_items.includes(:product).each do |item| %>
+                  <tr>
+                    <td><%= item.product.name %></td>
+                    <td class="text-muted"><%= item.product.sku || '-' %></td>
+                    <td class="text-center"><%= item.quantity %> <%= item.product.min_quantity_type %></td>
+                    <td class="text-end">$<%= number_with_precision(item.unit_price, precision: 2) %></td>
+                    <td class="text-end">$<%= number_with_precision(item.total_price, precision: 2) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="border-top pt-3 mt-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Subtotal</span>
+              <span>$<%= number_with_precision(@order.total_amount, precision: 2) %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Tax (8%)</span>
+              <span>$<%= number_with_precision(@order.total_amount * 0.08, precision: 2) %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Shipping</span>
+              <span>$15.00</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-2">
+              <span>Total</span>
+              <span>$<%= number_with_precision(@order.total_amount * 1.08 + 15, precision: 2) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Timeline -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Order Timeline</h5>
+          <p class="text-muted mb-4">Track your order progress</p>
+
+          <!-- Order Placed -->
+          <div class="d-flex align-items-start mb-4">
+            <div class="me-3 mt-1">
+              <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #198754;"></span>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-medium text-success">Order Placed</div>
+                  <div class="text-muted small">Order received and confirmed</div>
+                </div>
+                <small class="text-muted"><%= @order.placed_at&.strftime("%Y-%m-%d %H:%M") || @order.created_at.strftime("%Y-%m-%d %H:%M") %></small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Confirmed -->
+          <div class="d-flex align-items-start mb-4">
+            <div class="me-3 mt-1">
+              <% if @order.payment_status == 'paid' %>
+                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #198754;"></span>
+              <% else %>
+                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #adb5bd;"></span>
+              <% end %>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-medium <%= @order.payment_status == 'paid' ? 'text-success' : 'text-muted' %>">Payment Confirmed</div>
+                  <div class="text-muted small">Payment processed successfully</div>
+                </div>
+                <small class="text-muted">
+                  <% if @order.payment_status == 'paid' %>
+                    <%= (@order.placed_at || @order.created_at).strftime("%Y-%m-%d %H:%M") %>
+                  <% else %>
+                    Pending
+                  <% end %>
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Processing -->
+          <div class="d-flex align-items-start mb-4">
+            <div class="me-3 mt-1">
+              <% if %w[in_process processed completed].include?(@order.status) %>
+                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #0d6efd;"></span>
+              <% else %>
+                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #adb5bd;"></span>
+              <% end %>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-medium <%= %w[in_process processed completed].include?(@order.status) ? 'text-primary' : 'text-muted' %>">Processing</div>
+                  <div class="text-muted small">Order is being prepared</div>
+                </div>
+                <small class="text-muted">
+                  <% if %w[in_process processed completed].include?(@order.status) %>
+                    <%= @order.updated_at.strftime("%Y-%m-%d %H:%M") %>
+                  <% else %>
+                    Pending
+                  <% end %>
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipped -->
+          <div class="d-flex align-items-start mb-4">
+            <div class="me-3 mt-1">
+              <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #adb5bd;"></span>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-medium text-muted">Shipped</div>
+                  <div class="text-muted small">Order dispatched for delivery</div>
+                </div>
+                <small class="text-muted">Pending</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivered -->
+          <div class="d-flex align-items-start">
+            <div class="me-3 mt-1">
+              <% if @order.status == 'completed' %>
+                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #198754;"></span>
+              <% else %>
+                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #adb5bd;"></span>
+              <% end %>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-medium <%= @order.status == 'completed' ? 'text-success' : 'text-muted' %>">Delivered</div>
+                  <div class="text-muted small">Order delivered to customer</div>
+                </div>
+                <small class="text-muted">
+                  <% if @order.status == 'completed' %>
+                    <%= @order.receive_on&.strftime("%Y-%m-%d") || 'Completed' %>
+                  <% else %>
+                    Pending
+                  <% end %>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Notes -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Notes</h5>
+          <p class="text-muted mb-0"><%= @order.notes.present? ? @order.notes : 'No notes for this order.' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-4">
+      <!-- Client Information -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-user me-2"></i>Client Information
+          </h6>
+
+          <div class="mb-3">
+            <small class="text-muted">Client Name</small>
+            <div><%= @order.customer.contact_name %></div>
+          </div>
+
+          <div class="mb-3">
+            <small class="text-muted">Company</small>
+            <div><%= @order.customer.company_name %></div>
+          </div>
+
+          <div class="mb-2">
+            <i class="fa-solid fa-envelope text-muted me-2"></i>
+            <span><%= @order.customer.email %></span>
+          </div>
+
+          <% if @order.customer.contact_phone.present? %>
+            <div class="mb-2">
+              <i class="fa-solid fa-phone text-muted me-2"></i>
+              <span><%= @order.customer.contact_phone %></span>
+            </div>
+          <% end %>
+
+          <div class="d-grid mt-3">
+            <button class="btn btn-outline-secondary btn-sm">View Client Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Details -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-credit-card me-2"></i>Payment Details
+          </h6>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Payment Method</span>
+            <span>Credit Card</span>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Card</span>
+            <span>•••• 4242</span>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Status</span>
+            <% payment_badge_class = case @order.payment_status
+               when 'paid' then 'text-success'
+               when 'pending' then 'text-warning'
+               when 'failed' then 'text-danger'
+               else 'text-info'
+               end %>
+            <span class="<%= payment_badge_class %>"><%= @order.payment_status.titleize %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Insight -->
+      <div class="card bg-light border-0">
+        <div class="card-body">
+          <div class="d-flex align-items-start">
+            <div class="bg-primary rounded-circle p-2 me-3">
+              <i class="fa-solid fa-robot text-white"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">AI Insight</h6>
+              <p class="text-muted small mb-0">This client typically reorders every 2 weeks. Consider sending a follow-up in 10 days.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% end %>
