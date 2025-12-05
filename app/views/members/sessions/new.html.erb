@@ -1,0 +1,33 @@
+<h2 class="auth-title">Welcome back</h2>
+<p class="auth-subtitle">Sign in to your account</p>
+
+<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="auth-form">
+    <%= f.input :email,
+                required: false,
+                autofocus: true,
+                placeholder: "Email address",
+                label: false,
+                input_html: { autocomplete: "email", class: "auth-input" } %>
+    <%= f.input :password,
+                required: false,
+                placeholder: "Password",
+                label: false,
+                input_html: { autocomplete: "current-password", class: "auth-input" } %>
+
+    <div class="auth-options">
+      <% if devise_mapping.rememberable? %>
+        <%= f.input :remember_me, as: :boolean, wrapper: false, label: "Remember me" %>
+      <% end %>
+      <%= link_to "Forgot password?", new_password_path(resource_name), class: "auth-forgot-link" %>
+    </div>
+
+    <div class="auth-actions">
+      <%= f.button :submit, "Sign in", class: "auth-submit-btn" %>
+    </div>
+  </div>
+<% end %>
+
+<div class="auth-footer">
+  <p>Don't have an account? <%= link_to "Sign up", new_registration_path(resource_name), class: "auth-link" %></p>
+</div>

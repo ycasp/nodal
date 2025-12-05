@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  layout :layout_by_resource
   before_action :current_organisation
   include Pundit::Authorization
 
@@ -64,5 +65,13 @@ class ApplicationController < ActionController::Base
 
     flash[:alert]
     redirect_to(root_path)
+  end
+
+  def layout_by_resource
+    if devise_controller?
+      "auth"
+    else
+      "application"
+    end
   end
 end

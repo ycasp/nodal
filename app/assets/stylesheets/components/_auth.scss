@@ -1,0 +1,340 @@
+// Auth Pages Styles
+// Video background with centered login card
+
+// Variables - Shopify Style (consistent with _colors.scss)
+$teal: #008060;              // Shopify green
+$teal-light: #5cb88e;
+$teal-dark: #004c3f;
+$dark: #1e293b;
+
+// ========================================
+// AUTH PAGE LAYOUT
+// ========================================
+.auth-page {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $dark;
+}
+
+// ========================================
+// VIDEO BACKGROUND
+// ========================================
+.auth-video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.auth-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+.auth-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.85) 0%,
+    rgba(30, 41, 59, 0.75) 50%,
+    rgba(51, 65, 85, 0.80) 100%
+  );
+  z-index: 1;
+}
+
+// ========================================
+// AUTH CONTAINER
+// ========================================
+.auth-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 48px 40px;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+
+  @media (max-width: 480px) {
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+}
+
+// ========================================
+// AUTH LOGO
+// ========================================
+.auth-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.auth-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+
+  .brand-icon {
+    width: 48px;
+    height: 48px;
+    background: $teal;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $dark;
+    font-weight: 800;
+    font-size: 24px;
+  }
+
+  .brand-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $dark;
+    letter-spacing: -0.5px;
+  }
+}
+
+// ========================================
+// AUTH CONTENT
+// ========================================
+.auth-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $dark;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+// ========================================
+// AUTH FORM
+// ========================================
+.auth-form {
+  .form-group,
+  .input {
+    margin-bottom: 20px;
+  }
+
+  .auth-input,
+  .form-control,
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
+    color: $dark;
+    transition: all 0.2s ease;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $teal;
+      box-shadow: 0 0 0 4px rgba(62, 232, 200, 0.15);
+    }
+  }
+
+  .string,
+  .password,
+  .email {
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      background: #ffffff;
+      color: $dark;
+      transition: all 0.2s ease;
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $teal;
+        box-shadow: 0 0 0 4px rgba(62, 232, 200, 0.15);
+      }
+    }
+  }
+}
+
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  font-size: 0.875rem;
+
+  label {
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: $teal;
+    }
+  }
+}
+
+.auth-forgot-link {
+  color: $teal-dark;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    color: $teal;
+    text-decoration: underline;
+  }
+}
+
+// ========================================
+// AUTH BUTTON
+// ========================================
+.auth-actions {
+  margin-top: 8px;
+}
+
+.auth-submit-btn,
+.auth-actions button,
+.auth-actions input[type="submit"] {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: $teal;
+  color: $dark;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: $teal-dark;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ========================================
+// AUTH FOOTER
+// ========================================
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+
+  p {
+    color: #64748b;
+    font-size: 0.9375rem;
+    margin: 0;
+  }
+}
+
+.auth-link {
+  color: $teal-dark;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    color: $teal;
+    text-decoration: underline;
+  }
+}
+
+// ========================================
+// RESPONSIVE
+// ========================================
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 16px;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
+
+  .auth-brand {
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
+
+    .brand-text {
+      font-size: 1.5rem;
+    }
+  }
+
+  .video-container {
+    display: none;
+  }
+
+  .auth-video-overlay {
+    background: linear-gradient(135deg, $dark 0%, #334155 100%);
+  }
+}

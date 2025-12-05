@@ -1,11 +1,12 @@
 // Back Office Sidebar Styles
-// Variables (consistent with homepage)
+// Variables - Shopify green style
 $bo-sidebar-width: 220px;
 $bo-sidebar-bg: #1e293b;
-$teal: #3ee8c8;
-$teal-dark: #14b8a6;
+$teal: #008060;           // Shopify green
+$teal-light: #5cb88e;
+$teal-dark: #004c3f;
 $text-muted: #94a3b8;
-$navbar-height: 56px;
+$navbar-height: 64px;
 
 .bo-sidebar {
   position: fixed;
@@ -17,12 +18,51 @@ $navbar-height: 56px;
   display: flex;
   flex-direction: column;
   z-index: 998;
-  padding: 16px 0;
+  padding: 0;
+}
+
+// Logo section at top of sidebar
+.bo-sidebar-logo {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 16px;
+}
+
+.bo-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+
+  &:hover {
+    .bo-logo-text {
+      color: $teal;
+    }
+  }
+}
+
+.bo-logo-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.bo-logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  transition: color 0.2s ease;
 }
 
 .bo-sidebar-nav {
   list-style: none;
-  padding: 0;
+  padding: 0 0 0 0;
   margin: 0;
   flex: 1;
 }
@@ -62,7 +102,7 @@ $navbar-height: 56px;
 
   &.active a {
     color: #ffffff;
-    background-color: rgba(62, 232, 200, 0.1);
+    background-color: rgba(0, 128, 96, 0.15);
     border-left-color: $teal;
 
     i {
@@ -77,6 +117,24 @@ $navbar-height: 56px;
   padding: 24px;
   min-height: calc(100vh - #{$navbar-height});
   margin-top: $navbar-height;
+}
+
+// Clickable order rows
+.order-row {
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(0, 128, 96, 0.05);
+  }
+
+  td:first-child {
+    color: $teal;
+  }
+}
+
+.order-actions {
+  position: relative;
+  z-index: 1;
 }
 
 // Responsive - hide sidebar on mobile

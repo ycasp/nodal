@@ -1,5 +1,15 @@
 <% content_for :bo_main_content do%>
 
+<script>
+  document.addEventListener('turbo:load', function() {
+    document.querySelectorAll('.order-row').forEach(row => {
+      row.addEventListener('click', function() {
+        window.location.href = this.dataset.href;
+      });
+    });
+  });
+</script>
+
 <div class="container-fluid py-4">
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-start mb-4">
@@ -59,7 +69,7 @@
         </thead>
         <tbody>
           <% @orders.each do |order| %>
-            <tr>
+            <tr class="order-row" data-href="<%= bo_order_path(org_slug: @current_organisation.slug, id: order.id) %>" style="cursor: pointer;">
               <td class="fw-medium"><%= order.order_number %></td>
               <td>
                 <div><%= order.customer.company_name %></div>
@@ -90,7 +100,7 @@
                   <%= order.payment_status.titleize %>
                 </span>
               </td>
-              <td class="text-end">
+              <td class="text-end order-actions" onclick="event.stopPropagation();">
                 <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
                   <i class="fa-solid fa-eye"></i>
                 <% end %>

@@ -1,14 +1,17 @@
-// Variables
-$navbar-height: 56px;
-$teal: #3ee8c8;
-$teal-dark: #14b8a6;
+// Variables - Shopify Style
+$navbar-height: 64px;
+$teal: #008060;           // Shopify green
+$teal-light: #5cb88e;
+$teal-dark: #004c3f;
+$dark: #1a1a1a;
 $breakpoint-mobile: 768px;
 
 
 .navbar {
   width: 100%;
   height: $navbar-height;
-  background: linear-gradient(to right, #5a6a7a, #7a8a9a, #9aabbb);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -20,13 +23,13 @@ $breakpoint-mobile: 768px;
 
   .logo {
     font-size: 1.35rem;
-    font-weight: 600;
-    color: $teal;
+    font-weight: 700;
+    color: $dark;
     text-decoration: none;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.5px;
 
     &:hover {
-      opacity: 0.85;
+      color: $teal;
     }
   }
 
@@ -36,9 +39,9 @@ $breakpoint-mobile: 768px;
     gap: 28px;
 
     a {
-      color: #ffffff;
+      color: $dark;
       text-decoration: none;
-      font-weight: 400;
+      font-weight: 500;
       font-size: 0.95rem;
       transition: color 0.2s ease;
       padding: 16px 0;
@@ -53,9 +56,9 @@ $breakpoint-mobile: 768px;
     position: relative;
 
     > a {
-      color: #ffffff;
+      color: $dark;
       text-decoration: none;
-      font-weight: 400;
+      font-weight: 500;
       font-size: 0.95rem;
       transition: color 0.2s ease;
       padding: 16px 0;
@@ -85,9 +88,25 @@ $breakpoint-mobile: 768px;
       display: block;
       width: 100%;
       height: 2px;
-      background-color: #ffffff;
+      background-color: $dark;
       border-radius: 1px;
       transition: all 0.3s ease;
+    }
+  }
+
+  // CTA button in navbar
+  .nav-cta {
+    background-color: $teal;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $teal-dark;
+      color: #ffffff;
+      transform: translateY(-1px);
     }
   }
 
@@ -101,16 +120,19 @@ $breakpoint-mobile: 768px;
       left: 0;
       width: 100%;
       flex-direction: column;
-      background: linear-gradient(to bottom, #6a7a8a, #5a6a7a);
+      background: #ffffff;
+      border-bottom: 1px solid #e5e5e5;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       gap: 0;
 
       a {
         padding: 16px 24px;
         width: 100%;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid #f1f5f9;
 
         &:hover {
-          background-color: rgba(255, 255, 255, 0.05);
+          background-color: #f8fafc;
+          color: $teal;
         }
       }
     }
@@ -137,6 +159,4 @@ $breakpoint-mobile: 768px;
       }
     }
   }
-
-
 }

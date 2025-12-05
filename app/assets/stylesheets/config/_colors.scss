@@ -1,10 +1,24 @@
 // Define variables for your color scheme
+// Shopify-inspired brand colors
 
-// For example:
+// Brand Colors - Shopify Green
+$teal: #008060;              // Primary brand green (Shopify)
+$teal-light: #5cb88e;        // Lighter variant
+$teal-dark: #004c3f;         // Darker variant
+
+// Semantic Colors
 $red: #FD1015;
 $blue: #0D6EFD;
 $yellow: #FFC65A;
 $orange: #E67E22;
-$green: #1EDD88;
-$gray: #0E0000;
+$green: #008060;             // Aligned with brand teal
+
+// Neutral Colors
+$dark: #1a1a1a;
+$gray: #6b7177;
+$gray-text: #6b7280;
 $light-gray: #F4F4F4;
+$border-color: #e5e5e5;
+
+// Layout
+$navbar-height: 64px;
