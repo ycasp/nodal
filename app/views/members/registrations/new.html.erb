@@ -1,25 +1,54 @@
-<h2>Sign up</h2>
+<div class="auth-logo">
+  <span class="auth-logo-icon">N</span>
+  <span class="auth-logo-text">odal</span>
+</div>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<h1 class="auth-title">Create an account</h1>
+<p class="auth-subtitle">Get started with your free account</p>
+
+<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
   <%= f.error_notification %>
 
-  <div class="form-inputs">
+  <div class="auth-field">
     <%= f.input :email,
-                required: true,
+                required: false,
                 autofocus: true,
-                input_html: { autocomplete: "email" }%>
+                placeholder: "Enter your email",
+                label: "Email",
+                input_html: { autocomplete: "email" } %>
+  </div>
+
+  <div class="auth-field">
     <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: true,
+                required: false,
+                placeholder: "Create a password",
+                label: "Password",
+                hint: "Must be at least 6 characters",
                 input_html: { autocomplete: "new-password" } %>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
+  <div class="auth-field">
+    <%= f.input :password_confirmation,
+                required: false,
+                placeholder: "Confirm your password",
+                label: "Confirm password",
+                input_html: { autocomplete: "new-password" } %>
+  </div>
+
+  <div class="auth-terms">
+    <input type="checkbox" id="terms" required>
+    <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+  </div>
+
+  <div class="auth-actions">
+    <%= f.button :submit, "Create account", class: "auth-submit-btn" %>
   </div>
 <% end %>
 
-<%= render "members/shared/links" %>
+<div class="auth-divider">
+  <span>or</span>
+</div>
+
+<div class="auth-footer">
+  <p>Already have an account? <%= link_to "Sign in", new_session_path(resource_name), class: "auth-link" %></p>
+</div>

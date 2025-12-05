@@ -1,14 +1,9 @@
-<aside class="bo-sidebar">
-  <!-- Logo -->
-  <div class="bo-sidebar-logo">
+<aside class="bo-sidebar" data-controller="sidebar-toggle">
+  <!-- Logo Header - Integrated with navbar -->
+  <div class="bo-sidebar-header">
     <%= link_to bo_path, class: "bo-logo-link" do %>
-      <div class="bo-logo-icon">
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="8" fill="#008060"/>
-          <path d="M8 10L8 22L12 22L12 14L16 22L20 14L20 22L24 22L24 10L20 10L16 16L12 10L8 10Z" fill="white"/>
-        </svg>
-      </div>
-      <span class="bo-logo-text">nodal</span>
+      <div class="bo-logo-icon">N</div>
+      <span class="bo-logo-text">odal</span>
     <% end %>
   </div>
 
@@ -51,6 +46,12 @@
         <i class="fa-solid fa-gear"></i>
         <span>Settings</span>
       <% end %>
+    </li>
+    <!-- Toggle button -->
+    <li class="bo-sidebar-toggle">
+      <button type="button" data-action="sidebar-toggle#toggle">
+        <i class="fa-solid fa-angles-left"></i>
+      </button>
     </li>
   </ul>
 </aside>
