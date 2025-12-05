@@ -1,35 +1,31 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="hero-video"
-// Handles crossfade between multiple background videos
+// Hero Video Controller
+// Handles crossfade transitions between background videos like Shopify
 export default class extends Controller {
   static targets = ["video"]
 
   connect() {
     this.currentIndex = 0
-    this.transitionDuration = 8000 // 8 seconds per video
+    this.transitionInterval = 8000 // 8 seconds per video
 
-    // Start the first video
-    if (this.videoTargets.length > 0) {
-      this.videoTargets[0].classList.add("active")
-
-      // Only start cycling if there are multiple videos
-      if (this.videoTargets.length > 1) {
-        this.startCycle()
-      }
+    // Start the transition loop once videos are ready
+    if (this.videoTargets.length > 1) {
+      this.startTransitions()
     }
   }
 
   disconnect() {
-    if (this.cycleInterval) {
-      clearInterval(this.cycleInterval)
+    if (this.intervalId) {
+      clearInterval(this.intervalId)
     }
   }
 
-  startCycle() {
-    this.cycleInterval = setInterval(() => {
+  startTransitions() {
+    // TODO(human): Implement the transition logic
+    this.intervalId = setInterval(() => {
       this.nextVideo()
-    }, this.transitionDuration)
+    }, this.transitionInterval)
   }
 
   nextVideo() {

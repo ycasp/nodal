@@ -1,9 +1,9 @@
-// Variables - Shopify Style (consistent with _colors.scss)
-$teal: #008060;              // Shopify green
-$teal-light: #5cb88e;
-$teal-dark: #004c3f;
-$gray-text: #6b7280;
-$border-color: #e5e5e5;
+// Dropdown/Mega-menu Sidebar Styles
+@import "../config/colors";
+
+// Local variables
+$gray-text: $gray;
+$sidebar-border-color: $border-color;
 $breakpoint-mobile: 768px;
 
 

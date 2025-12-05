@@ -1,13 +1,6 @@
 // Back Office Sidebar Styles
-// Variables - Shopify green style
-$bo-sidebar-width: 220px;
-$bo-sidebar-collapsed-width: 72px;
-$bo-sidebar-bg: #1e293b;
-$teal: #008060;           // Shopify green
-$teal-light: #5cb88e;
-$teal-dark: #004c3f;
-$text-muted: #94a3b8;
-$navbar-height: 64px;
+// Modern design with collapsible toggle
+@import "../config/colors";
 
 // Back Office specific variables
 $bo-sidebar-width: 240px;
@@ -30,91 +23,48 @@ $navbar-height: 64px;
   background-color: $bo-sidebar-bg;
   display: flex;
   flex-direction: column;
-  z-index: 1001; // Above navbar
-  padding: 0;
+  z-index: 1000;
+  border-right: 1px solid $bo-sidebar-border;
   transition: width 0.3s ease;
 
-  // Collapsed state - shows only N icon
   &.collapsed {
     width: $bo-sidebar-collapsed-width;
 
-    .bo-logo-text,
+    .brand-text,
     .bo-sidebar-item span {
       opacity: 0;
       width: 0;
       overflow: hidden;
     }
 
+    .bo-sidebar-header {
+      justify-content: center;
+      padding: 16px 0;
+    }
+
+    .bo-sidebar-brand {
+      justify-content: center;
+    }
+
+    .sidebar-toggle {
+      position: static;
+      margin-left: 0;
+
+      i {
+        transform: rotate(180deg);
+      }
+    }
+
     .bo-sidebar-item a {
       justify-content: center;
-      padding: 12px;
+      padding: 14px 0;
     }
 
-    .bo-sidebar-header {
-      padding: 0 18px;
-    }
-
-    .bo-logo-link {
-      justify-content: center;
-    }
-
-    .bo-sidebar-toggle button i {
-      transform: rotate(180deg);
-    }
-
-    // Adjust navbar when collapsed
-    & ~ .bo-navbar {
-      left: $bo-sidebar-collapsed-width;
-      width: calc(100% - #{$bo-sidebar-collapsed-width});
+    .bo-sidebar-nav,
+    .bo-sidebar-nav-bottom {
+      padding: 8px;
     }
   }
-}
-
-// Header section - same height as navbar for seamless look
-.bo-sidebar-header {
-  height: $navbar-height;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
-}
-
-.bo-logo-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-
-  &:hover {
-    .bo-logo-text {
-      color: $teal;
-    }
-  }
-}
-
-.bo-logo-icon {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  background: $teal;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.bo-logo-text {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.5px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
 }
 
 // ========================================
@@ -192,7 +142,7 @@ $navbar-height: 64px;
 // ========================================
 .bo-sidebar-nav {
   list-style: none;
-  padding: 16px 0 0 0;
+  padding: 16px 12px;
   margin: 0;
   flex: 1;
   display: flex;
@@ -228,10 +178,11 @@ $navbar-height: 64px;
       width: 24px;
       text-align: center;
       flex-shrink: 0;
+      transition: color 0.2s ease;
     }
 
     span {
-      transition: all 0.3s ease;
+      transition: opacity 0.3s ease, width 0.3s ease;
       white-space: nowrap;
     }
 
@@ -246,9 +197,8 @@ $navbar-height: 64px;
   }
 
   &.active a {
-    color: #ffffff;
+    color: $text-primary;
     background-color: rgba(0, 128, 96, 0.15);
-    border-left-color: $teal;
 
     i {
       color: $teal;
@@ -256,270 +206,32 @@ $navbar-height: 64px;
   }
 }
 
-// Toggle button
-.bo-sidebar-toggle {
-  padding: 8px 20px 16px;
-
-  button {
-    width: 100%;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: $text-muted;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    i {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-    }
-  }
-}
-
-// Back Office Navbar - sits beside sidebar
-.bo-navbar {
-  position: fixed;
-  top: 0;
-  left: $bo-sidebar-width;
-  width: calc(100% - #{$bo-sidebar-width});
-  height: $navbar-height;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-  display: flex;
-  align-items: center;
-  z-index: 1000;
-  transition: left 0.3s ease, width 0.3s ease;
-
-  &.sidebar-collapsed {
-    left: $bo-sidebar-collapsed-width;
-    width: calc(100% - #{$bo-sidebar-collapsed-width});
-  }
-}
-
-.bo-navbar-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0 24px;
-}
-
-.bo-navbar-search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 8px 16px;
-  width: 320px;
-  transition: all 0.2s ease;
-
-  i {
-    color: $text-muted;
-    font-size: 0.9rem;
-  }
-
-  &:focus-within {
-    border-color: $teal;
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
-  }
-}
-
-.bo-search-input {
-  border: none;
-  background: transparent;
-  outline: none;
-  font-size: 0.9rem;
-  width: 100%;
-  color: #1e293b;
-
-  &::placeholder {
-    color: $text-muted;
-  }
-}
-
-.bo-navbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.bo-navbar-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  color: $text-muted;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-  }
-}
-
-.bo-navbar-user {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.bo-user-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, $teal, $teal-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: 0.85rem;
-}
-
-.bo-logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: transparent;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  color: $text-muted;
-  font-size: 0.875rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #fef2f2;
-    border-color: #fecaca;
-    color: #dc2626;
-  }
-}
-
-// Main content offset when sidebar is present
+// ========================================
+// MAIN CONTENT
+// ========================================
 .bo-main-content {
   margin-left: $bo-sidebar-width;
-  padding: 0;
-  min-height: calc(100vh - #{$navbar-height});
-  margin-top: $navbar-height;
+  padding: 32px;
+  min-height: 100vh;
+  background: #f8fafc;
   transition: margin-left 0.3s ease;
 
-  &.sidebar-collapsed {
+  .bo-sidebar.collapsed ~ & {
     margin-left: $bo-sidebar-collapsed-width;
   }
 }
 
-// Sticky page header
-.bo-page-header {
-  position: sticky;
-  top: 0;
-  background: #ffffff;
-  z-index: 100;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e5e5e5;
-
-  h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 4px;
-  }
-
-  p {
-    font-size: 0.875rem;
-    color: $text-muted;
-    margin-bottom: 0;
-  }
-
-  .bo-page-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-
-    .btn {
-      font-size: 0.875rem;
-      padding: 8px 16px;
-      border-radius: 8px;
-
-      i {
-        margin-right: 6px;
-      }
-    }
-
-    .btn-primary {
-      background-color: $teal;
-      border-color: $teal;
-
-      &:hover {
-        background-color: $teal-dark;
-        border-color: $teal-dark;
-      }
-    }
-
-    .btn-outline-secondary {
-      color: #64748b;
-      border-color: #e2e8f0;
-
-      &:hover {
-        background-color: #f8fafc;
-        border-color: #cbd5e1;
-        color: #1e293b;
-      }
-    }
-  }
+// ========================================
+// BACK OFFICE NAVBAR (within sidebar layout)
+// ========================================
+.bo-navbar {
+  display: none; // Navbar integrated into sidebar for this design
 }
 
-// Page body content below sticky header
-.bo-page-body {
-  padding: 24px;
-}
-
-// Dashboard stat icons
-.bo-stat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-}
-
-// Clickable order rows
-.order-row {
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background-color: rgba(0, 128, 96, 0.05);
-  }
-
-  td:first-child {
-    color: $teal;
-  }
-}
-
-.order-actions {
-  position: relative;
-  z-index: 1;
-}
-
-// Responsive - hide sidebar on mobile
-@media (max-width: 768px) {
+// ========================================
+// RESPONSIVE
+// ========================================
+@media (max-width: 992px) {
   .bo-sidebar {
     transform: translateX(-100%);
 
@@ -528,20 +240,61 @@ $navbar-height: 64px;
     }
   }
 
-  .bo-navbar {
-    left: 0;
-    width: 100%;
-  }
-
   .bo-main-content {
     margin-left: 0;
   }
 
-  .bo-navbar-search {
-    width: 200px;
-  }
+  // Mobile toggle button (shown in main content)
+  .mobile-sidebar-toggle {
+    display: flex;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 999;
+    width: 44px;
+    height: 44px;
+    background: $bo-sidebar-bg;
+    border: none;
+    border-radius: 10px;
+    color: $text-primary;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
-  .bo-logout-btn span {
+    &:hover {
+      background: lighten($bo-sidebar-bg, 5%);
+    }
+  }
+}
+
+@media (min-width: 993px) {
+  .mobile-sidebar-toggle {
     display: none;
+  }
+}
+
+// ========================================
+// TOOLTIPS FOR COLLAPSED STATE
+// ========================================
+.bo-sidebar.collapsed .bo-sidebar-item {
+  position: relative;
+
+  &:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: $bo-sidebar-bg;
+    color: $text-primary;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    border: 1px solid $bo-sidebar-border;
   }
 }
