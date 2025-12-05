@@ -135,60 +135,77 @@ end
 puts "  Creating products..."
 
 groceries_products_data = [
-  # Available products
+  # Available products (image_id = specific Lorem Picsum image for consistency)
   { name: "Organic Coffee Beans", slug: "organic-coffee-beans", sku: "COF-ORG-001",
     description: "Premium organic coffee beans, medium roast with rich flavor.",
-    category: "Beverages", unit_price: 2499, unit_description: "lb", available: true },
+    category: "Beverages", unit_price: 2499, unit_description: "lb", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935717/B00MW62LE8.MAIN_1200x_e6vq6e.webp" },
   { name: "Premium Olive Oil", slug: "premium-olive-oil", sku: "OIL-PRE-002",
     description: "Extra virgin olive oil from Mediterranean olives.",
-    category: "Oils & Condiments", unit_price: 1850, unit_description: "L", available: true },
+    category: "Oils & Condiments", unit_price: 1850, unit_description: "L", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935121/tgs4yxtgxnoekzrq8qir_800x_big1no.webp"},
   { name: "Artisan Sourdough Flour", slug: "artisan-sourdough-flour", sku: "FLR-SOU-003",
     description: "High-protein flour perfect for artisan bread baking.",
-    category: "Baking", unit_price: 1299, unit_description: "kg", available: true },
+    category: "Baking", unit_price: 1299, unit_description: "kg", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935115/81yNrU9IatL_eysbcp.webp" },
   { name: "Fresh Mozzarella", slug: "fresh-mozzarella", sku: "CHE-MOZ-004",
     description: "Creamy fresh mozzarella, perfect for salads and pizza.",
-    category: "Dairy", unit_price: 875, unit_description: "kg", available: true },
+    category: "Dairy", unit_price: 875, unit_description: "kg", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935111/16910f5ef4b1ab97a12313f86bb6b54a_rd0xj1.webp" },
   { name: "Grass-Fed Butter", slug: "grass-fed-butter", sku: "DAI-BUT-005",
     description: "Rich and creamy butter from grass-fed cows.",
-    category: "Dairy", unit_price: 650, unit_description: "lb", available: true },
+    category: "Dairy", unit_price: 650, unit_description: "lb", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935118/butter-2048px-3645_hxxclc.webp" },
   { name: "Wild-Caught Salmon", slug: "wild-caught-salmon", sku: "SEA-SAL-006",
     description: "Fresh wild-caught Atlantic salmon fillets.",
-    category: "Seafood", unit_price: 3200, unit_description: "lb", available: true },
+    category: "Seafood", unit_price: 3200, unit_description: "lb", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935110/10_1_Fish_1_kbfpba.webp" },
   { name: "Organic Apples", slug: "organic-apples", sku: "FRU-APP-007",
     description: "Fresh, crisp red apples, ideal for snacking or baking.",
-    category: "Fruits", unit_price: 299, unit_description: "lb", available: true },
+    category: "Fruits", unit_price: 299, unit_description: "lb", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935112/61kmJoXKqWL_itwbjq.webp" },
   { name: "Aged Parmesan", slug: "aged-parmesan", sku: "CHE-PAR-008",
     description: "24-month aged Italian Parmigiano-Reggiano cheese.",
-    category: "Dairy", unit_price: 2499, unit_description: "kg", available: true },
+    category: "Dairy", unit_price: 2499, unit_description: "kg", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935109/0a1755b0-59b1-49aa-bc88-fd7b25da4067.__CR0_0_300_300_PT0_SX300_V1____fucl7j.webp" },
   { name: "Organic Honey", slug: "organic-honey", sku: "SWT-HON-009",
     description: "Raw organic wildflower honey from local apiaries.",
-    category: "Baking", unit_price: 1599, unit_description: "jar", available: true },
+    category: "Baking", unit_price: 1599, unit_description: "jar", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935120/Organic_ThisHoney_24oz_b5f7b581-b402-4e93-8d58-9961f4b0caf2_sxh1ff.webp" },
   { name: "Fresh Basil", slug: "fresh-basil", sku: "VEG-BAS-010",
     description: "Aromatic fresh basil leaves, hydroponically grown.",
-    category: "Vegetables", unit_price: 450, unit_description: "bunch", available: true },
+    category: "Vegetables", unit_price: 450, unit_description: "bunch", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935119/large_766df0b7-9df4-4847-b245-290a4995ee1d_dgat91.webp" },
   { name: "Prime Ribeye Steak", slug: "prime-ribeye-steak", sku: "MEA-RIB-011",
     description: "USDA Prime grade ribeye, dry-aged for 21 days.",
-    category: "Meat", unit_price: 4599, unit_description: "lb", available: true },
+    category: "Meat", unit_price: 4599, unit_description: "lb", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935114/81dPJmdo-6L_xwlm9y.webp" },
   { name: "Balsamic Vinegar", slug: "balsamic-vinegar", sku: "OIL-BAL-012",
     description: "Aged balsamic vinegar from Modena, Italy.",
-    category: "Oils & Condiments", unit_price: 2199, unit_description: "bottle", available: true },
+    category: "Oils & Condiments", unit_price: 2199, unit_description: "bottle", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935122/vill-antica-balsamic-vinegar-of-modena-over-25-years-old-12987-1s-2987_flo7wg.jpg" },
   { name: "Organic Lemons", slug: "organic-lemons", sku: "FRU-LEM-013",
     description: "Fresh organic lemons, perfect for cooking and drinks.",
-    category: "Fruits", unit_price: 199, unit_description: "lb", available: true },
+    category: "Fruits", unit_price: 199, unit_description: "lb", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935113/71YrpRTwTKL_sqigxt.webp" },
   { name: "Atlantic Shrimp", slug: "atlantic-shrimp", sku: "SEA-SHR-014",
     description: "Large wild-caught Atlantic shrimp, shell-on.",
-    category: "Seafood", unit_price: 2899, unit_description: "lb", available: true },
+    category: "Seafood", unit_price: 2899, unit_description: "lb", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935118/cooked-peel-and-eat-shrimp-by-the-pound.f0c64227a1e4200c2499ae7d19f885c6_jxjlam.webp" },
   { name: "Whole Wheat Flour", slug: "whole-wheat-flour", sku: "FLR-WHT-015",
     description: "Stone-ground whole wheat flour for healthy baking.",
-    category: "Baking", unit_price: 899, unit_description: "kg", available: true },
+    category: "Baking", unit_price: 899, unit_description: "kg", available: true,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935115/91nOP4BaNUL_rqncoz.webp" },
 
   # UNAVAILABLE products (for testing filters)
   { name: "Seasonal Black Truffles", slug: "seasonal-black-truffles", sku: "VEG-TRU-016",
     description: "Rare black truffles - currently out of season.",
-    category: "Vegetables", unit_price: 15000, unit_description: "oz", available: false },
+    category: "Vegetables", unit_price: 15000, unit_description: "oz", available: false,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935111/61djJqZeg8L_k0enur.webp" },
   { name: "A5 Wagyu Beef", slug: "a5-wagyu-beef", sku: "MEA-WAG-017",
     description: "Premium Japanese A5 Wagyu - temporarily unavailable.",
-    category: "Meat", unit_price: 25000, unit_description: "lb", available: false }
+    category: "Meat", unit_price: 25000, unit_description: "lb", available: false,
+    image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764935111/61djJqZeg8L_k0enur.webp" }
 ]
 
 groceries_products = {}
@@ -207,7 +224,13 @@ groceries_products_data.each do |data|
     available: data[:available]
   )
   groceries_products[data[:slug]] = product
+
+  # Attach product photo (from URL if provided, otherwise from Lorem Picsum)
+  image_url = data[:image_url] || "https://picsum.photos/id/#{data[:image_id]}/400/300"
+  file = URI.open(image_url)
+  product.photo.attach(io: file, filename: "#{data[:slug]}.jpg", content_type: "image/jpeg")
 end
+puts "  Attached photos to #{groceries_products.count} products"
 
 # -----------------------------------------------------------------------------
 # Customers with billing + multiple shipping addresses
@@ -503,16 +526,16 @@ screws_categories = {
 }
 
 screws_products_data = [
-  { name: "Wood Screws #8", slug: "wood-screws-8", sku: "SCR-WD-008", desc: "Standard wood screws, #8 gauge", cat: "Screws", price: 599 },
-  { name: "Wood Screws #10", slug: "wood-screws-10", sku: "SCR-WD-010", desc: "Standard wood screws, #10 gauge", cat: "Screws", price: 699 },
-  { name: "Drywall Screws", slug: "drywall-screws", sku: "SCR-DW-001", desc: "Fine thread drywall screws", cat: "Screws", price: 499 },
-  { name: "Machine Screws", slug: "machine-screws", sku: "SCR-MC-001", desc: "Precision machine screws", cat: "Screws", price: 899 },
-  { name: "Deck Screws", slug: "deck-screws", sku: "SCR-DK-001", desc: "Weather-resistant deck screws", cat: "Screws", price: 1299 },
-  { name: "Hex Bolts", slug: "hex-bolts", sku: "BLT-HX-001", desc: "Standard hex head bolts", cat: "Bolts", price: 799 },
-  { name: "Carriage Bolts", slug: "carriage-bolts", sku: "BLT-CR-001", desc: "Round head carriage bolts", cat: "Bolts", price: 899 },
-  { name: "Lag Bolts", slug: "lag-bolts", sku: "BLT-LG-001", desc: "Heavy duty lag bolts", cat: "Bolts", price: 1199 },
-  { name: "Hex Nuts", slug: "hex-nuts", sku: "NUT-HX-001", desc: "Standard hex nuts", cat: "Nuts", price: 299 },
-  { name: "Lock Nuts", slug: "lock-nuts", sku: "NUT-LK-001", desc: "Nylon insert lock nuts", cat: "Nuts", price: 399 }
+  { name: "Wood Screws #8", slug: "wood-screws-8", sku: "SCR-WD-008", desc: "Standard wood screws, #8 gauge", cat: "Screws", price: 599, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934102/wood_screw_lixwxw.avif" },
+  { name: "Wood Screws #10", slug: "wood-screws-10", sku: "SCR-WD-010", desc: "Standard wood screws, #10 gauge", cat: "Screws", price: 699, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934100/10gaugue_wood_screw_w3evqf.webp" },
+  { name: "Drywall Screws", slug: "drywall-screws", sku: "SCR-DW-001", desc: "Fine thread drywall screws", cat: "Screws", price: 499, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934100/drywall_screw_zvdrey.webp" },
+  { name: "Machine Screws", slug: "machine-screws", sku: "SCR-MC-001", desc: "Precision machine screws", cat: "Screws", price: 899, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934102/machine_screw_bcfzjk.webp" },
+  { name: "Deck Screws", slug: "deck-screws", sku: "SCR-DK-001", desc: "Weather-resistant deck screws", cat: "Screws", price: 1299, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934100/deck_screw_operpd.avif" },
+  { name: "Hex Bolts", slug: "hex-bolts", sku: "BLT-HX-001", desc: "Standard hex head bolts", cat: "Bolts", price: 799, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934100/hex_bolt_iy1h4b.webp" },
+  { name: "Carriage Bolts", slug: "carriage-bolts", sku: "BLT-CR-001", desc: "Round head carriage bolts", cat: "Bolts", price: 899, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934100/carriage_bolts_gm1afj.webp" },
+  { name: "Lag Bolts", slug: "lag-bolts", sku: "BLT-LG-001", desc: "Heavy duty lag bolts", cat: "Bolts", price: 1199, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934101/lag_bolts_srvpoq.webp" },
+  { name: "Hex Nuts", slug: "hex-nuts", sku: "NUT-HX-001", desc: "Standard hex nuts", cat: "Nuts", price: 299, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934100/hex_nuts_jpnuq7.jpg" },
+  { name: "Lock Nuts", slug: "lock-nuts", sku: "NUT-LK-001", desc: "Nylon insert lock nuts", cat: "Nuts", price: 399, image_url: "https://res.cloudinary.com/dratqqhaz/image/upload/v1764934102/lock_nuts_dca4zn.jpg" }
 ]
 
 screws_products = {}
@@ -531,7 +554,12 @@ screws_products_data.each do |data|
     available: true
   )
   screws_products[data[:slug]] = product
+
+  # Attach product photo from URL
+  file = URI.open(data[:image_url])
+  product.photo.attach(io: file, filename: "#{data[:slug]}.jpg", content_type: "image/jpeg")
 end
+puts "  Attached photos to #{screws_products.count} products"
 
 # -----------------------------------------------------------------------------
 # Customers (including SAME EMAIL as Groceries org - tests scoped uniqueness)
