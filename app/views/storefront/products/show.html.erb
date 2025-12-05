@@ -97,27 +97,30 @@
         </div>
 
         <!-- Add to Cart Section -->
-        <div class="d-flex align-items-center gap-3 flex-wrap">
+        <%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, local: true, class: "d-flex align-items-center gap-3 flex-wrap" do |f| %>
+          <%= hidden_field_tag :product_id, @product.id %>
           <div class="input-group" style="width: 140px;">
             <span class="input-group-text bg-white border-end-0">
               <i class="fa-solid fa-arrow-up-1-9 text-muted"></i>
               <span class="ms-2 text-muted small">Qty</span>
             </span>
-            <input type="number" class="form-control border-start-0 text-center" value="<%= @product.min_quantity || 1 %>" min="<%= @product.min_quantity || 1 %>" style="max-width: 60px;">
+            <%= number_field_tag "order_item[quantity]", @product.min_quantity || 1, min: @product.min_quantity || 1, class: "form-control border-start-0 text-center", style: "max-width: 60px;" %>
           </div>
 
-          <button class="btn btn-primary btn-lg px-4" style="border-radius: 8px;" disabled>
+          <button type="submit" class="btn btn-primary btn-lg px-4" style="border-radius: 8px;" <%= 'disabled' unless @product.available? %>>
             <i class="fa-solid fa-cart-plus me-2"></i>Add to cart
           </button>
 
           <div class="text-muted">
             <i class="fa-solid fa-calculator me-2"></i>Estimated total: <%= humanized_money_with_symbol(@product.price) %>
           </div>
-        </div>
+        <% end %>
 
-        <small class="text-muted d-block mt-3">
-          <i class="fa-solid fa-clock me-1"></i>Cart functionality coming soon
-        </small>
+        <% unless @product.available? %>
+          <small class="text-danger d-block mt-3">
+            <i class="fa-solid fa-circle-xmark me-1"></i>This product is currently out of stock
+          </small>
+        <% end %>
       </div>
     </div>
   </div>

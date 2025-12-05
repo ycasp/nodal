@@ -32,6 +32,8 @@ class ProductPolicy < ApplicationPolicy
   private
 
   def belongs_to_organisation?
+    return false if user.nil?
+
     if user.is_a?(Member)
       user.organisations.include?(record.organisation)
     elsif user.is_a?(Customer)

@@ -18,6 +18,18 @@ Rails.application.routes.draw do
     # storefront (customer-facing)
     scope module: :storefront do
       resources :products, only: [:index, :show]
+
+      # Cart (current draft order)
+      resource :cart, only: [:show] do
+        delete :clear, on: :member
+        post :place, on: :member
+      end
+
+      # Order items (add/update/remove from cart)
+      resources :order_items, only: [:create, :update, :destroy]
+
+      # Order history (placed orders only)
+      resources :orders, only: [:index, :show]
     end
 
     # bo routes

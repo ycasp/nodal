@@ -34,6 +34,10 @@ class Customer < ApplicationRecord
      where(organisation: org, email: warden_conditions[:email]).first
   end
 
+  def current_cart(organisation)
+    orders.draft.find_or_create_by!(organisation: organisation)
+  end
+
   private
 
   def password_required?

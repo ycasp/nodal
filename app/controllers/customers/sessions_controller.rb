@@ -17,7 +17,8 @@ class Customers::SessionsController < Devise::SessionsController
       # re-render the form with error like Devise would
       self.resource = resource_class.new(sign_in_params)
       set_flash_message!(:alert, :invalid)
-      respond_with_navigational(resource) { render :new, status: :unprocessable_entity }
+      # respond_with_navigational(resource) { render :new, status: :unprocessable_entity }
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -37,5 +38,9 @@ class Customers::SessionsController < Devise::SessionsController
 
     # Tell Devise it's allowed to read this key
     devise_parameter_sanitizer.permit(:sign_in, keys: [:organisation_id])
+  end
+
+  def after_sign_in_path_for(resource)
+      products_path(org_slug: current_organisation.slug)  # or whatever storefront path you want
   end
 end
