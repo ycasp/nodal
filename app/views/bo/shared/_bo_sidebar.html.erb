@@ -39,17 +39,24 @@
     </li>
   </ul>
 
+  <!-- Bottom Navigation -->
   <ul class="bo-sidebar-nav-bottom">
-    <li class="bo-sidebar-item">
+    <li class="bo-sidebar-item" data-tooltip="Profile">
       <%= link_to "#" do %>
-        <i class="fa-solid fa-user"></i>
+        <i class="fa-solid fa-circle-user"></i>
         <span>Profile</span>
       <% end %>
     </li>
-    <li class="bo-sidebar-item">
+    <li class="bo-sidebar-item" data-tooltip="Settings">
       <%= link_to "#" do %>
         <i class="fa-solid fa-gear"></i>
         <span>Settings</span>
+      <% end %>
+    </li>
+    <li class="bo-sidebar-item" data-tooltip="Log out">
+      <%= link_to destroy_member_session_path, data: { turbo_method: :delete } do %>
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Log out</span>
       <% end %>
     </li>
   </ul>

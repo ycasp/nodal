@@ -20,6 +20,10 @@ class CustomerPolicy < ApplicationPolicy
     user_works_for_records_organisation?
   end
 
+  def invite?
+    user_works_for_records_organisation?
+  end
+
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
@@ -27,7 +31,7 @@ class CustomerPolicy < ApplicationPolicy
       if number_of_distinct_organisations <= 1
         scope.all
       else
-        # 
+        #
       end
     end
   end

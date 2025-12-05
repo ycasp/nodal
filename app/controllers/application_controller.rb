@@ -4,6 +4,9 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   layout :layout_by_resource
   before_action :current_organisation
+
+  before_action :inject_into_slug
+
   include Pundit::Authorization
 
   # Pundit: allow-list approach
@@ -72,6 +75,12 @@ class ApplicationController < ActionController::Base
       "auth"
     else
       "application"
+    end
+  end
+
+  def inject_into_slug
+    if params[:cusmter]
+      params[:cusmter][:org_slug] = params[:org_slug]
     end
   end
 end

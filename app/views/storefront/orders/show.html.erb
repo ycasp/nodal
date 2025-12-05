@@ -1,0 +1,135 @@
+<%= link_to orders_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
+  <i class="fa-solid fa-arrow-left me-2"></i>Back to Orders
+<% end %>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <!-- Order Header -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h1 class="h3 mb-1">Order <%= @order.order_number %></h1>
+            <p class="text-muted mb-0">
+              <% if @order.placed? %>
+                Placed on <%= @order.placed_at.strftime("%B %d, %Y at %I:%M %p") %>
+              <% else %>
+                Draft order
+              <% end %>
+            </p>
+          </div>
+          <% status_class = case @order.status
+             when 'completed' then 'bg-success'
+             when 'processed' then 'bg-info'
+             when 'in_process' then 'bg-warning text-dark'
+             else 'bg-secondary'
+             end %>
+          <span class="badge <%= status_class %> fs-6"><%= @order.status.titleize %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Order Items</h5>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th class="text-center">Quantity</th>
+              <th class="text-end">Price</th>
+              <th class="text-end">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @order.order_items.includes(:product).each do |item| %>
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <% if item.product.photo.attached? %>
+                      <%= image_tag item.product.photo, style: "width: 50px; height: 50px; object-fit: cover; border-radius: 6px;", class: "me-3" %>
+                    <% else %>
+                      <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 6px;">
+                        <i class="fa-solid fa-image text-muted"></i>
+                      </div>
+                    <% end %>
+                    <div>
+                      <div class="fw-medium"><%= item.product.name %></div>
+                      <small class="text-muted">SKU: <%= item.product.sku || '-' %></small>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center"><%= item.quantity %></td>
+                <td class="text-end"><%= humanized_money_with_symbol(Money.new(item.unit_price, 'EUR')) %></td>
+                <td class="text-end fw-medium"><%= humanized_money_with_symbol(Money.new(item.total_price, 'EUR')) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <hr>
+
+        <div class="d-flex justify-content-end">
+          <div style="width: 250px;">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Subtotal</span>
+              <span><%= humanized_money_with_symbol(Money.new(@order.total_amount, 'EUR')) %></span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold">
+              <span>Total</span>
+              <span><%= humanized_money_with_symbol(Money.new(@order.total_amount, 'EUR')) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @order.notes.present? %>
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Notes</h5>
+          <p class="mb-0"><%= @order.notes %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-lg-4">
+    <!-- Payment Status -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+      <div class="card-body">
+        <h6 class="text-muted mb-3">
+          <i class="fa-solid fa-credit-card me-2"></i>Payment Status
+        </h6>
+        <% payment_class = case @order.payment_status
+           when 'paid' then 'text-success'
+           when 'pending' then 'text-warning'
+           when 'failed' then 'text-danger'
+           else 'text-info'
+           end %>
+        <span class="fs-5 <%= payment_class %>"><%= @order.payment_status.titleize %></span>
+      </div>
+    </div>
+
+    <!-- Delivery Info -->
+    <% if @order.receive_on.present? %>
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-truck me-2"></i>Expected Delivery
+          </h6>
+          <span class="fs-5"><%= @order.receive_on.strftime("%B %d, %Y") %></span>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Continue Shopping -->
+    <div class="mt-4">
+      <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-primary w-100" do %>
+        <i class="fa-solid fa-shopping-bag me-2"></i>Continue Shopping
+      <% end %>
+    </div>
+  </div>
+</div>

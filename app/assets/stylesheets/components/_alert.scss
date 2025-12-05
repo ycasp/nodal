@@ -1,5 +1,6 @@
 // Flash Alert Component
-// Modern glassmorphism design with progress indicator
+// Inspired by shadcn/ui design system - adapted for Bootstrap
+@import "../config/colors";
 
 .flash-container {
   position: fixed;
@@ -15,160 +16,162 @@
 
 .alert {
   position: relative;
-  overflow: hidden;
-  padding: 1rem 1.25rem;
-  padding-right: 3rem;
-  border: none;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  font-weight: 500;
-  font-size: 0.9375rem;
-  line-height: 1.5;
+  width: 100%;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  display: grid;
+  grid-template-columns: calc(0.25rem * 4) 1fr;
+  gap: 0 0.75rem;
+  align-items: start;
+  background-color: #fff;
   color: #1a1a2e;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.3s ease-out;
 
-  &:hover {
-    transform: translateX(-4px);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.12),
-      0 2px 4px rgba(0, 0, 0, 0.06),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.6);
-  }
-
+  // Icon column
   .alert-icon {
+    grid-column: 1;
+    grid-row: 1 / span 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    margin-right: 14px;
-    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    transform: translateY(2px);
 
     i {
-      font-size: 1.25rem;
+      font-size: 1rem;
     }
   }
 
-  .alert-content {
-    flex: 1;
-    min-width: 0;
-
-    .alert-title {
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 2px;
-      opacity: 0.7;
-    }
-
-    .alert-message {
-      word-wrap: break-word;
-    }
+  // Title
+  .alert-title {
+    grid-column: 2;
+    grid-row: 1;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.4;
+    min-height: 1rem;
   }
 
+  // Description/Message
+  .alert-message {
+    grid-column: 2;
+    grid-row: 2;
+    color: #717182;
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  // Close button
   .btn-close {
     position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
-    width: 28px;
-    height: 28px;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 1.25rem;
+    height: 1.25rem;
     padding: 0;
-    border-radius: 8px;
-    opacity: 0.4;
-    transition: all 0.2s ease;
-    background-size: 10px;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+    background-size: 0.65rem;
 
     &:hover {
       opacity: 1;
-      background-color: rgba(0, 0, 0, 0.06);
     }
 
     &:focus {
       box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+      outline: none;
     }
   }
 
-  .alert-progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    width: 100%;
-    background: currentColor;
-    opacity: 0.25;
-    animation: progressShrink 5s linear forwards;
-    transform-origin: left;
-  }
+  // ═══════════════════════════════════════════
+  // Alert Variants
+  // ═══════════════════════════════════════════
 
-  &[data-paused="true"] .alert-progress {
-    animation-play-state: paused;
-  }
-
-  // Success variant (for notice)
+  // Success (notice) - Using brand teal
   &.alert-success {
-    border-left: 4px solid #10b981;
+    background-color: rgba($teal, 0.08);
+    border-color: $teal;
+    color: $teal-dark;
 
-    .alert-icon {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
-      i { color: #10b981; }
+    .alert-icon i {
+      color: $teal;
     }
 
-    .alert-title { color: #047857; }
-    .alert-progress { background: #10b981; }
+    .alert-title {
+      color: $teal-dark;
+    }
+
+    .alert-message {
+      color: rgba($teal-dark, 0.9);
+    }
   }
 
-  // Info variant
+  // Info - Blue theme
   &.alert-info {
-    border-left: 4px solid #3b82f6;
+    background-color: #eff6ff;
+    border-color: #3b82f6;
+    color: #1e40af;
 
-    .alert-icon {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
-      i { color: #3b82f6; }
+    .alert-icon i {
+      color: #3b82f6;
     }
 
-    .alert-title { color: #1d4ed8; }
-    .alert-progress { background: #3b82f6; }
+    .alert-title {
+      color: #1e40af;
+    }
+
+    .alert-message {
+      color: rgba(30, 64, 175, 0.9);
+    }
   }
 
-  // Warning variant
+  // Warning - Yellow/Amber theme
   &.alert-warning {
-    border-left: 4px solid #f59e0b;
+    background-color: #fefce8;
+    border-color: #eab308;
+    color: #a16207;
 
-    .alert-icon {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
-      i { color: #f59e0b; }
+    .alert-icon i {
+      color: #eab308;
     }
 
-    .alert-title { color: #b45309; }
-    .alert-progress { background: #f59e0b; }
+    .alert-title {
+      color: #a16207;
+    }
+
+    .alert-message {
+      color: rgba(161, 98, 7, 0.9);
+    }
   }
 
-  // Danger/Error variant (for alert)
+  // Danger/Error (alert) - Red theme
   &.alert-danger {
-    border-left: 4px solid #ef4444;
+    background-color: #fef2f2;
+    border-color: #ef4444;
+    color: #b91c1c;
 
-    .alert-icon {
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
-      i { color: #ef4444; }
+    .alert-icon i {
+      color: #ef4444;
     }
 
-    .alert-title { color: #b91c1c; }
-    .alert-progress { background: #ef4444; }
+    .alert-title {
+      color: #b91c1c;
+    }
+
+    .alert-message {
+      color: rgba(185, 28, 28, 0.9);
+    }
   }
 }
 
+// ═══════════════════════════════════════════
 // Animations
+// ═══════════════════════════════════════════
+
 @keyframes slideInRight {
   from {
     transform: translateX(100%);
@@ -191,38 +194,66 @@
   }
 }
 
-@keyframes progressShrink {
-  from { transform: scaleX(1); }
-  to { transform: scaleX(0); }
-}
-
 .animate__fadeOutRight {
-  animation: fadeOutRight 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+  animation: fadeOutRight 0.3s ease-in forwards;
 }
 
-// Dark mode
+// ═══════════════════════════════════════════
+// Dark mode support
+// ═══════════════════════════════════════════
+
 @media (prefers-color-scheme: dark) {
   .alert {
-    background: rgba(30, 30, 40, 0.92);
+    background-color: #1e1e2e;
+    border-color: rgba(255, 255, 255, 0.1);
     color: #f0f0f5;
-    box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.3),
-      0 1px 2px rgba(0, 0, 0, 0.2),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+    .alert-message {
+      color: rgba(240, 240, 245, 0.7);
+    }
 
     .btn-close {
       filter: invert(1);
-      &:hover { background-color: rgba(255, 255, 255, 0.1); }
     }
 
-    &.alert-success .alert-title { color: #34d399; }
-    &.alert-info .alert-title { color: #60a5fa; }
-    &.alert-warning .alert-title { color: #fbbf24; }
-    &.alert-danger .alert-title { color: #f87171; }
+    &.alert-success {
+      background-color: rgba($teal, 0.1);
+      border-color: $teal;
+
+      .alert-title { color: $teal-light; }
+      .alert-message { color: rgba($teal-light, 0.8); }
+    }
+
+    &.alert-info {
+      background-color: rgba(59, 130, 246, 0.1);
+      border-color: #3b82f6;
+
+      .alert-title { color: #93c5fd; }
+      .alert-message { color: rgba(147, 197, 253, 0.8); }
+    }
+
+    &.alert-warning {
+      background-color: rgba(234, 179, 8, 0.1);
+      border-color: #eab308;
+
+      .alert-title { color: #fde047; }
+      .alert-message { color: rgba(253, 224, 71, 0.8); }
+    }
+
+    &.alert-danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      border-color: #ef4444;
+
+      .alert-title { color: #fca5a5; }
+      .alert-message { color: rgba(252, 165, 165, 0.8); }
+    }
   }
 }
 
+// ═══════════════════════════════════════════
 // Mobile responsive
+// ═══════════════════════════════════════════
+
 @media (max-width: 480px) {
   .flash-container {
     bottom: 16px;
@@ -233,18 +264,8 @@
   }
 
   .alert {
-    padding: 0.875rem 1rem;
-    padding-right: 2.5rem;
-    border-radius: 12px;
-
-    .alert-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      margin-right: 12px;
-      i { font-size: 1.125rem; }
-    }
-
-    .alert-content .alert-title { font-size: 0.6875rem; }
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+    border-radius: 0.5rem;
   }
 }

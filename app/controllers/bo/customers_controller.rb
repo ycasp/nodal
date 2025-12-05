@@ -1,5 +1,5 @@
 class Bo::CustomersController < Bo::BaseController
-  before_action :set_and_authorize_customer, only: [:show, :edit, :update, :destroy]
+  before_action :set_and_authorize_customer, only: [:show, :edit, :update, :destroy, :invite]
 
   def index
     @customers = policy_scope(current_organisation.customers)
@@ -44,6 +44,12 @@ class Bo::CustomersController < Bo::BaseController
   def destroy
     @customer.destroy
     redirect_to bo_customers_path(params[:org_slug]), status: :see_other, notice: "Customer deleted successfully."
+  end
+
+  def invite
+    @customer.invite!
+    redirect_to bo_customer_path(params[:org_slug], @customer),
+                notice: "Invitation sent to #{@customer.email}"
   end
 
   private

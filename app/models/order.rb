@@ -15,6 +15,26 @@ class Order < ApplicationRecord
 
   before_validation :generate_order_number, on: :create
 
+  # Scopes for cart functionality
+  scope :draft, -> { where(placed_at: nil) }
+  scope :placed, -> { where.not(placed_at: nil) }
+
+  def draft?
+    placed_at.nil?
+  end
+
+  def placed?
+    placed_at.present?
+  end
+
+  def item_count
+    order_items.sum(:quantity)
+  end
+
+  def place!
+    update!(placed_at: Time.current)
+  end
+
   def total_amount
     order_items.sum { |item| (item.unit_price * item.quantity) - (item.discount_amount || 0) }
   end

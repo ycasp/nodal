@@ -11,7 +11,16 @@
   </head>
 
   <body>
-    <%= render "bo/shared/bo_application" %>
+    <%= render "bo/shared/bo_sidebar" %>
+
+    <main class="bo-main-content">
+      <!-- Mobile sidebar toggle -->
+      <button class="mobile-sidebar-toggle" data-action="click->sidebar#toggleMobile" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <%= yield :bo_main_content %>
+    </main>
 
     <%= render "shared/flashes" %>
   </body>

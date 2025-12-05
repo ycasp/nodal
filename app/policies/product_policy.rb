@@ -32,7 +32,15 @@ class ProductPolicy < ApplicationPolicy
   private
 
   def belongs_to_organisation?
-    user.organisations.include?(record.organisation)
+    return false if user.nil?
+
+    if user.is_a?(Member)
+      user.organisations.include?(record.organisation)
+    elsif user.is_a?(Customer)
+      user.organisation == record.organisation
+    else
+      false
+    end
   end
 
   class Scope < ApplicationPolicy::Scope
