@@ -1,4 +1,4 @@
-<% content_for :bo_main_content do%>
+<% content_for :bo_main_content do %>
 
 <script>
   document.addEventListener('turbo:load', function() {
@@ -10,26 +10,29 @@
   });
 </script>
 
-<div class="container-fluid py-4">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-start mb-4">
+<!-- Sticky Header -->
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
     <div>
-      <h1 class="h3 mb-1">Orders</h1>
-      <p class="text-muted mb-0">Track and manage all customer orders</p>
+      <h1>Orders</h1>
+      <p>Track and manage all customer orders</p>
     </div>
-    <div class="d-flex gap-2">
+    <div class="bo-page-actions">
       <button class="btn btn-outline-secondary">
-        <i class="fa-solid fa-upload me-1"></i> Import
+        <i class="fa-solid fa-upload"></i> Import
       </button>
       <button class="btn btn-outline-secondary">
-        <i class="fa-solid fa-download me-1"></i> Export
+        <i class="fa-solid fa-download"></i> Export
       </button>
       <%= link_to new_bo_order_path(org_slug: @current_organisation.slug), class: "btn btn-primary" do %>
-        <i class="fa-solid fa-plus me-1"></i> Add New
+        <i class="fa-solid fa-plus"></i> Add New
       <% end %>
     </div>
   </div>
+</div>
 
+<!-- Page Body -->
+<div class="bo-page-body">
   <!-- Search -->
   <div class="card mb-4">
     <div class="card-body">
@@ -49,7 +52,6 @@
       <% end %>
     </div>
   </div>
-
 
   <!-- Orders Table -->
   <div class="card">

@@ -11,35 +11,26 @@
   </head>
 
   <body class="auth-page">
-    <!-- Video Background -->
+    <!-- Video Background - Crossfading videos -->
     <div class="auth-video-background" data-controller="hero-video">
-      <div class="video-container">
-        <video class="auth-video active" autoplay muted loop playsinline data-hero-video-target="video">
-          <source src="/videos/8540430-hd_1920_1080_30fps.mp4" type="video/mp4">
-        </video>
-        <video class="auth-video" autoplay muted loop playsinline data-hero-video-target="video">
-          <source src="/videos/7287516-uhd_3840_2160_25fps.mp4" type="video/mp4">
-        </video>
-        <video class="auth-video" autoplay muted loop playsinline data-hero-video-target="video">
-          <source src="/videos/6169116-uhd_3840_2160_25fps.mp4" type="video/mp4">
-        </video>
-        <video class="auth-video" autoplay muted loop playsinline data-hero-video-target="video">
-          <source src="/videos/8725959-uhd_3840_2160_25fps.mp4" type="video/mp4">
-        </video>
-      </div>
+      <video class="auth-video" data-hero-video-target="video" autoplay muted loop playsinline>
+        <source src="/videos/8540430-hd_1920_1080_30fps.mp4" type="video/mp4">
+      </video>
+      <video class="auth-video" data-hero-video-target="video" autoplay muted loop playsinline>
+        <source src="/videos/7287516-uhd_3840_2160_25fps.mp4" type="video/mp4">
+      </video>
+      <video class="auth-video" data-hero-video-target="video" autoplay muted loop playsinline>
+        <source src="/videos/6169116-uhd_3840_2160_25fps.mp4" type="video/mp4">
+      </video>
+      <video class="auth-video" data-hero-video-target="video" autoplay muted loop playsinline>
+        <source src="/videos/8725959-uhd_3840_2160_25fps.mp4" type="video/mp4">
+      </video>
       <div class="auth-video-overlay"></div>
     </div>
 
     <!-- Auth Content -->
     <div class="auth-container">
       <div class="auth-card">
-        <div class="auth-logo">
-          <%= link_to root_path, class: "auth-brand" do %>
-            <span class="brand-icon">N</span>
-            <span class="brand-text">nodal</span>
-          <% end %>
-        </div>
-
         <%= yield %>
       </div>
     </div>
