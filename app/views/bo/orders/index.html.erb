@@ -1,25 +1,38 @@
-<% content_for :bo_main_content do%>
+<% content_for :bo_main_content do %>
 
-<div class="container-fluid py-4">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-start mb-4">
+<script>
+  document.addEventListener('turbo:load', function() {
+    document.querySelectorAll('.order-row').forEach(row => {
+      row.addEventListener('click', function() {
+        window.location.href = this.dataset.href;
+      });
+    });
+  });
+</script>
+
+<!-- Sticky Header -->
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
     <div>
-      <h1 class="h3 mb-1">Orders</h1>
-      <p class="text-muted mb-0">Track and manage all customer orders</p>
+      <h1>Orders</h1>
+      <p>Track and manage all customer orders</p>
     </div>
-    <div class="d-flex gap-2">
+    <div class="bo-page-actions">
       <button class="btn btn-outline-secondary">
-        <i class="fa-solid fa-upload me-1"></i> Import
+        <i class="fa-solid fa-upload"></i> Import
       </button>
       <button class="btn btn-outline-secondary">
-        <i class="fa-solid fa-download me-1"></i> Export
+        <i class="fa-solid fa-download"></i> Export
       </button>
       <%= link_to new_bo_order_path(org_slug: @current_organisation.slug), class: "btn btn-primary" do %>
-        <i class="fa-solid fa-plus me-1"></i> Add New
+        <i class="fa-solid fa-plus"></i> Add New
       <% end %>
     </div>
   </div>
+</div>
 
+<!-- Page Body -->
+<div class="bo-page-body">
   <!-- Search -->
   <div class="card mb-4">
     <div class="card-body">
@@ -40,7 +53,6 @@
     </div>
   </div>
 
-
   <!-- Orders Table -->
   <div class="card">
     <div class="table-responsive">
@@ -59,7 +71,7 @@
         </thead>
         <tbody>
           <% @orders.each do |order| %>
-            <tr>
+            <tr class="order-row" data-href="<%= bo_order_path(org_slug: @current_organisation.slug, id: order.id) %>" style="cursor: pointer;">
               <td class="fw-medium"><%= order.order_number %></td>
               <td>
                 <div><%= order.customer.company_name %></div>
@@ -90,7 +102,7 @@
                   <%= order.payment_status.titleize %>
                 </span>
               </td>
-              <td class="text-end">
+              <td class="text-end order-actions" onclick="event.stopPropagation();">
                 <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
                   <i class="fa-solid fa-eye"></i>
                 <% end %>
