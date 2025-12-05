@@ -26,6 +26,7 @@
       <%= link_to edit_bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-primary" do %>
         <i class="fa-solid fa-pen-to-square"></i> Edit
       <% end %>
+      <%= render "bo/customers/invite" %>
       <%= link_to bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-danger", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this customer?" } do %>
         <i class="fa-solid fa-trash"></i> Delete
       <% end %>

@@ -4,7 +4,7 @@ class Customer < ApplicationRecord
   # Note: :registerable is excluded - Members create customer accounts
   # Note: :validatable is excluded - email uniqueness is scoped to organisation
   devise :database_authenticatable,
-         :recoverable, :rememberable, #validatable,
+         :recoverable, :rememberable, :invitable,
          authentication_keys: [:email, :organisation_id]
 
   belongs_to :organisation

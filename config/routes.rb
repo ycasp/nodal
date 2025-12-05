@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+
   root to: "pages#home"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -37,7 +39,11 @@ Rails.application.routes.draw do
     namespace :bo do
       get "/", to: "dashboards#dashview"
       resources :orders
-      resources :customers, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+      resources :customers do
+        member do
+          post :invite
+        end
+      end
       resources :products
     end
   end
