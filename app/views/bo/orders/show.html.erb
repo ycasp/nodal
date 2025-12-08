@@ -102,121 +102,46 @@
         </div>
       </div>
 
-      <!-- Order Timeline -->
+      <!-- Order Details -->
       <div class="card mb-4">
         <div class="card-body">
-          <h5 class="card-title mb-1">Order Timeline</h5>
-          <p class="text-muted mb-4">Track your order progress</p>
+          <h5 class="card-title mb-3">Order Details</h5>
 
-          <!-- Order Placed -->
-          <div class="d-flex align-items-start mb-4">
-            <div class="me-3 mt-1">
-              <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #198754;"></span>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <small class="text-muted d-block">Delivery Method</small>
+              <span class="fw-medium">
+                <% if @order.pickup? %>
+                  <i class="fa-solid fa-store me-1"></i> Pickup
+                <% else %>
+                  <i class="fa-solid fa-truck me-1"></i> Delivery
+                <% end %>
+              </span>
             </div>
-            <div class="flex-grow-1">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <div class="fw-medium text-success">Order Placed</div>
-                  <div class="text-muted small">Order received and confirmed</div>
-                </div>
-                <small class="text-muted"><%= @order.placed_at&.strftime("%Y-%m-%d %H:%M") || @order.created_at.strftime("%Y-%m-%d %H:%M") %></small>
-              </div>
+
+            <div class="col-md-6 mb-3">
+              <small class="text-muted d-block"><%= @order.pickup? ? 'Pickup Date' : 'Delivery Date' %></small>
+              <span class="fw-medium">
+                <%= @order.receive_on&.strftime("%B %d, %Y") || 'Not specified' %>
+              </span>
             </div>
           </div>
 
-          <!-- Payment Confirmed -->
-          <div class="d-flex align-items-start mb-4">
-            <div class="me-3 mt-1">
-              <% if @order.payment_status == 'paid' %>
-                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #198754;"></span>
-              <% else %>
-                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #adb5bd;"></span>
-              <% end %>
+          <% if @order.delivery? && @order.shipping_address.present? %>
+            <div class="mb-3">
+              <small class="text-muted d-block">Shipping Address</small>
+              <span class="fw-medium"><%= @order.shipping_address.street_name %></span><br>
+              <span class="text-muted"><%= @order.shipping_address.postal_code %> <%= @order.shipping_address.city %>, <%= @order.shipping_address.country %></span>
             </div>
-            <div class="flex-grow-1">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <div class="fw-medium <%= @order.payment_status == 'paid' ? 'text-success' : 'text-muted' %>">Payment Confirmed</div>
-                  <div class="text-muted small">Payment processed successfully</div>
-                </div>
-                <small class="text-muted">
-                  <% if @order.payment_status == 'paid' %>
-                    <%= (@order.placed_at || @order.created_at).strftime("%Y-%m-%d %H:%M") %>
-                  <% else %>
-                    Pending
-                  <% end %>
-                </small>
-              </div>
-            </div>
-          </div>
+          <% end %>
 
-          <!-- Processing -->
-          <div class="d-flex align-items-start mb-4">
-            <div class="me-3 mt-1">
-              <% if %w[in_process processed completed].include?(@order.status) %>
-                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #0d6efd;"></span>
-              <% else %>
-                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #adb5bd;"></span>
-              <% end %>
+          <% if @order.billing_address.present? %>
+            <div class="mb-3">
+              <small class="text-muted d-block">Billing Address</small>
+              <span class="fw-medium"><%= @order.billing_address.street_name %></span><br>
+              <span class="text-muted"><%= @order.billing_address.postal_code %> <%= @order.billing_address.city %>, <%= @order.billing_address.country %></span>
             </div>
-            <div class="flex-grow-1">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <div class="fw-medium <%= %w[in_process processed completed].include?(@order.status) ? 'text-primary' : 'text-muted' %>">Processing</div>
-                  <div class="text-muted small">Order is being prepared</div>
-                </div>
-                <small class="text-muted">
-                  <% if %w[in_process processed completed].include?(@order.status) %>
-                    <%= @order.updated_at.strftime("%Y-%m-%d %H:%M") %>
-                  <% else %>
-                    Pending
-                  <% end %>
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <!-- Shipped -->
-          <div class="d-flex align-items-start mb-4">
-            <div class="me-3 mt-1">
-              <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #adb5bd;"></span>
-            </div>
-            <div class="flex-grow-1">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <div class="fw-medium text-muted">Shipped</div>
-                  <div class="text-muted small">Order dispatched for delivery</div>
-                </div>
-                <small class="text-muted">Pending</small>
-              </div>
-            </div>
-          </div>
-
-          <!-- Delivered -->
-          <div class="d-flex align-items-start">
-            <div class="me-3 mt-1">
-              <% if @order.status == 'completed' %>
-                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #198754;"></span>
-              <% else %>
-                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: #adb5bd;"></span>
-              <% end %>
-            </div>
-            <div class="flex-grow-1">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <div class="fw-medium <%= @order.status == 'completed' ? 'text-success' : 'text-muted' %>">Delivered</div>
-                  <div class="text-muted small">Order delivered to customer</div>
-                </div>
-                <small class="text-muted">
-                  <% if @order.status == 'completed' %>
-                    <%= @order.receive_on&.strftime("%Y-%m-%d") || 'Completed' %>
-                  <% else %>
-                    Pending
-                  <% end %>
-                </small>
-              </div>
-            </div>
-          </div>
+          <% end %>
         </div>
       </div>
 
