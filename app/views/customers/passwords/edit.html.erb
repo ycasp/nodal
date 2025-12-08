@@ -1,0 +1,44 @@
+<div class="auth-logo">
+  <span class="auth-logo-icon">N</span>
+  <span class="auth-logo-text">odal</span>
+</div>
+
+<h1 class="auth-title">Change your password</h1>
+<p class="auth-subtitle">Enter your new password below</p>
+
+<%= simple_form_for(resource, as: resource_name, url: customer_password_path(org_slug: @organisation.slug), html: { method: :put, class: "auth-form" }) do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.input :reset_password_token, as: :hidden %>
+  <%= f.full_error :reset_password_token %>
+
+  <div class="auth-field">
+    <%= f.input :password,
+                label: "New password",
+                required: true,
+                autofocus: true,
+                placeholder: "Enter your new password",
+                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                input_html: { autocomplete: "new-password" } %>
+  </div>
+
+  <div class="auth-field">
+    <%= f.input :password_confirmation,
+                label: "Confirm your new password",
+                required: true,
+                placeholder: "Confirm your new password",
+                input_html: { autocomplete: "new-password" } %>
+  </div>
+
+  <div class="auth-actions">
+    <%= f.button :submit, "Change my password", class: "auth-submit-btn" %>
+  </div>
+<% end %>
+
+<div class="auth-divider">
+  <span>or</span>
+</div>
+
+<div class="auth-footer">
+  <p>Remember your password? <%= link_to "Sign in", new_customer_session_path(org_slug: @organisation.slug), class: "auth-link" %></p>
+</div>

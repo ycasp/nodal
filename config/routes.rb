@@ -28,8 +28,10 @@ Rails.application.routes.draw do
       # Cart (current draft order)
       resource :cart, only: [:show] do
         delete :clear, on: :member
-        post :place, on: :member
       end
+
+      # Checkout
+      resource :checkout, only: [:show, :update]
 
       # Order items (add/update/remove from cart)
       resources :order_items, only: [:create, :update, :destroy]

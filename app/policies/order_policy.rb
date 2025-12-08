@@ -36,6 +36,10 @@ class OrderPolicy < ApplicationPolicy
     customer_owner? && record.draft?
   end
 
+  def checkout?
+    customer_owner? && record.draft?
+  end
+
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_a?(Customer)

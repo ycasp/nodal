@@ -1,6 +1,8 @@
 class Organisation < ApplicationRecord
   include Slugable
 
+  monetize :shipping_cost_cents
+
   has_many :org_members, dependent: :destroy
   has_many :members, through: :org_members, dependent: :destroy
   has_many :customers, dependent: :destroy

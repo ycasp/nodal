@@ -1,5 +1,15 @@
 <% content_for :bo_main_content do %>
 
+<script>
+  document.addEventListener('turbo:load', function() {
+    document.querySelectorAll('.product-row').forEach(row => {
+      row.addEventListener('click', function() {
+        window.location.href = this.dataset.href;
+      });
+    });
+  });
+</script>
+
 <!-- Sticky Header -->
 <div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-start">
@@ -61,12 +71,10 @@
     </thead>
     <tbody>
       <% @products.each do |product| %>
-        <tr>
+        <tr class="product-row" data-href="<%= bo_product_path(params[:org_slug], product) %>" style="cursor: pointer;">
           <td>
-            <%= link_to bo_product_path(params[:org_slug], product), class: "text-decoration-none text-dark" do %>
-              <div class="fw-semibold"><%= product.name %></div>
-              <small class="text-muted">P<%= product.id.to_s.rjust(3, '0') %></small>
-            <% end %>
+            <div class="fw-semibold"><%= product.name %></div>
+            <small class="text-muted">P<%= product.id.to_s.rjust(3, '0') %></small>
           </td>
           <td><%= product.sku %></td>
           <td><%= product.category&.name %></td>
@@ -94,18 +102,16 @@
               </span>
             <% end %>
           </td>
-          <td>
-            <div class="d-flex gap-2 justify-content-end">
-              <%= link_to bo_product_path(params[:org_slug], product), class: "text-muted", title: "View" do %>
-                <i class="fa-solid fa-eye"></i>
-              <% end %>
-              <%= link_to edit_bo_product_path(params[:org_slug], product), class: "text-muted", title: "Edit" do %>
-                <i class="fa-solid fa-pen-to-square"></i>
-              <% end %>
-              <%= link_to bo_product_path(params[:org_slug], product), class: "text-danger", title: "Delete", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this product?" } do %>
-                <i class="fa-solid fa-trash"></i>
-              <% end %>
-            </div>
+          <td class="text-end product-actions" onclick="event.stopPropagation();">
+            <%= link_to bo_product_path(params[:org_slug], product), class: "btn btn-sm btn-link text-muted" do %>
+              <i class="fa-solid fa-eye"></i>
+            <% end %>
+            <%= link_to edit_bo_product_path(params[:org_slug], product), class: "btn btn-sm btn-link text-muted" do %>
+              <i class="fa-solid fa-pen-to-square"></i>
+            <% end %>
+            <%= button_to bo_product_path(params[:org_slug], product), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: "Are you sure you want to delete this product?" } do %>
+              <i class="fa-solid fa-trash"></i>
+            <% end %>
           </td>
         </tr>
       <% end %>

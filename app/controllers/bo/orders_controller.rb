@@ -2,7 +2,7 @@ class Bo::OrdersController < Bo::BaseController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   def index
-    @orders = policy_scope(current_organisation.orders).includes(:customer, :order_items)
+    @orders = policy_scope(current_organisation.orders.placed).includes(:customer, :order_items)
 
     # Search by order number or customer name
     if params[:search].present?
