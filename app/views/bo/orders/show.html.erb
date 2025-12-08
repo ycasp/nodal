@@ -191,50 +191,6 @@
         </div>
       </div>
 
-      <!-- Payment Details -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <h6 class="text-muted mb-3">
-            <i class="fa-solid fa-credit-card me-2"></i>Payment Details
-          </h6>
-
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted">Payment Method</span>
-            <span>Credit Card</span>
-          </div>
-
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted">Card</span>
-            <span>•••• 4242</span>
-          </div>
-
-          <div class="d-flex justify-content-between">
-            <span class="text-muted">Status</span>
-            <% payment_badge_class = case @order.payment_status
-               when 'paid' then 'text-success'
-               when 'pending' then 'text-warning'
-               when 'failed' then 'text-danger'
-               else 'text-info'
-               end %>
-            <span class="<%= payment_badge_class %>"><%= @order.payment_status.titleize %></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- AI Insight -->
-      <div class="card bg-light border-0">
-        <div class="card-body">
-          <div class="d-flex align-items-start">
-            <div class="bg-primary rounded-circle p-2 me-3">
-              <i class="fa-solid fa-robot text-white"></i>
-            </div>
-            <div>
-              <h6 class="mb-1">AI Insight</h6>
-              <p class="text-muted small mb-0">This client typically reorders every 2 weeks. Consider sending a follow-up in 10 days.</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
