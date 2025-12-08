@@ -59,6 +59,7 @@
                   <th class="text-muted fw-normal">SKU</th>
                   <th class="text-muted fw-normal text-center">Qty</th>
                   <th class="text-muted fw-normal text-end">Price</th>
+                  <th class="text-muted fw-normal text-center">Discount</th>
                   <th class="text-muted fw-normal text-end">Total</th>
                 </tr>
               </thead>
@@ -68,8 +69,29 @@
                     <td><%= item.product.name %></td>
                     <td class="text-muted"><%= item.product.sku || '-' %></td>
                     <td class="text-center"><%= item.quantity %> <%= item.product.min_quantity_type %></td>
-                    <td class="text-end"><%= humanized_money_with_symbol(item.price) %></td>
-                    <td class="text-end"><%= humanized_money_with_symbol(item.total_price) %></td>
+                    <td class="text-end">
+                      <% if item.discount_percentage && item.discount_percentage > 0 %>
+                        <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price) %></span>
+                        <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
+                      <% else %>
+                        <%= humanized_money_with_symbol(item.price) %>
+                      <% end %>
+                    </td>
+                    <td class="text-center">
+                      <% if item.discount_percentage && item.discount_percentage > 0 %>
+                        <span class="badge bg-success">-<%= format_discount_percentage(item.discount_percentage) %></span>
+                      <% else %>
+                        <span class="text-muted">-</span>
+                      <% end %>
+                    </td>
+                    <td class="text-end">
+                      <% if item.discount_percentage && item.discount_percentage > 0 %>
+                        <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                        <span class="text-success fw-medium"><%= humanized_money_with_symbol(item.total_price) %></span>
+                      <% else %>
+                        <%= humanized_money_with_symbol(item.total_price) %>
+                      <% end %>
+                    </td>
                   </tr>
                 <% end %>
               </tbody>
