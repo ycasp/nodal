@@ -1,0 +1,40 @@
+<div class="auth-logo">
+  <span class="auth-logo-icon">N</span>
+  <span class="auth-logo-text">odal</span>
+</div>
+
+<h1 class="auth-title">Welcome back</h1>
+<p class="auth-subtitle">Sign in to your account to continue</p>
+
+<%= simple_form_for(resource, as: resource_name, url: customer_session_path(org_slug: @organisation.slug), html: { class: "auth-form", data: { turbo: false } }) do |f| %>
+  <div class="auth-field">
+    <%= f.input :email,
+                required: false,
+                autofocus: true,
+                placeholder: "Enter your email",
+                label: "Email",
+                input_html: { autocomplete: "email" } %>
+  </div>
+
+  <div class="auth-field">
+    <div class="auth-label-row">
+      <label class="auth-label">Password</label>
+      <%= link_to "Forgot password?", new_customer_password_path(org_slug: @organisation.slug), class: "auth-forgot-link" %>
+    </div>
+    <%= f.input :password,
+                required: false,
+                placeholder: "Enter your password",
+                label: false,
+                input_html: { autocomplete: "current-password" } %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class="auth-remember">
+      <%= f.input :remember_me, as: :boolean, wrapper: false, label: "Remember me for 30 days" %>
+    </div>
+  <% end %>
+
+  <div class="auth-actions">
+    <%= f.button :submit, "Sign in", class: "auth-submit-btn" %>
+  </div>
+<% end %>
