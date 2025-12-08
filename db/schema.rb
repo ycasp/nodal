@@ -68,8 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_151011) do
     t.bigint "customer_id", null: false
     t.bigint "product_id", null: false
     t.bigint "organisation_id", null: false
-    t.integer "discount_percentage", default: 0
-    t.integer "decimal", default: 0
+    t.decimal "discount_percentage", precision: 5, scale: 4, default: "0.0"
     t.date "valid_from"
     t.date "valid_until"
     t.datetime "created_at", null: false
@@ -127,8 +126,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_151011) do
     t.bigint "product_id", null: false
     t.integer "quantity", default: 1, null: false
     t.integer "unit_price", null: false
-    t.integer "discount_percentage", default: 0
-    t.integer "decimal", default: 0
+    t.decimal "discount_percentage", precision: 5, scale: 4, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_items_on_order_id"

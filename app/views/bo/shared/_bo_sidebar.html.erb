@@ -32,6 +32,12 @@
         <span>Orders</span>
       <% end %>
     </li>
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'customer_product_discounts' %>">
+      <%= link_to bo_customer_product_discounts_path do %>
+        <i class="fa-solid fa-percent"></i>
+        <span>Discounts</span>
+      <% end %>
+    </li>
   </ul>
 
   <!-- Bottom Navigation -->

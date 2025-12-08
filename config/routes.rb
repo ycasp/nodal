@@ -48,6 +48,7 @@ Rails.application.routes.draw do
         end
       end
       resources :products
+      resources :customer_product_discounts, only: [:index, :new, :create, :edit, :update, :destroy]
     end
   end
 end
