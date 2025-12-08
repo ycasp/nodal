@@ -25,7 +25,7 @@ Devise.setup do |config|
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
   config.mailer_sender = 'y.caspar@bluewin.ch'
-  config.mailer = "CustomerMailer"
+  # config.mailer = "CustomerMailer"  # Set per-model instead (see Customer#devise_mailer)
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'

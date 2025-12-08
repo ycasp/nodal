@@ -17,7 +17,8 @@ Rails.application.routes.draw do
     devise_for :customers, skip: [:registrations],
                 controllers: {
                   sessions: 'customers/sessions',
-                  invitations: 'customers/invitations'
+                  invitations: 'customers/invitations',
+                  passwords: 'customers/passwords'
                 }
 
     # storefront (customer-facing)

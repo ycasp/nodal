@@ -7,6 +7,10 @@ class Customer < ApplicationRecord
          :recoverable, :rememberable, :invitable,
          authentication_keys: [:email, :organisation_id]
 
+  def devise_mailer
+    CustomerMailer
+  end
+
   belongs_to :organisation
   has_many :orders, dependent: :destroy
   has_one :billing_address, -> { billing }, class_name: "Address", as: :addressable, dependent: :destroy
