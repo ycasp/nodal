@@ -17,6 +17,7 @@
 .alert {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   padding: 1rem 1.25rem;
   padding-right: 3rem;
   border: none;
@@ -97,7 +98,7 @@
 
   // Success (notice) - Using brand teal
   &.alert-success {
-    background-color: rgba($teal, 0.08);
+    background-color: $success-bg;
     border-color: $teal;
     color: $teal-dark;
 
@@ -110,7 +111,7 @@
     }
 
     .alert-message {
-      color: rgba($teal-dark, 0.9);
+      color: $success-text;
     }
   }
 
@@ -200,54 +201,6 @@
 
 .animate__fadeOutRight {
   animation: fadeOutRight 0.3s ease-in forwards;
-}
-
-// ═══════════════════════════════════════════
-// Dark mode support
-// ═══════════════════════════════════════════
-
-@media (prefers-color-scheme: dark) {
-  .alert {
-    background: #1e1e2e;
-    color: #f0f0f5;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
-
-    .btn-close {
-      filter: invert(1);
-    }
-
-    &.alert-success {
-      background-color: rgba($teal, 0.1);
-      border-color: $teal;
-
-      .alert-title { color: $teal-light; }
-      .alert-message { color: rgba($teal-light, 0.8); }
-    }
-
-    &.alert-info {
-      background-color: rgba(59, 130, 246, 0.1);
-      border-color: #3b82f6;
-
-      .alert-title { color: #93c5fd; }
-      .alert-message { color: rgba(147, 197, 253, 0.8); }
-    }
-
-    &.alert-warning {
-      background-color: rgba(234, 179, 8, 0.1);
-      border-color: #eab308;
-
-      .alert-title { color: #fde047; }
-      .alert-message { color: rgba(253, 224, 71, 0.8); }
-    }
-
-    &.alert-danger {
-      background-color: rgba(239, 68, 68, 0.1);
-      border-color: #ef4444;
-
-      .alert-title { color: #fca5a5; }
-      .alert-message { color: rgba(252, 165, 165, 0.8); }
-    }
-  }
 }
 
 // ═══════════════════════════════════════════
