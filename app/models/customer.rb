@@ -11,6 +11,7 @@ class Customer < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_one :billing_address, -> { billing }, class_name: "Address", as: :addressable, dependent: :destroy
   has_many :shipping_addresses, -> { shipping }, class_name: "Address", as: :addressable, dependent: :destroy
+  has_many :customer_product_discounts, dependent: :destroy
 
   validates :company_name, presence: true
   validates :contact_name, presence: true

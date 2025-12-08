@@ -99,8 +99,8 @@
             <span class="fw-bold fs-5"><%= humanized_money_with_symbol(@order.total_amount) %></span>
           </div>
 
-          <%= button_to place_cart_path(org_slug: params[:org_slug]), method: :post, class: "btn btn-primary w-100 btn-lg" do %>
-            <i class="fa-solid fa-check me-2"></i>Place Order
+          <%= link_to checkout_path(org_slug: params[:org_slug]), class: "btn btn-primary w-100 btn-lg" do %>
+            <i class="fa-solid fa-arrow-right me-2"></i>Proceed to Checkout
           <% end %>
         </div>
       </div>

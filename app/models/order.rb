@@ -1,9 +1,15 @@
 class Order < ApplicationRecord
   STATUSES = %w[in_process processed completed].freeze
   PAYMENT_STATUSES = %w[pending paid failed refunded].freeze
+  DELIVERY_METHODS = %w[pickup delivery].freeze
+
+  monetize :tax_amount_cents, allow_nil: true
+  monetize :shipping_amount_cents, allow_nil: true
 
   belongs_to :customer
   belongs_to :organisation
+  belongs_to :shipping_address, class_name: "Address", optional: true
+  belongs_to :billing_address, class_name: "Address", optional: true
   has_many :order_items, dependent: :destroy
   has_many :products, through: :order_items
 
@@ -12,6 +18,7 @@ class Order < ApplicationRecord
   validates :order_number, presence: true, uniqueness: true
   validates :status, inclusion: { in: STATUSES }
   validates :payment_status, inclusion: { in: PAYMENT_STATUSES }
+  validates :delivery_method, inclusion: { in: DELIVERY_METHODS }, allow_nil: true
 
   before_validation :generate_order_number, on: :create
 
@@ -35,8 +42,38 @@ class Order < ApplicationRecord
     update!(placed_at: Time.current)
   end
 
+  def finalize_checkout!(same_as_shipping: false)
+    self.billing_address = shipping_address if same_as_shipping && shipping_address.present?
+    self.tax_amount = calculated_tax
+    self.shipping_amount = calculated_shipping
+    place!
+  end
+
   def total_amount
     order_items.sum(&:total_price)
+  end
+
+  def pickup?
+    delivery_method == "pickup"
+  end
+
+  def delivery?
+    delivery_method == "delivery"
+  end
+
+  # Calculate tax based on organisation's tax rate
+  def calculated_tax
+    total_amount * organisation.tax_rate
+  end
+
+  # Calculate shipping based on delivery method and organisation's shipping cost
+  def calculated_shipping
+    pickup? ? Money.new(0, 'EUR') : organisation.shipping_cost
+  end
+
+  # Grand total including tax and shipping
+  def grand_total
+    total_amount + (tax_amount || calculated_tax) + (shipping_amount || calculated_shipping)
   end
 
   private

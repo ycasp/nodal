@@ -1,0 +1,271 @@
+<%= link_to cart_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
+  <i class="fa-solid fa-arrow-left me-2"></i>Back to Cart
+<% end %>
+
+<div class="row g-4"
+     data-controller="checkout"
+     data-checkout-subtotal-value="<%= @order.total_amount.cents %>"
+     data-checkout-tax-value="<%= @order.calculated_tax.cents %>"
+     data-checkout-shipping-cost-value="<%= @current_organisation.shipping_cost.cents %>">
+  <div class="col-lg-8">
+    <!-- Checkout Header -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+      <div class="card-body">
+        <h1 class="h3 mb-1">Checkout</h1>
+        <p class="text-muted mb-0">Review your order and choose delivery method</p>
+      </div>
+    </div>
+
+    <%= form_with model: @order, url: checkout_path(org_slug: params[:org_slug]), method: :patch, id: "checkout-form" do |f| %>
+
+      <!-- Order Items -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Items</h5>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @order_items.each do |item| %>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <% if item.product.photo.attached? %>
+                        <%= image_tag item.product.photo, style: "width: 50px; height: 50px; object-fit: cover; border-radius: 6px;", class: "me-3" %>
+                      <% else %>
+                        <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 6px;">
+                          <i class="fa-solid fa-image text-muted"></i>
+                        </div>
+                      <% end %>
+                      <div>
+                        <div class="fw-medium"><%= item.product.name %></div>
+                        <small class="text-muted"><%= item.product.category&.name %></small>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-center"><%= item.quantity %></td>
+                  <td class="text-end"><%= humanized_money_with_symbol(item.price) %></td>
+                  <td class="text-end fw-medium"><%= humanized_money_with_symbol(item.total_price) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Delivery Method -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-truck me-2"></i>Delivery Method
+          </h5>
+
+          <div class="mb-3">
+            <div class="form-check p-3 border rounded mb-2">
+              <%= f.radio_button :delivery_method, "delivery",
+                  class: "form-check-input",
+                  id: "delivery_method_delivery",
+                  checked: @order.delivery_method != "pickup",
+                  data: { action: "checkout#updateTotal checkout#toggleShippingAddress" } %>
+              <label class="form-check-label d-flex justify-content-between align-items-center w-100 ms-2" for="delivery_method_delivery">
+                <div>
+                  <strong>Delivery</strong>
+                  <div class="text-muted small">We'll deliver to your address</div>
+                </div>
+                <span class="fw-medium"><%= humanized_money_with_symbol(@current_organisation.shipping_cost) %></span>
+              </label>
+            </div>
+
+            <div class="form-check p-3 border rounded">
+              <%= f.radio_button :delivery_method, "pickup",
+                  class: "form-check-input",
+                  id: "delivery_method_pickup",
+                  data: { action: "checkout#updateTotal checkout#toggleShippingAddress" } %>
+              <label class="form-check-label d-flex justify-content-between align-items-center w-100 ms-2" for="delivery_method_pickup">
+                <div>
+                  <strong>Pickup</strong>
+                  <div class="text-muted small">Pick up your order yourself</div>
+                </div>
+                <span class="fw-medium text-success">Free</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery/Pickup Date -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-calendar me-2"></i><span data-checkout-target="dateLabel">Delivery Date</span>
+          </h5>
+
+          <div class="mb-3">
+            <%= f.date_field :receive_on,
+                class: "form-control",
+                min: Date.tomorrow,
+                value: @order.receive_on || Date.tomorrow %>
+            <div class="form-text">Select when you'd like to receive your order</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Address (only for delivery) -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;" data-checkout-target="shippingAddressSection">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-location-dot me-2"></i>Shipping Address
+          </h5>
+
+          <%= f.select :shipping_address_id,
+              options_for_select(
+                @shipping_addresses.map { |a| ["#{a.street_name}, #{a.postal_code} #{a.city}", a.id] } + [["+ Add new address", "new"]],
+                @order.shipping_address_id || @shipping_addresses.first&.id
+              ),
+              { include_blank: @shipping_addresses.empty? ? "Select or add address" : false },
+              class: "form-select mb-3",
+              data: { action: "checkout#toggleNewShippingAddress" } %>
+
+          <!-- New Shipping Address Form (hidden by default) -->
+          <div data-checkout-target="newShippingAddressForm" style="display: none;">
+            <div class="row g-3">
+              <div class="col-12">
+                <%= f.fields_for :new_shipping_address, Address.new do |af| %>
+                  <div class="mb-3">
+                    <%= af.label :street_name, "Street Address", class: "form-label" %>
+                    <%= af.text_field :street_name, class: "form-control", placeholder: "123 Main Street" %>
+                  </div>
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <%= af.label :postal_code, "Postal Code", class: "form-label" %>
+                      <%= af.text_field :postal_code, class: "form-control", placeholder: "12345" %>
+                    </div>
+                    <div class="col-md-4">
+                      <%= af.label :city, "City", class: "form-label" %>
+                      <%= af.text_field :city, class: "form-control", placeholder: "City" %>
+                    </div>
+                    <div class="col-md-4">
+                      <%= af.label :country, "Country", class: "form-label" %>
+                      <%= af.text_field :country, class: "form-control", placeholder: "Country" %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Billing Address -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-file-invoice me-2"></i>Billing Address
+          </h5>
+
+          <div class="form-check mb-3" data-checkout-target="sameAsShippingOption">
+            <%= f.check_box :same_as_shipping,
+                class: "form-check-input",
+                id: "same_as_shipping",
+                data: { action: "checkout#toggleBillingAddress" } %>
+            <label class="form-check-label" for="same_as_shipping">
+              Same as shipping address
+            </label>
+          </div>
+
+          <div data-checkout-target="billingAddressFields">
+            <% if @billing_address.present? %>
+              <%= f.hidden_field :billing_address_id, value: @billing_address.id %>
+              <div class="p-3 border rounded bg-light">
+                <strong><%= @billing_address.street_name %></strong><br>
+                <span class="text-muted"><%= @billing_address.postal_code %> <%= @billing_address.city %>, <%= @billing_address.country %></span>
+              </div>
+            <% else %>
+              <%= f.fields_for :new_billing_address, Address.new do |af| %>
+                <div class="mb-3">
+                  <%= af.label :street_name, "Street Address", class: "form-label" %>
+                  <%= af.text_field :street_name, class: "form-control", placeholder: "123 Main Street" %>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <%= af.label :postal_code, "Postal Code", class: "form-label" %>
+                    <%= af.text_field :postal_code, class: "form-control", placeholder: "12345" %>
+                  </div>
+                  <div class="col-md-4">
+                    <%= af.label :city, "City", class: "form-label" %>
+                    <%= af.text_field :city, class: "form-control", placeholder: "City" %>
+                  </div>
+                  <div class="col-md-4">
+                    <%= af.label :country, "Country", class: "form-label" %>
+                    <%= af.text_field :country, class: "form-control", placeholder: "Country" %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Notes -->
+      <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-comment me-2"></i>Order Notes <span class="text-muted fw-normal">(optional)</span>
+          </h5>
+
+          <%= f.text_area :notes,
+              class: "form-control",
+              rows: 3,
+              placeholder: "Any special instructions for your order..." %>
+        </div>
+      </div>
+
+    <% end %>
+  </div>
+
+  <div class="col-lg-4">
+    <!-- Order Summary -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; position: sticky; top: 20px;">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Order Summary</h5>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Subtotal (<%= @order.item_count %> items)</span>
+          <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
+        </div>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Tax (<%= (@current_organisation.tax_rate * 100).round(1) %>%)</span>
+          <span><%= humanized_money_with_symbol(@order.calculated_tax) %></span>
+        </div>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Shipping</span>
+          <span data-checkout-target="shippingAmount"><%= humanized_money_with_symbol(@order.calculated_shipping) %></span>
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-between mb-4">
+          <span class="fw-bold">Total</span>
+          <span class="fw-bold fs-5" data-checkout-target="totalAmount"><%= humanized_money_with_symbol(@order.grand_total) %></span>
+        </div>
+
+        <button type="submit" form="checkout-form" class="btn btn-primary w-100 btn-lg">
+          <i class="fa-solid fa-check me-2"></i>Place Order
+        </button>
+
+        <p class="text-muted small text-center mt-3 mb-0">
+          By placing your order, you agree to our terms and conditions.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

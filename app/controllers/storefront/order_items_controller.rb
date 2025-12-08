@@ -14,9 +14,9 @@ class Storefront::OrderItemsController < Storefront::BaseController
     authorize @order_item
 
     if @order_item.save
-      redirect_to cart_path(org_slug: params[:org_slug]), notice: "Added to cart."
+      redirect_to products_path(org_slug: params[:org_slug]), notice: "Added to cart."
     else
-      redirect_back fallback_location: products_path(org_slug: params[:org_slug]),
+      redirect_to product_path(org_slug: params[:org_slug], product_id: @product.id),
                     alert: @order_item.errors.full_messages.join(", ")
     end
   end

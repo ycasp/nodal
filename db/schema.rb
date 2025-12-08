@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_04_174644) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_08_163658) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_04_174644) do
     t.index ["organisation_id"], name: "index_categories_on_organisation_id"
   end
 
+  create_table "customer_product_discounts", force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.bigint "product_id", null: false
+    t.bigint "organisation_id", null: false
+    t.decimal "discount_percentage", precision: 5, scale: 4, default: "0.0"
+    t.date "valid_from"
+    t.date "valid_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_customer_product_discounts_on_customer_id"
+    t.index ["organisation_id"], name: "index_customer_product_discounts_on_organisation_id"
+    t.index ["product_id"], name: "index_customer_product_discounts_on_product_id"
+  end
+
   create_table "customers", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -112,7 +126,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_04_174644) do
     t.bigint "product_id", null: false
     t.integer "quantity", default: 1, null: false
     t.integer "unit_price", null: false
-    t.integer "discount_amount", default: 0
+    t.decimal "discount_percentage", precision: 5, scale: 4, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_items_on_order_id"
@@ -130,9 +144,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_04_174644) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "tax_amount_cents"
+    t.string "tax_amount_currency"
+    t.integer "shipping_amount_cents"
+    t.string "shipping_amount_currency"
+    t.string "delivery_method", default: "delivery"
+    t.bigint "shipping_address_id"
+    t.bigint "billing_address_id"
+    t.index ["billing_address_id"], name: "index_orders_on_billing_address_id"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["order_number"], name: "index_orders_on_order_number", unique: true
     t.index ["organisation_id"], name: "index_orders_on_organisation_id"
+    t.index ["shipping_address_id"], name: "index_orders_on_shipping_address_id"
   end
 
   create_table "org_members", force: :cascade do |t|
@@ -154,6 +177,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_04_174644) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "tax_rate", precision: 5, scale: 4, default: "0.08"
+    t.integer "shipping_cost_cents", default: 1500
+    t.string "shipping_cost_currency", default: "EUR"
     t.index ["slug"], name: "index_organisations_on_slug", unique: true
   end
 
@@ -180,9 +206,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_04_174644) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "categories", "organisations"
+  add_foreign_key "customer_product_discounts", "customers"
+  add_foreign_key "customer_product_discounts", "organisations"
+  add_foreign_key "customer_product_discounts", "products"
   add_foreign_key "customers", "organisations"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
+  add_foreign_key "orders", "addresses", column: "billing_address_id"
+  add_foreign_key "orders", "addresses", column: "shipping_address_id"
   add_foreign_key "orders", "customers"
   add_foreign_key "orders", "organisations"
   add_foreign_key "org_members", "members"
