@@ -4,8 +4,8 @@
     <% end %>
   <% elsif @customer.invitation_sent_at.present? %>
     <%= button_to invite_bo_customer_path(params[:org_slug], @customer),
-                  class: "btn btn-outline-warning" do %>
-      <i class="fa-solid fa-paper-plane me-1"></i> Resend Invite
+                  class: "btn btn-outline-primary" do %>
+      <i class="fa-solid fa-paper-plane me-1"></i> Resend
     <% end %>
   <% else %>
     <%= button_to invite_bo_customer_path(params[:org_slug], @customer),
