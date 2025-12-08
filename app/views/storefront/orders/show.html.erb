@@ -62,8 +62,8 @@
                   </div>
                 </td>
                 <td class="text-center"><%= item.quantity %></td>
-                <td class="text-end"><%= humanized_money_with_symbol(Money.new(item.unit_price, 'EUR')) %></td>
-                <td class="text-end fw-medium"><%= humanized_money_with_symbol(Money.new(item.total_price, 'EUR')) %></td>
+                <td class="text-end"><%= humanized_money_with_symbol(item.price) %></td>
+                <td class="text-end fw-medium"><%= humanized_money_with_symbol(item.total_price) %></td>
               </tr>
             <% end %>
           </tbody>
@@ -75,11 +75,11 @@
           <div style="width: 250px;">
             <div class="d-flex justify-content-between mb-2">
               <span class="text-muted">Subtotal</span>
-              <span><%= humanized_money_with_symbol(Money.new(@order.total_amount, 'EUR')) %></span>
+              <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
             </div>
             <div class="d-flex justify-content-between fw-bold">
               <span>Total</span>
-              <span><%= humanized_money_with_symbol(Money.new(@order.total_amount, 'EUR')) %></span>
+              <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
             </div>
           </div>
         </div>

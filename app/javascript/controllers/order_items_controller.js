@@ -41,9 +41,9 @@ export default class extends Controller {
     const selectedOption = select.options[select.selectedIndex]
     const price = selectedOption.dataset.price || 0
 
-    const unitPriceInput = row.querySelector("[data-price-field]")
-    if (unitPriceInput) {
-      unitPriceInput.value = parseFloat(price).toFixed(2)
+    const priceInput = row.querySelector("[data-price-field]")
+    if (priceInput) {
+      priceInput.value = parseFloat(price).toFixed(2)
     }
 
     this.calculateLineTotal(row)

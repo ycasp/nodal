@@ -68,8 +68,8 @@
                     <td><%= item.product.name %></td>
                     <td class="text-muted"><%= item.product.sku || '-' %></td>
                     <td class="text-center"><%= item.quantity %> <%= item.product.min_quantity_type %></td>
-                    <td class="text-end">$<%= number_with_precision(item.unit_price, precision: 2) %></td>
-                    <td class="text-end">$<%= number_with_precision(item.total_price, precision: 2) %></td>
+                    <td class="text-end"><%= humanized_money_with_symbol(item.price) %></td>
+                    <td class="text-end"><%= humanized_money_with_symbol(item.total_price) %></td>
                   </tr>
                 <% end %>
               </tbody>
@@ -79,19 +79,19 @@
           <div class="border-top pt-3 mt-3">
             <div class="d-flex justify-content-between mb-2">
               <span class="text-muted">Subtotal</span>
-              <span>$<%= number_with_precision(@order.total_amount, precision: 2) %></span>
+              <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
             </div>
             <div class="d-flex justify-content-between mb-2">
               <span class="text-muted">Tax (8%)</span>
-              <span>$<%= number_with_precision(@order.total_amount * 0.08, precision: 2) %></span>
+              <span><%= humanized_money_with_symbol(@order.total_amount * 0.08) %></span>
             </div>
             <div class="d-flex justify-content-between mb-2">
               <span class="text-muted">Shipping</span>
-              <span>$15.00</span>
+              <span><%= humanized_money_with_symbol(Money.new(1500, 'EUR')) %></span>
             </div>
             <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-2">
               <span>Total</span>
-              <span>$<%= number_with_precision(@order.total_amount * 1.08 + 15, precision: 2) %></span>
+              <span><%= humanized_money_with_symbol(@order.total_amount * 1.08 + Money.new(1500, 'EUR')) %></span>
             </div>
           </div>
         </div>

@@ -57,10 +57,10 @@
                     <% end %>
                   </td>
                   <td class="text-end">
-                    <%= humanized_money_with_symbol(Money.new(item.unit_price, 'EUR')) %>
+                    <%= humanized_money_with_symbol(item.price) %>
                   </td>
                   <td class="text-end fw-medium">
-                    <%= humanized_money_with_symbol(Money.new(item.total_price, 'EUR')) %>
+                    <%= humanized_money_with_symbol(item.total_price) %>
                   </td>
                   <td class="text-end pe-4">
                     <%= button_to order_item_path(org_slug: params[:org_slug], id: item), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Remove this item?" } do %>
@@ -89,14 +89,14 @@
 
           <div class="d-flex justify-content-between mb-2">
             <span class="text-muted">Subtotal (<%= @order.item_count %> items)</span>
-            <span><%= humanized_money_with_symbol(Money.new(@order.total_amount, 'EUR')) %></span>
+            <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
           </div>
 
           <hr>
 
           <div class="d-flex justify-content-between mb-4">
             <span class="fw-bold">Total</span>
-            <span class="fw-bold fs-5"><%= humanized_money_with_symbol(Money.new(@order.total_amount, 'EUR')) %></span>
+            <span class="fw-bold fs-5"><%= humanized_money_with_symbol(@order.total_amount) %></span>
           </div>
 
           <%= button_to place_cart_path(org_slug: params[:org_slug]), method: :post, class: "btn btn-primary w-100 btn-lg" do %>

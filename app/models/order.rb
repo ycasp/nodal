@@ -36,7 +36,7 @@ class Order < ApplicationRecord
   end
 
   def total_amount
-    order_items.sum { |item| (item.unit_price * item.quantity) - (item.discount_amount || 0) }
+    order_items.sum(&:total_price)
   end
 
   private

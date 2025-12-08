@@ -24,7 +24,7 @@
               <td class="ps-4 fw-medium"><%= order.order_number %></td>
               <td><%= order.placed_at&.strftime("%B %d, %Y") %></td>
               <td><%= order.order_items.count %> items</td>
-              <td><%= humanized_money_with_symbol(Money.new(order.total_amount, 'EUR')) %></td>
+              <td><%= humanized_money_with_symbol(order.total_amount) %></td>
               <td>
                 <% status_class = case order.status
                    when 'completed' then 'bg-success'
