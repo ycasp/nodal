@@ -72,7 +72,9 @@
         <tbody>
           <% @orders.each do |order| %>
             <tr class="order-row" data-href="<%= bo_order_path(org_slug: @current_organisation.slug, id: order.id) %>" style="cursor: pointer;">
-              <td class="fw-medium"><%= order.order_number %></td>
+              <td>
+                <div class="fw-semibold"><%= order.order_number %></div>
+              </td>
               <td>
                 <div><%= order.customer.company_name %></div>
                 <small class="text-muted"><%= order.customer.contact_name %></small>
