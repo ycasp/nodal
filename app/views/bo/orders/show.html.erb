@@ -256,7 +256,9 @@
           <% end %>
 
           <div class="d-grid mt-3">
-            <button class="btn btn-outline-secondary btn-sm">View Client Profile</button>
+            <%= link_to bo_customer_path(org_slug: @current_organisation.slug, id: @order.customer.id), class: "btn btn-outline-secondary btn-sm" do %>
+              View Client Profile
+            <% end %>
           </div>
         </div>
       </div>
