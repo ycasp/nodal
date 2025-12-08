@@ -79,7 +79,7 @@
               </td>
               <td><%= order.placed_at&.strftime("%m/%d/%Y") || order.created_at.strftime("%m/%d/%Y") %></td>
               <td><%= order.order_items.count %></td>
-              <td>$<%= number_with_precision(order.total_amount, precision: 2, delimiter: ',') %></td>
+              <td><%= humanized_money_with_symbol(Money.new(order.total_amount, 'EUR')) %></td>
               <td>
                 <% status_class = case order.status
                    when 'completed' then 'text-success'
