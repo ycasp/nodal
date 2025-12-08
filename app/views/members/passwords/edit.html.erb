@@ -1,27 +1,44 @@
-<h2>Change your password</h2>
+<div class="auth-logo">
+  <span class="auth-logo-icon">N</span>
+  <span class="auth-logo-text">odal</span>
+</div>
 
-<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+<h1 class="auth-title">Change your password</h1>
+<p class="auth-subtitle">Enter your new password below</p>
+
+<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
   <%= f.error_notification %>
 
   <%= f.input :reset_password_token, as: :hidden %>
   <%= f.full_error :reset_password_token %>
 
-  <div class="form-inputs">
+  <div class="auth-field">
     <%= f.input :password,
                 label: "New password",
                 required: true,
                 autofocus: true,
+                placeholder: "Enter your new password",
                 hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
                 input_html: { autocomplete: "new-password" } %>
+  </div>
+
+  <div class="auth-field">
     <%= f.input :password_confirmation,
                 label: "Confirm your new password",
                 required: true,
+                placeholder: "Confirm your new password",
                 input_html: { autocomplete: "new-password" } %>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Change my password" %>
+  <div class="auth-actions">
+    <%= f.button :submit, "Change my password", class: "auth-submit-btn" %>
   </div>
 <% end %>
 
-<%= render "members/shared/links" %>
+<div class="auth-divider">
+  <span>or</span>
+</div>
+
+<div class="auth-footer">
+  <p>Remember your password? <%= link_to "Sign in", new_session_path(resource_name), class: "auth-link" %></p>
+</div>
