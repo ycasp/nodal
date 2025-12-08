@@ -1,7 +1,7 @@
 <tr data-new-record="<%= f.object.new_record? %>">
   <td>
     <%= f.select :product_id,
-        options_for_select(products.map { |p| [p.name, p.id, { 'data-price': p.unit_price }] }, f.object.product_id),
+        options_for_select(products.map { |p| [p.name, p.id, { 'data-price': p.price.to_f }] }, f.object.product_id),
         { prompt: "Select product..." },
         { class: "form-select form-select-sm", data: { action: "change->order-items#updatePrice" } } %>
   </td>
@@ -11,11 +11,11 @@
   <td>
     <div class="input-group input-group-sm">
       <span class="input-group-text">€</span>
-      <%= f.number_field :unit_price, class: "form-control form-control-sm", step: 0.01, min: 0, value: f.object.unit_price ? (f.object.unit_price / 100.0) : nil, data: { price_field: true, action: "input->order-items#calculate" } %>
+      <%= f.number_field :price, class: "form-control form-control-sm", step: 0.01, min: 0, data: { price_field: true, action: "input->order-items#calculate" } %>
     </div>
   </td>
   <td>
-    <span class="fw-medium">€<span data-line-total><%= number_with_precision((f.object.quantity || 0) * (f.object.unit_price || 0) / 100.0, precision: 2) %></span></span>
+    <span class="fw-medium">€<span data-line-total><%= number_with_precision(f.object.total_price.to_f, precision: 2) %></span></span>
   </td>
   <td>
     <%= f.hidden_field :_destroy, value: "0" %>

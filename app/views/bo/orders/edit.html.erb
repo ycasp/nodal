@@ -105,7 +105,7 @@
               <div class="d-flex justify-content-end">
                 <div class="text-end">
                   <span class="text-muted me-3">Order Total:</span>
-                  <strong class="fs-5">€<span data-order-items-target="total"><%= number_with_precision(@order.total_amount / 100.0, precision: 2) %></span></strong>
+                  <strong class="fs-5">€<span data-order-items-target="total"><%= number_with_precision(@order.total_amount.to_f, precision: 2) %></span></strong>
                 </div>
               </div>
             </div>
@@ -117,7 +117,7 @@
                 <select name="order[order_items_attributes][NEW_INDEX][product_id]" class="form-select form-select-sm" data-action="change->order-items#updatePrice">
                   <option value="">Select product...</option>
                   <% @products.each do |product| %>
-                    <option value="<%= product.id %>" data-price="<%= product.unit_price %>"><%= product.name %></option>
+                    <option value="<%= product.id %>" data-price="<%= product.price.to_f %>"><%= product.name %></option>
                   <% end %>
                 </select>
               </td>
@@ -127,7 +127,7 @@
               <td>
                 <div class="input-group input-group-sm">
                   <span class="input-group-text">€</span>
-                  <input type="number" name="order[order_items_attributes][NEW_INDEX][unit_price]" class="form-control form-control-sm" step="0.01" min="0" data-price-field data-action="input->order-items#calculate">
+                  <input type="number" name="order[order_items_attributes][NEW_INDEX][price]" class="form-control form-control-sm" step="0.01" min="0" data-price-field data-action="input->order-items#calculate">
                 </div>
               </td>
               <td>
@@ -195,7 +195,7 @@
                 <div class="fw-medium small"><%= product.name %></div>
                 <div class="d-flex justify-content-between text-muted small">
                   <span><%= product.sku || 'No SKU' %></span>
-                  <span><%= humanized_money_with_symbol(Money.new(product.unit_price, 'EUR')) %></span>
+                  <span><%= humanized_money_with_symbol(product.price) %></span>
                 </div>
               </div>
             <% end %>
