@@ -1,8 +1,7 @@
 // Dropdown/Mega-menu Sidebar Styles
 @import "../config/colors";
 
-// Local variables
-$gray-text: $gray;
+// Local variable aliases (using imported colors)
 $sidebar-border-color: $border-color;
 $breakpoint-mobile: 768px;
 

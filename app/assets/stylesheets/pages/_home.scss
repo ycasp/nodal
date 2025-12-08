@@ -1,5 +1,5 @@
-// Landing Page Styles - Shopify-inspired Design
-// Clean, minimal, confidence-inspiring
+// Landing Page Styles for Nodal
+// Shopify-inspired clean white/green design
 @import "../config/colors";
 
 // ========================================
@@ -48,7 +48,7 @@ $section-padding-mobile: 64px 0;
 }
 
 // ========================================
-// HERO SECTION - Shopify Style
+// HERO SECTION - Shopify Style with Animation
 // ========================================
 .hero-section {
   background: #ffffff;
@@ -66,7 +66,7 @@ $section-padding-mobile: 64px 0;
 
   .container {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 }
 
@@ -174,7 +174,9 @@ $section-padding-mobile: 64px 0;
   margin: 0 auto;
 }
 
-// Video Background - Shopify-style
+// ========================================
+// Hero Background - Seamless Animation Blend
+// ========================================
 .hero-background {
   position: absolute;
   top: 0;
@@ -185,56 +187,79 @@ $section-padding-mobile: 64px 0;
   overflow: hidden;
 }
 
-.video-container {
-  position: absolute;
-  top: 0;
-  left: 0;
+.network-svg {
   width: 100%;
   height: 100%;
-}
+  opacity: 1;
 
-.hero-video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translate(-50%, -50%);
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out;
+  // Restyle SVG elements for light background with green tones
+  .connections {
+    stroke: $teal !important;
+    stroke-opacity: 0.15 !important;
+  }
 
-  &.active {
-    opacity: 1;
+  .pulses circle {
+    fill: $teal !important;
+  }
+
+  .nodes .node circle {
+    fill: rgba(255, 255, 255, 0.8) !important;
+    stroke: $teal !important;
+    stroke-opacity: 0.4 !important;
+  }
+
+  .nodes .node g {
+    rect, path, line, circle {
+      stroke: $teal !important;
+    }
+    rect[fill], circle[fill] {
+      fill: $teal !important;
+    }
+  }
+
+  .node-center circle {
+    fill: $teal !important;
+    stroke: $teal-dark !important;
+    opacity: 0.2 !important;
+    filter: drop-shadow(0 0 20px rgba(0, 128, 96, 0.3));
+  }
+
+  .node-center text {
+    fill: $teal !important;
+    opacity: 0.5 !important;
   }
 }
 
-.hero-overlay {
+// Overlay for seamless blend
+.hero-section::before {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  // Subtle overlay to ensure text readability
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.75) 50%,
-    rgba(255, 255, 255, 0.65) 100%
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.85) 40%,
+    rgba(248, 250, 249, 0.80) 100%
   );
   z-index: 1;
+  pointer-events: none;
 }
 
-// Mobile: hide videos for performance, show subtle gradient
+// Mobile: reduce animation visibility
 @media (max-width: 768px) {
-  .video-container {
-    display: none;
+  .hero-section::before {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.92) 100%
+    );
   }
 
-  .hero-overlay {
-    background: linear-gradient(135deg, #f8faf9 0%, #ffffff 100%);
+  .network-svg {
+    opacity: 0.5;
   }
 }
 
@@ -311,9 +336,9 @@ $section-padding-mobile: 64px 0;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 12px;
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
 .ui-nav-item {
@@ -393,13 +418,13 @@ $section-padding-mobile: 64px 0;
   animation: growBar 1.5s ease-out forwards;
   transform-origin: bottom;
 
-  &.bar-1 { animation-delay: 0.1s; --bar-height: 35%; }
-  &.bar-2 { animation-delay: 0.2s; --bar-height: 55%; }
-  &.bar-3 { animation-delay: 0.3s; --bar-height: 40%; }
-  &.bar-4 { animation-delay: 0.4s; --bar-height: 70%; }
-  &.bar-5 { animation-delay: 0.5s; --bar-height: 50%; background: $teal; }
-  &.bar-6 { animation-delay: 0.6s; --bar-height: 85%; background: $teal; }
-  &.bar-7 { animation-delay: 0.7s; --bar-height: 65%; background: $teal; }
+  &.bar-1 { animation-delay: 0.1s; --bar-height: 40%; }
+  &.bar-2 { animation-delay: 0.2s; --bar-height: 65%; }
+  &.bar-3 { animation-delay: 0.3s; --bar-height: 45%; }
+  &.bar-4 { animation-delay: 0.4s; --bar-height: 80%; }
+  &.bar-5 { animation-delay: 0.5s; --bar-height: 55%; background: $teal; }
+  &.bar-6 { animation-delay: 0.6s; --bar-height: 90%; background: $teal; }
+  &.bar-7 { animation-delay: 0.7s; --bar-height: 70%; }
 }
 
 @keyframes growBar {
@@ -475,9 +500,9 @@ $section-padding-mobile: 64px 0;
 }
 
 .order-badge {
-  font-size: 10px;
-  padding: 4px 8px;
-  border-radius: 6px;
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
   background: rgba(0, 128, 96, 0.1);
   color: $teal;
   font-weight: 600;
@@ -532,7 +557,7 @@ $section-padding-mobile: 64px 0;
 .problem-icon {
   width: 64px;
   height: 64px;
-  background-color: $light-bg;
+  background-color: #f6f6f7;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -589,7 +614,7 @@ $section-padding-mobile: 64px 0;
 .features-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+  gap: 24px;
 
   @media (max-width: 992px) {
     grid-template-columns: repeat(2, 1fr);
@@ -603,7 +628,7 @@ $section-padding-mobile: 64px 0;
 .feature-card {
   padding: 32px;
   border-radius: 16px;
-  background: $light-bg;
+  background: #f6f6f7;
   transition: all 0.3s ease;
 
   &:hover {
@@ -637,9 +662,31 @@ $section-padding-mobile: 64px 0;
 }
 
 .feature-description {
-  color: $gray;
+  color: #6b7280;
   line-height: 1.6;
-  margin-bottom: 0;
+  margin-bottom: 16px;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    color: $gray;
+    font-size: 0.875rem;
+    padding: 4px 0;
+    padding-left: 20px;
+    position: relative;
+
+    &::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: $teal;
+      font-weight: 600;
+    }
+  }
 }
 
 // ========================================
@@ -905,6 +952,225 @@ $section-padding-mobile: 64px 0;
   font-weight: 700;
   color: $dark;
   letter-spacing: -0.5px;
+
+  &.logo-hubspot {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+  }
+
+  &.logo-notion {
+    font-family: 'Georgia', serif;
+    font-weight: 500;
+  }
+
+  &.logo-linear {
+    font-family: 'SF Pro Display', -apple-system, sans-serif;
+    font-weight: 500;
+    letter-spacing: -1px;
+  }
+
+  &.logo-figma {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+  }
+
+  &.logo-miro {
+    font-family: 'Arial Black', sans-serif;
+    font-weight: 900;
+    text-transform: lowercase;
+  }
+
+  &.logo-lewagon {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+}
+
+// ========================================
+// HOW IT WORKS SECTION
+// ========================================
+.how-it-works-section {
+  padding: $section-padding;
+  background-color: #f8fafc;
+
+  @media (max-width: 768px) {
+    padding: $section-padding-mobile;
+  }
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  position: relative;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  // Connection line between steps (desktop only)
+  &::before {
+    content: "";
+    position: absolute;
+    top: 60px;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: linear-gradient(to right, $teal, $teal-dark);
+    z-index: 0;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+}
+
+.step-card {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background-color: $teal;
+  color: #1e293b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin: 0 auto 16px;
+}
+
+.step-icon {
+  width: 80px;
+  height: 80px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  i {
+    font-size: 2rem;
+    color: $teal-dark;
+  }
+}
+
+.step-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: $gray;
+  margin-bottom: 12px;
+}
+
+.step-description {
+  color: #6b7280;
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+// ========================================
+// SOLUTIONS SECTION
+// ========================================
+.solutions-section {
+  padding: $section-padding;
+  background-color: #ffffff;
+
+  @media (max-width: 768px) {
+    padding: $section-padding-mobile;
+  }
+}
+
+.solutions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.solution-card {
+  padding: 40px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f8fafc, #ffffff);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+  }
+}
+
+.solution-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+
+  i {
+    font-size: 1.75rem;
+    color: $teal;
+  }
+}
+
+.solution-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $gray;
+  margin-bottom: 12px;
+}
+
+.solution-description {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.solution-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+
+  li {
+    color: #6b7280;
+    font-size: 0.9rem;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      color: $teal-dark;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.solution-link {
+  color: $teal-dark;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: darken($teal-dark, 10%);
+  }
 }
 
 // ========================================

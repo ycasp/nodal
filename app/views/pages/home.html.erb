@@ -12,23 +12,215 @@
        Purpose: Primary value proposition
        ======================================== -->
   <section class="hero-section" aria-labelledby="hero-heading">
-    <!-- Video Background -->
-    <div class="hero-background" data-controller="hero-video">
-      <div class="video-container">
-        <video class="hero-video active" autoplay muted loop playsinline data-hero-video-target="video">
-          <source src="/videos/8540430-hd_1920_1080_30fps.mp4" type="video/mp4">
-        </video>
-        <video class="hero-video" autoplay muted loop playsinline data-hero-video-target="video">
-          <source src="/videos/7287516-uhd_3840_2160_25fps.mp4" type="video/mp4">
-        </video>
-        <video class="hero-video" autoplay muted loop playsinline data-hero-video-target="video">
-          <source src="/videos/6169116-uhd_3840_2160_25fps.mp4" type="video/mp4">
-        </video>
-        <video class="hero-video" autoplay muted loop playsinline data-hero-video-target="video">
-          <source src="/videos/8725959-uhd_3840_2160_25fps.mp4" type="video/mp4">
-        </video>
-      </div>
-      <div class="hero-overlay"></div>
+    <!-- Network Animation Background -->
+    <div class="hero-background">
+      <svg class="network-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Connection lines across the hero -->
+        <g class="connections" stroke="#3ee8c8" stroke-opacity="0.15" stroke-width="1.5" fill="none">
+          <path id="bgPath1" d="M80,100 Q300,200 600,300"/>
+          <path id="bgPath2" d="M80,300 Q300,250 600,300"/>
+          <path id="bgPath3" d="M80,500 Q300,400 600,300"/>
+          <path id="bgPath4" d="M1120,100 Q900,200 600,300"/>
+          <path id="bgPath5" d="M1120,300 Q900,250 600,300"/>
+          <path id="bgPath6" d="M1120,500 Q900,400 600,300"/>
+          <path id="bgPath7" d="M300,50 Q450,150 600,300"/>
+          <path id="bgPath8" d="M900,50 Q750,150 600,300"/>
+          <path id="bgPath9" d="M300,550 Q450,450 600,300"/>
+          <path id="bgPath10" d="M900,550 Q750,450 600,300"/>
+          <!-- Cross connections -->
+          <line x1="80" y1="100" x2="300" y2="50" stroke-opacity="0.1"/>
+          <line x1="1120" y1="100" x2="900" y2="50" stroke-opacity="0.1"/>
+          <line x1="80" y1="500" x2="300" y2="550" stroke-opacity="0.1"/>
+          <line x1="1120" y1="500" x2="900" y2="550" stroke-opacity="0.1"/>
+        </g>
+
+        <!-- Animated pulses -->
+        <g class="pulses" filter="url(#glow)">
+          <circle r="5" fill="#3ee8c8">
+            <animateMotion dur="4s" repeatCount="indefinite">
+              <mpath href="#bgPath1"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#14b8a6">
+            <animateMotion dur="3.5s" repeatCount="indefinite" begin="0.5s">
+              <mpath href="#bgPath2"/>
+            </animateMotion>
+          </circle>
+          <circle r="5" fill="#3ee8c8">
+            <animateMotion dur="4.2s" repeatCount="indefinite" begin="1s">
+              <mpath href="#bgPath3"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#14b8a6">
+            <animateMotion dur="3.8s" repeatCount="indefinite" begin="1.5s">
+              <mpath href="#bgPath4"/>
+            </animateMotion>
+          </circle>
+          <circle r="5" fill="#3ee8c8">
+            <animateMotion dur="3.5s" repeatCount="indefinite" begin="2s">
+              <mpath href="#bgPath5"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#14b8a6">
+            <animateMotion dur="4s" repeatCount="indefinite" begin="2.5s">
+              <mpath href="#bgPath6"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#3ee8c8">
+            <animateMotion dur="4.5s" repeatCount="indefinite" begin="0.3s">
+              <mpath href="#bgPath7"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#14b8a6">
+            <animateMotion dur="4.3s" repeatCount="indefinite" begin="1.8s">
+              <mpath href="#bgPath8"/>
+            </animateMotion>
+          </circle>
+        </g>
+
+        <!-- Business nodes spread across background -->
+        <g class="nodes">
+          <!-- Left side -->
+          <!-- Node 1: Calculator/Invoice icon -->
+          <g class="node">
+            <circle cx="80" cy="100" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.6"/>
+            <g transform="translate(80, 100)">
+              <rect x="-8" y="-10" width="16" height="18" fill="none" stroke="#3ee8c8" stroke-width="1.2" rx="2"/>
+              <line x1="-5" y1="-6" x2="5" y2="-6" stroke="#3ee8c8" stroke-width="1"/>
+              <line x1="-5" y1="-2" x2="5" y2="-2" stroke="#3ee8c8" stroke-width="1"/>
+              <line x1="-5" y1="2" x2="2" y2="2" stroke="#3ee8c8" stroke-width="1"/>
+              <circle cx="4" cy="5" r="2" fill="none" stroke="#3ee8c8" stroke-width="1"/>
+            </g>
+          </g>
+          <!-- Node 2: Chart/Analytics icon -->
+          <g class="node">
+            <circle cx="80" cy="300" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.6"/>
+            <g transform="translate(80, 300)">
+              <polyline points="-8,6 -8,-8 10,-8" fill="none" stroke="#3ee8c8" stroke-width="1.2"/>
+              <polyline points="-5,4 -1,-2 3,1 7,-5" fill="none" stroke="#3ee8c8" stroke-width="1.5"/>
+              <circle cx="7" cy="-5" r="2" fill="#3ee8c8"/>
+            </g>
+          </g>
+          <!-- Node 3: Delivery truck icon -->
+          <g class="node">
+            <circle cx="80" cy="500" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.6"/>
+            <g transform="translate(80, 500)">
+              <rect x="-10" y="-5" width="12" height="8" fill="none" stroke="#3ee8c8" stroke-width="1.2" rx="1"/>
+              <path d="M2,-5 L2,3 L8,3 L8,-1 L5,-5 Z" fill="none" stroke="#3ee8c8" stroke-width="1.2"/>
+              <circle cx="-5" cy="5" r="2.5" fill="none" stroke="#3ee8c8" stroke-width="1.2"/>
+              <circle cx="5" cy="5" r="2.5" fill="none" stroke="#3ee8c8" stroke-width="1.2"/>
+            </g>
+          </g>
+
+          <!-- Right side -->
+          <!-- Node 4: Warehouse/Building icon -->
+          <g class="node">
+            <circle cx="1120" cy="100" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.6"/>
+            <g transform="translate(1120, 100)">
+              <path d="M-10,-6 L-10,6 L10,6 L10,-6 L-10,-6 M-10,-6 L-7,-11 L7,-11 L10,-6" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+              <rect x="-2" y="0" width="4" height="6" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+            </g>
+          </g>
+          <!-- Node 5: Person/Customer icon -->
+          <g class="node">
+            <circle cx="1120" cy="300" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.6"/>
+            <g transform="translate(1120, 300)">
+              <circle cx="0" cy="-4" r="5" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+              <path d="M-8,8 Q-8,0 0,0 Q8,0 8,8" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+            </g>
+          </g>
+          <!-- Node 6: Handshake/Partnership icon -->
+          <g class="node">
+            <circle cx="1120" cy="500" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.6"/>
+            <g transform="translate(1120, 500)">
+              <path d="M-8,-2 L-4,2 L0,-1 L4,2 L8,-2" fill="none" stroke="#14b8a6" stroke-width="1.5"/>
+              <path d="M-6,4 L-2,0" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+              <path d="M6,4 L2,0" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+              <circle cx="-8" cy="-2" r="2" fill="#14b8a6"/>
+              <circle cx="8" cy="-2" r="2" fill="#14b8a6"/>
+            </g>
+          </g>
+
+          <!-- Top -->
+          <!-- Node 7: Shopping cart icon -->
+          <g class="node">
+            <circle cx="300" cy="50" r="24" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.5"/>
+            <g transform="translate(300, 50)">
+              <path d="M-7,0 L-5,-4 L6,-4 L7,2 L-3,2" fill="none" stroke="#3ee8c8" stroke-width="1.2"/>
+              <circle cx="-2" cy="5" r="2" fill="none" stroke="#3ee8c8" stroke-width="1"/>
+              <circle cx="5" cy="5" r="2" fill="none" stroke="#3ee8c8" stroke-width="1"/>
+            </g>
+          </g>
+          <!-- Node 8: Credit card/Payment icon -->
+          <g class="node">
+            <circle cx="900" cy="50" r="24" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.5"/>
+            <g transform="translate(900, 50)">
+              <rect x="-8" y="-5" width="16" height="10" fill="none" stroke="#14b8a6" stroke-width="1.2" rx="1"/>
+              <line x1="-8" y1="-1" x2="8" y2="-1" stroke="#14b8a6" stroke-width="2"/>
+              <line x1="-5" y1="2" x2="0" y2="2" stroke="#14b8a6" stroke-width="1"/>
+            </g>
+          </g>
+
+          <!-- Bottom -->
+          <!-- Node 9: Box/Package icon -->
+          <g class="node">
+            <circle cx="300" cy="550" r="24" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.5"/>
+            <g transform="translate(300, 550)">
+              <rect x="-6" y="-4" width="12" height="10" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+              <line x1="0" y1="-4" x2="0" y2="6" stroke="#14b8a6" stroke-width="1"/>
+              <path d="M-6,-4 L0,-7 L6,-4" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+            </g>
+          </g>
+          <!-- Node 10: Globe/International icon -->
+          <g class="node">
+            <circle cx="900" cy="550" r="24" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.5"/>
+            <g transform="translate(900, 550)">
+              <circle cx="0" cy="0" r="7" fill="none" stroke="#3ee8c8" stroke-width="1.2"/>
+              <ellipse cx="0" cy="0" rx="3" ry="7" fill="none" stroke="#3ee8c8" stroke-width="1"/>
+              <line x1="-7" y1="0" x2="7" y2="0" stroke="#3ee8c8" stroke-width="1"/>
+            </g>
+          </g>
+
+          <!-- Center: Nodal hub - MORE PRONOUNCED -->
+          <g class="node node-center">
+            <!-- Outer glow ring -->
+            <circle cx="600" cy="300" r="60" fill="none" stroke="#008060" stroke-width="1" opacity="0.15">
+              <animate attributeName="r" values="58;65;58" dur="4s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.15;0.08;0.15" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <!-- Middle ring -->
+            <circle cx="600" cy="300" r="50" fill="none" stroke="#008060" stroke-width="1.5" opacity="0.2">
+              <animate attributeName="r" values="48;54;48" dur="3.5s" repeatCount="indefinite"/>
+            </circle>
+            <!-- Main hub circle -->
+            <circle cx="600" cy="300" r="40" fill="#008060" stroke="#004c3f" stroke-width="2" opacity="0.25">
+              <animate attributeName="r" values="38;42;38" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.25;0.35;0.25" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <!-- Inner glow -->
+            <circle cx="600" cy="300" r="25" fill="#008060" opacity="0.15"/>
+            <!-- NODAL text - more visible -->
+            <text x="600" y="304" text-anchor="middle" fill="#004c3f" font-weight="700" font-size="14" letter-spacing="2" opacity="0.4">NODAL</text>
+            <!-- Connection dots around hub -->
+            <g opacity="0.3">
+              <circle cx="600" cy="255" r="3" fill="#008060"/>
+              <circle cx="600" cy="345" r="3" fill="#008060"/>
+              <circle cx="555" cy="300" r="3" fill="#008060"/>
+              <circle cx="645" cy="300" r="3" fill="#008060"/>
+            </g>
+          </g>
+        </g>
+      </svg>
     </div>
 
     <div class="container">

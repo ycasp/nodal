@@ -1,27 +1,32 @@
 <% content_for :bo_main_content do %>
 
-<div class="d-flex justify-content-between align-items-start mb-4">
-  <div>
-    <h1>Product Catalog</h1>
-    <p class="text-muted">Smart inventory with AI-powered insights</p>
-  </div>
-  <div class="d-flex gap-2">
-    <a href="#" class="btn btn-outline-secondary">
-      <i class="fa-solid fa-upload"></i> Import
-    </a>
-    <a href="#" class="btn btn-outline-secondary">
-      <i class="fa-solid fa-download"></i> Export
-    </a>
-    <a href="#" class="btn btn-outline-secondary">
-      <i class="fa-solid fa-gear"></i> Manage Properties
-    </a>
-<%= link_to new_bo_product_path(params[:org_slug]), class: "btn btn-primary" do %>
-      <i class="fa-solid fa-plus"></i> Add New
-    <% end %>
+<!-- Sticky Header -->
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <h1>Product Catalog</h1>
+      <p>Smart inventory with AI-powered insights</p>
+    </div>
+    <div class="bo-page-actions">
+      <a href="#" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-upload"></i> Import
+      </a>
+      <a href="#" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-download"></i> Export
+      </a>
+      <a href="#" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-gear"></i> Manage Properties
+      </a>
+      <%= link_to new_bo_product_path(params[:org_slug]), class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus"></i> Add New
+      <% end %>
+    </div>
   </div>
 </div>
 
-<div class="card mb-4">
+<!-- Page Body -->
+<div class="bo-page-body">
+  <div class="card mb-4">
   <div class="card-body">
     <%= form_with url: bo_products_path(params[:org_slug]), method: :get, class: "d-flex align-items-center" do %>
       <div class="input-group flex-grow-1 me-3">
@@ -106,6 +111,7 @@
       <% end %>
     </tbody>
   </table>
+  </div>
 </div>
 
 <% end %>

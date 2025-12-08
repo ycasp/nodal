@@ -1,25 +1,29 @@
 // Define variables for your color scheme
-// Unified Shopify-inspired palette
+// Shopify-inspired brand colors
 
-// Brand Colors
-$teal: #008060;           // Primary brand green (Shopify green)
-$teal-light: #5cb88e;     // Light variant for hovers
-$teal-dark: #004c3f;      // Dark variant for active states
-
-// Neutral Colors
-$dark: #1a1a1a;           // Primary text
-$gray: #6b7177;           // Secondary text
-$light-gray: #f6f6f7;     // Background light
-$border-color: #e5e5e5;   // Borders
+// Brand Colors - Shopify Green
+$teal: #008060;              // Primary brand green (Shopify)
+$teal-light: #5cb88e;        // Lighter variant
+$teal-dark: #004c3f;         // Darker variant
 
 // Semantic Colors
-$red: #dc3545;
+$red: #FD1015;
 $blue: #0D6EFD;
 $yellow: #ffc107;
 $orange: #E67E22;
-$green: $teal;            // Use brand green as primary green
+$green: #008060;             // Aligned with brand teal
+
+// Neutral Colors
+$dark: #1a1a1a;
+$gray: #6b7177;
+$gray-text: #6b7280;
+$light-gray: #F4F4F4;
+$border-color: #e5e5e5;
 
 // Alert-specific colors (using brand teal for success)
 $success-bg: #f0fdf4;
 $success-border: $teal;
 $success-text: #166534;
+
+// Layout
+$navbar-height: 64px;
