@@ -6,7 +6,7 @@
 <h1 class="auth-title">Welcome back</h1>
 <p class="auth-subtitle">Sign in to your account to continue</p>
 
-<%= simple_form_for(resource, as: resource_name, url: customer_session_path(org_slug: @organisation.slug), html: { class: "auth-form" }) do |f| %>
+<%= simple_form_for(resource, as: resource_name, url: customer_session_path(org_slug: @organisation.slug), html: { class: "auth-form", data: { turbo: false } }) do |f| %>
   <div class="auth-field">
     <%= f.input :email,
                 required: false,
