@@ -1,22 +1,21 @@
 <nav class="bo-navbar">
-  <div class="bo-navbar-content">
-    <div class="bo-navbar-search">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" placeholder="Search..." class="bo-search-input">
-    </div>
-
-    <div class="bo-navbar-actions">
-      <button class="bo-navbar-icon" title="Notifications">
-        <i class="fa-solid fa-bell"></i>
-      </button>
-      <div class="bo-navbar-user">
-        <div class="bo-user-avatar">
-          <i class="fa-solid fa-user"></i>
-        </div>
-        <%= link_to destroy_member_session_path, class: "bo-logout-btn", data: {turbo_method: :delete}, title: "Log out" do %>
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Log out</span>
-        <% end %>
+  <div class="bo-navbar-content justify-content-end">
+    <div class="d-flex align-items-center gap-3">
+      <span class="text-muted">
+        <i class="fa-regular fa-building"></i>
+      </span>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="fa-regular fa-user me-1"></i>
+Ayusha
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <%= link_to destroy_member_session_path, class: "dropdown-item", data: { turbo_method: :delete } do %>
+              <i class="fa-solid fa-right-from-bracket me-2"></i>Sign out
+            <% end %>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
