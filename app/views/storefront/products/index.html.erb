@@ -59,7 +59,19 @@
         <% @products.each do |product| %>
           <div class="col">
             <%= link_to product_path(org_slug: params[:org_slug], id: product), class: "text-decoration-none" do %>
-              <div class="card h-100 product-card">
+              <div class="card h-100 product-card position-relative">
+                <% discount_info = @product_discounts[product.id] %>
+                <% if discount_info && discount_info[:has_discount] %>
+                  <!-- Discount Badge on Image -->
+                  <div class="position-absolute" style="top: 10px; right: 10px; z-index: 10;">
+                    <span class="badge bg-success shadow-sm" style="font-size: 0.9rem; padding: 6px 10px;">
+                      <i class="fa-solid fa-percent me-1"></i>-<%= (discount_info[:effective_discount][:percentage] * 100).round(0) %>%
+                    </span>
+                    <% if discount_info[:all_discounts].any? { |d| d[:type] == :product } %>
+                      <span class="badge bg-danger shadow-sm d-block mt-1" style="font-size: 0.8rem;">SALE</span>
+                    <% end %>
+                  </div>
+                <% end %>
                 <% if product.photo.attached? %>
                   <%= image_tag product.photo, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
                 <% else %>
@@ -76,7 +88,6 @@
                 </div>
                 <div class="card-footer bg-white border-top-0">
                   <div class="d-flex justify-content-between align-items-center">
-                    <% discount_info = @product_discounts[product.id] %>
                     <% if discount_info && discount_info[:has_discount] %>
                       <div class="price-with-discount">
                         <span class="original-price text-muted text-decoration-line-through small">
