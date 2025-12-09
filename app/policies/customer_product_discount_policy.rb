@@ -25,6 +25,10 @@ class CustomerProductDiscountPolicy < ApplicationPolicy
     user_works_for_records_organisation?
   end
 
+  def toggle_active?
+    user_works_for_records_organisation?
+  end
+
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
