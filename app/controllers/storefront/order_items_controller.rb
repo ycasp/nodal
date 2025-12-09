@@ -8,19 +8,10 @@ class Storefront::OrderItemsController < Storefront::BaseController
     if @order_item
       @order_item.quantity += order_item_params[:quantity].to_i
     else
+      # OrderItem callback set_discount_from_product will use DiscountCalculator
+      # to apply the effective discount from all sources (ProductDiscount,
+      # CustomerDiscount, CustomerProductDiscount)
       @order_item = @order.order_items.build(order_item_params.merge(product: @product))
-
-      # Use DiscountCalculator to get the effective discount from ALL sources
-      # (ProductDiscount, CustomerDiscount, CustomerProductDiscount)
-      calculator = DiscountCalculator.new(
-        product: @product,
-        customer: current_customer,
-        quantity: order_item_params[:quantity].to_i
-      )
-
-      if calculator.effective_discount[:percentage] > 0
-        @order_item.discount_percentage = calculator.effective_discount[:percentage]
-      end
     end
 
     authorize @order_item
