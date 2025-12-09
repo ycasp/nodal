@@ -10,7 +10,7 @@ class OrderItem < ApplicationRecord
      less_than_or_equal_to: 1 }, allow_nil: true
 
   before_validation :set_unit_price_from_product, on: :create
-  before_validation :set_discount_from_product, on: :create
+  before_validation :recalculate_discount, if: :should_recalculate_discount?
 
   def total_price
     subtotal = price * quantity
@@ -24,12 +24,14 @@ class OrderItem < ApplicationRecord
     self.unit_price ||= product&.unit_price
   end
 
-  def set_discount_from_product
-    # Skip if discount was already set by the controller
-    return if discount_percentage.present? && discount_percentage > 0
+  def should_recalculate_discount?
+    # Recalculate on create, or when quantity changes (for min_quantity thresholds)
+    new_record? || quantity_changed?
+  end
 
+  def recalculate_discount
     # Use DiscountCalculator to get effective discount from ALL sources:
-    # - ProductDiscount (product-level sales)
+    # - ProductDiscount (product-level sales, may have min_quantity)
     # - CustomerDiscount (client tier discounts)
     # - CustomerProductDiscount (custom pricing)
     calculator = DiscountCalculator.new(
