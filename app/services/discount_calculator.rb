@@ -110,18 +110,51 @@ class DiscountCalculator
     stackable = all_discounts.select { |d| d[:stackable] }
     exclusive = all_discounts.reject { |d| d[:stackable] }
 
-    # Calculate stacked percentage (multiplicative for percentage, additive for fixed)
-    stacked_result = calculate_stacked(stackable)
-
-    # Find best exclusive discount
+    # Find best exclusive (non-stackable) discount - this is the "base"
     best_exclusive = find_best_exclusive(exclusive)
 
-    # Compare and return best option
-    if stacked_result[:savings] >= best_exclusive[:savings]
-      stacked_result
+    # Stack all stackable discounts ON TOP of the best exclusive
+    # Non-stackable discounts compete with each other (best wins)
+    # Stackable discounts combine with the base and each other
+    if stackable.any?
+      calculate_combined(best_exclusive, stackable)
     else
       best_exclusive
     end
+  end
+
+  def calculate_combined(base_exclusive, stackable_discounts)
+    # Start with full price
+    remaining_price = product.price
+
+    # Apply the best exclusive (non-stackable) discount first as the base
+    if base_exclusive[:savings] && base_exclusive[:savings] > Money.new(0, 'EUR')
+      remaining_price = remaining_price - base_exclusive[:savings]
+    end
+
+    # Stack all stackable discounts on top (multiplicative for percentage)
+    stackable_discounts.each do |d|
+      if d[:discount_type] == 'percentage'
+        remaining_price = remaining_price - (remaining_price * d[:value])
+      else # fixed
+        remaining_price = remaining_price - Money.new((d[:value] * 100).to_i, 'EUR')
+      end
+    end
+
+    remaining_price = [remaining_price, Money.new(0, 'EUR')].max
+    savings = product.price - remaining_price
+
+    # Calculate effective percentage for display
+    effective_pct = (savings.to_f / product.price.to_f).round(4) rescue 0
+
+    {
+      percentage: effective_pct,
+      savings: savings,
+      source: :combined,
+      label: "Combined Discount",
+      base_discount: base_exclusive,
+      stacked_discounts: stackable_discounts
+    }
   end
 
   def calculate_stacked(discounts)
