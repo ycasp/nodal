@@ -14,9 +14,10 @@ class Storefront::OrdersController < Storefront::BaseController
     original_order = current_customer.orders.placed.find(params[:id])
     authorize original_order
 
+    debugger
     # If cart has items and no confirmation, redirect back with warning
     if current_cart.order_items.any? && params[:confirm] != "true"
-      flash[:warning] = "Your cart has items. Reordering will replace them."
+      flash[:alert] = "Your cart has items. Reordering will replace them. Press reorder again!"
       redirect_to order_path(org_slug: params[:org_slug], id: original_order, confirm_reorder: true)
       return
     end
