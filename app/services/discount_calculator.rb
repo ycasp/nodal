@@ -1,10 +1,13 @@
 class DiscountCalculator
-  attr_reader :product, :customer, :quantity
+  attr_reader :product, :customer, :quantity, :for_display
 
-  def initialize(product:, customer: nil, quantity: 1)
+  # for_display: true - shows all available discounts (ignoring min_quantity) for product pages
+  # for_display: false - only shows applicable discounts (respecting min_quantity) for cart/checkout
+  def initialize(product:, customer: nil, quantity: 1, for_display: false)
     @product = product
     @customer = customer
     @quantity = quantity
+    @for_display = for_display
   end
 
   # Returns all applicable discounts with metadata
@@ -45,8 +48,16 @@ class DiscountCalculator
     discounts = []
 
     # 1. Product-level discounts (global, for all customers)
-    product_discounts = product.product_discounts.active.where("min_quantity <= ?", quantity)
+    # for_display: true - show all available discounts (ignore min_quantity)
+    # for_display: false - only applicable discounts (respect min_quantity)
+    product_discounts = if for_display
+      product.product_discounts.active
+    else
+      product.product_discounts.active.where("min_quantity <= ?", quantity)
+    end
+
     product_discounts.each do |pd|
+      meets_min_quantity = quantity >= pd.min_quantity
       discounts << {
         type: :product,
         discount_type: pd.discount_type,
@@ -54,7 +65,9 @@ class DiscountCalculator
         stackable: pd.stackable,
         label: "Product Sale",
         valid_until: pd.valid_until,
-        source: pd
+        source: pd,
+        meets_min_quantity: meets_min_quantity,
+        min_quantity_required: pd.min_quantity
       }
     end
 

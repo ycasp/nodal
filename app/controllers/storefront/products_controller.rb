@@ -13,8 +13,9 @@ class Storefront::ProductsController < Storefront::BaseController
     end
 
     # Build discount info for all products using DiscountCalculator
+    # for_display: true shows all available discounts (ignoring min_quantity) for display purposes
     @product_discounts = @products.each_with_object({}) do |product, hash|
-      calculator = DiscountCalculator.new(product: product, customer: current_customer)
+      calculator = DiscountCalculator.new(product: product, customer: current_customer, for_display: true)
       hash[product.id] = calculator.discount_breakdown
     end
   end
@@ -22,6 +23,7 @@ class Storefront::ProductsController < Storefront::BaseController
   def show
     @product = current_organisation.products.find(params[:id])
     authorize @product
-    @discount_calculator = DiscountCalculator.new(product: @product, customer: current_customer)
+    # for_display: true shows all available discounts (ignoring min_quantity) for display purposes
+    @discount_calculator = DiscountCalculator.new(product: @product, customer: current_customer, for_display: true)
   end
 end

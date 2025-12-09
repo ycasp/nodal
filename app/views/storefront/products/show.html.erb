@@ -95,7 +95,7 @@
         <% if discount_breakdown[:has_discount] %>
           <div class="alert alert-success mb-4" style="border-radius: 10px;">
             <h6 class="alert-heading mb-3">
-              <i class="fa-solid fa-tags me-2"></i>Applied Discounts
+              <i class="fa-solid fa-tags me-2"></i>Available Discounts
             </h6>
             <% discount_breakdown[:all_discounts].each do |discount| %>
               <div class="d-flex justify-content-between align-items-center py-2 <%= 'border-bottom' unless discount == discount_breakdown[:all_discounts].last %>">
@@ -104,8 +104,16 @@
                   <% when :product %>
                     <span class="badge bg-danger me-2">SALE</span>
                     <strong>Product Discount</strong>
-                    <% if discount[:source].min_quantity > 1 %>
-                      <small class="text-muted d-block">Min. quantity: <%= discount[:source].min_quantity %> units</small>
+                    <% if discount[:min_quantity_required] && discount[:min_quantity_required] > 1 %>
+                      <% if discount[:meets_min_quantity] %>
+                        <small class="text-success d-block">
+                          <i class="fa-solid fa-check me-1"></i>Min. quantity met (<%= discount[:min_quantity_required] %>+ units)
+                        </small>
+                      <% else %>
+                        <small class="text-warning d-block">
+                          <i class="fa-solid fa-info-circle me-1"></i>Buy <%= discount[:min_quantity_required] %>+ units to unlock this discount
+                        </small>
+                      <% end %>
                     <% end %>
                   <% when :customer %>
                     <span class="badge bg-info me-2">VIP</span>
