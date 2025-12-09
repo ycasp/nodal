@@ -51,8 +51,22 @@
                     </div>
                   </td>
                   <td class="text-center"><%= item.quantity %></td>
-                  <td class="text-end"><%= humanized_money_with_symbol(item.price) %></td>
-                  <td class="text-end fw-medium"><%= humanized_money_with_symbol(item.total_price) %></td>
+                  <td class="text-end">
+                    <% if item.discount_percentage && item.discount_percentage > 0 %>
+                      <span class="text-muted text-decoration-line-through small"><%= humanized_money_with_symbol(item.price) %></span>
+                      <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
+                    <% else %>
+                      <%= humanized_money_with_symbol(item.price) %>
+                    <% end %>
+                  </td>
+                  <td class="text-end fw-medium">
+                    <% if item.discount_percentage && item.discount_percentage > 0 %>
+                      <span class="text-muted text-decoration-line-through small"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                      <span class="text-success"><%= humanized_money_with_symbol(item.total_price) %></span>
+                    <% else %>
+                      <%= humanized_money_with_symbol(item.total_price) %>
+                    <% end %>
+                  </td>
                 </tr>
               <% end %>
             </tbody>

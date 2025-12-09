@@ -55,7 +55,15 @@
 
         <!-- Price -->
         <div class="mb-3">
-          <span class="text-primary" style="font-size: 2.5rem; font-weight: 700;"><%= humanized_money_with_symbol(@product.price) %></span>
+          <% if @active_discount %>
+            <div class="price-with-discount">
+              <span class="original-price text-muted" style="font-size: 1.5rem;"><%= humanized_money_with_symbol(@product.price) %></span>
+              <span class="discounted-price" style="font-size: 2.5rem; font-weight: 700;"><%= humanized_money_with_symbol(@product.discounted_price_for(@active_discount)) %></span>
+              <span class="badge bg-success fs-6">-<%= @active_discount.percentage_display %>% OFF</span>
+            </div>
+          <% else %>
+            <span class="text-primary" style="font-size: 2.5rem; font-weight: 700;"><%= humanized_money_with_symbol(@product.price) %></span>
+          <% end %>
           <span class="text-muted fs-5">/ <%= @product.unit_description || 'unit' %></span>
         </div>
 
@@ -112,7 +120,13 @@
           </button>
 
           <div class="text-muted">
-            <i class="fa-solid fa-calculator me-2"></i>Estimated total: <%= humanized_money_with_symbol(@product.price) %>
+            <i class="fa-solid fa-calculator me-2"></i>Estimated total:
+            <% if @active_discount %>
+              <%= humanized_money_with_symbol(@product.discounted_price_for(@active_discount)) %>
+              <small class="text-success">(-<%= @active_discount.percentage_display %>%)</small>
+            <% else %>
+              <%= humanized_money_with_symbol(@product.price) %>
+            <% end %>
           </div>
         <% end %>
 

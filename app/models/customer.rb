@@ -43,6 +43,13 @@ class Customer < ApplicationRecord
     orders.draft.find_or_create_by!(organisation: organisation)
   end
 
+  def active_discounts_for_products(product_ids)
+    customer_product_discounts
+      .active
+      .where(product_id: product_ids)
+      .index_by(&:product_id)
+  end
+
   private
 
   def password_required?

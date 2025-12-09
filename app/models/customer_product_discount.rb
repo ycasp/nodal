@@ -12,6 +12,12 @@ class CustomerProductDiscount < ApplicationRecord
   validate :dates_not_in_past, on: :create
   validate :no_overlapping_discounts
 
+  scope :active, -> { where("valid_from <= ? AND valid_until >= ?", Date.current, Date.current) }
+
+  def percentage_display
+    (discount_percentage * 100).round(0)
+  end
+
   private
 
   def valid_until_after_valid_from

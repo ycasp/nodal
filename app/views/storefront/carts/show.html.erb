@@ -57,10 +57,21 @@
                     <% end %>
                   </td>
                   <td class="text-end">
-                    <%= humanized_money_with_symbol(item.price) %>
+                    <% if item.discount_percentage && item.discount_percentage > 0 %>
+                      <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price) %></span>
+                      <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
+                      <span class="badge bg-success-subtle text-success small">-<%= format_discount_percentage(item.discount_percentage) %></span>
+                    <% else %>
+                      <%= humanized_money_with_symbol(item.price) %>
+                    <% end %>
                   </td>
                   <td class="text-end fw-medium">
-                    <%= humanized_money_with_symbol(item.total_price) %>
+                    <% if item.discount_percentage && item.discount_percentage > 0 %>
+                      <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                      <span class="text-success fw-bold"><%= humanized_money_with_symbol(item.total_price) %></span>
+                    <% else %>
+                      <%= humanized_money_with_symbol(item.total_price) %>
+                    <% end %>
                   </td>
                   <td class="text-end pe-4">
                     <%= button_to order_item_path(org_slug: params[:org_slug], id: item), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Remove this item?" } do %>

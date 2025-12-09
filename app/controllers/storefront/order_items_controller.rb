@@ -9,6 +9,9 @@ class Storefront::OrderItemsController < Storefront::BaseController
       @order_item.quantity += order_item_params[:quantity].to_i
     else
       @order_item = @order.order_items.build(order_item_params.merge(product: @product))
+      if discount = @product.active_discount_for(current_customer)
+        @order_item.discount_percentage = discount.discount_percentage
+      end
     end
 
     authorize @order_item

@@ -76,7 +76,16 @@
                 </div>
                 <div class="card-footer bg-white border-top-0">
                   <div class="d-flex justify-content-between align-items-center">
-                    <span class="h5 mb-0 text-primary"><%= humanized_money_with_symbol(product.price) %></span>
+                    <% discount = @customer_discounts[product.id] %>
+                    <% if discount %>
+                      <div class="price-with-discount">
+                        <span class="original-price text-muted"><%= humanized_money_with_symbol(product.price) %></span>
+                        <span class="discounted-price h5 mb-0"><%= humanized_money_with_symbol(product.discounted_price_for(discount)) %></span>
+                        <span class="badge bg-success">-<%= format_discount_percentage(discount.discount_percentage) %></span>
+                      </div>
+                    <% else %>
+                      <span class="h5 mb-0 text-primary"><%= humanized_money_with_symbol(product.price) %></span>
+                    <% end %>
                     <small class="text-muted"><%= product.unit_description %></small>
                   </div>
                 </div>

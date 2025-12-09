@@ -11,4 +11,14 @@ class Product < ApplicationRecord
   validates :name, presence: true
   validates :description, length: { minimum: 5, maximum: 150 }
   monetize :unit_price, as: :price
+
+  def active_discount_for(customer)
+    return nil unless customer
+    customer_product_discounts.active.find_by(customer: customer)
+  end
+
+  def discounted_price_for(discount)
+    return price unless discount
+    price - (price * discount.discount_percentage)
+  end
 end
