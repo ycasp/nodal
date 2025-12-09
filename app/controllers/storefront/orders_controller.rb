@@ -30,7 +30,7 @@ class Storefront::OrdersController < Storefront::BaseController
     original_order.order_items.includes(:product).each do |item|
       product = item.product
 
-      if product.nil? || !product.active?
+      if product.nil? || !product.available?
         skipped_items << item.product&.name || "Unknown product"
         next
       end
