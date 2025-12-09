@@ -36,53 +36,6 @@
 </div>
 
 <div class="row g-3 mb-4">
-  <div class="col-md-3">
-    <div class="card h-100">
-      <div class="card-body d-flex justify-content-between align-items-center">
-        <div>
-          <small class="text-muted">Total Orders</small>
-          <h3 class="mb-0">0</h3>
-        </div>
-        <i class="fa-solid fa-box text-primary fa-2x opacity-50"></i>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card h-100">
-      <div class="card-body d-flex justify-content-between align-items-center">
-        <div>
-          <small class="text-muted">Total Spent</small>
-          <h3 class="mb-0">$0.00</h3>
-        </div>
-        <i class="fa-solid fa-dollar-sign text-primary fa-2x opacity-50"></i>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card h-100">
-      <div class="card-body d-flex justify-content-between align-items-center">
-        <div>
-          <small class="text-muted">Avg Order Value</small>
-          <h3 class="mb-0">$0.00</h3>
-        </div>
-        <i class="fa-solid fa-chart-line text-primary fa-2x opacity-50"></i>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card h-100">
-      <div class="card-body d-flex justify-content-between align-items-center">
-        <div>
-          <small class="text-muted">Outstanding</small>
-          <h3 class="mb-0">$0.00</h3>
-        </div>
-        <i class="fa-solid fa-calendar text-primary fa-2x opacity-50"></i>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-3 mb-4">
   <div class="col-md-8">
     <div class="card h-100">
       <div class="card-body">
@@ -130,19 +83,9 @@
           <span>C<%= @customer.id.to_s.rjust(3, '0') %></span>
         </div>
 
-        <div class="border-bottom pb-3 mb-3">
+        <div>
           <small class="text-muted d-block">Member Since</small>
           <span><%= @customer.created_at.strftime("%-m/%-d/%Y") %></span>
-        </div>
-
-        <div class="border-bottom pb-3 mb-3">
-          <small class="text-muted d-block">Payment Terms</small>
-          <span>-</span>
-        </div>
-
-        <div>
-          <small class="text-muted d-block">Credit Limit</small>
-          <span>-</span>
         </div>
       </div>
     </div>
