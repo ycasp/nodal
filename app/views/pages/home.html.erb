@@ -37,11 +37,22 @@
           <path id="bgPath8" d="M900,50 Q750,150 600,300"/>
           <path id="bgPath9" d="M300,550 Q450,450 600,300"/>
           <path id="bgPath10" d="M900,550 Q750,450 600,300"/>
-          <!-- Cross connections -->
-          <line x1="80" y1="100" x2="300" y2="50" stroke-opacity="0.1"/>
-          <line x1="1120" y1="100" x2="900" y2="50" stroke-opacity="0.1"/>
-          <line x1="80" y1="500" x2="300" y2="550" stroke-opacity="0.1"/>
-          <line x1="1120" y1="500" x2="900" y2="550" stroke-opacity="0.1"/>
+          <!-- Cross connections between outer nodes -->
+          <!-- Top to side connections -->
+          <line x1="80" y1="100" x2="300" y2="50" stroke-opacity="0.25"/>
+          <line x1="1120" y1="100" x2="900" y2="50" stroke-opacity="0.25"/>
+          <!-- Bottom to side connections -->
+          <line x1="80" y1="500" x2="300" y2="550" stroke-opacity="0.25"/>
+          <line x1="1120" y1="500" x2="900" y2="550" stroke-opacity="0.25"/>
+          <!-- Vertical side connections -->
+          <line x1="80" y1="100" x2="80" y2="300" stroke-opacity="0.2"/>
+          <line x1="80" y1="300" x2="80" y2="500" stroke-opacity="0.2"/>
+          <line x1="1120" y1="100" x2="1120" y2="300" stroke-opacity="0.2"/>
+          <line x1="1120" y1="300" x2="1120" y2="500" stroke-opacity="0.2"/>
+          <!-- Top horizontal connection -->
+          <line x1="300" y1="50" x2="900" y2="50" stroke-opacity="0.15"/>
+          <!-- Bottom horizontal connection -->
+          <line x1="300" y1="550" x2="900" y2="550" stroke-opacity="0.15"/>
         </g>
 
         <!-- Animated pulses -->
@@ -191,32 +202,77 @@
             </g>
           </g>
 
-          <!-- Center: Nodal hub - MORE PRONOUNCED -->
+          <!-- Center: Nodal hub - GLOWING RING EFFECT -->
           <g class="node node-center">
-            <!-- Outer glow ring -->
-            <circle cx="600" cy="300" r="60" fill="none" stroke="#008060" stroke-width="1" opacity="0.15">
-              <animate attributeName="r" values="58;65;58" dur="4s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.15;0.08;0.15" dur="4s" repeatCount="indefinite"/>
-            </circle>
-            <!-- Middle ring -->
-            <circle cx="600" cy="300" r="50" fill="none" stroke="#008060" stroke-width="1.5" opacity="0.2">
-              <animate attributeName="r" values="48;54;48" dur="3.5s" repeatCount="indefinite"/>
-            </circle>
-            <!-- Main hub circle -->
-            <circle cx="600" cy="300" r="40" fill="#008060" stroke="#004c3f" stroke-width="2" opacity="0.25">
-              <animate attributeName="r" values="38;42;38" dur="3s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.25;0.35;0.25" dur="3s" repeatCount="indefinite"/>
-            </circle>
-            <!-- Inner glow -->
-            <circle cx="600" cy="300" r="25" fill="#008060" opacity="0.15"/>
-            <!-- NODAL text - more visible -->
-            <text x="600" y="304" text-anchor="middle" fill="#004c3f" font-weight="700" font-size="14" letter-spacing="2" opacity="0.4">NODAL</text>
-            <!-- Connection dots around hub -->
-            <g opacity="0.3">
-              <circle cx="600" cy="255" r="3" fill="#008060"/>
-              <circle cx="600" cy="345" r="3" fill="#008060"/>
-              <circle cx="555" cy="300" r="3" fill="#008060"/>
-              <circle cx="645" cy="300" r="3" fill="#008060"/>
+            <!-- Glow filter for rings -->
+            <defs>
+              <filter id="ringGlow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00d4aa"/>
+                <stop offset="50%" stop-color="#008060"/>
+                <stop offset="100%" stop-color="#004c3f"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Pulsing glow rings that expand outward -->
+            <g class="glow-rings" filter="url(#ringGlow)">
+              <!-- Ring 1 - continuous pulse -->
+              <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
+                <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="stroke-width" values="3;1" dur="3s" repeatCount="indefinite"/>
+              </circle>
+              <!-- Ring 2 - offset timing -->
+              <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
+                <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite" begin="1s"/>
+                <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite" begin="1s"/>
+                <animate attributeName="stroke-width" values="3;1" dur="3s" repeatCount="indefinite" begin="1s"/>
+              </circle>
+              <!-- Ring 3 - offset timing -->
+              <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
+                <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite" begin="2s"/>
+                <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite" begin="2s"/>
+                <animate attributeName="stroke-width" values="3;1" dur="3s" repeatCount="indefinite" begin="2s"/>
+              </circle>
+            </g>
+
+            <!-- Static outer ring -->
+            <circle cx="600" cy="300" r="52" fill="none" stroke="#008060" stroke-width="2" opacity="0.3"/>
+
+            <!-- Main hub circle - solid white background -->
+            <circle cx="600" cy="300" r="46" fill="#ffffff" stroke="#008060" stroke-width="2.5"/>
+
+            <!-- Inner accent ring -->
+            <circle cx="600" cy="300" r="38" fill="none" stroke="#008060" stroke-width="1" opacity="0.2"/>
+
+            <!-- NODAL text - PROMINENT -->
+            <text x="600" y="306" text-anchor="middle" fill="#008060" font-weight="800" font-size="18" letter-spacing="3" class="nodal-text">NODAL</text>
+
+            <!-- Connection dots around hub with pulse -->
+            <g class="hub-dots">
+              <circle cx="600" cy="243" r="5" fill="#008060" opacity="0.7">
+                <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="600" cy="357" r="5" fill="#008060" opacity="0.7">
+                <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+              </circle>
+              <circle cx="543" cy="300" r="5" fill="#008060" opacity="0.7">
+                <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" begin="1s"/>
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" begin="1s"/>
+              </circle>
+              <circle cx="657" cy="300" r="5" fill="#008060" opacity="0.7">
+                <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+              </circle>
             </g>
           </g>
         </g>
@@ -227,7 +283,7 @@
       <div class="hero-content">
         <div class="hero-text">
           <h1 id="hero-heading" class="hero-headline">
-            Connecting Businesses Through Smarter Orders
+            Ordering that works
           </h1>
           <p class="hero-subheadline">
             A plug-and-play B2B ordering platform built specifically for small and medium businesses. No developers required, no complex setup — just smart ordering that works.
@@ -236,7 +292,6 @@
             <%= link_to "Get Started", "#", class: "btn btn-primary btn-lg hero-cta-primary" %>
             <%= link_to "Book a Demo", "#", class: "btn btn-outline-light btn-lg hero-cta-secondary" %>
           </div>
-          <p class="hero-disclaimer">No credit card required • Launch in minutes</p>
         </div>
         <div class="hero-visual">
           <!-- Animated Dashboard Preview (Light Theme) -->
