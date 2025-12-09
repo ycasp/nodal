@@ -25,8 +25,19 @@ class OrderItem < ApplicationRecord
   end
 
   def set_discount_from_product
-    discounts_on_prod = self.order.customer.customer_product_discounts.where(product: self.product)
-    active_discount = discounts_on_prod&.select{ |discount| discount.valid? }.first
-    self.discount_percentage = active_discount&.discount_percentage || 0
+    # Skip if discount was already set by the controller
+    return if discount_percentage.present? && discount_percentage > 0
+
+    # Use DiscountCalculator to get effective discount from ALL sources:
+    # - ProductDiscount (product-level sales)
+    # - CustomerDiscount (client tier discounts)
+    # - CustomerProductDiscount (custom pricing)
+    calculator = DiscountCalculator.new(
+      product: product,
+      customer: order&.customer,
+      quantity: quantity || 1
+    )
+
+    self.discount_percentage = calculator.effective_discount[:percentage] || 0
   end
 end
