@@ -21,6 +21,7 @@ class Order < ApplicationRecord
   validates :delivery_method, inclusion: { in: DELIVERY_METHODS }, allow_nil: true
 
   before_validation :generate_order_number, on: :create
+  before_validation :update_tax, on: :update
 
   # Scopes for cart functionality
   scope :draft, -> { where(placed_at: nil) }
@@ -84,5 +85,9 @@ class Order < ApplicationRecord
     timestamp = Time.current.strftime("%Y%m%d%H%M%S")
     sequence = organisation.orders.count + 1
     self.order_number = "#{organisation.slug.upcase}-#{timestamp}-#{sequence.to_s.rjust(4, '0')}"
+  end
+
+  def update_tax
+    self.tax_amount = calculated_tax
   end
 end
