@@ -21,6 +21,10 @@
         <%= link_to new_bo_customer_product_discount_path(params[:org_slug]), class: "btn btn-primary" do %>
           <i class="fa-solid fa-plus me-1"></i> Add Discount
         <% end %>
+      <% when 'order_tiers' %>
+        <%= link_to new_bo_order_discount_path(params[:org_slug]), class: "btn btn-primary" do %>
+          <i class="fa-solid fa-plus me-1"></i> Add Discount
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -50,6 +54,12 @@
             <i class="fa-solid fa-dollar-sign me-2"></i>Custom Pricing
           <% end %>
         </li>
+        <li class="nav-item" role="presentation">
+          <%= link_to bo_pricing_path(params[:org_slug], tab: 'order_tiers'),
+              class: "nav-link rounded-0 py-3 #{'active' if @tab == 'order_tiers'}" do %>
+            <i class="fa-solid fa-cart-shopping me-2"></i>Order Tiers
+          <% end %>
+        </li>
       </ul>
     </div>
   </div>
@@ -62,6 +72,8 @@
     <%= render 'client_tiers' %>
   <% when 'custom_pricing' %>
     <%= render 'custom_pricing' %>
+  <% when 'order_tiers' %>
+    <%= render 'order_tiers' %>
   <% end %>
 </div>
 

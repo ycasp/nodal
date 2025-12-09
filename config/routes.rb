@@ -77,6 +77,12 @@ Rails.application.routes.draw do
           patch :toggle_active
         end
       end
+
+      resources :order_discounts, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
     end
   end
 end

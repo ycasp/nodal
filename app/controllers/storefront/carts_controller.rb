@@ -3,6 +3,7 @@ class Storefront::CartsController < Storefront::BaseController
     @order = current_cart
     authorize @order, policy_class: OrderPolicy
     @order_items = @order.order_items.includes(product: :category)
+    @order_discounts = current_organisation.order_discounts.active.by_min_amount
   end
 
   def clear

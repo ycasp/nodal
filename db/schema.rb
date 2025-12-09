@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_09_122803) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_09_163725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -141,6 +141,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_09_122803) do
     t.index ["reset_password_token"], name: "index_members_on_reset_password_token", unique: true
   end
 
+  create_table "order_discounts", force: :cascade do |t|
+    t.bigint "organisation_id", null: false
+    t.string "discount_type", null: false
+    t.decimal "discount_value", precision: 10, scale: 4, null: false
+    t.integer "min_order_amount_cents", null: false
+    t.date "valid_from"
+    t.date "valid_until"
+    t.boolean "stackable", default: false
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organisation_id", "active"], name: "index_order_discounts_on_organisation_id_and_active"
+    t.index ["organisation_id"], name: "index_order_discounts_on_organisation_id"
+  end
+
   create_table "order_items", force: :cascade do |t|
     t.bigint "order_id", null: false
     t.bigint "product_id", null: false
@@ -254,6 +269,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_09_122803) do
   add_foreign_key "customer_product_discounts", "organisations"
   add_foreign_key "customer_product_discounts", "products"
   add_foreign_key "customers", "organisations"
+  add_foreign_key "order_discounts", "organisations"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "addresses", column: "billing_address_id"

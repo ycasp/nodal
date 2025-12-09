@@ -103,11 +103,18 @@
             <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
           </div>
 
+          <% if @order.best_order_discount.present? %>
+            <div class="d-flex justify-content-between mb-2 text-success">
+              <span>Order Discount (<%= @order.best_order_discount.value_display %>)</span>
+              <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
+            </div>
+          <% end %>
+
           <hr>
 
           <div class="d-flex justify-content-between mb-4">
             <span class="fw-bold">Total</span>
-            <span class="fw-bold fs-5"><%= humanized_money_with_symbol(@order.total_amount) %></span>
+            <span class="fw-bold fs-5"><%= humanized_money_with_symbol(@order.total_with_auto_discount) %></span>
           </div>
 
           <%= link_to checkout_path(org_slug: params[:org_slug]), class: "btn btn-primary w-100 btn-lg" do %>
@@ -115,6 +122,44 @@
           <% end %>
         </div>
       </div>
+
+      <% if @order_discounts.any? %>
+        <div class="card border-0 shadow-sm mt-3" style="border-radius: 12px;">
+          <div class="card-body">
+            <h6 class="card-title mb-3">
+              <i class="fa-solid fa-gift text-primary me-2"></i>Available Order Discounts
+            </h6>
+
+            <% @order_discounts.each do |discount| %>
+              <% qualified = discount.applicable_to?(@order.total_amount) %>
+              <% amount_needed = discount.min_order_amount - @order.total_amount %>
+
+              <div class="d-flex align-items-start mb-2 <%= qualified ? 'text-success' : 'text-muted' %>">
+                <% if qualified %>
+                  <i class="fa-solid fa-check-circle me-2 mt-1"></i>
+                <% else %>
+                  <i class="fa-regular fa-circle me-2 mt-1"></i>
+                <% end %>
+                <div>
+                  <div class="<%= qualified ? 'fw-semibold' : '' %>">
+                    <% if discount.percentage? %>
+                      <%= discount.value_display %> off
+                    <% else %>
+                      <%= humanized_money_with_symbol(Money.new((discount.discount_value * 100).to_i, 'EUR')) %> off
+                    <% end %>
+                    orders over <%= discount.min_amount_display %>
+                  </div>
+                  <% if qualified %>
+                    <small>Applied to your order!</small>
+                  <% elsif amount_needed > Money.new(0, 'EUR') %>
+                    <small>Spend <%= humanized_money_with_symbol(amount_needed) %> more to unlock</small>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 <% end %>

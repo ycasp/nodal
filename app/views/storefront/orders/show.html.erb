@@ -62,8 +62,23 @@
                   </div>
                 </td>
                 <td class="text-center"><%= item.quantity %></td>
-                <td class="text-end"><%= humanized_money_with_symbol(item.price) %></td>
-                <td class="text-end fw-medium"><%= humanized_money_with_symbol(item.total_price) %></td>
+                <td class="text-end">
+                  <% if item.discount_percentage && item.discount_percentage > 0 %>
+                    <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price) %></span>
+                    <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
+                    <span class="badge bg-success-subtle text-success small">-<%= format_discount_percentage(item.discount_percentage) %></span>
+                  <% else %>
+                    <%= humanized_money_with_symbol(item.price) %>
+                  <% end %>
+                </td>
+                <td class="text-end fw-medium">
+                  <% if item.discount_percentage && item.discount_percentage > 0 %>
+                    <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                    <span class="text-success"><%= humanized_money_with_symbol(item.total_price) %></span>
+                  <% else %>
+                    <%= humanized_money_with_symbol(item.total_price) %>
+                  <% end %>
+                </td>
               </tr>
             <% end %>
           </tbody>
@@ -77,6 +92,18 @@
               <span class="text-muted">Subtotal</span>
               <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
             </div>
+            <% if @order.best_order_discount.present? %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>Order Discount (<%= @order.best_order_discount.value_display %>)</span>
+                <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
+              </div>
+            <% end %>
+            <% if @order.has_order_discount? %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>Additional Discount (<%= @order.order_discount_display %>)</span>
+                <span>-<%= humanized_money_with_symbol(@order.order_discount_amount) %></span>
+              </div>
+            <% end %>
             <% if @order.tax_amount.present? %>
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted">Tax</span>
