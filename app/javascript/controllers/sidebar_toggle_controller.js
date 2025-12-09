@@ -4,33 +4,18 @@ import { Controller } from "@hotwired/stimulus"
 // Handles collapsing/expanding the sidebar
 export default class extends Controller {
   connect() {
-    // Check if sidebar was previously collapsed (stored in localStorage)
+    // Restore collapsed state from localStorage
     const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true'
     if (isCollapsed) {
-      this.applyCollapsedState(true)
+      this.element.classList.add('collapsed')
     }
   }
 
   toggle() {
-    const isCollapsed = !this.element.classList.contains('collapsed')
-    this.applyCollapsedState(isCollapsed)
+    this.element.classList.toggle('collapsed')
 
-    // Store state in localStorage
+    // Persist state to localStorage
+    const isCollapsed = this.element.classList.contains('collapsed')
     localStorage.setItem('sidebarCollapsed', isCollapsed)
-  }
-
-  applyCollapsedState(collapsed) {
-    const mainContent = document.querySelector('.bo-main-content')
-    const navbar = document.querySelector('.bo-navbar')
-
-    if (collapsed) {
-      this.element.classList.add('collapsed')
-      mainContent?.classList.add('sidebar-collapsed')
-      navbar?.classList.add('sidebar-collapsed')
-    } else {
-      this.element.classList.remove('collapsed')
-      mainContent?.classList.remove('sidebar-collapsed')
-      navbar?.classList.remove('sidebar-collapsed')
-    }
   }
 }
