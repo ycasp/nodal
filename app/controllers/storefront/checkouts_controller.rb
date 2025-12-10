@@ -22,14 +22,20 @@ class Storefront::CheckoutsController < Storefront::BaseController
       return
     end
 
-    @order.assign_attributes(order_params)
-    handle_addresses
-    @order.finalize_checkout!(same_as_shipping: checkout_params[:same_as_shipping] == "1")
+    begin
+      @order.assign_attributes(order_params)
+      handle_addresses
+      @order.finalize_checkout!(same_as_shipping: checkout_params[:same_as_shipping] == "1")
 
-    CustomerMailer.with(customer: current_customer, order: @order).confirm_order.deliver_later
-
-    redirect_to order_path(org_slug: params[:org_slug], id: @order),
-                notice: "Order placed successfully!"
+      CustomerMailer.with(customer: current_customer, order: @order).confirm_order.deliver_later
+      redirect_to order_path(org_slug: params[:org_slug], id: @order), notice: "Order placed successfully!"
+    rescue ActiveRecord::RecordInvalid => e
+      @order_items = @order.order_items.includes(product: :category)
+      @shipping_addresses = current_customer.shipping_addresses
+      @billing_address = current_customer.billing_address
+      flash.now[:alert] = e.record.errors.full_messages.to_sentence
+      render :show, status: :unprocessable_entity
+    end
   end
 
   private
