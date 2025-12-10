@@ -83,20 +83,15 @@
 </div>
 
 <script>
-document.addEventListener('turbo:load', initDashboard);
-document.addEventListener('DOMContentLoaded', initDashboard);
+(function() {
+  function initDashboard() {
+    const dashboard = document.querySelector('.dashboard');
+    if (!dashboard) return;
+    if (dashboard.dataset.initialized === 'true') return;
+    dashboard.dataset.initialized = 'true';
 
-let dashboardInitialized = false;
-
-function initDashboard() {
-  if (dashboardInitialized) return;
-
-  const dashboard = document.querySelector('.dashboard');
-  if (!dashboard) return;
-
-  dashboardInitialized = true;
-
-  const metricsUrl = dashboard.dataset.metricsUrl;
+    const metricsUrl = dashboard.dataset.metricsUrl;
+    console.log('Dashboard initializing, metrics URL:', metricsUrl);
   const fromInput = document.getElementById('dashboard-from');
   const toInput = document.getElementById('dashboard-to');
 
@@ -408,12 +403,16 @@ function initDashboard() {
       `;
     }).join('');
   }
-}
 
-// Reset on turbo navigation
-document.addEventListener('turbo:before-render', function() {
-  dashboardInitialized = false;
-});
+  // Initialize on various events
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDashboard);
+  } else {
+    initDashboard();
+  }
+  document.addEventListener('turbo:load', initDashboard);
+  document.addEventListener('turbo:render', initDashboard);
+})();
 </script>
 
 <% end %>
