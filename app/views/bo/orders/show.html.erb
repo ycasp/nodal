@@ -104,10 +104,20 @@
               <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
             </div>
 
+            <% if @order.best_order_discount.present? %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>
+                  Order Tier Discount (<%= @order.best_order_discount.value_display %>)
+                  <small class="text-muted d-block">Orders over <%= @order.best_order_discount.min_amount_display %></small>
+                </span>
+                <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
+              </div>
+            <% end %>
+
             <% if @order.has_order_discount? %>
               <div class="d-flex justify-content-between mb-2 text-success">
                 <span>
-                  Order Discount (<%= @order.order_discount_display %>)
+                  Manual Discount (<%= @order.order_discount_display %>)
                   <% if @order.discount_reason.present? %>
                     <small class="text-muted d-block"><%= @order.discount_reason %></small>
                   <% end %>
@@ -228,11 +238,34 @@
         </div>
       </div>
 
-      <!-- Order Discount -->
+      <!-- Automatic Order Tier Discount -->
+      <% if @order.best_order_discount.present? %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h6 class="text-muted mb-3">
+              <i class="fa-solid fa-cart-shopping me-2"></i>Order Tier Discount
+            </h6>
+
+            <div class="alert alert-success mb-0">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong><%= @order.best_order_discount.value_display %> off</strong>
+                  <div class="small text-muted">Orders over <%= @order.best_order_discount.min_amount_display %></div>
+                </div>
+                <span class="badge bg-success fs-6">
+                  -<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Manual Order Discount -->
       <div class="card mb-4">
         <div class="card-body">
           <h6 class="text-muted mb-3">
-            <i class="fa-solid fa-tag me-2"></i>Order Discount
+            <i class="fa-solid fa-tag me-2"></i>Manual Discount
           </h6>
 
           <% if @order.has_order_discount? %>

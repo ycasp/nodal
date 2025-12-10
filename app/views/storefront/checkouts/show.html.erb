@@ -255,6 +255,13 @@
           <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
         </div>
 
+        <% if @order.best_order_discount.present? %>
+          <div class="d-flex justify-content-between mb-2 text-success">
+            <span>Order Discount (<%= @order.best_order_discount.value_display %>)</span>
+            <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
+          </div>
+        <% end %>
+
         <div class="d-flex justify-content-between mb-2">
           <span class="text-muted">Tax (<%= (@current_organisation.tax_rate * 100).round(1) %>%)</span>
           <span><%= humanized_money_with_symbol(@order.calculated_tax) %></span>

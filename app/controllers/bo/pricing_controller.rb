@@ -6,6 +6,7 @@ class Bo::PricingController < Bo::BaseController
     load_product_discounts
     load_client_tiers
     load_custom_pricing
+    load_order_tiers
 
     authorize :pricing, :index?
   end
@@ -44,5 +45,10 @@ class Bo::PricingController < Bo::BaseController
         .where("customers.company_name ILIKE ? OR products.name ILIKE ?",
                "%#{params[:search]}%", "%#{params[:search]}%")
     end
+  end
+
+  def load_order_tiers
+    @order_discounts = policy_scope(current_organisation.order_discounts)
+      .order(min_order_amount_cents: :asc)
   end
 end

@@ -59,6 +59,28 @@ class Order < ApplicationRecord
     order_items.sum(&:total_price)
   end
 
+  # Find the best applicable order tier discount
+  def best_order_discount
+    @best_order_discount ||= organisation.order_discounts
+      .active
+      .where("min_order_amount_cents <= ?", total_amount.cents)
+      .order(min_order_amount_cents: :desc)
+      .first
+  end
+
+  # Calculate the automatic order tier discount amount
+  def auto_order_discount_amount
+    return Money.new(0, 'EUR') unless best_order_discount.present?
+
+    best_order_discount.calculate_discount(total_amount)
+  end
+
+  # Total with automatic order tier discount applied (before manual discounts)
+  def total_with_auto_discount
+    result = total_amount - auto_order_discount_amount
+    [result, Money.new(0, 'EUR')].max
+  end
+
   def pickup?
     delivery_method == "pickup"
   end
@@ -91,7 +113,8 @@ class Order < ApplicationRecord
   end
 
   def subtotal_after_discount
-    result = total_amount - order_discount_amount
+    # Apply both auto order tier discount and manual order discount
+    result = total_with_auto_discount - order_discount_amount
     [result, Money.new(0, 'EUR')].max
   end
 
