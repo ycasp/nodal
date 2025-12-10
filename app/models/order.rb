@@ -2,6 +2,7 @@ class Order < ApplicationRecord
   STATUSES = %w[in_process processed completed].freeze
   PAYMENT_STATUSES = %w[pending paid failed refunded].freeze
   DELIVERY_METHODS = %w[pickup delivery].freeze
+  DISCOUNT_TYPES = %w[percentage fixed].freeze
 
   monetize :tax_amount_cents, allow_nil: true
   monetize :shipping_amount_cents, allow_nil: true
@@ -10,6 +11,7 @@ class Order < ApplicationRecord
   belongs_to :organisation
   belongs_to :shipping_address, class_name: "Address", optional: true
   belongs_to :billing_address, class_name: "Address", optional: true
+  belongs_to :applied_by, class_name: "Member", optional: true
   has_many :order_items, dependent: :destroy
   has_many :products, through: :order_items
 
@@ -19,6 +21,9 @@ class Order < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
   validates :payment_status, inclusion: { in: PAYMENT_STATUSES }
   validates :delivery_method, inclusion: { in: DELIVERY_METHODS }, allow_nil: true
+  validates :discount_type, inclusion: { in: DISCOUNT_TYPES }, allow_nil: true
+  validates :discount_value, numericality: { greater_than: 0 }, allow_nil: true
+  validate :discount_value_valid_for_type
 
   before_validation :generate_order_number, on: :create
   before_validation :update_tax, on: :update
@@ -62,22 +67,63 @@ class Order < ApplicationRecord
     delivery_method == "delivery"
   end
 
-  # Calculate tax based on organisation's tax rate
-  def calculated_tax
-    total_amount * organisation.tax_rate
-  end
-
   # Calculate shipping based on delivery method and organisation's shipping cost
   def calculated_shipping
     pickup? ? Money.new(0, 'EUR') : organisation.shipping_cost
   end
 
+  # Order discount methods
+  def has_order_discount?
+    discount_type.present? && discount_value.present?
+  end
+
+  def order_discount_amount
+    return Money.new(0, 'EUR') unless has_order_discount?
+
+    case discount_type
+    when 'percentage'
+      total_amount * discount_value
+    when 'fixed'
+      Money.new((discount_value * 100).to_i, 'EUR')
+    else
+      Money.new(0, 'EUR')
+    end
+  end
+
+  def subtotal_after_discount
+    result = total_amount - order_discount_amount
+    [result, Money.new(0, 'EUR')].max
+  end
+
+  def order_discount_display
+    return nil unless has_order_discount?
+
+    if discount_type == 'percentage'
+      "#{(discount_value * 100).round(0)}%"
+    else
+      "€#{discount_value}"
+    end
+  end
+
   # Grand total including tax and shipping
   def grand_total
-    total_amount + (tax_amount || calculated_tax) + (shipping_amount || calculated_shipping)
+    subtotal_after_discount + (tax_amount || calculated_tax) + (shipping_amount || calculated_shipping)
+  end
+
+  # Calculate tax based on subtotal after discount
+  def calculated_tax
+    subtotal_after_discount * organisation.tax_rate
   end
 
   private
+
+  def discount_value_valid_for_type
+    return unless discount_type.present? && discount_value.present?
+
+    if discount_type == 'percentage' && discount_value > 1
+      errors.add(:discount_value, "must be between 0 and 1 for percentage discounts")
+    end
+  end
 
   def generate_order_number
     return if order_number.present?

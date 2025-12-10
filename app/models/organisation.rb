@@ -11,6 +11,8 @@ class Organisation < ApplicationRecord
   has_many :products, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :customer_product_discounts, dependent: :destroy
+  has_many :product_discounts, dependent: :destroy
+  has_many :customer_discounts, dependent: :destroy
 
   validates :name, presence: true
   validates :billing_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true

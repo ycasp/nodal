@@ -46,14 +46,39 @@ Rails.application.routes.draw do
     devise_for :members, controllers: { sessions: "members/sessions" }
     namespace :bo do
       get "/", to: "dashboards#dashview"
-      resources :orders
+      resources :orders do
+        member do
+          patch :apply_discount
+          delete :remove_discount
+        end
+      end
       resources :customers do
         member do
           post :invite
         end
       end
       resources :products
-      resources :customer_product_discounts, only: [:index, :new, :create, :edit, :update, :destroy]
+
+      # Unified Pricing section
+      get 'pricing', to: 'pricing#index', as: :pricing
+
+      resources :product_discounts, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
+
+      resources :customer_discounts, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
+
+      resources :customer_product_discounts, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
     end
   end
 end
