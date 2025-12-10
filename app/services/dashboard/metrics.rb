@@ -215,10 +215,9 @@ module Dashboard
     # Open carts (draft orders)
     def open_carts(organisation:, **_filters)
       carts = organisation.orders.draft
-        .includes(:customer)
-        .order(updated_at: :desc)
-        .limit(10)
+        .includes(:customer, :order_items)
 
+      # Calculate totals and sort by amount descending
       top_carts = carts.map do |cart|
         total = cart.order_items.sum { |item| item.unit_price * item.quantity } / 100.0
         {
@@ -226,9 +225,9 @@ module Dashboard
           client_name: cart.customer&.company_name || "Unknown",
           cart_total: total.round(2)
         }
-      end
+      end.sort_by { |c| -c[:cart_total] }.first(10)
 
-      { value: organisation.orders.draft.count, top_carts: top_carts }
+      { value: carts.count, top_carts: top_carts }
     end
 
     # Orders per product: count of orders containing each product
