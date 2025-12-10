@@ -92,9 +92,9 @@
               <span class="text-muted">Subtotal</span>
               <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
             </div>
-            <% if @order.best_order_discount.present? %>
+            <% if @order.has_auto_discount_snapshot? %>
               <div class="d-flex justify-content-between mb-2 text-success">
-                <span>Order Discount (<%= @order.best_order_discount.value_display %>)</span>
+                <span>Order Discount (<%= @order.auto_discount_display %>)</span>
                 <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
               </div>
             <% end %>
