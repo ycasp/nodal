@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Bo::DashboardController < Bo::BaseController
-  skip_after_action :verify_policy_scoped, only: [:index]
+  skip_after_action :verify_authorized
+  skip_after_action :verify_policy_scoped
 
   # GET /bo/dashboard
   def index
