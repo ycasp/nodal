@@ -92,25 +92,38 @@ module Dashboard
     end
 
     # Total sales (sum of all placed order totals) in CHF/EUR
-    def total_sales(organisation:, from:, to:, **_filters)
-      placed_orders_in_range(organisation, from, to)
-        .joins(:order_items)
-        .sum("order_items.unit_price * order_items.quantity * (1 - COALESCE(order_items.discount_percentage, 0))") / 100.0
+    def total_sales(organisation:, from:, to:, client_id: nil, category_id: nil, **_filters)
+      orders = placed_orders_in_range(organisation, from, to)
+      orders = orders.where(customer_id: client_id) if client_id.present?
+
+      query = orders.joins(:order_items)
+      query = query.joins(order_items: :product).where(products: { category_id: category_id }) if category_id.present?
+
+      query.sum("order_items.unit_price * order_items.quantity * (1 - COALESCE(order_items.discount_percentage, 0))") / 100.0
     end
 
     # Count of placed orders
-    def order_count(organisation:, from:, to:, **_filters)
-      placed_orders_in_range(organisation, from, to).count
+    def order_count(organisation:, from:, to:, client_id: nil, category_id: nil, **_filters)
+      orders = placed_orders_in_range(organisation, from, to)
+      orders = orders.where(customer_id: client_id) if client_id.present?
+      orders = orders.joins(order_items: :product).where(products: { category_id: category_id }).distinct if category_id.present?
+
+      orders.count
     end
 
     # Average order value
-    def aov(organisation:, from:, to:, **_filters)
+    def aov(organisation:, from:, to:, client_id: nil, category_id: nil, **_filters)
       orders = placed_orders_in_range(organisation, from, to)
+      orders = orders.where(customer_id: client_id) if client_id.present?
+      orders = orders.joins(order_items: :product).where(products: { category_id: category_id }).distinct if category_id.present?
+
       count = orders.count
       return 0.0 if count.zero?
 
-      total = orders.joins(:order_items)
-        .sum("order_items.unit_price * order_items.quantity * (1 - COALESCE(order_items.discount_percentage, 0))")
+      query = orders.joins(:order_items)
+      query = query.joins(order_items: :product).where(products: { category_id: category_id }) if category_id.present?
+
+      total = query.sum("order_items.unit_price * order_items.quantity * (1 - COALESCE(order_items.discount_percentage, 0))")
       (total / 100.0 / count).round(2)
     end
 
