@@ -13,6 +13,7 @@ class Bo::CustomerDiscountsController < Bo::BaseController
     authorize @discount
 
     if @discount.save
+      CustomerMailer.with(discount: @discount, organisation: current_organisation).notify_customer_about_discount.deliver_later
       redirect_to bo_pricing_path(params[:org_slug], tab: 'client_tiers'),
                   notice: "Client tier discount created successfully."
     else
