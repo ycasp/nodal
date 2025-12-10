@@ -18,6 +18,7 @@
   <div class="bo-page-body">
     <!-- Top Row: KPI Cards -->
     <div class="dashboard__grid dashboard__grid--kpis mb-4">
+    
       <%= render "bo/dashboard/kpi_card",
           id: "total_sales",
           title: "Total Sales",
@@ -55,21 +56,8 @@
         <%= render "bo/dashboard/order_frequency" %>
       </div>
 
-      <!-- Right Column: Retention & Discount Panel -->
+      <!-- Right Column: Discount Panel -->
       <div class="dashboard__side-col">
-        <!-- Retention Rate Card -->
-        <div class="card dashboard__card mb-3">
-          <div class="card-body">
-            <h6 class="card-subtitle text-muted mb-2">
-              <i class="fa-solid fa-users-rays me-1"></i> Retention Rate
-            </h6>
-            <div class="dashboard__retention">
-              <span class="dashboard__retention-value" id="retention-value">--</span>
-              <span class="dashboard__retention-label">of customers returned</span>
-            </div>
-          </div>
-        </div>
-
         <%= render "bo/dashboard/discount_panel" %>
       </div>
     </div>
