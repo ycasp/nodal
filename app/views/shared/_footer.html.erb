@@ -4,7 +4,9 @@
     <div class="footer-grid">
       <!-- Brand Column -->
       <div class="footer-brand">
-        <%= link_to "nodal", root_path, class: "footer-logo" %>
+        <%= link_to root_path, class: "footer-logo" do %>
+          <span class="logo-icon">N</span><span class="logo-text">odal</span>
+        <% end %>
         <p class="footer-tagline">The integration platform that scales with your business.</p>
         <!-- Social Links -->
         <div class="footer-social">
