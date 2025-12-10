@@ -17,4 +17,16 @@ class CustomerMailerPreview < ActionMailer::Preview
     order_discount = organisation.order_discounts.last
     CustomerMailer.with(discount: order_discount, organisation: organisation).notify_clients_about_discount
   end
+
+  def notify_customer_about_discount_customer
+    organisation = Organisation.last
+    customer_discount = organisation.customer_discounts.last
+    CustomerMailer.with(discount: customer_discount, organisation: organisation).notify_customer_about_discount
+  end
+
+  def notify_customer_about_discount_customer_product
+    organisation = Organisation.last
+    customer_product_discount = organisation.customer_product_discounts.last
+    CustomerMailer.with(discount: customer_product_discount, organisation: organisation).notify_customer_about_discount
+  end
 end
