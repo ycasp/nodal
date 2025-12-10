@@ -46,6 +46,8 @@ Rails.application.routes.draw do
     devise_for :members, controllers: { sessions: "members/sessions" }
     namespace :bo do
       get "/", to: "dashboards#dashview"
+      get "dashboard", to: "dashboard#index", as: :dashboard
+      get "dashboard/metrics", to: "dashboard#metrics", as: :dashboard_metrics
       resources :orders do
         member do
           patch :apply_discount
