@@ -1,5 +1,5 @@
-# Preview all emails at http://localhost:3000/rails/mailers/customer_mailer
-class CustomerMailerPreview < ActionMailer::Preview
+# Preview all emails at http://localhost:3000/rails/mailers/member_mailer
+class MemberMailerPreview < ActionMailer::Preview
   def confirm_order
     order = Order.placed.last
     customer = order.customer
