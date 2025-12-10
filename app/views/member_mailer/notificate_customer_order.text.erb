@@ -1,0 +1,42 @@
+Hello <%= @organisation.name %>,
+
+<%= @customer.company_name %> has placed new order.
+
+ORDER DETAILS
+-------------
+Order Number: <%= @order.order_number %>
+Placed At: <%= l(@order.placed_at, format: :long) %>
+Delivery Method: <%= @order.delivery_method.capitalize %>
+
+CUSTOMER
+--------
+<%= @customer.contact_name %>
+<%= @customer.company_name %>
+<%= @order.customer.email %>
+
+ITEMS
+-----
+<% @order.order_items.each do |item| %>
+- <%= item.product.name %> x<%= item.quantity %> @ <%= humanized_money_with_symbol(item.price) %> = <%= humanized_money_with_symbol(item.total_price) %>
+<% end %>
+
+ORDER SUMMARY
+-------------
+Subtotal: <%= humanized_money_with_symbol(@order.total_amount) %>
+<% if @order.auto_order_discount_amount.cents > 0 %>
+Order Discount (<%= @order.auto_discount_display %>): -<%=
+humanized_money_with_symbol(@order.auto_order_discount_amount) %>
+<% end %>
+<% if @order.has_order_discount? %>
+Manual Discount (<%= @order.order_discount_display %>): -<%=
+humanized_money_with_symbol(@order.order_discount_amount) %>
+<% end %>
+Tax: <%= humanized_money_with_symbol(@order.tax_amount || @order.calculated_tax) %>
+Shipping: <%= humanized_money_with_symbol(@order.shipping_amount || @order.calculated_shipping) %>
+Grand Total: <%= humanized_money_with_symbol(@order.grand_total) %>
+
+NOTES
+-----
+<% if @order.notes.present? %>
+  <%= @order.notes %>
+<% end %>

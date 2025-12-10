@@ -1,0 +1,65 @@
+<p>Hello <%= @organisation.name %>,</p>
+
+<p><%= @customer.company_name %> has placed new order.</p>
+
+<h3>Order Details</h3>
+<table>
+  <tr>
+    <td><strong>Order Number:</strong></td>
+    <td><%= @order.order_number %></td>
+  </tr>
+  <tr>
+    <td><strong>Placed At:</strong></td>
+    <td><%= l(@order.placed_at, format: :long) %></td>
+  </tr>
+  <tr>
+    <td><strong>Delivery Method:</strong></td>
+    <td><%= @order.delivery_method.capitalize %></td>
+  </tr>
+</table>
+
+<h3>Customer</h3>
+<p>
+  <%= @customer.contact_name %><br>
+  <%= @customer.company_name %><br>
+  <%= @customer.email %>
+</p>
+
+<h3>Items</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Qty</th>
+      <th>Unit Price</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order.order_items.each do |item| %>
+      <tr>
+        <td><%= item.product.name %></td>
+        <td><%= item.quantity %></td>
+        <td><%= humanized_money_with_symbol(item.price) %></td>
+        <td><%= humanized_money_with_symbol(item.total_price) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h3>Order Summary</h3>
+<p>Subtotal: <%= humanized_money_with_symbol(@order.total_amount) %></p>
+<% if @order.auto_order_discount_amount.cents > 0 %>
+  <p>Order Discount (<%= @order.auto_discount_display %>): -<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></p>
+<% end %>
+<% if @order.has_order_discount? %>
+  <p>Manual Discount (<%= @order.order_discount_display %>): -<%= humanized_money_with_symbol(@order.order_discount_amount) %></p>
+<% end %>
+<p>Tax: <%= humanized_money_with_symbol(@order.tax_amount || @order.calculated_tax) %></p>
+<p>Shipping: <%= humanized_money_with_symbol(@order.shipping_amount || @order.calculated_shipping) %></p>
+<p><strong>Grand Total: <%= humanized_money_with_symbol(@order.grand_total) %></strong></p>
+
+<% if @order.notes.present? %>
+  <h3>Notes</h3>
+  <p><%= @order.notes %></p>
+<% end %>

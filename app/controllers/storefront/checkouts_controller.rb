@@ -28,6 +28,8 @@ class Storefront::CheckoutsController < Storefront::BaseController
       @order.finalize_checkout!(same_as_shipping: checkout_params[:same_as_shipping] == "1")
 
       CustomerMailer.with(customer: current_customer, order: @order).confirm_order.deliver_later
+      MemberMailer.with(customer: current_customer, order: @order, org_slug: params[:org_slug]).notificate_customer_order.deliver_later
+
       redirect_to order_path(org_slug: params[:org_slug], id: @order), notice: "Order placed successfully!"
     rescue ActiveRecord::RecordInvalid => e
       @order_items = @order.order_items.includes(product: :category)
