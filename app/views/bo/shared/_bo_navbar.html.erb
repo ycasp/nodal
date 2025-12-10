@@ -1,4 +1,21 @@
 <nav class="bo-navbar">
+  <!-- Hamburger menu - only visible when sidebar is collapsed -->
+  <div class="bo-collapsed-menu dropdown">
+    <button class="bo-collapsed-menu-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+      <li><%= link_to bo_path, class: "dropdown-item" do %><i class="fa-solid fa-chart-line me-2"></i>Dashboard<% end %></li>
+      <li><%= link_to bo_customers_path, class: "dropdown-item" do %><i class="fa-solid fa-users me-2"></i>Customers<% end %></li>
+      <li><%= link_to bo_products_path, class: "dropdown-item" do %><i class="fa-solid fa-box me-2"></i>Products<% end %></li>
+      <li><%= link_to bo_orders_path, class: "dropdown-item" do %><i class="fa-solid fa-clipboard-list me-2"></i>Orders<% end %></li>
+      <li><%= link_to bo_customer_product_discounts_path, class: "dropdown-item" do %><i class="fa-solid fa-percent me-2"></i>Discounts<% end %></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><%= link_to "#", class: "dropdown-item" do %><i class="fa-solid fa-circle-user me-2"></i>Profile<% end %></li>
+      <li><%= link_to "#", class: "dropdown-item" do %><i class="fa-solid fa-gear me-2"></i>Settings<% end %></li>
+    </ul>
+  </div>
+
   <div class="bo-navbar-content justify-content-end">
     <div class="d-flex align-items-center gap-3">
       <span class="text-muted">

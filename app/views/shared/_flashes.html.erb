@@ -1,20 +1,20 @@
 <div class="flash-container">
   <% if notice %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <div class="alert-icon">
-        <i class="fa-solid fa-circle-check"></i>
+    <div class="alert alert-success alert-dismissible fade show" role="alert" data-controller="alert">
+      <div class="alert-header">
+        <i class="fa-solid fa-circle-check alert-icon"></i>
+        <span class="alert-title">Success</span>
       </div>
-      <div class="alert-title">Success</div>
       <div class="alert-message"><%= notice %></div>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   <% end %>
   <% if alert %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <div class="alert-icon">
-        <i class="fa-solid fa-circle-exclamation"></i>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" data-controller="alert">
+      <div class="alert-header">
+        <i class="fa-solid fa-circle-exclamation alert-icon"></i>
+        <span class="alert-title">Error</span>
       </div>
-      <div class="alert-title">Error</div>
       <div class="alert-message"><%= alert %></div>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>

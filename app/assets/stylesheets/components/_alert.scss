@@ -36,35 +36,28 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  .alert-icon {
-    grid-column: 1;
-    grid-row: 1 / span 2;
+  // Header (icon + title inline)
+  .alert-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 1rem;
-    height: 1rem;
-    transform: translateY(2px);
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
 
-    i {
-      font-size: 1rem;
-    }
+  .alert-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
   }
 
   // Title
   .alert-title {
-    grid-column: 2;
-    grid-row: 1;
     font-weight: 500;
     letter-spacing: -0.025em;
     line-height: 1.4;
-    min-height: 1rem;
   }
 
   // Description/Message
   .alert-message {
-    grid-column: 2;
-    grid-row: 2;
     color: #717182;
     font-size: 0.875rem;
     line-height: 1.625;
