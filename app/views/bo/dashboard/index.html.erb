@@ -1,17 +1,17 @@
 <% content_for :bo_main_content do %>
 
-<div class="dashboard" data-metrics-url="<%= bo_dashboard_metrics_path(org_slug: @organisation.slug) %>">
-  <!-- Header with Filters -->
-  <div class="bo-page-header bo-page-header--with-filters">
-    <div class="bo-page-header__top">
-      <div>
-        <h1>Dashboard</h1>
-        <p>Business insights and KPI metrics for <%= @organisation.name %></p>
-      </div>
+<!-- Sticky Header with Filters -->
+<div class="bo-page-header bo-page-header--with-filters">
+  <div class="bo-page-header__top">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Business insights and KPI metrics for <%= @organisation.name %></p>
     </div>
-    <%= render "bo/dashboard/filters_panel" %>
   </div>
+  <%= render "bo/dashboard/filters_panel" %>
+</div>
 
+<div class="dashboard" data-metrics-url="<%= bo_dashboard_metrics_path(org_slug: @organisation.slug) %>">
   <!-- Page Body -->
   <div class="bo-page-body">
     <!-- Top Row: KPI Cards -->
