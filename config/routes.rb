@@ -86,6 +86,22 @@ Rails.application.routes.draw do
           patch :toggle_active
         end
       end
+
+      # Profile & Settings
+      resource :profile, only: [:edit, :update]
+      resource :settings, only: [:edit, :update]
+
+      # Team Management
+      resources :team_members, path: 'team', except: [:show] do
+        member do
+          post :resend_invitation
+          patch :toggle_active
+        end
+      end
     end
+
+    # Invitation acceptance (outside bo namespace, no auth required)
+    get 'invitations/:token/accept', to: 'members/invitations#show', as: :accept_invitation
+    post 'invitations/:token/accept', to: 'members/invitations#create'
   end
 end

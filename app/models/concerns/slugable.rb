@@ -2,7 +2,7 @@ module Slugable
   extend ActiveSupport::Concern
 
   included do
-    before_validation :generate_slug, on: :create
+    before_validation :generate_slug, on: [:create, :update]
 
     private
 
@@ -12,7 +12,7 @@ module Slugable
 
     def generate_slug
       base_slug = send(source_attribute)&.to_s&.parameterize
-      self.slug = base_slug if slug.blank?
+      self.slug = base_slug
       # enhace if uniqueness fails (eg. products) - see article of Rui on Slack
     end
   end

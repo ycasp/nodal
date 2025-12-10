@@ -1,0 +1,114 @@
+<% content_for :bo_main_content do %>
+
+<!-- Sticky Header -->
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <h1>Team</h1>
+      <p>Manage your organisation's team members</p>
+    </div>
+    <% if policy(OrgMember).new? %>
+      <div class="bo-page-actions">
+        <%= link_to new_bo_team_member_path, class: "btn btn-primary" do %>
+          <i class="fa-solid fa-user-plus"></i> Invite Member
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Page Body -->
+<div class="bo-page-body">
+  <div class="card">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Member</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Joined</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @org_members.each do |org_member| %>
+          <tr>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 36px; height: 36px; font-size: 0.875rem;">
+                  <% if org_member.member.present? %>
+                    <%= org_member.member.first_name&.first&.upcase %><%= org_member.member.last_name&.first&.upcase %>
+                  <% else %>
+                    <i class="fa-solid fa-envelope" style="font-size: 0.75rem;"></i>
+                  <% end %>
+                </div>
+                <div>
+                  <div class="fw-semibold"><%= org_member.display_name %></div>
+                  <small class="text-muted"><%= org_member.display_email %></small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge <%= org_member.role == 'owner' ? 'bg-danger' : org_member.role == 'admin' ? 'bg-warning text-dark' : 'bg-secondary' %>">
+                <%= org_member.role.capitalize %>
+              </span>
+            </td>
+            <td>
+              <% if org_member.pending_invitation? %>
+                <span class="badge rounded-pill bg-info-subtle text-info">
+                  <i class="fa-solid fa-clock"></i> Pending
+                </span>
+              <% elsif org_member.active? %>
+                <span class="badge rounded-pill bg-success-subtle text-success">Active</span>
+              <% else %>
+                <span class="badge rounded-pill bg-secondary-subtle text-secondary">Inactive</span>
+              <% end %>
+            </td>
+            <td>
+              <% if org_member.joined_at.present? %>
+                <%= org_member.joined_at.strftime("%-m/%-d/%Y") %>
+              <% elsif org_member.invitation_sent_at.present? %>
+                <small class="text-muted">Invited <%= time_ago_in_words(org_member.invitation_sent_at) %> ago</small>
+              <% else %>
+                -
+              <% end %>
+            </td>
+            <td class="text-end">
+              <% is_self = org_member.member_id == current_member.id %>
+
+              <% if org_member.pending_invitation? && policy(org_member).resend_invitation? %>
+                <%= button_to resend_invitation_bo_team_member_path(params[:org_slug], org_member), method: :post, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-primary", title: "Resend invitation" do %>
+                  <i class="fa-solid fa-paper-plane"></i>
+                <% end %>
+              <% end %>
+
+              <% if !org_member.pending_invitation? && policy(org_member).toggle_active? %>
+                <%= button_to toggle_active_bo_team_member_path(params[:org_slug], org_member), method: :patch, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-muted", title: org_member.active? ? "Deactivate" : "Activate" do %>
+                  <i class="fa-solid fa-<%= org_member.active? ? 'user-slash' : 'user-check' %>"></i>
+                <% end %>
+              <% end %>
+
+              <% if policy(org_member).edit? %>
+                <%= link_to edit_bo_team_member_path(params[:org_slug], org_member), class: "btn btn-sm btn-link text-muted", title: "Edit role" do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+              <% end %>
+
+              <% if policy(org_member).destroy? %>
+                <%= button_to bo_team_member_path(params[:org_slug], org_member), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", title: "Remove from team", data: { turbo_confirm: "Are you sure you want to remove #{org_member.display_name} from the team?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              <% end %>
+
+              <% if is_self %>
+                <span class="badge bg-light text-muted ms-1">You</span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% end %>

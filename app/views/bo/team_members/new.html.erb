@@ -1,0 +1,105 @@
+<% content_for :bo_main_content do%>
+
+<div class="mb-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_team_members_path(params[:org_slug]), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
+      <% end %>
+
+      <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+
+      <div>
+        <h4 class="mb-0">Invite Team Member</h4>
+        <span class="text-muted">Add a new member to <%= current_organisation.name %></span>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 align-items-center">
+      <%= link_to bo_team_members_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
+        Cancel
+      <% end %>
+      <button type="submit" form="invite-form" class="btn btn-primary">
+        <i class="fa-solid fa-paper-plane"></i> Send Invitation
+      </button>
+    </div>
+  </div>
+</div>
+
+<%= form_with model: @org_member, url: bo_team_members_path(params[:org_slug]), method: :post, id: "invite-form" do |f| %>
+  <div class="row g-3">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Invitation Details</h5>
+
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label class="form-label">Email Address</label>
+              <%= f.email_field :invited_email, class: "form-control", placeholder: "Enter email address", required: true %>
+              <small class="text-muted">An invitation will be sent to this email address</small>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-12">
+              <label class="form-label">Role</label>
+              <%= f.select :role, [
+                ['Member - Can view and manage orders, customers, products', 'member'],
+                ['Admin - All member permissions plus team management', 'admin'],
+                ['Owner - Full access including organisation settings', 'owner']
+              ], {}, class: "form-select" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Role Permissions</h5>
+
+          <div class="mb-3">
+            <div class="fw-semibold text-secondary mb-2">
+              <i class="fa-solid fa-user"></i> Member
+            </div>
+            <ul class="small text-muted mb-0 ps-3">
+              <li>View dashboard</li>
+              <li>Manage customers</li>
+              <li>Manage products</li>
+              <li>Manage orders</li>
+            </ul>
+          </div>
+
+          <div class="mb-3">
+            <div class="fw-semibold text-warning mb-2">
+              <i class="fa-solid fa-user-gear"></i> Admin
+            </div>
+            <ul class="small text-muted mb-0 ps-3">
+              <li>All member permissions</li>
+              <li>Invite new members</li>
+              <li>Deactivate members</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="fw-semibold text-danger mb-2">
+              <i class="fa-solid fa-crown"></i> Owner
+            </div>
+            <ul class="small text-muted mb-0 ps-3">
+              <li>All admin permissions</li>
+              <li>Edit organisation settings</li>
+              <li>Change member roles</li>
+              <li>Remove members</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% end %>

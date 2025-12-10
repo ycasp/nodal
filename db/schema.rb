@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_10_114145) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_10_171352) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -208,12 +208,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_10_114145) do
 
   create_table "org_members", force: :cascade do |t|
     t.bigint "organisation_id", null: false
-    t.bigint "member_id", null: false
+    t.bigint "member_id"
     t.string "role"
     t.datetime "joined_at"
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "invitation_token"
+    t.datetime "invitation_sent_at"
+    t.bigint "invited_by_id"
+    t.datetime "invitation_accepted_at"
+    t.string "invited_email"
+    t.index ["invitation_token"], name: "index_org_members_on_invitation_token", unique: true
     t.index ["member_id"], name: "index_org_members_on_member_id"
     t.index ["organisation_id"], name: "index_org_members_on_organisation_id"
   end
