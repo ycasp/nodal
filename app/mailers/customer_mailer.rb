@@ -1,6 +1,6 @@
 class CustomerMailer < ApplicationMailer
   helper :application
-  default template_path: 'devise/mailer'
+  default template_path: 'customer_mailer'
 
   def invitation_instructions(record, token, opts = {})
     org = Organisation.find(record.organisation_id)
@@ -14,5 +14,11 @@ class CustomerMailer < ApplicationMailer
     @token = token
     @resource = record
     mail(to: record.email, subject: "Reset your password",  template_path: 'customer_mailer')
+  end
+
+  def confirm_order
+    @customer = params[:customer]
+    @order = params[:order]
+    mail(to: @customer.email, subject: "Orderconfirmation for Order #{@order.order_number}", template_path: 'customer_mailer')
   end
 end

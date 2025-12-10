@@ -26,6 +26,8 @@ class Storefront::CheckoutsController < Storefront::BaseController
     handle_addresses
     @order.finalize_checkout!(same_as_shipping: checkout_params[:same_as_shipping] == "1")
 
+    CustomerMailer.with(customer: current_customer, order: @order).confirm_order.deliver_later
+
     redirect_to order_path(org_slug: params[:org_slug], id: @order),
                 notice: "Order placed successfully!"
   end
