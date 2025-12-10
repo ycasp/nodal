@@ -12,6 +12,7 @@ class Order < ApplicationRecord
   belongs_to :shipping_address, class_name: "Address", optional: true
   belongs_to :billing_address, class_name: "Address", optional: true
   belongs_to :applied_by, class_name: "Member", optional: true
+  belongs_to :order_discount, optional: true
   has_many :order_items, dependent: :destroy
   has_many :products, through: :order_items
 
@@ -52,6 +53,7 @@ class Order < ApplicationRecord
     self.billing_address = shipping_address if same_as_shipping && shipping_address.present?
     self.tax_amount = calculated_tax
     self.shipping_amount = calculated_shipping
+    snapshot_auto_discount!
     place!
   end
 
@@ -70,9 +72,27 @@ class Order < ApplicationRecord
 
   # Calculate the automatic order tier discount amount
   def auto_order_discount_amount
-    return Money.new(0, 'EUR') unless best_order_discount.present?
+    if placed? && has_auto_discount_snapshot?
+      Money.new(auto_discount_amount_cents, 'EUR')
+    elsif best_order_discount.present?
+      best_order_discount.calculate_discount(total_amount)
+    else
+      Money.new(0, 'EUR')
+    end
+  end
 
-    best_order_discount.calculate_discount(total_amount)
+  def has_auto_discount_snapshot?
+    auto_discount_amount_cents.present?
+  end
+
+  def auto_discount_display
+    return nil unless has_auto_discount_snapshot?
+
+    if auto_discount_type == 'percentage'
+      "#{(auto_discount_value * 100).round(0)}%"
+    else
+      "€#{auto_discount_value}"
+    end
   end
 
   # Total with automatic order tier discount applied (before manual discounts)
@@ -158,5 +178,14 @@ class Order < ApplicationRecord
 
   def update_tax
     self.tax_amount = calculated_tax
+  end
+
+  def snapshot_auto_discount!
+    if (discount = best_order_discount)
+      self.order_discount = discount
+      self.auto_discount_type = discount.discount_type
+      self.auto_discount_value = discount.discount_value
+      self.auto_discount_amount_cents = discount.calculate_discount(total_amount).cents
+    end
   end
 end
