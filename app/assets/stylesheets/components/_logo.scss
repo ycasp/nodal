@@ -1,0 +1,32 @@
+// Nodal Logo Styles
+// Shared logo component used across navbar, footer, and customer storefront
+@import "../config/colors";
+
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  background: $teal;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+}
+
+.logo-text {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: $dark;
+  letter-spacing: -0.5px;
+  transition: color 0.2s ease;
+}
+
+// Footer variant (white text on dark background)
+.footer-logo {
+  .logo-text {
+    color: #ffffff;
+  }
+}

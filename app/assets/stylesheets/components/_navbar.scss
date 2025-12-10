@@ -18,14 +18,18 @@ $breakpoint-mobile: 768px;
   z-index: 1000;
 
   .logo {
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: $dark;
+    display: flex;
+    align-items: center;
+    gap: 2px;
     text-decoration: none;
-    letter-spacing: -0.5px;
 
     &:hover {
-      color: $teal;
+      .logo-icon {
+        background: $teal-dark;
+      }
+      .logo-text {
+        color: $teal;
+      }
     }
   }
 
