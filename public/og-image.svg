@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <!-- More dramatic gradient background -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7EDAD0"/>
+      <stop offset="25%" stop-color="#4ECBA9"/>
+      <stop offset="50%" stop-color="#2DB88A"/>
+      <stop offset="75%" stop-color="#00A67E"/>
+      <stop offset="100%" stop-color="#006B50"/>
+    </linearGradient>
+
+    <!-- Additional radial gradient overlay for depth -->
+    <radialGradient id="radialOverlay" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+    </radialGradient>
+
+    <!-- Radial glow for center -->
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.3)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+
+    <!-- Glow effect for center circle -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background with gradient -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+
+  <!-- Radial overlay for more depth -->
+  <rect width="1200" height="630" fill="url(#radialOverlay)"/>
+
+  <!-- Soft center glow -->
+  <ellipse cx="600" cy="280" rx="400" ry="280" fill="url(#centerGlow)"/>
+
+  <!-- Connection lines from outer nodes to center (animated feel with dashes) -->
+  <line x1="200" y1="130" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <line x1="150" y1="350" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <line x1="320" y1="480" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <line x1="880" y1="480" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <line x1="1050" y1="350" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <line x1="1000" y1="130" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <line x1="600" y1="60" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <line x1="280" y1="240" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <line x1="920" y1="240" x2="600" y2="280" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-dasharray="8,4"/>
+
+  <!-- Central circle with "Nodal" - eye-catching with glow -->
+  <circle cx="600" cy="280" r="95" fill="rgba(255,255,255,0.95)" filter="url(#glow)"/>
+  <text x="600" y="295" font-family="'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="2" fill="#008060" text-anchor="middle">nodal</text>
+
+  <!-- Tagline below the circle - two lines -->
+  <text x="600" y="430" font-family="'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#ffffff" text-anchor="middle">Where B2B happens</text>
+  <text x="600" y="475" font-family="'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#ffffff" text-anchor="middle">fast, simple, connected</text>
+
+  <!-- Node 1: Delivery Truck (top) -->
+  <g transform="translate(575, 35)">
+    <circle cx="25" cy="25" r="30" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <path d="M15 20h20v12h-20zM35 22h8l5 6v4h-13zM20 32a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM40 32a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Node 2: Package Box (top left) -->
+  <g transform="translate(175, 105)">
+    <circle cx="25" cy="25" r="28" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <path d="M12 18l13-6 13 6v16l-13 6-13-6z M12 18l13 6 13-6 M25 24v16" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Node 3: Location Pin (top right) -->
+  <g transform="translate(975, 105)">
+    <circle cx="25" cy="25" r="28" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <path d="M25 38c0 0-10-10-10-17a10 10 0 1 1 20 0c0 7-10 17-10 17z" fill="none" stroke="white" stroke-width="2"/>
+    <circle cx="25" cy="21" r="3" fill="none" stroke="white" stroke-width="2"/>
+  </g>
+
+  <!-- Node 4: Warehouse (middle left) -->
+  <g transform="translate(255, 215)">
+    <circle cx="25" cy="25" r="26" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <path d="M12 22l13-8 13 8v16h-26z M19 38v-8h12v8" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Node 5: Delivery Van (middle right) -->
+  <g transform="translate(895, 215)">
+    <circle cx="25" cy="25" r="26" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <path d="M10 18h22v14h-22zM32 22h6l4 5v5h-10zM16 32a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM36 32a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Node 6: Clipboard/Order (left) -->
+  <g transform="translate(125, 325)">
+    <circle cx="25" cy="25" r="28" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <path d="M16 12h18v28h-18z M20 10v4 M30 10v4 M20 22h10 M20 28h8 M20 34h6" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Node 7: Fast shipping (right) -->
+  <g transform="translate(1025, 325)">
+    <circle cx="25" cy="25" r="26" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <path d="M38 25h-20 M30 19l6 6-6 6 M10 20h6 M10 25h4 M10 30h6" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Node 8: Clock/Timer (bottom left) -->
+  <g transform="translate(295, 455)">
+    <circle cx="25" cy="25" r="28" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <circle cx="25" cy="25" r="12" fill="none" stroke="white" stroke-width="2"/>
+    <path d="M25 17v8l5 3" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Node 9: Route/Map (bottom right) -->
+  <g transform="translate(855, 455)">
+    <circle cx="25" cy="25" r="30" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <path d="M15 12l8 4v24l-8-4z M23 16l10-4v24l-10 4z M33 12l8 4v24l-8-4z" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
