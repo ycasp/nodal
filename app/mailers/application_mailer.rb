@@ -1,4 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "y.caspar@bluewin.ch"
+  default from: "no-reply@nodal-seiri.dev"
   layout "mailer"
 end
+  
