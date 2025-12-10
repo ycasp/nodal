@@ -8,16 +8,10 @@
   </div>
 
   <ul class="bo-sidebar-nav">
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'dashboards' %>">
-      <%= link_to bo_path do %>
-        <i class="fa-solid fa-house"></i>
-        <span>Home</span>
-      <% end %>
-    </li>
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'dashboard' %>">
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'dashboard' || controller_name == 'dashboards' %>">
       <%= link_to bo_dashboard_path do %>
         <i class="fa-solid fa-chart-line"></i>
-        <span>Analytics</span>
+        <span>Dashboard</span>
       <% end %>
     </li>
     <li class="bo-sidebar-item <%= 'active' if controller_name == 'customers' %>">
