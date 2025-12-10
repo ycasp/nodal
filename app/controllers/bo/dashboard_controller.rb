@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Bo::DashboardController < Bo::BaseController
+  skip_after_action :verify_policy_scoped, only: [:index]
+
   # GET /bo/dashboard
   def index
     @organisation = current_organisation
