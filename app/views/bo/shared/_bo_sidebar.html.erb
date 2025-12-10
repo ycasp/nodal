@@ -49,12 +49,6 @@
       <% end %>
     </li>
     <li class="bo-sidebar-item">
-      <%= link_to "#" do %>
-        <i class="fa-solid fa-gear"></i>
-        <span>Settings</span>
-      <% end %>
-    </li>
-    <li class="bo-sidebar-item">
       <%= link_to destroy_member_session_path, data: { turbo_method: :delete } do %>
         <i class="fa-solid fa-right-from-bracket"></i>
         <span>Log out</span>

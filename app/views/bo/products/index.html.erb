@@ -15,7 +15,7 @@
   <div class="d-flex justify-content-between align-items-start">
     <div>
       <h1>Product Catalog</h1>
-      <p>Smart inventory with AI-powered insights</p>
+      <p>View and manage your product catalog</p>
     </div>
     <div class="bo-page-actions">
       <a href="#" class="btn btn-outline-secondary">
@@ -23,9 +23,6 @@
       </a>
       <a href="#" class="btn btn-outline-secondary">
         <i class="fa-solid fa-download"></i> Export
-      </a>
-      <a href="#" class="btn btn-outline-secondary">
-        <i class="fa-solid fa-gear"></i> Manage Properties
       </a>
       <%= link_to new_bo_product_path(params[:org_slug]), class: "btn btn-primary" do %>
         <i class="fa-solid fa-plus"></i> Add New
@@ -64,8 +61,6 @@
         <th>SKU</th>
         <th>Category</th>
         <th>Price</th>
-        <th>Stock</th>
-        <th>AI Insights</th>
         <th class="text-end">Actions</th>
       </tr>
     </thead>
@@ -79,29 +74,6 @@
           <td><%= product.sku %></td>
           <td><%= product.category&.name %></td>
           <td><%= humanized_money_with_symbol(product.price) %></td>
-          <td>
-            <% stock = rand(20..500) %>
-            <% unit = product.unit_description || 'units' %>
-            <% if stock < 100 %>
-              <span class="badge rounded-pill bg-danger-subtle text-danger"><%= stock %> <%= unit %></span>
-            <% else %>
-              <span class="badge rounded-pill bg-success-subtle text-success"><%= stock %> <%= unit %></span>
-            <% end %>
-          </td>
-          <td>
-            <% insights = [
-              { text: "High demand - Reorder soon", color: "primary" },
-              { text: "Trending up 15%", color: "success" },
-              { text: "Low stock alert", color: "danger" },
-              { text: "Popular this week", color: "info" },
-              nil
-            ].sample %>
-            <% if insights %>
-              <span class="badge rounded-pill bg-<%= insights[:color] %>-subtle text-<%= insights[:color] %> border border-<%= insights[:color] %>-subtle">
-                <i class="fa-solid fa-chart-line me-1"></i><%= insights[:text] %>
-              </span>
-            <% end %>
-          </td>
           <td class="text-end product-actions" onclick="event.stopPropagation();">
             <%= link_to bo_product_path(params[:org_slug], product), class: "btn btn-sm btn-link text-muted" do %>
               <i class="fa-solid fa-eye"></i>
