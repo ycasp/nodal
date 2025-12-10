@@ -27,6 +27,14 @@ class OrderPolicy < ApplicationPolicy
     member_of_organisation?
   end
 
+  def apply_discount?
+    member_of_organisation?
+  end
+
+  def remove_discount?
+    member_of_organisation?
+  end
+
   # Customer storefront actions
   def place?
     customer_owner? && record.draft?

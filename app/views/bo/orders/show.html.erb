@@ -103,6 +103,19 @@
               <span class="text-muted">Subtotal</span>
               <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
             </div>
+
+            <% if @order.has_order_discount? %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>
+                  Order Discount (<%= @order.order_discount_display %>)
+                  <% if @order.discount_reason.present? %>
+                    <small class="text-muted d-block"><%= @order.discount_reason %></small>
+                  <% end %>
+                </span>
+                <span>-<%= humanized_money_with_symbol(@order.order_discount_amount) %></span>
+              </div>
+            <% end %>
+
             <div class="d-flex justify-content-between mb-2">
               <span class="text-muted">Tax (<%= (@current_organisation.tax_rate * 100).round(1) %>%)</span>
               <span><%= humanized_money_with_symbol(@order.tax_amount || @order.calculated_tax) %></span>
@@ -212,6 +225,77 @@
               View Client Profile
             <% end %>
           </div>
+        </div>
+      </div>
+
+      <!-- Order Discount -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-tag me-2"></i>Order Discount
+          </h6>
+
+          <% if @order.has_order_discount? %>
+            <div class="alert alert-success mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong><%= @order.order_discount_display %> off</strong>
+                  <% if @order.discount_reason.present? %>
+                    <div class="small text-muted"><%= @order.discount_reason %></div>
+                  <% end %>
+                  <% if @order.applied_by.present? %>
+                    <div class="small text-muted">Applied by <%= @order.applied_by.email %></div>
+                  <% end %>
+                </div>
+                <span class="badge bg-success fs-6">
+                  -<%= humanized_money_with_symbol(@order.order_discount_amount) %>
+                </span>
+              </div>
+            </div>
+
+            <%= button_to remove_discount_bo_order_path(org_slug: @current_organisation.slug, id: @order.id),
+                method: :delete,
+                class: "btn btn-outline-danger btn-sm w-100",
+                data: { turbo_confirm: "Remove order discount?" } do %>
+              <i class="fa-solid fa-times me-1"></i> Remove Discount
+            <% end %>
+          <% else %>
+            <p class="text-muted small mb-3">Apply a discount to the entire order</p>
+
+            <%= form_with url: apply_discount_bo_order_path(org_slug: @current_organisation.slug, id: @order.id),
+                method: :patch,
+                scope: :order,
+                local: true do |f| %>
+              <div class="mb-3">
+                <label class="form-label small">Discount Type</label>
+                <%= f.select :discount_type,
+                    [["Percentage", "percentage"], ["Fixed Amount", "fixed"]],
+                    { prompt: "Select type..." },
+                    { class: "form-select form-select-sm", required: true } %>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small">Value</label>
+                <%= f.number_field :discount_value,
+                    class: "form-control form-control-sm",
+                    step: 0.01, min: 0,
+                    placeholder: "0.10 for 10% or 25.00 for fixed",
+                    required: true %>
+                <small class="text-muted">For percentage: 0.15 = 15%</small>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small">Reason (optional)</label>
+                <%= f.text_field :discount_reason,
+                    class: "form-control form-control-sm",
+                    placeholder: "e.g., Loyalty bonus" %>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-sm w-100">
+                <i class="fa-solid fa-check me-1"></i> Apply Discount
+              </button>
+            <% end %>
+          <% end %>
         </div>
       </div>
 

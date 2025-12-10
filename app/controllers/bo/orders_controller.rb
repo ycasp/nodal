@@ -1,5 +1,5 @@
 class Bo::OrdersController < Bo::BaseController
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_order, only: [:show, :edit, :update, :destroy, :apply_discount, :remove_discount]
 
   def index
     @orders = policy_scope(current_organisation.orders.placed).includes(:customer, :order_items)
@@ -64,6 +64,22 @@ class Bo::OrdersController < Bo::BaseController
     redirect_to bo_orders_path(org_slug: @current_organisation.slug), notice: "Order deleted successfully."
   end
 
+  def apply_discount
+    if @order.update(order_discount_params.merge(applied_by: current_member))
+      redirect_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id),
+                  notice: "Discount applied successfully."
+    else
+      redirect_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id),
+                  alert: "Failed to apply discount: #{@order.errors.full_messages.join(', ')}"
+    end
+  end
+
+  def remove_discount
+    @order.update(discount_type: nil, discount_value: nil, discount_reason: nil, applied_by: nil)
+    redirect_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id),
+                notice: "Discount removed."
+  end
+
   private
 
   def set_order
@@ -76,5 +92,9 @@ class Bo::OrdersController < Bo::BaseController
       :customer_id, :status, :payment_status, :receive_on, :notes,
       order_items_attributes: [:id, :product_id, :quantity, :price, :discount_percentage, :_destroy]
     )
+  end
+
+  def order_discount_params
+    params.require(:order).permit(:discount_type, :discount_value, :discount_reason)
   end
 end

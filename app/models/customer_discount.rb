@@ -1,15 +1,14 @@
-class CustomerProductDiscount < ApplicationRecord
+class CustomerDiscount < ApplicationRecord
   DISCOUNT_TYPES = %w[percentage fixed].freeze
 
   belongs_to :customer
-  belongs_to :product
   belongs_to :organisation
 
   validates :discount_type, presence: true, inclusion: { in: DISCOUNT_TYPES }
-  validates :discount_percentage, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
+  validates :discount_value, presence: true, numericality: { greater_than: 0 }
 
+  validate :discount_value_valid_for_type
   validate :valid_until_after_valid_from
-  validate :dates_not_in_past, on: :create
   validate :no_overlapping_discounts
 
   scope :active, -> {
@@ -30,15 +29,11 @@ class CustomerProductDiscount < ApplicationRecord
     valid_from.nil? && valid_until.nil?
   end
 
-  def percentage_display
-    (discount_percentage * 100).round(0)
-  end
-
   def value_display
     if percentage?
-      "#{percentage_display}%"
+      "#{(discount_value * 100).round(0)}%"
     else
-      discount_percentage
+      discount_value
     end
   end
 
@@ -56,6 +51,14 @@ class CustomerProductDiscount < ApplicationRecord
 
   private
 
+  def discount_value_valid_for_type
+    return unless discount_value.present? && discount_type.present?
+
+    if percentage? && discount_value > 1
+      errors.add(:discount_value, "must be between 0 and 1 for percentage discounts (e.g., 0.15 for 15%)")
+    end
+  end
+
   def valid_until_after_valid_from
     return if valid_from.blank? || valid_until.blank?
 
@@ -64,18 +67,11 @@ class CustomerProductDiscount < ApplicationRecord
     end
   end
 
-  def dates_not_in_past
-    return if valid_from.blank? && valid_until.blank?
-
-    errors.add(:valid_from, "cannot be in the past") if valid_from.present? && valid_from < Date.current
-    errors.add(:valid_until, "cannot be in the past") if valid_until.present? && valid_until < Date.current
-  end
-
   def no_overlapping_discounts
-    return if customer_id.blank? || product_id.blank?
+    return if customer_id.blank?
 
-    overlapping = CustomerProductDiscount
-      .where(customer_id: customer_id, product_id: product_id)
+    overlapping = CustomerDiscount
+      .where(customer_id: customer_id)
       .where.not(id: id)
 
     if valid_from.present? && valid_until.present?
@@ -86,10 +82,15 @@ class CustomerProductDiscount < ApplicationRecord
     elsif perpetual?
       # Perpetual discount - check if any other discount exists
       overlapping = overlapping.all
+    else
+      # One date is nil
+      if valid_from.nil?
+        overlapping = overlapping.where("valid_until IS NULL OR valid_until >= ?", Date.current)
+      else
+        overlapping = overlapping.where("valid_from IS NULL OR valid_from <= ?", valid_until || Date.current + 100.years)
+      end
     end
 
-    if overlapping.exists?
-      errors.add(:base, "overlaps with an existing discount for this customer and product")
-    end
+    errors.add(:base, "overlaps with an existing discount for this customer") if overlapping.exists?
   end
 end

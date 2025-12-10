@@ -4,6 +4,7 @@ class Product < ApplicationRecord
   has_many :order_items, dependent: :restrict_with_error
   has_many :orders, through: :order_items
   has_many :customer_product_discounts, dependent: :destroy
+  has_many :product_discounts, dependent: :destroy
 
   has_one_attached :photo
 

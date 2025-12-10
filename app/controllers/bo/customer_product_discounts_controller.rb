@@ -1,5 +1,5 @@
 class Bo::CustomerProductDiscountsController < Bo::BaseController
-  before_action :set_discount, only: [:edit, :update, :destroy]
+  before_action :set_discount, only: [:edit, :update, :destroy, :toggle_active]
   before_action :load_form_collections, only: [:new, :create, :edit, :update]
 
   def index
@@ -17,7 +17,8 @@ class Bo::CustomerProductDiscountsController < Bo::BaseController
     authorize @discount
 
     if @discount.save
-      redirect_to bo_customer_product_discounts_path(params[:org_slug]), notice: "Custom price created successfully."
+      redirect_to bo_pricing_path(params[:org_slug], tab: 'custom_pricing'),
+                  notice: "Custom price created successfully."
     else
       render :new, status: :unprocessable_entity
     end
@@ -28,7 +29,8 @@ class Bo::CustomerProductDiscountsController < Bo::BaseController
 
   def update
     if @discount.update(customer_product_discount_params)
-      redirect_to bo_customer_product_discounts_path(params[:org_slug]), notice: "Custom price updated successfully."
+      redirect_to bo_pricing_path(params[:org_slug], tab: 'custom_pricing'),
+                  notice: "Custom price updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -36,7 +38,14 @@ class Bo::CustomerProductDiscountsController < Bo::BaseController
 
   def destroy
     @discount.destroy
-    redirect_to bo_customer_product_discounts_path(params[:org_slug]), notice: "Custom price deleted successfully."
+    redirect_to bo_pricing_path(params[:org_slug], tab: 'custom_pricing'),
+                notice: "Custom price deleted successfully."
+  end
+
+  def toggle_active
+    @discount.update(active: !@discount.active)
+    redirect_to bo_pricing_path(params[:org_slug], tab: 'custom_pricing'),
+                notice: "Discount #{@discount.active? ? 'activated' : 'deactivated'}."
   end
 
   private
@@ -52,6 +61,9 @@ class Bo::CustomerProductDiscountsController < Bo::BaseController
   end
 
   def customer_product_discount_params
-    params.require(:customer_product_discount).permit(:customer_id, :product_id, :discount_percentage, :valid_from, :valid_until)
+    params.require(:customer_product_discount).permit(
+      :customer_id, :product_id, :discount_percentage, :discount_type,
+      :valid_from, :valid_until, :stackable, :active
+    )
   end
 end

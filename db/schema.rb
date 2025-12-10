@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_08_163658) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_09_122803) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_163658) do
     t.index ["organisation_id"], name: "index_categories_on_organisation_id"
   end
 
+  create_table "customer_discounts", force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "discount_type", default: "percentage", null: false
+    t.decimal "discount_value", precision: 10, scale: 4, null: false
+    t.date "valid_from"
+    t.date "valid_until"
+    t.boolean "stackable", default: false, null: false
+    t.boolean "active", default: true, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id", "organisation_id"], name: "index_customer_discounts_on_customer_id_and_organisation_id"
+    t.index ["customer_id"], name: "index_customer_discounts_on_customer_id"
+    t.index ["organisation_id"], name: "index_customer_discounts_on_organisation_id"
+  end
+
   create_table "customer_product_discounts", force: :cascade do |t|
     t.bigint "customer_id", null: false
     t.bigint "product_id", null: false
@@ -73,6 +90,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_163658) do
     t.date "valid_until"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "discount_type", default: "percentage", null: false
+    t.boolean "stackable", default: false, null: false
+    t.boolean "active", default: true, null: false
     t.index ["customer_id"], name: "index_customer_product_discounts_on_customer_id"
     t.index ["organisation_id"], name: "index_customer_product_discounts_on_organisation_id"
     t.index ["product_id"], name: "index_customer_product_discounts_on_product_id"
@@ -151,6 +171,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_163658) do
     t.string "delivery_method", default: "delivery"
     t.bigint "shipping_address_id"
     t.bigint "billing_address_id"
+    t.string "discount_type"
+    t.decimal "discount_value", precision: 10, scale: 4
+    t.text "discount_reason"
+    t.bigint "applied_by_id"
+    t.index ["applied_by_id"], name: "index_orders_on_applied_by_id"
     t.index ["billing_address_id"], name: "index_orders_on_billing_address_id"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["order_number"], name: "index_orders_on_order_number", unique: true
@@ -183,6 +208,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_163658) do
     t.index ["slug"], name: "index_organisations_on_slug", unique: true
   end
 
+  create_table "product_discounts", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "discount_type", default: "percentage", null: false
+    t.decimal "discount_value", precision: 10, scale: 4, null: false
+    t.integer "min_quantity", default: 1, null: false
+    t.date "valid_from"
+    t.date "valid_until"
+    t.boolean "stackable", default: false, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organisation_id"], name: "index_product_discounts_on_organisation_id"
+    t.index ["product_id", "organisation_id"], name: "index_product_discounts_on_product_id_and_organisation_id"
+    t.index ["product_id"], name: "index_product_discounts_on_product_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.string "name"
@@ -206,6 +248,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_163658) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "categories", "organisations"
+  add_foreign_key "customer_discounts", "customers"
+  add_foreign_key "customer_discounts", "organisations"
   add_foreign_key "customer_product_discounts", "customers"
   add_foreign_key "customer_product_discounts", "organisations"
   add_foreign_key "customer_product_discounts", "products"
@@ -215,9 +259,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_163658) do
   add_foreign_key "orders", "addresses", column: "billing_address_id"
   add_foreign_key "orders", "addresses", column: "shipping_address_id"
   add_foreign_key "orders", "customers"
+  add_foreign_key "orders", "members", column: "applied_by_id"
   add_foreign_key "orders", "organisations"
   add_foreign_key "org_members", "members"
   add_foreign_key "org_members", "organisations"
+  add_foreign_key "product_discounts", "organisations"
+  add_foreign_key "product_discounts", "products"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "organisations"
 end
