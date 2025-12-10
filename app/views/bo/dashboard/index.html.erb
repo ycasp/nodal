@@ -1,0 +1,108 @@
+<% content_for :bo_main_content do %>
+
+<div data-controller="dashboard" data-dashboard-metrics-url-value="<%= bo_dashboard_metrics_path(org_slug: @organisation.slug) %>">
+  <!-- Sticky Header with Filters -->
+  <div class="bo-page-header bo-page-header--with-filters">
+    <div class="bo-page-header__top">
+      <div>
+        <h1>Dashboard</h1>
+        <p>Business insights and KPI metrics for <%= @organisation.name %></p>
+      </div>
+    </div>
+    <div class="filters-panel filters-panel--inline">
+      <div class="filters-panel__row">
+        <div class="filters-panel__field">
+          <label class="form-label" for="dashboard-from">From</label>
+          <input type="date" class="form-control form-control-sm" id="dashboard-from" data-dashboard-target="from">
+        </div>
+        <div class="filters-panel__field">
+          <label class="form-label" for="dashboard-to">To</label>
+          <input type="date" class="form-control form-control-sm" id="dashboard-to" data-dashboard-target="to">
+        </div>
+        <div class="filters-panel__field filters-panel__field--wide">
+          <label class="form-label" for="dashboard-client">Client</label>
+          <select class="form-select form-select-sm" id="dashboard-client" data-dashboard-target="client">
+            <option value="">All Clients</option>
+            <% @organisation.customers.where(active: true).order(:company_name).each do |customer| %>
+              <option value="<%= customer.id %>"><%= customer.company_name %></option>
+            <% end %>
+          </select>
+        </div>
+        <div class="filters-panel__field">
+          <label class="form-label" for="dashboard-category">Category</label>
+          <select class="form-select form-select-sm" id="dashboard-category" data-dashboard-target="category">
+            <option value="">All Categories</option>
+            <% @organisation.categories.order(:name).each do |category| %>
+              <option value="<%= category.id %>"><%= category.name %></option>
+            <% end %>
+          </select>
+        </div>
+        <div class="filters-panel__field filters-panel__field--action">
+          <label class="form-label">&nbsp;</label>
+          <button type="button" class="btn btn-primary btn-sm" data-action="click->dashboard#applyFilters">
+            <i class="fa-solid fa-check me-1"></i> Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <!-- Page Body -->
+    <div class="bo-page-body">
+      <!-- Top Row: KPI Cards -->
+      <div class="dashboard__grid dashboard__grid--kpis mb-4">
+
+        <%= render "bo/dashboard/kpi_card",
+            id: "total_sales",
+            title: "Total Sales",
+            icon: "fa-euro-sign",
+            format: "currency",
+            drill_path: bo_orders_path(org_slug: @organisation.slug) %>
+
+        <%= render "bo/dashboard/kpi_card",
+            id: "order_count",
+            title: "Orders",
+            icon: "fa-clipboard-list",
+            format: "number",
+            drill_path: bo_orders_path(org_slug: @organisation.slug) %>
+
+        <%= render "bo/dashboard/kpi_card",
+            id: "aov",
+            title: "Avg Order Value",
+            icon: "fa-chart-line",
+            format: "currency",
+            drill_path: nil %>
+
+        <%= render "bo/dashboard/kpi_card",
+            id: "open_carts",
+            title: "Open Carts",
+            icon: "fa-shopping-cart",
+            format: "number",
+            drill_path: nil %>
+      </div>
+
+      <!-- Middle Section -->
+      <div class="dashboard__grid dashboard__grid--middle mb-4">
+        <!-- Left Column: Top Clients & Order Frequency -->
+        <div class="dashboard__main-col">
+          <%= render "bo/dashboard/top_clients", organisation: @organisation %>
+          <%= render "bo/dashboard/order_frequency" %>
+        </div>
+
+        <!-- Right Column: Discount Panel -->
+        <div class="dashboard__side-col">
+          <%= render "bo/dashboard/discount_panel" %>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Product Tables -->
+      <div class="dashboard__grid dashboard__grid--products">
+        <%= render "bo/dashboard/orders_per_product", organisation: @organisation %>
+        <%= render "bo/dashboard/revenue_per_product", organisation: @organisation %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% end %>

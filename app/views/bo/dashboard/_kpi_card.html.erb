@@ -1,0 +1,28 @@
+<div class="card dashboard__card kpi" data-kpi="<%= id %>">
+  <div class="card-body">
+    <div class="kpi__header">
+      <span class="kpi__icon">
+        <i class="fa-solid <%= icon %>"></i>
+      </span>
+      <% if drill_path %>
+        <%= link_to drill_path, class: "kpi__drill-link" do %>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="kpi__body">
+      <div class="kpi__title"><%= title %></div>
+      <div class="kpi__value">--</div>
+      <div class="kpi__footer">
+        <span class="kpi__delta">--</span>
+        <span class="kpi__period">vs prev period</span>
+      </div>
+    </div>
+    <div class="kpi__sparkline-wrapper">
+      <canvas class="kpi__sparkline" width="80" height="24"></canvas>
+    </div>
+    <% if id == "open_carts" %>
+      <div class="kpi__carts-list"></div>
+    <% end %>
+  </div>
+</div>

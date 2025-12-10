@@ -390,9 +390,19 @@ $bo-sidebar-border: #334155;
   position: sticky;
   top: 0;
   background: #ffffff;
-  z-index: 100;
+  z-index: 99;
   padding: 20px 24px;
   border-bottom: 1px solid #e5e5e5;
+
+  &--with-filters {
+    padding-bottom: 16px;
+  }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 
   h1 {
     font-size: 1.5rem;
