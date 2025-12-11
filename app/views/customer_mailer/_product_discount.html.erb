@@ -18,9 +18,20 @@
 
 <p style="margin: 0 0 8px 0; font-size: 16px;">Hello,</p>
 
-<p style="margin: 0 0 32px 0; color: #4b5563;">
+<p style="margin: 0 0 24px 0; color: #4b5563;">
   Great news! We have a special discount on one of our products that we thought you'd like to know about.
 </p>
+
+<!-- Shop button -->
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+  <tr>
+    <td align="center">
+      <a href="<%= product_url(@product, org_slug: @organisation.slug) %>" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); background-color: #7c3aed; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: 8px;">
+        View Product →
+      </a>
+    </td>
+  </tr>
+</table>
 
 <!-- Product discount card -->
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden;">
@@ -84,7 +95,7 @@
     <td style="padding: 20px; background-color: #f0fdf4; border-radius: 12px; border-left: 4px solid #008060;">
       <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #166534;">Don't miss out!</p>
       <p style="margin: 0; font-size: 14px; color: #4b5563; line-height: 1.5;">
-        Order now to take advantage of this special discount. Visit our store to place your order.
+        Order now to take advantage of this special discount.
       </p>
     </td>
   </tr>
