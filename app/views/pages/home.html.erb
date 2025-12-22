@@ -1,5 +1,4 @@
 <!-- Landing Page for Nodal - B2B Ordering Platform for SMBs -->
-<!-- Content based on The-Problem.pdf -->
 
 <div class="landing-page">
   <!-- ========================================
@@ -37,21 +36,15 @@
           <path id="bgPath8" d="M900,50 Q750,150 600,300"/>
           <path id="bgPath9" d="M300,550 Q450,450 600,300"/>
           <path id="bgPath10" d="M900,550 Q750,450 600,300"/>
-          <!-- Cross connections between outer nodes -->
-          <!-- Top to side connections -->
           <line x1="80" y1="100" x2="300" y2="50" stroke-opacity="0.25"/>
           <line x1="1120" y1="100" x2="900" y2="50" stroke-opacity="0.25"/>
-          <!-- Bottom to side connections -->
           <line x1="80" y1="500" x2="300" y2="550" stroke-opacity="0.25"/>
           <line x1="1120" y1="500" x2="900" y2="550" stroke-opacity="0.25"/>
-          <!-- Vertical side connections -->
           <line x1="80" y1="100" x2="80" y2="300" stroke-opacity="0.2"/>
           <line x1="80" y1="300" x2="80" y2="500" stroke-opacity="0.2"/>
           <line x1="1120" y1="100" x2="1120" y2="300" stroke-opacity="0.2"/>
           <line x1="1120" y1="300" x2="1120" y2="500" stroke-opacity="0.2"/>
-          <!-- Top horizontal connection -->
           <line x1="300" y1="50" x2="900" y2="50" stroke-opacity="0.15"/>
-          <!-- Bottom horizontal connection -->
           <line x1="300" y1="550" x2="900" y2="550" stroke-opacity="0.15"/>
         </g>
 
@@ -102,7 +95,6 @@
         <!-- Business nodes spread across background -->
         <g class="nodes">
           <!-- Left side -->
-          <!-- Node 1: Calculator/Invoice icon -->
           <g class="node">
             <circle cx="80" cy="100" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.6"/>
             <g transform="translate(80, 100)">
@@ -113,7 +105,6 @@
               <circle cx="4" cy="5" r="2" fill="none" stroke="#3ee8c8" stroke-width="1"/>
             </g>
           </g>
-          <!-- Node 2: Chart/Analytics icon -->
           <g class="node">
             <circle cx="80" cy="300" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.6"/>
             <g transform="translate(80, 300)">
@@ -122,7 +113,6 @@
               <circle cx="7" cy="-5" r="2" fill="#3ee8c8"/>
             </g>
           </g>
-          <!-- Node 3: Delivery truck icon -->
           <g class="node">
             <circle cx="80" cy="500" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.6"/>
             <g transform="translate(80, 500)">
@@ -134,7 +124,6 @@
           </g>
 
           <!-- Right side -->
-          <!-- Node 4: Warehouse/Building icon -->
           <g class="node">
             <circle cx="1120" cy="100" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.6"/>
             <g transform="translate(1120, 100)">
@@ -142,7 +131,6 @@
               <rect x="-2" y="0" width="4" height="6" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
             </g>
           </g>
-          <!-- Node 5: Person/Customer icon -->
           <g class="node">
             <circle cx="1120" cy="300" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.6"/>
             <g transform="translate(1120, 300)">
@@ -150,7 +138,6 @@
               <path d="M-8,8 Q-8,0 0,0 Q8,0 8,8" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
             </g>
           </g>
-          <!-- Node 6: Handshake/Partnership icon -->
           <g class="node">
             <circle cx="1120" cy="500" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.6"/>
             <g transform="translate(1120, 500)">
@@ -163,7 +150,6 @@
           </g>
 
           <!-- Top -->
-          <!-- Node 7: Shopping cart icon -->
           <g class="node">
             <circle cx="300" cy="50" r="24" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.5"/>
             <g transform="translate(300, 50)">
@@ -172,7 +158,6 @@
               <circle cx="5" cy="5" r="2" fill="none" stroke="#3ee8c8" stroke-width="1"/>
             </g>
           </g>
-          <!-- Node 8: Credit card/Payment icon -->
           <g class="node">
             <circle cx="900" cy="50" r="24" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.5"/>
             <g transform="translate(900, 50)">
@@ -183,7 +168,6 @@
           </g>
 
           <!-- Bottom -->
-          <!-- Node 9: Box/Package icon -->
           <g class="node">
             <circle cx="300" cy="550" r="24" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.5"/>
             <g transform="translate(300, 550)">
@@ -192,7 +176,6 @@
               <path d="M-6,-4 L0,-7 L6,-4" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
             </g>
           </g>
-          <!-- Node 10: Globe/International icon -->
           <g class="node">
             <circle cx="900" cy="550" r="24" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.5"/>
             <g transform="translate(900, 550)">
@@ -204,7 +187,6 @@
 
           <!-- Center: Nodal hub - GLOWING RING EFFECT -->
           <g class="node node-center">
-            <!-- Glow filter for rings -->
             <defs>
               <filter id="ringGlow" x="-100%" y="-100%" width="300%" height="300%">
                 <feGaussianBlur stdDeviation="6" result="blur"/>
@@ -221,21 +203,18 @@
               </linearGradient>
             </defs>
 
-            <!-- Pulsing glow rings that expand outward -->
+            <!-- Pulsing glow rings -->
             <g class="glow-rings" filter="url(#ringGlow)">
-              <!-- Ring 1 - continuous pulse -->
               <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
                 <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite"/>
                 <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite"/>
                 <animate attributeName="stroke-width" values="3;1" dur="3s" repeatCount="indefinite"/>
               </circle>
-              <!-- Ring 2 - offset timing -->
               <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
                 <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite" begin="1s"/>
                 <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite" begin="1s"/>
                 <animate attributeName="stroke-width" values="3;1" dur="3s" repeatCount="indefinite" begin="1s"/>
               </circle>
-              <!-- Ring 3 - offset timing -->
               <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
                 <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite" begin="2s"/>
                 <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite" begin="2s"/>
@@ -243,19 +222,11 @@
               </circle>
             </g>
 
-            <!-- Static outer ring -->
             <circle cx="600" cy="300" r="52" fill="none" stroke="#008060" stroke-width="2" opacity="0.3"/>
-
-            <!-- Main hub circle - solid white background -->
             <circle cx="600" cy="300" r="46" fill="#ffffff" stroke="#008060" stroke-width="2.5"/>
-
-            <!-- Inner accent ring -->
             <circle cx="600" cy="300" r="38" fill="none" stroke="#008060" stroke-width="1" opacity="0.2"/>
-
-            <!-- NODAL text - PROMINENT -->
             <text x="600" y="306" text-anchor="middle" fill="#008060" font-weight="800" font-size="18" letter-spacing="3" class="nodal-text">NODAL</text>
 
-            <!-- Connection dots around hub with pulse -->
             <g class="hub-dots">
               <circle cx="600" cy="243" r="5" fill="#008060" opacity="0.7">
                 <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite"/>
@@ -280,90 +251,27 @@
     </div>
 
     <div class="container">
-      <div class="hero-content">
-        <div class="hero-text">
+      <div class="hero-content hero-content--centered">
+        <!-- Top: Headline -->
+        <div class="hero-top">
           <h1 id="hero-heading" class="hero-headline">
-            Ordering that works
+            The new standard<br><span class="text-primary">for B2B</span>
           </h1>
+        </div>
+
+        <!-- Bottom: Subheadline, CTAs, Trust badges -->
+        <div class="hero-bottom">
           <p class="hero-subheadline">
-            A plug-and-play B2B ordering platform built specifically for small and medium businesses. No developers required, no complex setup — just smart ordering that works.
+            A professional platform to manage orders, clients, and transactions — replacing chaos.
           </p>
           <div class="hero-cta-group">
             <%= link_to "Get Started", "#", class: "btn btn-primary btn-lg hero-cta-primary" %>
-            <%= link_to "Book a Demo", "#", class: "btn btn-outline-light btn-lg hero-cta-secondary" %>
+            <%= link_to "Book a Demo", "#", class: "btn btn-outline-dark btn-lg hero-cta-secondary" %>
           </div>
-        </div>
-        <div class="hero-visual">
-          <!-- Animated Dashboard Preview (Light Theme) -->
-          <div class="dashboard-preview">
-            <!-- Browser chrome -->
-            <div class="browser-chrome">
-              <span class="browser-dot red"></span>
-              <span class="browser-dot yellow"></span>
-              <span class="browser-dot green"></span>
-              <span class="browser-url">app.nodal.io</span>
-            </div>
-
-            <!-- Dashboard UI -->
-            <div class="dashboard-ui">
-              <!-- Sidebar -->
-              <div class="ui-sidebar">
-                <div class="ui-logo">N</div>
-                <div class="ui-nav-item active"></div>
-                <div class="ui-nav-item"></div>
-                <div class="ui-nav-item"></div>
-                <div class="ui-nav-item"></div>
-              </div>
-
-              <!-- Main content -->
-              <div class="ui-main">
-                <!-- Stats row -->
-                <div class="ui-stats">
-                  <div class="ui-stat">
-                    <div class="ui-stat-value">1,247</div>
-                    <div class="ui-stat-label">Orders</div>
-                  </div>
-                  <div class="ui-stat highlight">
-                    <div class="ui-stat-value">€89.4k</div>
-                    <div class="ui-stat-label">Revenue</div>
-                  </div>
-                  <div class="ui-stat">
-                    <div class="ui-stat-value">156</div>
-                    <div class="ui-stat-label">Clients</div>
-                  </div>
-                </div>
-
-                <!-- Animated chart -->
-                <div class="ui-chart">
-                  <div class="chart-bar bar-1"></div>
-                  <div class="chart-bar bar-2"></div>
-                  <div class="chart-bar bar-3"></div>
-                  <div class="chart-bar bar-4"></div>
-                  <div class="chart-bar bar-5"></div>
-                  <div class="chart-bar bar-6"></div>
-                  <div class="chart-bar bar-7"></div>
-                </div>
-
-                <!-- Order list with new orders appearing -->
-                <div class="ui-orders">
-                  <div class="ui-order order-1">
-                    <span class="order-dot"></span>
-                    <span class="order-text"></span>
-                    <span class="order-badge">New</span>
-                  </div>
-                  <div class="ui-order order-2">
-                    <span class="order-dot"></span>
-                    <span class="order-text"></span>
-                    <span class="order-badge success">Done</span>
-                  </div>
-                  <div class="ui-order order-3">
-                    <span class="order-dot"></span>
-                    <span class="order-text"></span>
-                    <span class="order-badge success">Done</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="hero-trust-badges">
+            <span class="trust-badge"><i class="fas fa-check-circle"></i> Live in 15 minutes</span>
+            <span class="trust-badge"><i class="fas fa-check-circle"></i> No technical setup</span>
+            <span class="trust-badge"><i class="fas fa-check-circle"></i> Free tier during Beta</span>
           </div>
         </div>
       </div>
@@ -371,163 +279,243 @@
   </section>
 
   <!-- ========================================
-       SECTION 3: THE PROBLEM
-       Purpose: Identify pain points customers face
+       SECTION 3: STATS BAR
+       Purpose: Social proof with numbers
+       ======================================== -->
+  <section class="stats-bar-section" aria-label="Platform statistics">
+    <div class="container">
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-value">500+</span>
+          <span class="stat-label">Orders processed daily</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">73%</span>
+          <span class="stat-label">Faster order processing</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">15 min</span>
+          <span class="stat-label">Average setup time</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Technical skills required</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 4: THE PROBLEM
+       Purpose: Without vs With Nodal comparison
        ======================================== -->
   <section class="problem-section" aria-labelledby="problem-heading">
     <div class="container">
       <header class="section-header">
-        <h2 id="problem-heading" class="section-title">The Problem</h2>
+        <span class="section-label">THE PROBLEM</span>
+        <h2 id="problem-heading" class="section-title">You're still taking orders like it's 2010</h2>
         <p class="section-subtitle">
-          Most small and medium businesses still manage B2B sales through WhatsApp, Excel, or email — a patchwork of disconnected tools that slow down operations, create errors, and make growth nearly impossible.
+          While your competitors automate, you're drowning in messages, spreadsheets, and manual work.
         </p>
       </header>
 
-      <div class="problems-grid">
-        <!-- Problem 1: Scattered Communication -->
-        <article class="problem-card">
-          <div class="problem-icon" data-placeholder="communication-icon">
-            <i class="fas fa-comments"></i>
-          </div>
-          <h3 class="problem-title">Scattered Communication</h3>
-          <p class="problem-description">
-            Orders buried in WhatsApp threads and email chains
-          </p>
-        </article>
+      <div class="comparison-grid">
+        <!-- Without Nodal -->
+        <div class="comparison-card comparison-card--without">
+          <span class="comparison-badge comparison-badge--without">WITHOUT NODAL</span>
+          <ul class="comparison-list">
+            <li class="comparison-item">
+              <span class="comparison-icon comparison-icon--red"><i class="fas fa-comments"></i></span>
+              <div class="comparison-content">
+                <h4>Orders buried in messages</h4>
+                <p>Texts, calls, voice notes, emails — all over the place</p>
+              </div>
+            </li>
+            <li class="comparison-item">
+              <span class="comparison-icon comparison-icon--red"><i class="fas fa-file-excel"></i></span>
+              <div class="comparison-content">
+                <h4>Excel sheets everywhere</h4>
+                <p>Version conflicts, copy-paste errors, lost data</p>
+              </div>
+            </li>
+            <li class="comparison-item">
+              <span class="comparison-icon comparison-icon--red"><i class="fas fa-clock"></i></span>
+              <div class="comparison-content">
+                <h4>Hours of manual work</h4>
+                <p>Typing orders, calculating prices, sending confirmations</p>
+              </div>
+            </li>
+            <li class="comparison-item">
+              <span class="comparison-icon comparison-icon--red"><i class="fas fa-eye-slash"></i></span>
+              <div class="comparison-content">
+                <h4>Zero visibility</h4>
+                <p>No idea which clients order what or when</p>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-        <!-- Problem 2: Manual Processing -->
-        <article class="problem-card">
-          <div class="problem-icon" data-placeholder="manual-icon">
-            <i class="fas fa-file-excel"></i>
-          </div>
-          <h3 class="problem-title">Manual Processing</h3>
-          <p class="problem-description">
-            Endless Excel sheets prone to mistakes and delays
-          </p>
-        </article>
-
-        <!-- Problem 3: No Visibility -->
-        <article class="problem-card">
-          <div class="problem-icon" data-placeholder="visibility-icon">
-            <i class="fas fa-eye-slash"></i>
-          </div>
-          <h3 class="problem-title">No Visibility</h3>
-          <p class="problem-description">
-            Zero insight into client behavior or sales trends
-          </p>
-        </article>
+        <!-- With Nodal -->
+        <div class="comparison-card comparison-card--with">
+          <span class="comparison-badge comparison-badge--with">WITH NODAL</span>
+          <ul class="comparison-list">
+            <li class="comparison-item">
+              <span class="comparison-icon comparison-icon--green"><i class="fas fa-store"></i></span>
+              <div class="comparison-content">
+                <h4>Professional ordering portal</h4>
+                <p>Clients browse, order, and pay — 24/7</p>
+              </div>
+            </li>
+            <li class="comparison-item">
+              <span class="comparison-icon comparison-icon--green"><i class="fas fa-cogs"></i></span>
+              <div class="comparison-content">
+                <h4>Automatic everything</h4>
+                <p>Pricing, confirmations, notifications — handled</p>
+              </div>
+            </li>
+            <li class="comparison-item">
+              <span class="comparison-icon comparison-icon--green"><i class="fas fa-bolt"></i></span>
+              <div class="comparison-content">
+                <h4>Orders in seconds</h4>
+                <p>No typing, no calls, no back-and-forth</p>
+              </div>
+            </li>
+            <li class="comparison-item">
+              <span class="comparison-icon comparison-icon--green"><i class="fas fa-chart-line"></i></span>
+              <div class="comparison-content">
+                <h4>Complete insights</h4>
+                <p>Know exactly what's selling and to whom</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-
-      <p class="problem-result">
-        The result? <strong>Missed orders, frustrated clients, and operations teams stuck doing administrative work instead of growing the business.</strong>
-      </p>
     </div>
   </section>
 
   <!-- ========================================
-       SECTION 4: FEATURES (Core Platform Capabilities)
-       Purpose: Explain what Nodal does
+       SECTION 5: HOW IT WORKS
+       Purpose: Feature cards with benefits
        ======================================== -->
-  <section class="features-section" aria-labelledby="features-heading">
+  <section id="how-it-works" class="how-it-works-section" aria-labelledby="how-heading">
     <div class="container">
       <header class="section-header">
-        <h2 id="features-heading" class="section-title">Smart B2B Ordering, Made Simple</h2>
-        <p class="section-subtitle">Everything you need to run your B2B sales — in one platform</p>
+        <span class="section-label">HOW IT WORKS</span>
+        <h2 id="how-heading" class="section-title">Everything changes when you switch to Nodal</h2>
       </header>
 
-      <div class="features-grid">
-        <!-- Feature 1: Smart Catalog Management -->
-        <article class="feature-card">
-          <div class="feature-icon" data-placeholder="catalog-icon">
-            <i class="fas fa-th-large"></i>
+      <div class="features-grid features-grid--2x2">
+        <!-- Feature 1: Self-service ordering -->
+        <article class="feature-card feature-card--large">
+          <div class="feature-icon-wrapper">
+            <i class="fas fa-lock"></i>
           </div>
-          <h3 class="feature-title">Smart Catalog Management</h3>
+          <h3 class="feature-title">Your clients order themselves</h3>
           <p class="feature-description">
-            Expose and organize your entire product catalog with custom pricing rules
+            Give each client their own login to a branded portal. They browse your catalog, see their prices, and place orders — anytime, without calling you.
           </p>
+          <ul class="feature-benefits">
+            <li><i class="fas fa-check"></i> 24/7 self-service ordering</li>
+            <li><i class="fas fa-check"></i> Mobile-friendly interface</li>
+            <li><i class="fas fa-check"></i> Order history & reordering</li>
+          </ul>
         </article>
 
-        <!-- Feature 2: Client-Specific Pricing -->
-        <article class="feature-card">
-          <div class="feature-icon" data-placeholder="pricing-icon">
+        <!-- Feature 2: Automatic pricing -->
+        <article class="feature-card feature-card--large">
+          <div class="feature-icon-wrapper">
             <i class="fas fa-tags"></i>
           </div>
-          <h3 class="feature-title">Client-Specific Pricing</h3>
+          <h3 class="feature-title">Pricing runs on autopilot</h3>
           <p class="feature-description">
-            Set personalized prices and discounts for each client automatically
+            Set your rules once: volume discounts, client-specific prices, seasonal promotions. Nodal calculates everything automatically.
           </p>
+          <ul class="feature-benefits">
+            <li><i class="fas fa-check"></i> Client-specific pricing tiers</li>
+            <li><i class="fas fa-check"></i> Volume discounts</li>
+            <li><i class="fas fa-check"></i> Stackable promotions</li>
+          </ul>
         </article>
 
-        <!-- Feature 3: Effortless Ordering -->
-        <article class="feature-card">
-          <div class="feature-icon" data-placeholder="ordering-icon">
-            <i class="fas fa-shopping-cart"></i>
+        <!-- Feature 3: Catalog management -->
+        <article class="feature-card feature-card--large">
+          <div class="feature-icon-wrapper">
+            <i class="fas fa-th"></i>
           </div>
-          <h3 class="feature-title">Effortless Ordering</h3>
+          <h3 class="feature-title">Your catalog, always updated</h3>
           <p class="feature-description">
-            Clients can browse, order, track shipments, and reorder with one click
+            Upload products once. Change a price? Everyone sees it instantly. No more outdated PDFs or "let me check the current price."
           </p>
+          <ul class="feature-benefits">
+            <li><i class="fas fa-check"></i> Real-time price updates</li>
+            <li><i class="fas fa-check"></i> Product categories</li>
+            <li><i class="fas fa-check"></i> Stock visibility</li>
+          </ul>
         </article>
 
-        <!-- Feature 4: AI-Powered Insights -->
-        <article class="feature-card">
-          <div class="feature-icon" data-placeholder="ai-icon">
-            <i class="fas fa-brain"></i>
+        <!-- Feature 4: Analytics -->
+        <article class="feature-card feature-card--large">
+          <div class="feature-icon-wrapper">
+            <i class="fas fa-chart-pie"></i>
           </div>
-          <h3 class="feature-title">AI-Powered Insights</h3>
+          <h3 class="feature-title">Insights that drive growth</h3>
           <p class="feature-description">
-            Understand sales patterns and client behavior to make smarter decisions
+            See what's working and what's not. Your dashboard shows revenue trends, open carts, product performance, and discount impact — all in real time.
           </p>
+          <ul class="feature-benefits">
+            <li><i class="fas fa-check"></i> Revenue & order analytics</li>
+            <li><i class="fas fa-check"></i> Open carts & conversion tracking</li>
+            <li><i class="fas fa-check"></i> Product & discount performance</li>
+          </ul>
         </article>
       </div>
     </div>
   </section>
 
   <!-- ========================================
-       SECTION 5: WHY NODAL
-       Purpose: Key differentiators
+       SECTION 6: WHY NODAL
+       Purpose: Key differentiators for SMBs
        ======================================== -->
   <section class="why-section" aria-labelledby="why-heading">
     <div class="container">
       <header class="section-header">
-        <h2 id="why-heading" class="section-title">Why Nodal?</h2>
-        <p class="section-subtitle">The smart link between businesses</p>
+        <span class="section-label">WHY NODAL</span>
+        <h2 id="why-heading" class="section-title">Built specifically for SMBs</h2>
+        <p class="section-subtitle">
+          Not a watered-down enterprise tool. Not a generic e-commerce platform. Built from the ground up for how small businesses actually work.
+        </p>
       </header>
 
       <div class="why-grid">
-        <!-- Reason 1 -->
         <div class="why-card">
           <div class="why-number">01</div>
-          <h3 class="why-title">Plug-and-Play Setup</h3>
+          <h3 class="why-title">Live in 15 minutes</h3>
           <p class="why-description">
-            Launch your B2B store in minutes — no developer or technical expertise needed
+            No developers needed. No complex setup. Import your products, invite your first client, and you're in business.
           </p>
         </div>
 
-        <!-- Reason 2 -->
         <div class="why-card">
           <div class="why-number">02</div>
-          <h3 class="why-title">AI-Powered Intelligence</h3>
+          <h3 class="why-title">Affordable from day one</h3>
           <p class="why-description">
-            Get actionable insights on sales trends, client preferences, and inventory needs
+            Start free, grow gradually. Our pricing scales with your business — not enterprise budgets.
           </p>
         </div>
 
-        <!-- Reason 3 -->
         <div class="why-card">
           <div class="why-number">03</div>
-          <h3 class="why-title">Built for SMBs</h3>
+          <h3 class="why-title">Works with your tools</h3>
           <p class="why-description">
-            Affordable SaaS pricing designed for growing businesses, not enterprise budgets
+            Export to Excel, send email notifications, integrate with your existing workflow seamlessly.
           </p>
         </div>
 
-        <!-- Reason 4 -->
         <div class="why-card">
           <div class="why-number">04</div>
-          <h3 class="why-title">Future-Ready Integration</h3>
+          <h3 class="why-title">AI that actually helps</h3>
           <p class="why-description">
-            Connect seamlessly with WhatsApp, email, and your existing CRM tools
+            Not just buzzwords. Get actionable insights on what to sell, when to restock, and how to grow.
           </p>
         </div>
       </div>
@@ -535,177 +523,204 @@
   </section>
 
   <!-- ========================================
-       SECTION 6: PRICING
-       Purpose: Clear pricing tiers
+       SECTION 7: COMING SOON / ROADMAP
+       Purpose: Show future features in development
        ======================================== -->
-  <section class="pricing-section" aria-labelledby="pricing-heading">
+  <section id="coming-soon" class="roadmap-section" aria-labelledby="roadmap-heading">
     <div class="container">
       <header class="section-header">
-        <h2 id="pricing-heading" class="section-title">Simple, Transparent Pricing</h2>
-        <p class="section-subtitle">Start with a 14-day free trial. No credit card required.</p>
+        <span class="section-label">COMING SOON</span>
+        <h2 id="roadmap-heading" class="section-title">What's next for Nodal</h2>
+        <p class="section-subtitle">
+          We're building the features that B2B businesses actually need. Here's what's in the pipeline.
+        </p>
       </header>
 
-      <div class="pricing-grid">
+      <div class="roadmap-grid">
+        <!-- Feature 1: AI Shopping Assistant -->
+        <article class="roadmap-card">
+          <div class="roadmap-badge">In Development</div>
+          <div class="roadmap-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <h3 class="roadmap-title">AI Shopping Assistant</h3>
+          <p class="roadmap-description">
+            An intelligent assistant that helps your clients find products, suggests reorders based on purchase history, and answers questions about your catalog — 24/7.
+          </p>
+          <ul class="roadmap-features">
+            <li><i class="fas fa-sparkles"></i> Smart product recommendations</li>
+            <li><i class="fas fa-sparkles"></i> Natural language search</li>
+            <li><i class="fas fa-sparkles"></i> Automated reorder suggestions</li>
+          </ul>
+        </article>
+
+        <!-- Feature 2: Team Chat & Notifications -->
+        <article class="roadmap-card">
+          <div class="roadmap-badge">In Development</div>
+          <div class="roadmap-icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h3 class="roadmap-title">Team Chat & Notifications</h3>
+          <p class="roadmap-description">
+            Real-time communication between your team and clients. Provide instant support and keep everyone updated with automated order notifications.
+          </p>
+          <ul class="roadmap-features">
+            <li><i class="fas fa-sparkles"></i> Direct client messaging</li>
+            <li><i class="fas fa-sparkles"></i> Automated status updates</li>
+            <li><i class="fas fa-sparkles"></i> Team collaboration tools</li>
+          </ul>
+        </article>
+
+        <!-- Feature 3: Claims & Quality Tracking -->
+        <article class="roadmap-card">
+          <div class="roadmap-badge">In Development</div>
+          <div class="roadmap-icon">
+            <i class="fas fa-clipboard-check"></i>
+          </div>
+          <h3 class="roadmap-title">Claims & Quality Tracking</h3>
+          <p class="roadmap-description">
+            A complete claims management system to handle issues professionally. Track quality trends and generate automated scorecards for clients and suppliers.
+          </p>
+          <ul class="roadmap-features">
+            <li><i class="fas fa-sparkles"></i> Structured claims workflow</li>
+            <li><i class="fas fa-sparkles"></i> Product quality analytics</li>
+            <li><i class="fas fa-sparkles"></i> Supplier & client scorecards</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 8: PRICING
+       Purpose: 3 clear pricing tiers
+       ======================================== -->
+  <section id="pricing" class="pricing-section" aria-labelledby="pricing-heading">
+    <div class="container">
+      <header class="section-header">
+        <span class="section-label">PRICING</span>
+        <h2 id="pricing-heading" class="section-title">Simple, transparent pricing</h2>
+        <p class="section-subtitle">Start free. Upgrade when you're ready. No surprises.</p>
+      </header>
+
+      <div class="pricing-grid pricing-grid--3col">
         <!-- Free Tier -->
         <div class="pricing-card">
+          <div class="pricing-badge pricing-badge--dark">BETA</div>
           <div class="pricing-header">
             <h3 class="pricing-name">Free</h3>
             <div class="pricing-price">
-              <span class="price-amount">€0</span>
+              <span class="price-currency">€</span>
+              <span class="price-amount">0</span>
               <span class="price-period">/month</span>
             </div>
-            <p class="pricing-description">Perfect for testing the waters</p>
+            <p class="pricing-description">Free during Beta phase</p>
           </div>
+          <div class="pricing-divider"></div>
           <ul class="pricing-features">
             <li><i class="fas fa-check"></i> Up to 10 products</li>
             <li><i class="fas fa-check"></i> 3 client accounts</li>
             <li><i class="fas fa-check"></i> Basic order management</li>
             <li><i class="fas fa-check"></i> Email support</li>
           </ul>
-          <%= link_to "Get Started", "#", class: "btn btn-outline-primary btn-pricing" %>
+          <%= link_to "Get Started", "#", class: "btn btn-outline-dark btn-pricing" %>
         </div>
 
-        <!-- Starter Tier -->
-        <div class="pricing-card">
+        <!-- Pro Tier (Recommended) -->
+        <div class="pricing-card pricing-card--featured">
+          <div class="pricing-badge pricing-badge--green">RECOMMENDED</div>
           <div class="pricing-header">
-            <h3 class="pricing-name">Starter</h3>
+            <h3 class="pricing-name">Pro</h3>
             <div class="pricing-price">
-              <span class="price-amount">€29</span>
+              <span class="price-currency">€</span>
+              <span class="price-amount price-amount--featured">149</span>
               <span class="price-period">/month</span>
             </div>
             <p class="pricing-description">For growing businesses</p>
           </div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Up to 100 products</li>
-            <li><i class="fas fa-check"></i> 25 client accounts</li>
-            <li><i class="fas fa-check"></i> Client-specific pricing</li>
-            <li><i class="fas fa-check"></i> Order tracking</li>
-            <li><i class="fas fa-check"></i> Priority email support</li>
-          </ul>
-          <%= link_to "Start Free Trial", "#", class: "btn btn-outline-primary btn-pricing" %>
-        </div>
-
-        <!-- Pro Tier (Popular) -->
-        <div class="pricing-card popular">
-          <div class="pricing-badge">Most Popular</div>
-          <div class="pricing-header">
-            <h3 class="pricing-name">Pro</h3>
-            <div class="pricing-price">
-              <span class="price-amount">€79</span>
-              <span class="price-period">/month</span>
-            </div>
-            <p class="pricing-description">For established SMBs</p>
-          </div>
+          <div class="pricing-divider"></div>
           <ul class="pricing-features">
             <li><i class="fas fa-check"></i> Unlimited products</li>
             <li><i class="fas fa-check"></i> Unlimited clients</li>
-            <li><i class="fas fa-check"></i> AI-powered insights</li>
+            <li><i class="fas fa-check"></i> Client-specific pricing</li>
+            <li><i class="fas fa-check"></i> Advanced analytics dashboard</li>
             <li><i class="fas fa-check"></i> Custom branding</li>
-            <li><i class="fas fa-check"></i> WhatsApp integration</li>
             <li><i class="fas fa-check"></i> Priority support</li>
           </ul>
-          <%= link_to "Start Free Trial", "#", class: "btn btn-primary btn-pricing" %>
+          <%= link_to "Get Started", "#", class: "btn btn-primary btn-pricing" %>
         </div>
 
-        <!-- Enterprise Tier -->
+        <!-- Business Tier -->
         <div class="pricing-card">
           <div class="pricing-header">
-            <h3 class="pricing-name">Enterprise</h3>
+            <h3 class="pricing-name">Business</h3>
             <div class="pricing-price">
-              <span class="price-amount">Custom</span>
+              <span class="price-amount price-amount--custom">Let's talk</span>
             </div>
-            <p class="pricing-description">For large organizations</p>
+            <p class="pricing-description">For established operations</p>
           </div>
+          <div class="pricing-divider"></div>
           <ul class="pricing-features">
             <li><i class="fas fa-check"></i> Everything in Pro</li>
-            <li><i class="fas fa-check"></i> Dedicated account manager</li>
+            <li><i class="fas fa-check"></i> API access</li>
             <li><i class="fas fa-check"></i> Custom integrations</li>
+            <li><i class="fas fa-check"></i> Dedicated account manager</li>
             <li><i class="fas fa-check"></i> SLA guarantee</li>
-            <li><i class="fas fa-check"></i> On-premise option</li>
-            <li><i class="fas fa-check"></i> 24/7 phone support</li>
+            <li><i class="fas fa-check"></i> Phone support</li>
           </ul>
-          <%= link_to "Contact Sales", "#", class: "btn btn-outline-primary btn-pricing" %>
+          <%= link_to "Contact Us", "#", class: "btn btn-outline-dark btn-pricing" %>
         </div>
       </div>
+
+      <p class="pricing-disclaimer">No credit card required to get started.</p>
     </div>
   </section>
 
   <!-- ========================================
-       SECTION 7: SOCIAL PROOF / LOGOS BAR
-       Purpose: Build trust
+       SECTION 8: RESULTS STATS
+       Purpose: Social proof with metrics
        ======================================== -->
-  <section class="logos-section" aria-label="Trusted by companies">
+  <section class="results-section" aria-label="Customer results">
     <div class="container">
-      <p class="logos-heading">Trusted by growing businesses</p>
-      <div class="logos-grid">
-        <div class="logo-item" data-placeholder="hubspot-logo">
-          <span class="logo-text logo-hubspot">HubSpot</span>
+      <div class="results-grid">
+        <div class="result-item">
+          <span class="result-value">73%</span>
+          <span class="result-label">Reduction in order processing time</span>
         </div>
-        <div class="logo-item" data-placeholder="notion-logo">
-          <span class="logo-text logo-notion">Notion</span>
+        <div class="result-item">
+          <span class="result-value">89%</span>
+          <span class="result-label">Fewer order errors</span>
         </div>
-        <div class="logo-item" data-placeholder="linear-logo">
-          <span class="logo-text logo-linear">Linear</span>
-        </div>
-        <div class="logo-item" data-placeholder="figma-logo">
-          <span class="logo-text logo-figma">Figma</span>
-        </div>
-        <div class="logo-item" data-placeholder="miro-logo">
-          <span class="logo-text logo-miro">miro</span>
-        </div>
-        <div class="logo-item" data-placeholder="lewagon-logo">
-          <span class="logo-text logo-lewagon">Le Wagon</span>
+        <div class="result-item">
+          <span class="result-value">4.5h</span>
+          <span class="result-label">Saved per week on admin work</span>
         </div>
       </div>
+      <p class="results-disclaimer">Average results based on customer data</p>
     </div>
   </section>
 
   <!-- ========================================
-       SECTION 7: TESTIMONIAL
-       Purpose: Social proof from a real customer
-       ======================================== -->
-  <section class="testimonial-section" aria-labelledby="testimonial-heading">
-    <div class="container">
-      <h2 id="testimonial-heading" class="visually-hidden">Customer Testimonial</h2>
-      <blockquote class="testimonial-quote">
-        <p class="quote-text">
-          "We went from spending hours on WhatsApp taking orders to having everything automated. Our clients love it and we've grown 40% since switching to Nodal."
-        </p>
-        <footer class="quote-attribution">
-          <div class="quote-avatar" data-placeholder="customer-avatar">
-            <i class="fas fa-user-circle"></i>
-          </div>
-          <div class="quote-info">
-            <cite class="quote-name">Customer Name</cite>
-            <span class="quote-title">Operations Manager, Company</span>
-          </div>
-        </footer>
-      </blockquote>
-    </div>
-  </section>
-
-  <!-- ========================================
-       SECTION 8: BOTTOM CTA
+       SECTION 9: FINAL CTA
        Purpose: Final conversion opportunity
        ======================================== -->
   <section class="cta-section" aria-labelledby="cta-heading">
     <div class="container">
       <div class="cta-content">
-        <h2 id="cta-heading" class="cta-headline">Transform how you connect with your clients</h2>
+        <h2 id="cta-heading" class="cta-headline">Your competitors are already<br>doing this</h2>
         <p class="cta-subheadline">
-          Join businesses already using Nodal to grow their B2B sales.
+          Every day you wait, you're losing orders to businesses that make buying easy.
         </p>
         <div class="cta-buttons">
-          <%= link_to "Get Started", "#", class: "btn btn-primary btn-lg" %>
-          <%= link_to "Book a Demo", "#", class: "btn btn-outline-light btn-lg" %>
+          <%= link_to "Get Started", "#", class: "btn btn-outline-light btn-lg" %>
         </div>
-        <p class="cta-disclaimer">Free 14-day trial • No credit card required • Cancel anytime</p>
+        <p class="cta-disclaimer">Setup takes 15 minutes. No credit card required.</p>
       </div>
     </div>
   </section>
 
   <!-- ========================================
-       SECTION 9: FOOTER
+       SECTION 10: FOOTER
        ======================================== -->
   <%= render "shared/footer" %>
 </div>
