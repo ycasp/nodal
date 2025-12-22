@@ -1,0 +1,525 @@
+// Back Office Sidebar Styles
+// Simplified Shopify-inspired design
+@import "../config/colors";
+
+// Back Office specific variables
+$bo-sidebar-width: 220px;
+$bo-sidebar-collapsed-width: 72px;
+$bo-sidebar-bg: #1e293b;
+$text-muted: #94a3b8;
+$text-primary: #f8fafc;
+$bo-sidebar-border: #334155;
+
+// ========================================
+// SIDEBAR CONTAINER
+// ========================================
+.bo-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $bo-sidebar-width;
+  height: 100vh;
+  background-color: $bo-sidebar-bg;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001; // Above navbar
+  padding: 0;
+  transition: width 0.3s ease;
+
+  // Collapsed state - shows only N icon and nav icons
+  &.collapsed {
+    width: $bo-sidebar-collapsed-width;
+
+    .bo-logo-text,
+    .bo-sidebar-item span {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+    }
+
+    .bo-sidebar-item a {
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .bo-sidebar-header {
+      padding: 0 18px;
+    }
+
+    .bo-logo-link {
+      justify-content: center;
+    }
+
+    // Adjust navbar when collapsed
+    & ~ .bo-navbar {
+      left: $bo-sidebar-collapsed-width;
+      width: calc(100% - #{$bo-sidebar-collapsed-width});
+    }
+
+    // Adjust main content when collapsed
+    & ~ .bo-main-content {
+      margin-left: $bo-sidebar-collapsed-width;
+    }
+  }
+}
+
+// Header section - same height as navbar for seamless look
+.bo-sidebar-header {
+  height: $navbar-height;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.bo-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    .bo-logo-text {
+      color: $teal;
+    }
+  }
+}
+
+
+.bo-logo-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  background: $teal;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.bo-logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+// ========================================
+// NAVIGATION
+// ========================================
+.bo-sidebar-nav {
+  list-style: none;
+  padding: 16px 0 0 0;
+  margin: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bo-sidebar-nav-bottom {
+  list-style: none;
+  padding: 16px 12px;
+  margin: 0;
+  border-top: 1px solid $bo-sidebar-border;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bo-sidebar-item {
+  a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: $text-muted;
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-radius: 10px;
+
+    i {
+      font-size: 1.125rem;
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+      transition: color 0.2s ease;
+    }
+
+    span {
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      color: $text-primary;
+      background-color: rgba(255, 255, 255, 0.05);
+
+      i {
+        color: $teal-light;
+      }
+    }
+  }
+
+  &.active a {
+    color: #ffffff;
+    background-color: rgba(0, 128, 96, 0.15);
+    border-left-color: $teal;
+
+    i {
+      color: $teal;
+    }
+  }
+}
+
+// Toggle button at bottom - styled like nav items
+.bo-sidebar-toggle {
+  button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: $text-muted;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    i {
+      font-size: 1.125rem;
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      color: $text-primary;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+// Arrow rotation when collapsed
+.bo-sidebar.collapsed .bo-sidebar-toggle button i {
+  transform: rotate(180deg);
+}
+
+// Back Office Navbar - sits beside sidebar
+.bo-navbar {
+  position: fixed;
+  top: 0;
+  left: $bo-sidebar-width;
+  width: calc(100% - #{$bo-sidebar-width});
+  height: $navbar-height;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  transition: left 0.3s ease, width 0.3s ease;
+}
+
+// Collapsed menu in navbar - only visible on mobile
+.bo-collapsed-menu {
+  display: none;
+  margin-left: 16px;
+
+  .bo-collapsed-menu-btn {
+    width: 40px;
+    height: 40px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
+  .dropdown-menu {
+    min-width: 200px;
+    margin-top: 8px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.bo-navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 24px;
+}
+
+.bo-navbar-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 320px;
+  transition: all 0.2s ease;
+
+  i {
+    color: $text-muted;
+    font-size: 0.9rem;
+  }
+
+  &:focus-within {
+    border-color: $teal;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
+  }
+}
+
+.bo-search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.9rem;
+  width: 100%;
+  color: #1e293b;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.bo-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bo-navbar-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: $text-muted;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+  }
+}
+
+.bo-navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bo-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $teal, $teal-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.85rem;
+}
+
+.bo-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: $text-muted;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+  }
+}
+
+// Main content offset when sidebar is present
+.bo-main-content {
+  margin-left: $bo-sidebar-width;
+  padding: 0;
+  min-height: calc(100vh - #{$navbar-height});
+  margin-top: $navbar-height;
+  transition: margin-left 0.3s ease;
+}
+
+// Sticky page header
+.bo-page-header {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 99;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e5e5;
+
+  &--with-filters {
+    padding-bottom: 16px;
+  }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: $text-muted;
+    margin-bottom: 0;
+  }
+
+  .bo-page-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .btn {
+      font-size: 0.875rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+
+      i {
+        margin-right: 6px;
+      }
+    }
+
+    .btn-primary {
+      background-color: $teal;
+      border-color: $teal;
+
+      &:hover {
+        background-color: $teal-dark;
+        border-color: $teal-dark;
+      }
+    }
+
+    .btn-outline-secondary {
+      color: #64748b;
+      border-color: #e2e8f0;
+
+      &:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+        color: #1e293b;
+      }
+    }
+  }
+}
+
+// Page body content below sticky header
+.bo-page-body {
+  padding: 24px;
+}
+
+// Dashboard stat icons
+.bo-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+// Clickable order rows
+.order-row {
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(0, 128, 96, 0.05);
+  }
+}
+
+.order-actions {
+  position: relative;
+  z-index: 1;
+}
+
+// Responsive - hide sidebar on mobile
+@media (max-width: 768px) {
+  .bo-sidebar {
+    transform: translateX(-100%);
+
+    &.mobile-open {
+      transform: translateX(0);
+    }
+  }
+
+  .bo-navbar {
+    left: 0;
+    width: 100%;
+  }
+
+  .bo-main-content {
+    margin-left: 0;
+  }
+
+  .bo-navbar-search {
+    width: 200px;
+  }
+
+  .bo-logout-btn span {
+    display: none;
+  }
+
+  // Show hamburger menu on mobile only
+  .bo-collapsed-menu {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-sidebar-toggle {
+    display: none;
+  }
+}

@@ -4,8 +4,10 @@
     <div class="footer-grid">
       <!-- Brand Column -->
       <div class="footer-brand">
-        <%= link_to "nodal", root_path, class: "footer-logo" %>
-        <p class="footer-tagline">The integration platform that scales with your business.</p>
+        <%= link_to root_path, class: "footer-logo" do %>
+          <span class="logo-icon">N</span><span class="logo-text">odal</span>
+        <% end %>
+        <p class="footer-tagline">The B2B ordering platform that grows with your business.</p>
         <!-- Social Links -->
         <div class="footer-social">
           <a href="#" aria-label="Twitter" data-placeholder="twitter-icon">
@@ -24,9 +26,10 @@
       <div class="footer-column">
         <h4>Product</h4>
         <ul>
-          <li><%= link_to "Secure Integrations", "#" %></li>
-          <li><%= link_to "Observability", "#" %></li>
-          <li><%= link_to "Orchestration", "#" %></li>
+          <li><%= link_to "Catalog Management", "#" %></li>
+          <li><%= link_to "Order Management", "#" %></li>
+          <li><%= link_to "Pricing & Discounts", "#" %></li>
+          <li><%= link_to "Analytics", "#" %></li>
           <li><%= link_to "Pricing", "#" %></li>
         </ul>
       </div>
@@ -35,10 +38,10 @@
       <div class="footer-column">
         <h4>Solutions</h4>
         <ul>
-          <li><%= link_to "Finance & Payments", "#" %></li>
-          <li><%= link_to "Supply Chain", "#" %></li>
-          <li><%= link_to "Enterprise", "#" %></li>
-          <li><%= link_to "Startups", "#" %></li>
+          <li><%= link_to "Food & Beverage", "#" %></li>
+          <li><%= link_to "Wholesale Distribution", "#" %></li>
+          <li><%= link_to "Manufacturing", "#" %></li>
+          <li><%= link_to "B2B Retail", "#" %></li>
         </ul>
       </div>
 
@@ -46,10 +49,10 @@
       <div class="footer-column">
         <h4>Resources</h4>
         <ul>
-          <li><%= link_to "Documentation", "#" %></li>
-          <li><%= link_to "API Reference", "#" %></li>
+          <li><%= link_to "Getting Started", "#" %></li>
+          <li><%= link_to "Help Center", "#" %></li>
+          <li><%= link_to "API Documentation", "#" %></li>
           <li><%= link_to "Blog", "#" %></li>
-          <li><%= link_to "Status", "#" %></li>
         </ul>
       </div>
 
@@ -57,9 +60,9 @@
       <div class="footer-column">
         <h4>Company</h4>
         <ul>
-          <li><%= link_to "About", "#" %></li>
-          <li><%= link_to "Careers", "#" %></li>
+          <li><%= link_to "About Us", "#" %></li>
           <li><%= link_to "Contact", "#" %></li>
+          <li><%= link_to "Careers", "#" %></li>
           <li><%= link_to "Security", "#" %></li>
         </ul>
       </div>

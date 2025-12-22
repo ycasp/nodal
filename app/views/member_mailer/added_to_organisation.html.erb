@@ -1,0 +1,9 @@
+<p>Hello <%= @member.first_name %>,</p>
+
+<p><%= @inviter&.first_name %> <%= @inviter&.last_name %> has added you to <strong><%= @organisation.name %></strong> on Nodal.</p>
+
+<p>You've been assigned the role of <strong><%= @org_member.role.capitalize %></strong>.</p>
+
+<p><%= link_to 'Go to Back Office', @login_url %></p>
+
+<p>You can now access the back office for <%= @organisation.name %> using your existing account credentials.</p>

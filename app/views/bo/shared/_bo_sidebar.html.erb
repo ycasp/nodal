@@ -1,0 +1,78 @@
+<aside class="bo-sidebar" data-controller="sidebar-toggle">
+  <!-- Logo Header - Integrated with navbar -->
+  <div class="bo-sidebar-header">
+    <%= link_to bo_path, class: "bo-logo-link" do %>
+      <div class="bo-logo-icon">N</div>
+      <span class="bo-logo-text">odal</span>
+    <% end %>
+  </div>
+
+  <ul class="bo-sidebar-nav">
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'dashboard' || controller_name == 'dashboards' %>">
+      <%= link_to bo_path do %>
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Dashboard</span>
+      <% end %>
+    </li>
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'customers' %>">
+      <%= link_to bo_customers_path do %>
+        <i class="fa-solid fa-users"></i>
+        <span>Customers</span>
+      <% end %>
+    </li>
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'products' %>">
+      <%= link_to bo_products_path do %>
+        <i class="fa-solid fa-box"></i>
+        <span>Products</span>
+      <% end %>
+    </li>
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'orders' %>">
+      <%= link_to bo_orders_path do %>
+        <i class="fa-solid fa-clipboard-list"></i>
+        <span>Orders</span>
+      <% end %>
+    </li>
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'pricing' || controller_name == 'customer_product_discounts' || controller_name == 'product_discounts' || controller_name == 'customer_discounts' %>">
+      <%= link_to bo_pricing_path do %>
+        <i class="fa-solid fa-tag"></i>
+        <span>Pricing</span>
+      <% end %>
+    </li>
+  </ul>
+
+  <!-- Bottom Navigation -->
+  <ul class="bo-sidebar-nav-bottom">
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'profiles' %>">
+      <%= link_to edit_bo_profile_path do %>
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Profile</span>
+      <% end %>
+    </li>
+    <li class="bo-sidebar-item <%= 'active' if controller_name == 'team_members' %>">
+      <%= link_to bo_team_members_path do %>
+        <i class="fa-solid fa-users-gear"></i>
+        <span>Team</span>
+      <% end %>
+    </li>
+    <% if admin_or_owner? %>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'settings' %>">
+        <%= link_to edit_bo_settings_path do %>
+          <i class="fa-solid fa-gear"></i>
+          <span>Settings</span>
+        <% end %>
+      </li>
+    <% end %>
+    <li class="bo-sidebar-item">
+      <%= link_to destroy_member_session_path, data: { turbo_method: :delete } do %>
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Log out</span>
+      <% end %>
+    </li>
+    <!-- Toggle button -->
+    <li class="bo-sidebar-toggle">
+      <button type="button" data-action="sidebar-toggle#toggle">
+        <i class="fa-solid fa-angles-left"></i>
+      </button>
+    </li>
+  </ul>
+</aside>

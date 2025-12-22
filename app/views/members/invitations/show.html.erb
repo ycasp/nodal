@@ -1,0 +1,52 @@
+<div class="auth-logo">
+  <span class="auth-logo-icon">N</span>
+  <span class="auth-logo-text">odal</span>
+</div>
+
+<h1 class="auth-title">Accept Invitation</h1>
+<p class="auth-subtitle">Join <strong><%= @org_member.organisation.name %></strong> as a <%= @org_member.role.capitalize %></p>
+
+<%= form_with model: @member, url: accept_invitation_path(params[:org_slug], params[:token]), method: :post, html: { class: "auth-form" } do |f| %>
+  <div class="auth-field">
+    <label class="auth-label">Email</label>
+    <input type="email" class="form-control" value="<%= @org_member.invited_email %>" disabled>
+  </div>
+
+  <div class="auth-field">
+    <label class="auth-label">First Name</label>
+    <%= f.text_field :first_name, class: "form-control", placeholder: "Enter your first name", required: true %>
+  </div>
+
+  <div class="auth-field">
+    <label class="auth-label">Last Name</label>
+    <%= f.text_field :last_name, class: "form-control", placeholder: "Enter your last name", required: true %>
+  </div>
+
+  <div class="auth-field">
+    <label class="auth-label">Password</label>
+    <%= f.password_field :password, class: "form-control", placeholder: "Create a password", required: true, autocomplete: "new-password" %>
+  </div>
+
+  <div class="auth-field">
+    <label class="auth-label">Confirm Password</label>
+    <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm your password", required: true, autocomplete: "new-password" %>
+  </div>
+
+  <% if @member.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @member.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="auth-actions">
+    <%= f.submit "Create Account & Join Team", class: "auth-submit-btn" %>
+  </div>
+<% end %>
+
+<div class="auth-footer">
+  <p>Already have an account? <%= link_to "Sign in", new_member_session_path, class: "auth-link" %></p>
+</div>

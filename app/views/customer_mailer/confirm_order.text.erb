@@ -1,0 +1,6 @@
+Hello <%= @customer.contact_name %>
+
+Your order is confirmed. Your ordered
+<% @order.order_items.each do |item| %>
+  <%= item.product.name  %>
+<% end %>

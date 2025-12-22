@@ -1,0 +1,227 @@
+<%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
+  <i class="fa-solid fa-arrow-left me-2"></i>Back to products
+<% end %>
+
+<div class="row g-4">
+  <!-- Left Column - Product Image -->
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm position-relative" style="background-color: #f8f9fa; border-radius: 12px; overflow: hidden;">
+      <!-- Category Badge on Image -->
+      <span class="badge bg-dark position-absolute" style="top: 16px; left: 16px; z-index: 10; padding: 8px 14px; border-radius: 20px;">
+        <i class="fa-solid fa-tag me-1"></i><%= @product.category&.name %>
+      </span>
+
+      <% discount_breakdown = @discount_calculator.discount_breakdown %>
+
+      <!-- Main Image -->
+      <div class="d-flex align-items-center justify-content-center" style="min-height: 400px; padding: 40px;">
+        <% if @product.photo.attached? %>
+          <%= image_tag @product.photo, class: "img-fluid", style: "max-height: 350px; object-fit: contain;" %>
+        <% else %>
+          <i class="fa-solid fa-image fa-5x text-muted"></i>
+        <% end %>
+      </div>
+
+      <!-- Zoom Button -->
+      <% if @product.photo.attached? %>
+        <button class="btn btn-dark btn-sm position-absolute" style="bottom: 16px; right: 16px; border-radius: 20px; padding: 6px 16px;" data-bs-toggle="modal" data-bs-target="#imageModal">
+          <i class="fa-solid fa-magnifying-glass-plus me-1"></i>Zoom
+        </button>
+      <% end %>
+    </div>
+
+    <!-- Thumbnail (if photo exists) -->
+    <% if @product.photo.attached? %>
+      <div class="d-flex justify-content-center mt-3">
+        <div class="border rounded p-1" style="width: 60px; height: 60px; cursor: pointer;">
+          <%= image_tag @product.photo, class: "img-fluid h-100 w-100", style: "object-fit: cover;" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Right Column - Product Details -->
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
+      <div class="card-body p-4">
+        <!-- Product Name & Category -->
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <h1 class="mb-0" style="font-size: 2rem; font-weight: 600;"><%= @product.name %></h1>
+          <span class="badge bg-secondary-subtle text-secondary" style="padding: 6px 12px; border-radius: 20px;">
+            <i class="fa-solid fa-box me-1"></i><%= @product.category&.name %>
+          </span>
+        </div>
+
+        <!-- Description -->
+        <p class="text-muted mb-4"><%= @product.description %></p>
+
+        <!-- Price -->
+        <div class="mb-3">
+          <% if discount_breakdown[:has_discount] %>
+            <div class="price-with-discount">
+              <span class="original-price text-muted text-decoration-line-through" style="font-size: 1.5rem;">
+                <%= humanized_money_with_symbol(discount_breakdown[:base_price]) %>
+              </span>
+              <span class="discounted-price text-success" style="font-size: 2.5rem; font-weight: 700;">
+                <%= humanized_money_with_symbol(discount_breakdown[:final_price]) %>
+              </span>
+              <span class="badge bg-success fs-6">
+                -<%= (discount_breakdown[:effective_discount][:percentage] * 100).round(0) %>% OFF
+              </span>
+              <% if discount_breakdown[:all_discounts].any? { |d| d[:type] == :product } %>
+                <span class="badge bg-danger fs-6 ms-1">SALE</span>
+              <% end %>
+            </div>
+          <% else %>
+            <span class="text-primary" style="font-size: 2.5rem; font-weight: 700;"><%= humanized_money_with_symbol(@product.price) %></span>
+          <% end %>
+          <span class="text-muted fs-5">/ <%= @product.unit_description || 'unit' %></span>
+        </div>
+
+        <!-- Discount Details Section -->
+        <% if discount_breakdown[:has_discount] %>
+          <div class="alert alert-success mb-4" style="border-radius: 10px;">
+            <h6 class="alert-heading mb-3">
+              <i class="fa-solid fa-tags me-2"></i>Available Discounts
+            </h6>
+            <% discount_breakdown[:all_discounts].each do |discount| %>
+              <div class="d-flex justify-content-between align-items-center py-2 <%= 'border-bottom' unless discount == discount_breakdown[:all_discounts].last %>">
+                <div>
+                  <% case discount[:type] %>
+                  <% when :product %>
+                    <span class="badge bg-danger me-2">SALE</span>
+                    <strong>Product Discount</strong>
+                    <% if discount[:min_quantity_required] && discount[:min_quantity_required] > 1 %>
+                      <% if discount[:meets_min_quantity] %>
+                        <small class="text-success d-block">
+                          <i class="fa-solid fa-check me-1"></i>Min. quantity met (<%= discount[:min_quantity_required] %>+ units)
+                        </small>
+                      <% else %>
+                        <small class="text-warning d-block">
+                          <i class="fa-solid fa-info-circle me-1"></i>Buy <%= discount[:min_quantity_required] %>+ units to unlock this discount
+                        </small>
+                      <% end %>
+                    <% end %>
+                  <% when :customer %>
+                    <span class="badge bg-info me-2">VIP</span>
+                    <strong>Customer Tier Discount</strong>
+                    <small class="text-muted d-block">Special pricing for your account</small>
+                  <% when :customer_product %>
+                    <span class="badge bg-primary me-2">SPECIAL</span>
+                    <strong>Your Special Price</strong>
+                    <small class="text-muted d-block">Exclusive pricing just for you</small>
+                  <% end %>
+                  <% if discount[:valid_until].present? %>
+                    <small class="text-warning d-block">
+                      <i class="fa-solid fa-clock me-1"></i>Valid until <%= discount[:valid_until].strftime('%b %d, %Y') %>
+                    </small>
+                  <% end %>
+                </div>
+                <div class="text-end">
+                  <span class="badge bg-success fs-6">
+                    -<%= discount[:discount_type] == 'percentage' ? "#{(discount[:value] * 100).round(0)}%" : humanized_money_with_symbol(Money.new((discount[:value] * 100).to_i, @current_organisation.currency)) %>
+                  </span>
+                  <% if discount[:stackable] %>
+                    <small class="text-muted d-block">Stackable</small>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+            <div class="mt-3 pt-2 border-top">
+              <div class="d-flex justify-content-between">
+                <strong>You Save:</strong>
+                <strong class="text-success"><%= humanized_money_with_symbol(discount_breakdown[:savings]) %> per unit</strong>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Additional Price Info -->
+        <div class="mb-4 text-muted">
+          <% if @product.sku.present? %>
+            <div><i class="fa-solid fa-barcode me-2"></i>SKU: <%= @product.sku %></div>
+          <% end %>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="row g-3 mb-4 py-3 border-top border-bottom">
+          <div class="col-4">
+            <div class="text-muted small fw-semibold mb-1">Min. order</div>
+            <div>
+              <i class="fa-solid fa-layer-group me-1 text-muted"></i>
+              <%= @product.min_quantity || 1 %> <%= @product.min_quantity_type || @product.unit_description || 'unit' %>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="text-muted small fw-semibold mb-1">Category</div>
+            <div>
+              <i class="fa-solid fa-folder me-1 text-muted"></i>
+              <%= @product.category&.name || '-' %>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="text-muted small fw-semibold mb-1">Availability</div>
+            <div>
+              <% if @product.available? %>
+                <i class="fa-solid fa-circle-check me-1 text-success"></i>
+                In Stock
+              <% else %>
+                <i class="fa-solid fa-circle-xmark me-1 text-danger"></i>
+                Out of Stock
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add to Cart Section -->
+        <%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, local: true, class: "d-flex align-items-center gap-3 flex-wrap" do |f| %>
+          <%= hidden_field_tag :product_id, @product.id %>
+          <div class="input-group" style="width: 140px;">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="fa-solid fa-arrow-up-1-9 text-muted"></i>
+              <span class="ms-2 text-muted small">Qty</span>
+            </span>
+            <%= number_field_tag "order_item[quantity]", @product.min_quantity || 1, min: @product.min_quantity || 1, class: "form-control border-start-0 text-center", style: "max-width: 60px;" %>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg px-4" style="border-radius: 8px;" <%= 'disabled' unless @product.available? %>>
+            <i class="fa-solid fa-cart-plus me-2"></i>Add to cart
+          </button>
+
+          <div class="text-muted">
+            <i class="fa-solid fa-calculator me-2"></i>Estimated total:
+            <% if discount_breakdown[:has_discount] %>
+              <%= humanized_money_with_symbol(discount_breakdown[:final_price]) %>
+              <small class="text-success">(-<%= (discount_breakdown[:effective_discount][:percentage] * 100).round(0) %>%)</small>
+            <% else %>
+              <%= humanized_money_with_symbol(@product.price) %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <% unless @product.available? %>
+          <small class="text-danger d-block mt-3">
+            <i class="fa-solid fa-circle-xmark me-1"></i>This product is currently out of stock
+          </small>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Zoom Modal -->
+<% if @product.photo.attached? %>
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="imageModalLabel"><%= @product.name %></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+          <%= image_tag @product.photo, class: "img-fluid", style: "max-height: 70vh;" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

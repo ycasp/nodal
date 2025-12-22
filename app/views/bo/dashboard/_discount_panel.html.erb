@@ -1,0 +1,40 @@
+<div class="card dashboard__card discount-panel">
+  <div class="card-header">
+    <h6 class="mb-0">
+      <i class="fa-solid fa-percent me-2 text-danger"></i> Discount Analytics
+    </h6>
+  </div>
+  <div class="card-body">
+    <!-- Summary Stats -->
+    <div class="discount-panel__stats mb-3">
+      <div class="discount-panel__stat">
+        <span class="discount-panel__stat-label">Usage Rate</span>
+        <span class="discount-panel__stat-value" id="discount-usage-rate">--</span>
+      </div>
+      <div class="discount-panel__stat">
+        <span class="discount-panel__stat-label">Avg Discount/Order</span>
+        <span class="discount-panel__stat-value" id="discount-avg">--</span>
+      </div>
+      <div class="discount-panel__stat">
+        <span class="discount-panel__stat-label">Revenue Lost</span>
+        <span class="discount-panel__stat-value text-danger" id="discount-revenue-lost">--</span>
+      </div>
+    </div>
+
+    <!-- Top Discounted Products -->
+    <div class="discount-panel__section mb-3">
+      <h6 class="discount-panel__section-title">Top Discounted Products</h6>
+      <div id="top-discounted-products" class="discount-panel__list">
+        <div class="text-muted small">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Top Clients by Discount -->
+    <div class="discount-panel__section">
+      <h6 class="discount-panel__section-title">Top Clients by Discount</h6>
+      <div id="top-clients-by-discount" class="discount-panel__list">
+        <div class="text-muted small">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>

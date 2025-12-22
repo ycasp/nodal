@@ -1,6 +1,217 @@
-.alert {
+// Flash Alert Component
+// Inspired by shadcn/ui design system - adapted for Bootstrap
+@import "../config/colors";
+
+.flash-container {
   position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1000;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  width: calc(100% - 48px);
+}
+
+.alert {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 1rem 1.25rem;
+  padding-right: 3rem;
+  border: none;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+  animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #1a1a2e;
+
+  &:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  // Header (icon + title inline)
+  .alert-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .alert-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  // Title
+  .alert-title {
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.4;
+  }
+
+  // Description/Message
+  .alert-message {
+    color: #717182;
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  // Close button
+  .btn-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+    background-size: 0.65rem;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+      outline: none;
+    }
+  }
+
+  // ═══════════════════════════════════════════
+  // Alert Variants
+  // ═══════════════════════════════════════════
+
+  // Success (notice) - Using brand teal
+  &.alert-success {
+    background-color: $success-bg;
+    border-color: $teal;
+    color: $teal-dark;
+
+    .alert-icon i {
+      color: $teal;
+    }
+
+    .alert-title {
+      color: $teal-dark;
+    }
+
+    .alert-message {
+      color: $success-text;
+    }
+  }
+
+  // Info - Blue theme
+  &.alert-info {
+    background-color: #eff6ff;
+    border-color: #3b82f6;
+    color: #1e40af;
+
+    .alert-icon i {
+      color: #3b82f6;
+    }
+
+    .alert-title {
+      color: #1e40af;
+    }
+
+    .alert-message {
+      color: rgba(30, 64, 175, 0.9);
+    }
+  }
+
+  // Warning - Yellow/Amber theme
+  &.alert-warning {
+    background-color: #fefce8;
+    border-color: #eab308;
+    color: #a16207;
+
+    .alert-icon i {
+      color: #eab308;
+    }
+
+    .alert-title {
+      color: #a16207;
+    }
+
+    .alert-message {
+      color: rgba(161, 98, 7, 0.9);
+    }
+  }
+
+  // Danger/Error (alert) - Red theme
+  &.alert-danger {
+    background-color: #fef2f2;
+    border-color: #ef4444;
+    color: #b91c1c;
+
+    .alert-icon i {
+      color: #ef4444;
+    }
+
+    .alert-title {
+      color: #b91c1c;
+    }
+
+    .alert-message {
+      color: rgba(185, 28, 28, 0.9);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════
+// Animations
+// ═══════════════════════════════════════════
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.animate__fadeOutRight {
+  animation: fadeOutRight 0.3s ease-in forwards;
+}
+
+// ═══════════════════════════════════════════
+// Mobile responsive
+// ═══════════════════════════════════════════
+
+@media (max-width: 480px) {
+  .flash-container {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
+  }
+
+  .alert {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+    border-radius: 0.5rem;
+  }
 }

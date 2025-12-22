@@ -1,0 +1,337 @@
+<% content_for :bo_main_content do%>
+
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_orders_path(org_slug: @current_organisation.slug), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
+      <% end %>
+      <div>
+        <h1 class="h3 mb-0">Order</h1>
+        <div class="text-muted">
+          <span class="fw-bold text-dark"><%= @order.order_number %></span>
+          <span class="ms-2"><%= @order.placed_at&.strftime("%B %d, %Y") || @order.created_at.strftime("%B %d, %Y") %></span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+      <% status_bg_class = case @order.status
+         when 'completed' then 'bg-success'
+         when 'in_process', 'processed' then 'bg-primary'
+         else 'bg-warning'
+         end %>
+      <span class="badge <%= status_bg_class %> rounded-pill px-3 py-2">
+        <%= @order.status.titleize %>
+      </span>
+      <% payment_bg_class = case @order.payment_status
+         when 'paid' then 'bg-success'
+         when 'pending' then 'bg-warning text-dark'
+         when 'failed' then 'bg-danger'
+         else 'bg-info'
+         end %>
+      <span class="badge <%= payment_bg_class %> rounded-pill px-3 py-2">
+        Payment: <%= @order.payment_status.titleize %>
+      </span>
+      <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "btn btn-outline-primary" do %>
+        <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+      <% end %>
+      <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id), method: :delete, form: { class: "d-inline" }, class: "btn btn-outline-danger", data: { turbo_confirm: "Are you sure you want to delete order #{@order.order_number}?" } do %>
+        <i class="fa-solid fa-trash me-1"></i> Delete
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Left Column -->
+    <div class="col-lg-8">
+      <!-- Order Items -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Order Items</h5>
+          <p class="text-muted small mb-3"><%= @order.order_items.count %> items in this order</p>
+
+          <div class="table-responsive">
+            <table class="table table-borderless align-middle mb-0">
+              <thead class="border-bottom">
+                <tr>
+                  <th class="text-muted fw-normal">Product</th>
+                  <th class="text-muted fw-normal">SKU</th>
+                  <th class="text-muted fw-normal text-center">Qty</th>
+                  <th class="text-muted fw-normal text-end">Price</th>
+                  <th class="text-muted fw-normal text-center">Discount</th>
+                  <th class="text-muted fw-normal text-end">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @order.order_items.includes(:product).each do |item| %>
+                  <tr>
+                    <td><%= item.product.name %></td>
+                    <td class="text-muted"><%= item.product.sku || '-' %></td>
+                    <td class="text-center"><%= item.quantity %> <%= item.product.min_quantity_type %></td>
+                    <td class="text-end">
+                      <% if item.discount_percentage && item.discount_percentage > 0 %>
+                        <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price) %></span>
+                        <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
+                      <% else %>
+                        <%= humanized_money_with_symbol(item.price) %>
+                      <% end %>
+                    </td>
+                    <td class="text-center">
+                      <% if item.discount_percentage && item.discount_percentage > 0 %>
+                        <span class="badge bg-success">-<%= format_discount_percentage(item.discount_percentage) %></span>
+                      <% else %>
+                        <span class="text-muted">-</span>
+                      <% end %>
+                    </td>
+                    <td class="text-end">
+                      <% if item.discount_percentage && item.discount_percentage > 0 %>
+                        <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                        <span class="text-success fw-medium"><%= humanized_money_with_symbol(item.total_price) %></span>
+                      <% else %>
+                        <%= humanized_money_with_symbol(item.total_price) %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="border-top pt-3 mt-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Subtotal</span>
+              <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
+            </div>
+
+            <% if @order.has_auto_discount_snapshot? %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>
+                  Order Tier Discount (<%= @order.auto_discount_display %>)
+                </span>
+                <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
+              </div>
+            <% end %>
+
+            <% if @order.has_order_discount? %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>
+                  Manual Discount (<%= @order.order_discount_display %>)
+                  <% if @order.discount_reason.present? %>
+                    <small class="text-muted d-block"><%= @order.discount_reason %></small>
+                  <% end %>
+                </span>
+                <span>-<%= humanized_money_with_symbol(@order.order_discount_amount) %></span>
+              </div>
+            <% end %>
+
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Tax (<%= (@current_organisation.tax_rate * 100).round(1) %>%)</span>
+              <span><%= humanized_money_with_symbol(@order.tax_amount || @order.calculated_tax) %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">
+                Shipping
+                <% if @order.pickup? %>
+                  <span class="badge bg-secondary ms-1">Pickup</span>
+                <% end %>
+              </span>
+              <span><%= humanized_money_with_symbol(@order.shipping_amount || @order.calculated_shipping) %></span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-2">
+              <span>Total</span>
+              <span><%= humanized_money_with_symbol(@order.grand_total) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Details -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Details</h5>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <small class="text-muted d-block">Delivery Method</small>
+              <span class="fw-medium">
+                <% if @order.pickup? %>
+                  <i class="fa-solid fa-store me-1"></i> Pickup
+                <% else %>
+                  <i class="fa-solid fa-truck me-1"></i> Delivery
+                <% end %>
+              </span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <small class="text-muted d-block"><%= @order.pickup? ? 'Pickup Date' : 'Delivery Date' %></small>
+              <span class="fw-medium">
+                <%= @order.receive_on&.strftime("%B %d, %Y") || 'Not specified' %>
+              </span>
+            </div>
+          </div>
+
+          <% if @order.delivery? && @order.shipping_address.present? %>
+            <div class="mb-3">
+              <small class="text-muted d-block">Shipping Address</small>
+              <span class="fw-medium"><%= @order.shipping_address.street_name %></span><br>
+              <span class="text-muted"><%= @order.shipping_address.postal_code %> <%= @order.shipping_address.city %>, <%= @order.shipping_address.country %></span>
+            </div>
+          <% end %>
+
+          <% if @order.billing_address.present? %>
+            <div class="mb-3">
+              <small class="text-muted d-block">Billing Address</small>
+              <span class="fw-medium"><%= @order.billing_address.street_name %></span><br>
+              <span class="text-muted"><%= @order.billing_address.postal_code %> <%= @order.billing_address.city %>, <%= @order.billing_address.country %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Order Notes -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Notes</h5>
+          <p class="text-muted mb-0"><%= @order.notes.present? ? @order.notes : 'No notes for this order.' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-4">
+      <!-- Client Information -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-user me-2"></i>Client Information
+          </h6>
+
+          <div class="mb-3">
+            <small class="text-muted">Client Name</small>
+            <div><%= @order.customer.contact_name %></div>
+          </div>
+
+          <div class="mb-3">
+            <small class="text-muted">Company</small>
+            <div><%= @order.customer.company_name %></div>
+          </div>
+
+          <div class="mb-2">
+            <i class="fa-solid fa-envelope text-muted me-2"></i>
+            <span><%= @order.customer.email %></span>
+          </div>
+
+          <% if @order.customer.contact_phone.present? %>
+            <div class="mb-2">
+              <i class="fa-solid fa-phone text-muted me-2"></i>
+              <span><%= @order.customer.contact_phone %></span>
+            </div>
+          <% end %>
+
+          <div class="d-grid mt-3">
+            <%= link_to bo_customer_path(org_slug: @current_organisation.slug, id: @order.customer.id), class: "btn btn-outline-secondary btn-sm" do %>
+              View Client Profile
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Automatic Order Tier Discount -->
+      <% if @order.has_auto_discount_snapshot? %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h6 class="text-muted mb-3">
+              <i class="fa-solid fa-cart-shopping me-2"></i>Order Tier Discount
+            </h6>
+
+            <div class="alert alert-success mb-0">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong><%= @order.auto_discount_display %> off</strong>
+                </div>
+                <span class="badge bg-success fs-6">
+                  -<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Manual Order Discount -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-tag me-2"></i>Manual Discount
+          </h6>
+
+          <% if @order.has_order_discount? %>
+            <div class="alert alert-success mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong><%= @order.order_discount_display %> off</strong>
+                  <% if @order.discount_reason.present? %>
+                    <div class="small text-muted"><%= @order.discount_reason %></div>
+                  <% end %>
+                  <% if @order.applied_by.present? %>
+                    <div class="small text-muted">Applied by <%= @order.applied_by.email %></div>
+                  <% end %>
+                </div>
+                <span class="badge bg-success fs-6">
+                  -<%= humanized_money_with_symbol(@order.order_discount_amount) %>
+                </span>
+              </div>
+            </div>
+
+            <%= button_to remove_discount_bo_order_path(org_slug: @current_organisation.slug, id: @order.id),
+                method: :delete,
+                class: "btn btn-outline-danger btn-sm w-100",
+                data: { turbo_confirm: "Remove order discount?" } do %>
+              <i class="fa-solid fa-times me-1"></i> Remove Discount
+            <% end %>
+          <% else %>
+            <p class="text-muted small mb-3">Apply a discount to the entire order</p>
+
+            <%= form_with url: apply_discount_bo_order_path(org_slug: @current_organisation.slug, id: @order.id),
+                method: :patch,
+                scope: :order,
+                local: true do |f| %>
+              <div class="mb-3">
+                <label class="form-label small">Discount Type</label>
+                <%= f.select :discount_type,
+                    [["Percentage", "percentage"], ["Fixed Amount", "fixed"]],
+                    { prompt: "Select type..." },
+                    { class: "form-select form-select-sm", required: true } %>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small">Value</label>
+                <%= f.number_field :discount_value,
+                    class: "form-control form-control-sm",
+                    step: 0.01, min: 0,
+                    placeholder: "0.10 for 10% or 25.00 for fixed",
+                    required: true %>
+                <small class="text-muted">For percentage: 0.15 = 15%</small>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small">Reason (optional)</label>
+                <%= f.text_field :discount_reason,
+                    class: "form-control form-control-sm",
+                    placeholder: "e.g., Loyalty bonus" %>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-sm w-100">
+                <i class="fa-solid fa-check me-1"></i> Apply Discount
+              </button>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<% end %>

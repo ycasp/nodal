@@ -1,0 +1,107 @@
+<% content_for :bo_main_content do%>
+
+<div class="mb-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
+        <%= @member.first_name&.first&.upcase %><%= @member.last_name&.first&.upcase %>
+      </div>
+
+      <div>
+        <h4 class="mb-0">My Profile</h4>
+        <span class="text-muted"><%= @member.email %></span>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 align-items-center">
+      <%= link_to bo_path, class: "btn btn-outline-secondary" do %>
+        Cancel
+      <% end %>
+      <button type="submit" form="profile-form" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<%= form_with model: @member, url: bo_profile_path(params[:org_slug]), method: :patch, id: "profile-form" do |f| %>
+  <div class="row g-3">
+    <div class="col-md-8">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Personal Information</h5>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">First Name</label>
+              <%= f.text_field :first_name, class: "form-control", placeholder: "Enter first name" %>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Last Name</label>
+              <%= f.text_field :last_name, class: "form-control", placeholder: "Enter last name" %>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-12">
+              <label class="form-label">Email</label>
+              <%= f.email_field :email, class: "form-control", placeholder: "Enter email address" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Change Password</h5>
+          <p class="text-muted small mb-3">Leave blank if you don't want to change your password</p>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">New Password</label>
+              <%= f.password_field :password, class: "form-control", placeholder: "Enter new password", autocomplete: "new-password" %>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Confirm Password</label>
+              <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm new password", autocomplete: "new-password" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Role in <%= current_organisation.name %></h5>
+
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <% role = current_org_member&.role %>
+            <span class="badge <%= role == 'owner' ? 'bg-danger' : role == 'admin' ? 'bg-warning text-dark' : 'bg-secondary' %>">
+              <%= role&.capitalize %>
+            </span>
+          </div>
+          <small class="text-muted">Contact an owner to change your role</small>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Account Info</h5>
+
+          <div class="border-bottom pb-3 mb-3">
+            <small class="text-muted d-block">Member Since</small>
+            <span><%= @member.created_at.strftime("%-m/%-d/%Y") %></span>
+          </div>
+
+          <div>
+            <small class="text-muted d-block">Last Updated</small>
+            <span><%= @member.updated_at.strftime("%-m/%-d/%Y") %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% end %>

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class ApplicationPolicy
-  attr_reader :user, :record
+  attr_reader :context, :user, :organisation, :record
 
-  def initialize(user, record)
-    @user = user
+  def initialize(context, record)
+    @context = context
+    @user = context.is_a?(PunditContext) ? context.user : context
+    @organisation = context.is_a?(PunditContext) ? context.organisation : nil
     @record = record
   end
 
@@ -37,17 +39,17 @@ class ApplicationPolicy
   end
 
   class Scope
-    def initialize(user, scope)
-      @user = user
+    attr_reader :context, :user, :organisation, :scope
+
+    def initialize(context, scope)
+      @context = context
+      @user = context.is_a?(PunditContext) ? context.user : context
+      @organisation = context.is_a?(PunditContext) ? context.organisation : nil
       @scope = scope
     end
 
     def resolve
       raise NoMethodError, "You must define #resolve in #{self.class}"
     end
-
-    private
-
-    attr_reader :user, :scope
   end
 end

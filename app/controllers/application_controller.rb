@@ -2,8 +2,14 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  layout :layout_by_resource
   before_action :current_organisation
+
+  before_action :inject_into_slug
+
   include Pundit::Authorization
+
+  helper_method :current_organisation
 
   # Pundit: allow-list approach
   after_action :verify_authorized, unless: :skip_authorization?
@@ -36,7 +42,7 @@ class ApplicationController < ActionController::Base
   end
 
   def pundit_user
-    current_member || current_customer
+    PunditContext.new(current_member || current_customer, current_organisation)
   end
 
   # accessable form every where, done before everything
@@ -64,5 +70,19 @@ class ApplicationController < ActionController::Base
 
     flash[:alert]
     redirect_to(root_path)
+  end
+
+  def inject_into_slug
+    if params[:customer]
+      params[:customer][:org_slug] = params[:org_slug]
+    end
+  end
+
+  def layout_by_resource
+    if devise_controller?
+      "auth"
+    else
+      "application"
+    end
   end
 end

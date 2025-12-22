@@ -1,0 +1,89 @@
+<!-- Order Tiers Tab -->
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h5 class="card-title mb-1">Order Tiers</h5>
+        <p class="text-muted small mb-0">Set discounts based on total order value</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Discounts Table -->
+<div class="card">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Min Order Amount</th>
+        <th>Discount Type</th>
+        <th>Value</th>
+        <th>Valid Period</th>
+        <th>Stackable</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @order_discounts.any? %>
+        <% @order_discounts.each do |discount| %>
+          <tr>
+            <td>
+              <span class="fw-semibold"><%= discount.min_amount_display %></span>
+            </td>
+            <td>
+              <span class="badge bg-secondary-subtle text-secondary">
+                <%= discount.discount_type.titleize %>
+              </span>
+            </td>
+            <td>
+              <% if discount.percentage? %>
+                <span class="text-success fw-semibold"><%= discount.value_display %></span>
+              <% else %>
+                <span class="text-success fw-semibold"><%= humanized_money_with_symbol(Money.new((discount.discount_value * 100).to_i, @current_organisation.currency)) %></span>
+              <% end %>
+            </td>
+            <td><%= discount.valid_period_display %></td>
+            <td>
+              <% if discount.stackable? %>
+                <span class="badge bg-info-subtle text-info">Yes</span>
+              <% else %>
+                <span class="badge bg-secondary-subtle text-secondary">No</span>
+              <% end %>
+            </td>
+            <td>
+              <%= form_with url: toggle_active_bo_order_discount_path(params[:org_slug], discount),
+                            method: :patch,
+                            local: true,
+                            class: "d-inline" do %>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox"
+                         <%= 'checked' if discount.active? %>
+                         onchange="this.form.submit()">
+                </div>
+              <% end %>
+            </td>
+            <td>
+              <div class="d-flex gap-2">
+                <%= link_to edit_bo_order_discount_path(params[:org_slug], discount), class: "text-muted", title: "Edit" do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+                <%= link_to bo_order_discount_path(params[:org_slug], discount), class: "text-danger", title: "Delete", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this discount?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="7" class="text-center text-muted py-4">
+            <i class="fa-solid fa-cart-shopping fa-2x mb-2 d-block"></i>
+            No order tier discounts yet.
+            <%= link_to "Create your first discount", new_bo_order_discount_path(params[:org_slug]) %>.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

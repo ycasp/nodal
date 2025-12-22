@@ -1,0 +1,91 @@
+<% content_for :bo_main_content do %>
+
+<!-- Sticky Header -->
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <h1>Pricing & Discounts</h1>
+      <p>Manage product discounts, client pricing tiers, and custom pricing rules</p>
+    </div>
+    <div class="bo-page-actions">
+      <%= link_to new_bo_customer_product_discount_path(params[:org_slug]), class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus"></i> Add Custom Price
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Page Body -->
+<div class="bo-page-body">
+  <!-- Search Card -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <%= form_with url: bo_customer_product_discounts_path(params[:org_slug]), method: :get, class: "d-flex align-items-center" do %>
+        <div class="input-group flex-grow-1 me-3">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="fa-solid fa-magnifying-glass text-muted"></i>
+          </span>
+          <%= text_field_tag :query,
+                params[:query],
+                class: "form-control border-start-0",
+                placeholder: "Search custom pricing..."
+          %>
+        </div>
+        <button type="submit" class="btn btn-outline-secondary">
+          <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Discounts Table -->
+  <div class="card">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Client</th>
+          <th>Product</th>
+          <th>Base Price</th>
+          <th>Custom Price</th>
+          <th>Discount</th>
+          <th>Effective Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @discounts.each do |discount| %>
+          <tr>
+            <td>
+              <div class="fw-semibold"><%= discount.customer.company_name %></div>
+              <small class="text-muted">C<%= discount.customer.id.to_s.rjust(3, '0') %></small>
+            </td>
+            <td><%= discount.product.name %></td>
+            <td><%= humanized_money_with_symbol(discount.product.price) %></td>
+            <td>
+              <% custom_price = discount.product.price * (1 - discount.discount_percentage) %>
+              <%= humanized_money_with_symbol(custom_price) %>
+            </td>
+            <td>
+              <span class="badge rounded-pill bg-success-subtle text-success">
+                -<%= number_to_percentage(discount.discount_percentage * 100, precision: 1) %>
+              </span>
+            </td>
+            <td><%= discount.valid_from.strftime("%Y-%m-%d") %></td>
+            <td>
+              <div class="d-flex gap-2">
+                <%= link_to edit_bo_customer_product_discount_path(params[:org_slug], discount), class: "text-muted", title: "Edit" do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+                <%= link_to bo_customer_product_discount_path(params[:org_slug], discount), class: "text-danger", title: "Delete", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this discount?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% end %>

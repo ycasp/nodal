@@ -1,0 +1,24 @@
+<h1 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 600; color: #1a1a1a;">
+  Welcome aboard! 👋
+</h1>
+
+<p style="margin: 0 0 16px 0;">Hello <strong><%= @resource.contact_name %></strong>,</p>
+
+<p style="margin: 0 0 24px 0;">
+  You have been invited to join <strong style="color: #008060;"><%= @resource.organisation.name %></strong> on Nodal,
+  where ordering just works.
+</p>
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 32px 0;">
+  <tr>
+    <td style="background-color: #008060; border-radius: 6px;">
+      <%= link_to 'Accept Invitation',
+          accept_invitation_url(@resource, invitation_token: @token, org_slug: @resource.organisation.slug),
+          style: 'display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px;' %>
+    </td>
+  </tr>
+</table>
+
+<p style="margin: 24px 0 0 0; color: #6b7177; font-size: 14px;">
+  If you don't want to accept the invitation, please ignore this email.
+</p>

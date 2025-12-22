@@ -1,14 +1,20 @@
 <nav class="navbar">
-  <%= link_to "nodal", root_path, class: "logo" %>
+  <%= link_to root_path, class: "logo" do %>
+    <span class="logo-icon">N</span><span class="logo-text">odal</span>
+  <% end %>
 
   <div class="nav-links">
     <div class="dropdown-wrapper">
       <%= link_to "Product", "#" %>
       <%= render "shared/sidebar" %>
     </div>
-    <%= link_to "Solutions", "#" %>
-    <%= link_to "Resources", "#" %>
-    <%= link_to "Contact", "#" %>
+    <%= link_to "How it works", "#how-it-works" %>
+    <%= link_to "Coming soon", "#coming-soon" %>
+    <%= link_to "Pricing", "#pricing" %>
+  </div>
+
+  <div class="nav-actions">
+    <%= link_to "Start free trial", "#", class: "nav-cta" %>
   </div>
 
   <div class="menu-toggle">

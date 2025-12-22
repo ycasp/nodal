@@ -1,0 +1,198 @@
+<%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
+  <i class="fa-solid fa-arrow-left me-2"></i>Back to products
+<% end %>
+
+<h1 class="mb-4">Your Cart</h1>
+
+<% if @order.order_items.empty? %>
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body text-center py-5">
+          <i class="fa-solid fa-cart-shopping fa-4x text-muted mb-3"></i>
+          <h4>Your cart is empty</h4>
+          <p class="text-muted">Browse our products and add items to your cart.</p>
+          <%= link_to "Browse Products", products_path(org_slug: params[:org_slug]), class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+
+    <% if @order_discounts.any? %>
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+          <div class="card-body">
+            <h6 class="card-title mb-3">
+              <i class="fa-solid fa-percent text-success me-2"></i>Order Discounts Available!
+            </h6>
+            <p class="text-muted small mb-3">Save more when your order reaches these thresholds:</p>
+
+            <% @order_discounts.each do |discount| %>
+              <div class="d-flex align-items-center mb-2 p-2 bg-light rounded">
+                <i class="fa-solid fa-tag text-success me-2"></i>
+                <div>
+                  <div class="fw-semibold">
+                    <% if discount.percentage? %>
+                      <%= discount.value_display %> off
+                    <% else %>
+                      <%= humanized_money_with_symbol(Money.new((discount.discount_value * 100).to_i, @current_organisation.currency)) %> off
+                    <% end %>
+                  </div>
+                  <small class="text-muted">Orders over <%= discount.min_amount_display %></small>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body p-0">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4">Product</th>
+                <th class="text-center" style="width: 180px;">Quantity</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Total</th>
+                <th class="pe-4"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @order_items.each do |item| %>
+                <tr>
+                  <td class="ps-4">
+                    <div class="d-flex align-items-center">
+                      <% if item.product.photo.attached? %>
+                        <%= image_tag item.product.photo, class: "me-3", style: "width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" %>
+                      <% else %>
+                        <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 8px;">
+                          <i class="fa-solid fa-image text-muted"></i>
+                        </div>
+                      <% end %>
+                      <div>
+                        <div class="fw-medium"><%= item.product.name %></div>
+                        <small class="text-muted"><%= item.product.category&.name %></small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <%= form_with model: item, url: order_item_path(org_slug: params[:org_slug], id: item), method: :patch, local: true, class: "d-flex justify-content-center" do |f| %>
+                      <div class="input-group input-group-sm" style="width: 120px;">
+                        <%= f.number_field :quantity, min: item.product.min_quantity || 1, class: "form-control text-center" %>
+                        <button type="submit" class="btn btn-outline-secondary">
+                          <i class="fa-solid fa-sync"></i>
+                        </button>
+                      </div>
+                    <% end %>
+                  </td>
+                  <td class="text-end">
+                    <% if item.discount_percentage && item.discount_percentage > 0 %>
+                      <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price) %></span>
+                      <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
+                      <span class="badge bg-success-subtle text-success small">-<%= format_discount_percentage(item.discount_percentage) %></span>
+                    <% else %>
+                      <%= humanized_money_with_symbol(item.price) %>
+                    <% end %>
+                  </td>
+                  <td class="text-end fw-medium">
+                    <% if item.discount_percentage && item.discount_percentage > 0 %>
+                      <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                      <span class="text-success fw-bold"><%= humanized_money_with_symbol(item.total_price) %></span>
+                    <% else %>
+                      <%= humanized_money_with_symbol(item.total_price) %>
+                    <% end %>
+                  </td>
+                  <td class="text-end pe-4">
+                    <%= button_to order_item_path(org_slug: params[:org_slug], id: item), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Remove this item?" } do %>
+                      <i class="fa-solid fa-trash"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary" do %>
+          <i class="fa-solid fa-arrow-left me-2"></i>Continue Shopping
+        <% end %>
+        <%= button_to "Clear Cart", clear_cart_path(org_slug: params[:org_slug]), method: :delete, class: "btn btn-outline-danger", data: { turbo_confirm: "Are you sure you want to clear your cart?" } %>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Summary</h5>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Subtotal (<%= @order.item_count %> items)</span>
+            <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
+          </div>
+
+          <% if @order.best_order_discount.present? %>
+            <div class="d-flex justify-content-between mb-2 text-success">
+              <span>Order Discount (<%= @order.best_order_discount.value_display %>)</span>
+              <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
+            </div>
+          <% end %>
+
+          <hr>
+
+          <div class="d-flex justify-content-between mb-4">
+            <span class="fw-bold">Total</span>
+            <span class="fw-bold fs-5"><%= humanized_money_with_symbol(@order.total_with_auto_discount) %></span>
+          </div>
+
+          <%= link_to checkout_path(org_slug: params[:org_slug]), class: "btn btn-primary w-100 btn-lg" do %>
+            <i class="fa-solid fa-arrow-right me-2"></i>Proceed to Checkout
+          <% end %>
+        </div>
+      </div>
+
+      <% if @order_discounts.any? %>
+        <div class="card border-0 shadow-sm mt-3" style="border-radius: 12px;">
+          <div class="card-body">
+            <h6 class="card-title mb-3">
+              <i class="fa-solid fa-percent text-primary me-2"></i>Available Order Discounts
+            </h6>
+
+            <% @order_discounts.each do |discount| %>
+              <% qualified = discount.applicable_to?(@order.total_amount) %>
+              <% amount_needed = discount.min_order_amount - @order.total_amount %>
+
+              <div class="d-flex align-items-start mb-2 <%= qualified ? 'text-success' : 'text-muted' %>">
+                <% if qualified %>
+                  <i class="fa-solid fa-check-circle me-2 mt-1"></i>
+                <% else %>
+                  <i class="fa-regular fa-circle me-2 mt-1"></i>
+                <% end %>
+                <div>
+                  <div class="<%= qualified ? 'fw-semibold' : '' %>">
+                    <% if discount.percentage? %>
+                      <%= discount.value_display %> off
+                    <% else %>
+                      <%= humanized_money_with_symbol(Money.new((discount.discount_value * 100).to_i, @current_organisation.currency)) %> off
+                    <% end %>
+                    orders over <%= discount.min_amount_display %>
+                  </div>
+                  <% if qualified %>
+                    <small>Applied to your order!</small>
+                  <% elsif amount_needed > Money.new(0, @current_organisation.currency) %>
+                    <small>Spend <%= humanized_money_with_symbol(amount_needed) %> more to unlock</small>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

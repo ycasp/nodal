@@ -1,0 +1,76 @@
+<% content_for :bo_main_content do %>
+
+<div class="container-fluid py-4">
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div class="d-flex align-items-center gap-3">
+    <%= link_to bo_products_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+      <i class="fa-solid fa-arrow-left fa-lg"></i>
+    <% end %>
+    <div>
+      <h1 class="mb-0"><%= @product.name %></h1>
+      <span class="text-muted">SKU: <%= @product.sku %></span>
+    </div>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <%= link_to edit_bo_product_path(params[:org_slug], @product), class: "btn btn-outline-primary" do %>
+      <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+    <% end %>
+    <%= link_to bo_product_path(params[:org_slug], @product),
+        class: "btn btn-outline-danger ms-2",
+        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete '#{@product.name}'? This action cannot be undone." } do %>
+      <i class="fa-solid fa-trash me-1"></i> Delete
+    <% end %>
+  </div>
+</div>
+
+<div class="row g-4">
+  <%# Left Column %>
+  <div class="col-lg-8">
+    <%# Product Information Card %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Product Information</h5>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Description</small>
+          <p class="mb-0"><%= @product.description %></p>
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <small class="text-muted d-block">Category</small>
+            <strong><%= @product.category&.name %></strong>
+          </div>
+          <div class="col-md-6 mb-3">
+            <small class="text-muted d-block">Unit of Measure</small>
+            <strong><%= @product.unit_description || '-' %></strong>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <small class="text-muted d-block">Shelf Life</small>
+            <strong>12 months</strong>
+          </div>
+          <div class="col-md-6 mb-3">
+            <small class="text-muted d-block">Reorder Point</small>
+            <strong>100 <%= @product.unit_description || 'units' %></strong>
+          </div>
+        </div>
+
+        <hr>
+
+        <div>
+          <small class="text-muted d-block">Storage Conditions</small>
+          <strong>Cool, dry place away from direct sunlight</strong>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<% end %>

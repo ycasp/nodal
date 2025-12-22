@@ -4,6 +4,11 @@ class Member < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  def devise_mailer
+    MemberMailer
+  end
+
+
   has_many :org_members, dependent: :destroy
   has_many :organisations, through: :org_members
 

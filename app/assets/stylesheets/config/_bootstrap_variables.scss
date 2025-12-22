@@ -10,19 +10,19 @@ $headings-font-family:   $headers-font;
 $body-bg:                $light-gray;
 $font-size-base:         1rem;
 
-// Colors
-$body-color: $gray;
-$primary:    $blue;
-$success:    $green;
-$info:       $yellow;
+// Colors - Using Shopify green as primary
+$body-color: $dark;
+$primary:    $teal;           // Shopify green #008060
+$success:    $teal;           // Aligned with brand
+$info:       $blue;
 $danger:     $red;
-$warning:    $orange;
+$warning:    $yellow;
 
 // Buttons & inputs' radius
-$border-radius-sm:            .0625rem;
-$border-radius:               .125rem;
-$border-radius-lg:            .25rem;
-$border-radius-xl:            .5rem;
-$border-radius-xxl:           1rem;
+$border-radius-sm:            .375rem;
+$border-radius:               .5rem;
+$border-radius-lg:            .625rem;
+$border-radius-xl:            1rem;
+$border-radius-xxl:           1.5rem;
 
 // Override other variables below!

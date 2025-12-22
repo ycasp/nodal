@@ -1,8 +1,8 @@
-// Variables
-$teal: #2dd4bf;
-$teal-dark: #14b8a6;
-$gray-text: #6b7280;
-$border-color: #e5e7eb;
+// Dropdown/Mega-menu Sidebar Styles
+@import "../config/colors";
+
+// Local variable aliases (using imported colors)
+$sidebar-border-color: $border-color;
 $breakpoint-mobile: 768px;
 
 
@@ -25,7 +25,7 @@ $breakpoint-mobile: 768px;
     grid-template-columns: repeat(3, 1fr);
     gap: 40px;
     padding-bottom: 40px;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid $sidebar-border-color;
   }
 
   .sidebar-item {
@@ -38,7 +38,7 @@ $breakpoint-mobile: 768px;
       transition: color 0.2s ease;
 
       &:hover {
-        color: $teal-dark;
+        color: $teal-light;
       }
     }
 
@@ -76,7 +76,7 @@ $breakpoint-mobile: 768px;
       transition: color 0.2s ease;
 
       &:hover {
-        color: $teal-dark;
+        color: $teal-light;
       }
     }
 

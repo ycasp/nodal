@@ -1,0 +1,11 @@
+<p>Hello,</p>
+
+<p><%= @inviter&.first_name %> <%= @inviter&.last_name %> has invited you to join <strong><%= @organisation.name %></strong> on Nodal.</p>
+
+<p>You've been assigned the role of <strong><%= @org_member.role.capitalize %></strong>.</p>
+
+<p><%= link_to 'Accept Invitation', @invitation_url %></p>
+
+<p>This invitation will allow you to access the back office for <%= @organisation.name %>, where you can manage customers, products, and orders.</p>
+
+<p>If you weren't expecting this invitation, you can ignore this email.</p>

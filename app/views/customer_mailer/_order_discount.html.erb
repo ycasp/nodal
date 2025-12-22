@@ -1,0 +1,100 @@
+<!-- Discount banner -->
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+  <tr>
+    <td style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); background-color: #7c3aed; border-radius: 12px; padding: 24px; text-align: center;">
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+        <tr>
+          <td style="background-color: #fef3c7; border-radius: 50%; width: 48px; height: 48px; text-align: center; vertical-align: middle;">
+            <span style="font-size: 24px; line-height: 48px;">🛒</span>
+          </td>
+        </tr>
+      </table>
+      <h1 style="margin: 16px 0 0 0; font-size: 24px; font-weight: 700; color: #ffffff;">
+        Order Discount Available!
+      </h1>
+    </td>
+  </tr>
+</table>
+
+<p style="margin: 0 0 8px 0; font-size: 16px;">Hello,</p>
+
+<p style="margin: 0 0 24px 0; color: #4b5563;">
+  Great news! We have a special discount on your next order that we thought you'd like to know about.
+</p>
+
+<!-- Shop button -->
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+  <tr>
+    <td align="center">
+      <a href="<%= products_url(org_slug: @organisation.slug) %>" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); background-color: #7c3aed; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: 8px;">
+        Shop Now →
+      </a>
+    </td>
+  </tr>
+</table>
+
+<!-- Order discount card -->
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden;">
+  <!-- Card header -->
+  <tr>
+    <td style="padding: 16px 20px; background-color: #f9fafb; border-bottom: 1px solid #e5e5e5;">
+      <span style="font-size: 14px; font-weight: 600; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px;">Discount Details</span>
+    </td>
+  </tr>
+  <!-- Discount info -->
+  <tr>
+    <td style="padding: 20px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td style="vertical-align: top;">
+            <!-- Discount badge - full width -->
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 20px 0;">
+              <tr>
+                <td style="background-color: #fef3c7; padding: 16px 24px; border-radius: 12px; text-align: center;">
+                  <span style="font-size: 28px; font-weight: 700; color: #92400e;">
+                    <% if @discount.percentage? %>
+                      <%= @discount.value_display %> OFF
+                    <% else %>
+                      <%= @discount.discount_value.format %> OFF
+                    <% end %>
+                  </span>
+                  <p style="margin: 4px 0 0 0; font-size: 14px; color: #92400e;">on your entire order</p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Discount details -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td style="padding-right: 32px;">
+                  <span style="font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">Minimum Order</span>
+                  <p style="margin: 4px 0 0 0; font-size: 18px; font-weight: 600; color: #1a1a1a;"><%= @discount.min_amount_display %></p>
+                </td>
+                <td>
+                  <span style="font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">Valid</span>
+                  <p style="margin: 4px 0 0 0; font-size: 18px; font-weight: 600; color: #1a1a1a;"><%= @discount.valid_period_display %></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!-- CTA section -->
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 24px 0;">
+  <tr>
+    <td style="padding: 20px; background-color: #f0fdf4; border-radius: 12px; border-left: 4px solid #008060;">
+      <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #166534;">Don't miss out!</p>
+      <p style="margin: 0; font-size: 14px; color: #4b5563; line-height: 1.5;">
+        Place an order of <%= @discount.min_amount_display %> or more to take advantage of this discount.
+      </p>
+    </td>
+  </tr>
+</table>
+
+<p style="margin: 0; color: #9ca3af; font-size: 13px; text-align: center;">
+  Questions? Just reply to this email.
+</p>

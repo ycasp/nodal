@@ -1,0 +1,32 @@
+<div class="auth-logo">
+  <span class="auth-logo-icon">N</span>
+  <span class="auth-logo-text">odal</span>
+</div>
+
+<h1 class="auth-title">Forgot your password?</h1>
+<p class="auth-subtitle">Enter your email and we'll send you reset instructions</p>
+
+<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "auth-form" }) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="auth-field">
+    <%= f.input :email,
+                required: true,
+                autofocus: true,
+                placeholder: "Enter your email",
+                label: "Email",
+                input_html: { autocomplete: "email" } %>
+  </div>
+
+  <div class="auth-actions">
+    <%= f.button :submit, "Send reset instructions", class: "auth-submit-btn" %>
+  </div>
+<% end %>
+
+<div class="auth-divider">
+  <span>or</span>
+</div>
+
+<div class="auth-footer">
+  <p>Remember your password? <%= link_to "Sign in", new_session_path(resource_name), class: "auth-link" %></p>
+</div>

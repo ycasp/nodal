@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+  <div class="container">
+    <%= link_to root_path, class: "navbar-brand fw-bold d-flex align-items-center gap-1" do %>
+      <span class="logo-icon">N</span><span class="logo-text">odal</span>
+    <% end %>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#customerNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="customerNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <%= link_to "Products", products_path(org_slug: params[:org_slug]), class: "nav-link #{'active' if controller_name == 'products'}" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Orders", orders_path(org_slug: params[:org_slug]), class: "nav-link #{'active' if controller_name == 'orders'}" %>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center gap-3">
+        <% if current_customer %>
+          <!-- Cart Icon -->
+          <%= link_to cart_path(org_slug: params[:org_slug]), class: "btn btn-outline-primary position-relative #{'active' if controller_name == 'carts'}" do %>
+            <i class="fa-solid fa-cart-shopping"></i>
+            <% if cart_item_count > 0 %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= cart_item_count %>
+              </span>
+            <% end %>
+            <% if has_order_discounts? %>
+              <span class="position-absolute badge rounded-circle bg-success d-flex align-items-center justify-content-center" style="width: 16px; height: 16px; font-size: 8px; bottom: -4px; left: -4px;" title="Order discounts available!">
+                <i class="fa-solid fa-percent"></i>
+              </span>
+            <% end %>
+          <% end %>
+          <span class="text-muted small">
+            <i class="fa-regular fa-building me-1"></i>
+            <%= current_customer.company_name %>
+          </span>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="fa-regular fa-user me-1"></i>
+              <%= current_customer.contact_name %>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <%= link_to destroy_customer_session_path(org_slug: params[:org_slug]), class: "dropdown-item", data: { turbo_method: :delete } do %>
+                  <i class="fa-solid fa-right-from-bracket me-2"></i>Sign out
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>

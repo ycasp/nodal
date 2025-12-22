@@ -1,0 +1,189 @@
+<%= link_to orders_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
+  <i class="fa-solid fa-arrow-left me-2"></i>Back to Orders
+<% end %>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <!-- Order Header -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h1 class="h3 mb-1">Order <%= @order.order_number %></h1>
+            <p class="text-muted mb-0">
+              <% if @order.placed? %>
+                Placed on <%= @order.placed_at.strftime("%B %d, %Y at %I:%M %p") %>
+              <% else %>
+                Draft order
+              <% end %>
+            </p>
+          </div>
+          <% status_class = case @order.status
+             when 'completed' then 'bg-success'
+             when 'processed' then 'bg-info'
+             when 'in_process' then 'bg-warning text-dark'
+             else 'bg-secondary'
+             end %>
+          <span class="badge <%= status_class %> fs-6"><%= @order.status.titleize %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Order Items</h5>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th class="text-center">Quantity</th>
+              <th class="text-end">Price</th>
+              <th class="text-end">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @order.order_items.includes(:product).each do |item| %>
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <% if item.product.photo.attached? %>
+                      <%= image_tag item.product.photo, style: "width: 50px; height: 50px; object-fit: cover; border-radius: 6px;", class: "me-3" %>
+                    <% else %>
+                      <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 6px;">
+                        <i class="fa-solid fa-image text-muted"></i>
+                      </div>
+                    <% end %>
+                    <div>
+                      <div class="fw-medium"><%= item.product.name %></div>
+                      <small class="text-muted">SKU: <%= item.product.sku || '-' %></small>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center"><%= item.quantity %></td>
+                <td class="text-end">
+                  <% if item.discount_percentage && item.discount_percentage > 0 %>
+                    <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price) %></span>
+                    <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
+                    <span class="badge bg-success-subtle text-success small">-<%= format_discount_percentage(item.discount_percentage) %></span>
+                  <% else %>
+                    <%= humanized_money_with_symbol(item.price) %>
+                  <% end %>
+                </td>
+                <td class="text-end fw-medium">
+                  <% if item.discount_percentage && item.discount_percentage > 0 %>
+                    <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                    <span class="text-success"><%= humanized_money_with_symbol(item.total_price) %></span>
+                  <% else %>
+                    <%= humanized_money_with_symbol(item.total_price) %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <hr>
+
+        <div class="d-flex justify-content-end">
+          <div style="width: 250px;">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Subtotal</span>
+              <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
+            </div>
+            <% if @order.has_auto_discount_snapshot? %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>Order Discount (<%= @order.auto_discount_display %>)</span>
+                <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
+              </div>
+            <% end %>
+            <% if @order.has_order_discount? %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>Additional Discount (<%= @order.order_discount_display %>)</span>
+                <span>-<%= humanized_money_with_symbol(@order.order_discount_amount) %></span>
+              </div>
+            <% end %>
+            <% if @order.tax_amount.present? %>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Tax</span>
+                <span><%= humanized_money_with_symbol(@order.tax_amount) %></span>
+              </div>
+            <% end %>
+            <% if @order.shipping_amount.present? %>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Shipping</span>
+                <span><%= humanized_money_with_symbol(@order.shipping_amount) %></span>
+              </div>
+            <% end %>
+            <div class="d-flex justify-content-between fw-bold border-top pt-2">
+              <span>Total</span>
+              <span><%= humanized_money_with_symbol(@order.grand_total) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @order.notes.present? %>
+      <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Order Notes</h5>
+          <p class="mb-0"><%= @order.notes %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-lg-4">
+    <!-- Payment Status -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+      <div class="card-body">
+        <h6 class="text-muted mb-3">
+          <i class="fa-solid fa-credit-card me-2"></i>Payment Status
+        </h6>
+        <% payment_class = case @order.payment_status
+           when 'paid' then 'text-success'
+           when 'pending' then 'text-warning'
+           when 'failed' then 'text-danger'
+           else 'text-info'
+           end %>
+        <span class="fs-5 <%= payment_class %>"><%= @order.payment_status.titleize %></span>
+      </div>
+    </div>
+
+    <!-- Delivery Method -->
+    <% if @order.delivery_method.present? %>
+      <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-<%= @order.pickup? ? 'store' : 'truck' %> me-2"></i>Delivery Method
+          </h6>
+          <span class="fs-5"><%= @order.pickup? ? 'Pickup' : 'Delivery' %></span>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Expected Delivery -->
+    <% if @order.receive_on.present? && @order.delivery? %>
+      <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+        <div class="card-body">
+          <h6 class="text-muted mb-3">
+            <i class="fa-solid fa-calendar me-2"></i>Expected Delivery
+          </h6>
+          <span class="fs-5"><%= @order.receive_on.strftime("%B %d, %Y") %></span>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Reorder -->
+    <div class="mt-4">
+      <%= button_to reorder_order_path(org_slug: params[:org_slug], id: @order, confirm: params[:confirm_reorder]), method: :post, class: "btn btn-outline-secondary w-100 mb-2" do %>
+        <i class="fa-solid fa-rotate-right me-2"></i>Reorder
+      <% end %>
+      <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-primary w-100" do %>
+        <i class="fa-solid fa-shopping-bag me-2"></i>Continue Shopping
+      <% end %>
+    </div>
+  </div>
+</div>

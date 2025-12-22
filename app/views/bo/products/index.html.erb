@@ -1,0 +1,95 @@
+<% content_for :bo_main_content do %>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    document.querySelectorAll('.product-row').forEach(row => {
+      row.addEventListener('click', function() {
+        window.location.href = this.dataset.href;
+      });
+    });
+  });
+</script>
+
+<!-- Sticky Header -->
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <h1>Product Catalog</h1>
+      <p>View and manage your product catalog</p>
+    </div>
+    <div class="bo-page-actions">
+      <a href="#" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-upload"></i> Import
+      </a>
+      <a href="#" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-download"></i> Export
+      </a>
+      <%= link_to new_bo_product_path(params[:org_slug]), class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus"></i> Add New
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Page Body -->
+<div class="bo-page-body">
+  <div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: bo_products_path(params[:org_slug]), method: :get, class: "d-flex align-items-center" do %>
+      <div class="input-group flex-grow-1 me-3">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa-solid fa-magnifying-glass text-muted"></i>
+        </span>
+        <%= text_field_tag :query,
+              params[:query],
+              class: "form-control border-start-0",
+              placeholder: "Search catalog..."
+        %>
+      </div>
+      <button type="submit" class="btn btn-outline-secondary me-2">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+      </button>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Product</th>
+        <th>SKU</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @products.each do |product| %>
+        <tr class="product-row" data-href="<%= bo_product_path(params[:org_slug], product) %>" style="cursor: pointer;">
+          <td>
+            <div class="fw-semibold"><%= product.name %></div>
+            <small class="text-muted">P<%= product.id.to_s.rjust(3, '0') %></small>
+          </td>
+          <td><%= product.sku %></td>
+          <td><%= product.category&.name %></td>
+          <td><%= humanized_money_with_symbol(product.price) %></td>
+          <td class="text-end product-actions" onclick="event.stopPropagation();">
+            <%= link_to bo_product_path(params[:org_slug], product), class: "btn btn-sm btn-link text-muted" do %>
+              <i class="fa-solid fa-eye"></i>
+            <% end %>
+            <%= link_to edit_bo_product_path(params[:org_slug], product), class: "btn btn-sm btn-link text-muted" do %>
+              <i class="fa-solid fa-pen-to-square"></i>
+            <% end %>
+            <%= button_to bo_product_path(params[:org_slug], product), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: "Are you sure you want to delete this product?" } do %>
+              <i class="fa-solid fa-trash"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<% end %>

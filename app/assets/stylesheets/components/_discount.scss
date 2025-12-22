@@ -1,0 +1,20 @@
+.price-with-discount {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+
+  .original-price {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .discounted-price {
+    color: var(--bs-success);
+    font-weight: 600;
+  }
+
+  .discount-badge {
+    font-size: 0.75em;
+  }
+}

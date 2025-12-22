@@ -1,47 +1,49 @@
-// Variables
-$navbar-height: 56px;
-$teal: #3ee8c8;
-$teal-dark: #14b8a6;
-$breakpoint-mobile: 768px;
+// Navbar Styles - Shopify-inspired clean design
+@import "../config/colors";
 
+$breakpoint-mobile: 768px;
 
 .navbar {
   width: 100%;
   height: $navbar-height;
-  background: linear-gradient(to right, #5a6a7a, #7a8a9a, #9aabbb);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 48px;
+  padding: 0 40px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
 
   .logo {
-    font-size: 1.35rem;
-    font-weight: 600;
-    color: $teal;
+    display: flex;
+    align-items: center;
+    gap: 2px;
     text-decoration: none;
-    letter-spacing: 0.5px;
 
     &:hover {
-      opacity: 0.85;
+      .logo-icon {
+        background: $teal-dark;
+      }
+      .logo-text {
+        color: $teal;
+      }
     }
   }
 
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 32px;
 
     a {
-      color: #ffffff;
+      color: $dark;
       text-decoration: none;
-      font-weight: 400;
+      font-weight: 500;
       font-size: 0.95rem;
       transition: color 0.2s ease;
-      padding: 16px 0;
 
       &:hover {
         color: $teal;
@@ -53,12 +55,11 @@ $breakpoint-mobile: 768px;
     position: relative;
 
     > a {
-      color: #ffffff;
+      color: $dark;
       text-decoration: none;
-      font-weight: 400;
+      font-weight: 500;
       font-size: 0.95rem;
       transition: color 0.2s ease;
-      padding: 16px 0;
       display: block;
 
       &:hover {
@@ -70,6 +71,39 @@ $breakpoint-mobile: 768px;
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
+    }
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .nav-login {
+      color: $dark;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $teal;
+      }
+    }
+
+    .nav-cta {
+      background: $teal;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: $teal-dark;
+      }
     }
   }
 
@@ -85,32 +119,52 @@ $breakpoint-mobile: 768px;
       display: block;
       width: 100%;
       height: 2px;
-      background-color: #ffffff;
+      background-color: $dark;
       border-radius: 1px;
       transition: all 0.3s ease;
     }
   }
 
-  @media (max-width: $breakpoint-mobile) {
-    padding: 0 24px;
+  // CTA button in navbar
+  .nav-cta {
+    background-color: $teal;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
 
-    .nav-links {
+    &:hover {
+      background-color: $teal-dark;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0 20px;
+
+    .nav-links,
+    .nav-actions {
       display: none;
       position: absolute;
       top: $navbar-height;
       left: 0;
       width: 100%;
       flex-direction: column;
-      background: linear-gradient(to bottom, #6a7a8a, #5a6a7a);
+      background: #ffffff;
+      border-bottom: 1px solid #e5e5e5;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       gap: 0;
 
       a {
         padding: 16px 24px;
         width: 100%;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid #f1f5f9;
 
         &:hover {
-          background-color: rgba(255, 255, 255, 0.05);
+          background-color: #f8fafc;
+          color: $teal;
         }
       }
     }
@@ -122,6 +176,20 @@ $breakpoint-mobile: 768px;
     &.active {
       .nav-links {
         display: flex;
+        position: absolute;
+        top: $navbar-height;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 16px 0;
+        gap: 0;
+
+        a {
+          padding: 12px 24px;
+          width: 100%;
+        }
       }
 
       .menu-toggle span:nth-child(1) {
@@ -137,6 +205,4 @@ $breakpoint-mobile: 768px;
       }
     }
   }
-
-
 }

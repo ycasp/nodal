@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+
   root to: "pages#home"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -12,13 +14,94 @@ Rails.application.routes.draw do
   # routes for each organisation
   scope ":org_slug" do
     # customer routes
-    devise_for :customers, skip: [:registrations]
-    resources :products, only: :index
+    devise_for :customers, skip: [:registrations],
+                controllers: {
+                  sessions: 'customers/sessions',
+                  invitations: 'customers/invitations',
+                  passwords: 'customers/passwords'
+                }
+
+    # storefront (customer-facing)
+    scope module: :storefront do
+      resources :products, only: [:index, :show]
+
+      # Cart (current draft order)
+      resource :cart, only: [:show] do
+        delete :clear, on: :member
+      end
+
+      # Checkout
+      resource :checkout, only: [:show, :update]
+
+      # Order items (add/update/remove from cart)
+      resources :order_items, only: [:create, :update, :destroy]
+
+      # Order history (placed orders only)
+      resources :orders, only: [:index, :show] do
+        post :reorder, on: :member
+      end
+    end
 
     # bo routes
-    devise_for :members
+    devise_for :members, controllers: { sessions: "members/sessions" }
     namespace :bo do
-      get "/", to: "dashboards#dashview"
+      get "/", to: "dashboard#index"
+      get "dashboard/metrics", to: "dashboard#metrics", as: :dashboard_metrics
+      resources :orders do
+        member do
+          patch :apply_discount
+          delete :remove_discount
+        end
+      end
+      resources :customers do
+        member do
+          post :invite
+        end
+      end
+      resources :products
+
+      # Unified Pricing section
+      get 'pricing', to: 'pricing#index', as: :pricing
+
+      resources :product_discounts, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
+
+      resources :customer_discounts, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
+
+      resources :customer_product_discounts, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
+
+      resources :order_discounts, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
+
+      # Profile & Settings
+      resource :profile, only: [:edit, :update]
+      resource :settings, only: [:edit, :update]
+
+      # Team Management
+      resources :team_members, path: 'team', except: [:show] do
+        member do
+          post :resend_invitation
+          patch :toggle_active
+        end
+      end
     end
+
+    # Invitation acceptance (outside bo namespace, no auth required)
+    get 'invitations/:token/accept', to: 'members/invitations#show', as: :accept_invitation
+    post 'invitations/:token/accept', to: 'members/invitations#create'
   end
 end

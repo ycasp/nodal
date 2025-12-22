@@ -1,0 +1,104 @@
+<% content_for :bo_main_content do %>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    document.querySelectorAll('.customer-row').forEach(row => {
+      row.addEventListener('click', function() {
+        window.location.href = this.dataset.href;
+      });
+    });
+  });
+</script>
+
+<!-- Sticky Header -->
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <h1>Customers</h1>
+      <p>View and manage your customers</p>
+    </div>
+    <div class="bo-page-actions">
+      <a href="#" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-upload"></i> Import
+      </a>
+      <a href="#" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-download"></i> Export
+      </a>
+      <%= link_to new_bo_customer_path(params[:org_slug]), class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus"></i> Add New
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Page Body -->
+<div class="bo-page-body">
+  <div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: bo_customers_path(params[:org_slug]), method: :get, class: "d-flex align-items-center" do %>
+      <div class="input-group flex-grow-1 me-3">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa-solid fa-magnifying-glass text-muted"></i>
+        </span>
+        <%= text_field_tag :query,
+              params[:query],
+              class: "form-control border-start-0",
+              placeholder: "Search customers..."
+        %>
+      </div>
+      <button type="submit" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+      </button>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Customer</th>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @customers.each do |customer| %>
+        <tr class="customer-row" data-href="<%= bo_customer_path(params[:org_slug], customer) %>" style="cursor: pointer;">
+          <td>
+            <div class="fw-semibold"><%= customer.contact_name %></div>
+            <small class="text-muted">C<%= customer.id.to_s.rjust(3, '0') %></small>
+          </td>
+          <td><%= customer.company_name %></td>
+          <td>
+            <div><%= customer.email %></div>
+            <small class="text-muted"><%= customer.contact_phone %></small>
+          </td>
+          <td>
+            <% if customer.active? %>
+              <span class="badge rounded-pill bg-success-subtle text-success">Active</span>
+            <% else %>
+              <span class="badge rounded-pill bg-secondary-subtle text-secondary">Inactive</span>
+            <% end %>
+          </td>
+          <td class="text-end customer-actions" onclick="event.stopPropagation();">
+            <%= link_to bo_customer_path(params[:org_slug], customer), class: "btn btn-sm btn-link text-muted" do %>
+              <i class="fa-solid fa-eye"></i>
+            <% end %>
+            <%= link_to edit_bo_customer_path(params[:org_slug], customer), class: "btn btn-sm btn-link text-muted" do %>
+              <i class="fa-solid fa-pen-to-square"></i>
+            <% end %>
+            <%= button_to bo_customer_path(params[:org_slug], customer), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: "Are you sure you want to delete this customer?" } do %>
+              <i class="fa-solid fa-trash"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<% end %>
