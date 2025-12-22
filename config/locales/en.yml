@@ -1,31 +1,250 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  # Navigation
+  navbar:
+    product: "Product"
+    how_it_works: "How it works"
+    coming_soon: "Coming soon"
+    pricing: "Pricing"
+    start_free_trial: "Start free trial"
+
+  # Hero Section
+  hero:
+    headline_html: "The new standard<br><span class=\"text-primary\">for B2B</span>"
+    subheadline: "A professional platform to manage orders, clients, and transactions — replacing chaos."
+    cta_primary: "Get Started"
+    cta_secondary: "Book a Demo"
+    trust_badges:
+      live_minutes: "Live in 15 minutes"
+      no_technical: "No technical setup"
+      free_beta: "Free tier during Beta"
+
+  # Stats Bar
+  stats:
+    orders_daily: "Orders processed daily"
+    faster_processing: "Faster order processing"
+    setup_time: "Average setup time"
+    technical_skills: "Technical skills required"
+
+  # Problem Section
+  problem:
+    label: "THE PROBLEM"
+    title: "You're still taking orders like it's 2010"
+    subtitle: "While your competitors automate, you're drowning in messages, spreadsheets, and manual work."
+    without_nodal: "WITHOUT NODAL"
+    with_nodal: "WITH NODAL"
+    without:
+      orders_buried:
+        title: "Orders buried in messages"
+        description: "Texts, calls, voice notes, emails — all over the place"
+      excel_sheets:
+        title: "Excel sheets everywhere"
+        description: "Version conflicts, copy-paste errors, lost data"
+      manual_work:
+        title: "Hours of manual work"
+        description: "Typing orders, calculating prices, sending confirmations"
+      zero_visibility:
+        title: "Zero visibility"
+        description: "No idea which clients order what or when"
+    with:
+      ordering_portal:
+        title: "Professional ordering portal"
+        description: "Clients browse and order — 24/7"
+      automatic:
+        title: "Automatic everything"
+        description: "Pricing, confirmations, notifications — handled"
+      orders_seconds:
+        title: "Orders in seconds"
+        description: "No typing, no calls, no back-and-forth"
+      complete_insights:
+        title: "Complete insights"
+        description: "Know exactly what's selling and to whom"
+
+  # How It Works Section
+  how_it_works:
+    label: "HOW IT WORKS"
+    title: "Everything changes when you switch to Nodal"
+    features:
+      self_service:
+        title: "Your clients order themselves"
+        description: "Give each client their own login to a branded portal. They browse your catalog, see their prices, and place orders — anytime, without calling you."
+        benefit_1: "24/7 self-service ordering"
+        benefit_2: "Mobile-friendly interface"
+        benefit_3: "Order history & reordering"
+      pricing:
+        title: "Pricing runs on autopilot"
+        description: "Set your rules once: volume discounts, client-specific prices, seasonal promotions. Nodal calculates everything automatically."
+        benefit_1: "Client-specific pricing tiers"
+        benefit_2: "Volume discounts"
+        benefit_3: "Stackable promotions"
+      catalog:
+        title: "Your catalog, always updated"
+        description: "Upload products once. Change a price? Everyone sees it instantly. No more outdated PDFs or \"let me check the current price.\""
+        benefit_1: "Real-time price updates"
+        benefit_2: "Product categories"
+        benefit_3: "Stock visibility"
+      analytics:
+        title: "Insights that drive growth"
+        description: "See what's working and what's not. Your dashboard shows revenue trends, open carts, product performance, and discount impact — all in real time."
+        benefit_1: "Revenue & order analytics"
+        benefit_2: "Open carts & conversion tracking"
+        benefit_3: "Product & discount performance"
+
+  # Why Nodal Section
+  why_nodal:
+    label: "WHY NODAL"
+    title: "Built specifically for SMBs"
+    subtitle: "Not a watered-down enterprise tool. Not a generic e-commerce platform. Built from the ground up for how small businesses actually work."
+    reasons:
+      live_minutes:
+        number: "01"
+        title: "Live in 15 minutes"
+        description: "No developers needed. No complex setup. Import your products, invite your first client, and you're in business."
+      affordable:
+        number: "02"
+        title: "Affordable from day one"
+        description: "Start free, grow gradually. Our pricing scales with your business — not enterprise budgets."
+      tools:
+        number: "03"
+        title: "Works with your tools"
+        description: "Export to Excel, send email notifications, integrate with your existing workflow seamlessly."
+      ai:
+        number: "04"
+        title: "AI that actually helps"
+        description: "Not just buzzwords. Get actionable insights on what to sell, when to restock, and how to grow."
+
+  # Roadmap / Coming Soon Section
+  roadmap:
+    label: "COMING SOON"
+    title: "What's next for Nodal"
+    subtitle: "We're building the features that B2B businesses actually need. Here's what's in the pipeline."
+    in_development: "In Development"
+    features:
+      ai_assistant:
+        title: "AI Shopping Assistant"
+        description: "An intelligent assistant that helps your clients find products, suggests reorders based on purchase history, and answers questions about your catalog — 24/7."
+        benefit_1: "Smart product recommendations"
+        benefit_2: "Natural language search"
+        benefit_3: "Automated reorder suggestions"
+      team_chat:
+        title: "Team Chat & Notifications"
+        description: "Real-time communication between your team and clients. Provide instant support and keep everyone updated with automated order notifications."
+        benefit_1: "Direct client messaging"
+        benefit_2: "Automated status updates"
+        benefit_3: "Team collaboration tools"
+      claims:
+        title: "Claims & Quality Tracking"
+        description: "A complete claims management system to handle issues professionally. Track quality trends and generate automated scorecards for clients and suppliers."
+        benefit_1: "Structured claims workflow"
+        benefit_2: "Product quality analytics"
+        benefit_3: "Supplier & client scorecards"
+
+  # Pricing Section
+  pricing:
+    label: "PRICING"
+    title: "Simple, transparent pricing"
+    subtitle: "Start free. Upgrade when you're ready. No surprises."
+    disclaimer: "No credit card required to get started."
+    per_month: "/month"
+    tiers:
+      free:
+        badge: "BETA"
+        name: "Free"
+        description: "Free during Beta phase"
+        feature_1: "Up to 10 products"
+        feature_2: "3 client accounts"
+        feature_3: "Basic order management"
+        feature_4: "Email support"
+        cta: "Get Started"
+      pro:
+        badge: "RECOMMENDED"
+        name: "Pro"
+        description: "For growing businesses"
+        feature_1: "Unlimited products"
+        feature_2: "Unlimited clients"
+        feature_3: "Client-specific pricing"
+        feature_4: "Advanced analytics dashboard"
+        feature_5: "Custom branding"
+        feature_6: "Priority support"
+        cta: "Get Started"
+      business:
+        name: "Business"
+        price: "Let's talk"
+        description: "For established operations"
+        feature_1: "Everything in Pro"
+        feature_2: "API access"
+        feature_3: "Custom integrations"
+        feature_4: "Dedicated account manager"
+        feature_5: "SLA guarantee"
+        feature_6: "Phone support"
+        cta: "Contact Us"
+
+  # Results Section
+  results:
+    processing_time: "Reduction in order processing time"
+    fewer_errors: "Fewer order errors"
+    saved_weekly: "Saved per week on admin work"
+    disclaimer: "Average results based on customer data"
+
+  # Contact Section
+  contact:
+    label: "CONTACT"
+    title: "Get in touch"
+    subtitle: "Have questions? Want a demo? Drop us a message and we'll get back to you within 24 hours."
+    form:
+      name: "Name"
+      name_placeholder: "Your name"
+      email: "Email"
+      email_placeholder: "you@company.com"
+      company: "Company"
+      company_optional: "(optional)"
+      company_placeholder: "Your company name"
+      message: "Message"
+      message_placeholder: "How can we help you?"
+      submit: "Send Message"
+
+  # CTA Section
+  cta:
+    headline_html: "Your competitors are already<br>doing this"
+    subheadline: "Every day you wait, you're losing orders to businesses that make buying easy."
+    button: "Get Started"
+    disclaimer: "Setup takes 15 minutes. No credit card required."
+
+  # Footer
+  footer:
+    tagline: "The B2B ordering platform that grows with your business."
+    product:
+      title: "Product"
+      catalog_management: "Catalog Management"
+      order_management: "Order Management"
+      pricing_discounts: "Pricing & Discounts"
+      analytics: "Analytics"
+      pricing: "Pricing"
+    solutions:
+      title: "Solutions"
+      food_beverage: "Food & Beverage"
+      wholesale: "Wholesale Distribution"
+      manufacturing: "Manufacturing"
+      b2b_retail: "B2B Retail"
+    resources:
+      title: "Resources"
+      getting_started: "Getting Started"
+      help_center: "Help Center"
+      api_docs: "API Documentation"
+      blog: "Blog"
+    company:
+      title: "Company"
+      about: "About Us"
+      contact: "Contact"
+      careers: "Careers"
+      security: "Security"
+    legal:
+      rights: "All rights reserved."
+      privacy: "Privacy Policy"
+      terms: "Terms of Service"
+
+  # Language Switcher
+  language:
+    en: "English"
+    pt: "Português"
+    es: "Español"
+    switch: "Language"

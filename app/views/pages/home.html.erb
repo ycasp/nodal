@@ -255,23 +255,23 @@
         <!-- Top: Headline -->
         <div class="hero-top">
           <h1 id="hero-heading" class="hero-headline">
-            The new standard<br><span class="text-primary">for B2B</span>
+            <%= t("hero.headline_html").html_safe %>
           </h1>
         </div>
 
         <!-- Bottom: Subheadline, CTAs, Trust badges -->
         <div class="hero-bottom">
           <p class="hero-subheadline">
-            A professional platform to manage orders, clients, and transactions — replacing chaos.
+            <%= t("hero.subheadline") %>
           </p>
           <div class="hero-cta-group">
-            <%= link_to "Get Started", "#contact", class: "btn btn-primary btn-lg hero-cta-primary" %>
-            <%= link_to "Book a Demo", "#contact", class: "btn btn-outline-dark btn-lg hero-cta-secondary" %>
+            <%= link_to t("hero.cta_primary"), "#contact", class: "btn btn-primary btn-lg hero-cta-primary" %>
+            <%= link_to t("hero.cta_secondary"), "#contact", class: "btn btn-outline-dark btn-lg hero-cta-secondary" %>
           </div>
           <div class="hero-trust-badges">
-            <span class="trust-badge"><i class="fas fa-check-circle"></i> Live in 15 minutes</span>
-            <span class="trust-badge"><i class="fas fa-check-circle"></i> No technical setup</span>
-            <span class="trust-badge"><i class="fas fa-check-circle"></i> Free tier during Beta</span>
+            <span class="trust-badge"><i class="fas fa-check-circle"></i> <%= t("hero.trust_badges.live_minutes") %></span>
+            <span class="trust-badge"><i class="fas fa-check-circle"></i> <%= t("hero.trust_badges.no_technical") %></span>
+            <span class="trust-badge"><i class="fas fa-check-circle"></i> <%= t("hero.trust_badges.free_beta") %></span>
           </div>
         </div>
       </div>
@@ -287,19 +287,19 @@
       <div class="stats-bar">
         <div class="stat-item">
           <span class="stat-value">500+</span>
-          <span class="stat-label">Orders processed daily</span>
+          <span class="stat-label"><%= t("stats.orders_daily") %></span>
         </div>
         <div class="stat-item">
           <span class="stat-value">73%</span>
-          <span class="stat-label">Faster order processing</span>
+          <span class="stat-label"><%= t("stats.faster_processing") %></span>
         </div>
         <div class="stat-item">
           <span class="stat-value">15 min</span>
-          <span class="stat-label">Average setup time</span>
+          <span class="stat-label"><%= t("stats.setup_time") %></span>
         </div>
         <div class="stat-item">
           <span class="stat-value">0</span>
-          <span class="stat-label">Technical skills required</span>
+          <span class="stat-label"><%= t("stats.technical_skills") %></span>
         </div>
       </div>
     </div>
@@ -312,44 +312,44 @@
   <section class="problem-section" aria-labelledby="problem-heading">
     <div class="container">
       <header class="section-header">
-        <span class="section-label">THE PROBLEM</span>
-        <h2 id="problem-heading" class="section-title">You're still taking orders like it's 2010</h2>
+        <span class="section-label"><%= t("problem.label") %></span>
+        <h2 id="problem-heading" class="section-title"><%= t("problem.title") %></h2>
         <p class="section-subtitle">
-          While your competitors automate, you're drowning in messages, spreadsheets, and manual work.
+          <%= t("problem.subtitle") %>
         </p>
       </header>
 
       <div class="comparison-grid">
         <!-- Without Nodal -->
         <div class="comparison-card comparison-card--without">
-          <span class="comparison-badge comparison-badge--without">WITHOUT NODAL</span>
+          <span class="comparison-badge comparison-badge--without"><%= t("problem.without_nodal") %></span>
           <ul class="comparison-list">
             <li class="comparison-item">
               <span class="comparison-icon comparison-icon--red"><i class="fas fa-comments"></i></span>
               <div class="comparison-content">
-                <h4>Orders buried in messages</h4>
-                <p>Texts, calls, voice notes, emails — all over the place</p>
+                <h4><%= t("problem.without.orders_buried.title") %></h4>
+                <p><%= t("problem.without.orders_buried.description") %></p>
               </div>
             </li>
             <li class="comparison-item">
               <span class="comparison-icon comparison-icon--red"><i class="fas fa-file-excel"></i></span>
               <div class="comparison-content">
-                <h4>Excel sheets everywhere</h4>
-                <p>Version conflicts, copy-paste errors, lost data</p>
+                <h4><%= t("problem.without.excel_sheets.title") %></h4>
+                <p><%= t("problem.without.excel_sheets.description") %></p>
               </div>
             </li>
             <li class="comparison-item">
               <span class="comparison-icon comparison-icon--red"><i class="fas fa-clock"></i></span>
               <div class="comparison-content">
-                <h4>Hours of manual work</h4>
-                <p>Typing orders, calculating prices, sending confirmations</p>
+                <h4><%= t("problem.without.manual_work.title") %></h4>
+                <p><%= t("problem.without.manual_work.description") %></p>
               </div>
             </li>
             <li class="comparison-item">
               <span class="comparison-icon comparison-icon--red"><i class="fas fa-eye-slash"></i></span>
               <div class="comparison-content">
-                <h4>Zero visibility</h4>
-                <p>No idea which clients order what or when</p>
+                <h4><%= t("problem.without.zero_visibility.title") %></h4>
+                <p><%= t("problem.without.zero_visibility.description") %></p>
               </div>
             </li>
           </ul>
@@ -357,34 +357,34 @@
 
         <!-- With Nodal -->
         <div class="comparison-card comparison-card--with">
-          <span class="comparison-badge comparison-badge--with">WITH NODAL</span>
+          <span class="comparison-badge comparison-badge--with"><%= t("problem.with_nodal") %></span>
           <ul class="comparison-list">
             <li class="comparison-item">
               <span class="comparison-icon comparison-icon--green"><i class="fas fa-store"></i></span>
               <div class="comparison-content">
-                <h4>Professional ordering portal</h4>
-                <p>Clients browse, order, and pay — 24/7</p>
+                <h4><%= t("problem.with.ordering_portal.title") %></h4>
+                <p><%= t("problem.with.ordering_portal.description") %></p>
               </div>
             </li>
             <li class="comparison-item">
               <span class="comparison-icon comparison-icon--green"><i class="fas fa-cogs"></i></span>
               <div class="comparison-content">
-                <h4>Automatic everything</h4>
-                <p>Pricing, confirmations, notifications — handled</p>
+                <h4><%= t("problem.with.automatic.title") %></h4>
+                <p><%= t("problem.with.automatic.description") %></p>
               </div>
             </li>
             <li class="comparison-item">
               <span class="comparison-icon comparison-icon--green"><i class="fas fa-bolt"></i></span>
               <div class="comparison-content">
-                <h4>Orders in seconds</h4>
-                <p>No typing, no calls, no back-and-forth</p>
+                <h4><%= t("problem.with.orders_seconds.title") %></h4>
+                <p><%= t("problem.with.orders_seconds.description") %></p>
               </div>
             </li>
             <li class="comparison-item">
               <span class="comparison-icon comparison-icon--green"><i class="fas fa-chart-line"></i></span>
               <div class="comparison-content">
-                <h4>Complete insights</h4>
-                <p>Know exactly what's selling and to whom</p>
+                <h4><%= t("problem.with.complete_insights.title") %></h4>
+                <p><%= t("problem.with.complete_insights.description") %></p>
               </div>
             </li>
           </ul>
@@ -400,8 +400,8 @@
   <section id="how-it-works" class="how-it-works-section" aria-labelledby="how-heading">
     <div class="container">
       <header class="section-header">
-        <span class="section-label">HOW IT WORKS</span>
-        <h2 id="how-heading" class="section-title">Everything changes when you switch to Nodal</h2>
+        <span class="section-label"><%= t("how_it_works.label") %></span>
+        <h2 id="how-heading" class="section-title"><%= t("how_it_works.title") %></h2>
       </header>
 
       <div class="features-grid features-grid--2x2">
@@ -410,14 +410,14 @@
           <div class="feature-icon-wrapper">
             <i class="fas fa-lock"></i>
           </div>
-          <h3 class="feature-title">Your clients order themselves</h3>
+          <h3 class="feature-title"><%= t("how_it_works.features.self_service.title") %></h3>
           <p class="feature-description">
-            Give each client their own login to a branded portal. They browse your catalog, see their prices, and place orders — anytime, without calling you.
+            <%= t("how_it_works.features.self_service.description") %>
           </p>
           <ul class="feature-benefits">
-            <li><i class="fas fa-check"></i> 24/7 self-service ordering</li>
-            <li><i class="fas fa-check"></i> Mobile-friendly interface</li>
-            <li><i class="fas fa-check"></i> Order history & reordering</li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.self_service.benefit_1") %></li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.self_service.benefit_2") %></li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.self_service.benefit_3") %></li>
           </ul>
         </article>
 
@@ -426,14 +426,14 @@
           <div class="feature-icon-wrapper">
             <i class="fas fa-tags"></i>
           </div>
-          <h3 class="feature-title">Pricing runs on autopilot</h3>
+          <h3 class="feature-title"><%= t("how_it_works.features.pricing.title") %></h3>
           <p class="feature-description">
-            Set your rules once: volume discounts, client-specific prices, seasonal promotions. Nodal calculates everything automatically.
+            <%= t("how_it_works.features.pricing.description") %>
           </p>
           <ul class="feature-benefits">
-            <li><i class="fas fa-check"></i> Client-specific pricing tiers</li>
-            <li><i class="fas fa-check"></i> Volume discounts</li>
-            <li><i class="fas fa-check"></i> Stackable promotions</li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.pricing.benefit_1") %></li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.pricing.benefit_2") %></li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.pricing.benefit_3") %></li>
           </ul>
         </article>
 
@@ -442,14 +442,14 @@
           <div class="feature-icon-wrapper">
             <i class="fas fa-th"></i>
           </div>
-          <h3 class="feature-title">Your catalog, always updated</h3>
+          <h3 class="feature-title"><%= t("how_it_works.features.catalog.title") %></h3>
           <p class="feature-description">
-            Upload products once. Change a price? Everyone sees it instantly. No more outdated PDFs or "let me check the current price."
+            <%= t("how_it_works.features.catalog.description") %>
           </p>
           <ul class="feature-benefits">
-            <li><i class="fas fa-check"></i> Real-time price updates</li>
-            <li><i class="fas fa-check"></i> Product categories</li>
-            <li><i class="fas fa-check"></i> Stock visibility</li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.catalog.benefit_1") %></li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.catalog.benefit_2") %></li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.catalog.benefit_3") %></li>
           </ul>
         </article>
 
@@ -458,14 +458,14 @@
           <div class="feature-icon-wrapper">
             <i class="fas fa-chart-pie"></i>
           </div>
-          <h3 class="feature-title">Insights that drive growth</h3>
+          <h3 class="feature-title"><%= t("how_it_works.features.analytics.title") %></h3>
           <p class="feature-description">
-            See what's working and what's not. Your dashboard shows revenue trends, open carts, product performance, and discount impact — all in real time.
+            <%= t("how_it_works.features.analytics.description") %>
           </p>
           <ul class="feature-benefits">
-            <li><i class="fas fa-check"></i> Revenue & order analytics</li>
-            <li><i class="fas fa-check"></i> Open carts & conversion tracking</li>
-            <li><i class="fas fa-check"></i> Product & discount performance</li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.analytics.benefit_1") %></li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.analytics.benefit_2") %></li>
+            <li><i class="fas fa-check"></i> <%= t("how_it_works.features.analytics.benefit_3") %></li>
           </ul>
         </article>
       </div>
@@ -479,43 +479,43 @@
   <section class="why-section" aria-labelledby="why-heading">
     <div class="container">
       <header class="section-header">
-        <span class="section-label">WHY NODAL</span>
-        <h2 id="why-heading" class="section-title">Built specifically for SMBs</h2>
+        <span class="section-label"><%= t("why_nodal.label") %></span>
+        <h2 id="why-heading" class="section-title"><%= t("why_nodal.title") %></h2>
         <p class="section-subtitle">
-          Not a watered-down enterprise tool. Not a generic e-commerce platform. Built from the ground up for how small businesses actually work.
+          <%= t("why_nodal.subtitle") %>
         </p>
       </header>
 
       <div class="why-grid">
         <div class="why-card">
-          <div class="why-number">01</div>
-          <h3 class="why-title">Live in 15 minutes</h3>
+          <div class="why-number"><%= t("why_nodal.reasons.live_minutes.number") %></div>
+          <h3 class="why-title"><%= t("why_nodal.reasons.live_minutes.title") %></h3>
           <p class="why-description">
-            No developers needed. No complex setup. Import your products, invite your first client, and you're in business.
+            <%= t("why_nodal.reasons.live_minutes.description") %>
           </p>
         </div>
 
         <div class="why-card">
-          <div class="why-number">02</div>
-          <h3 class="why-title">Affordable from day one</h3>
+          <div class="why-number"><%= t("why_nodal.reasons.affordable.number") %></div>
+          <h3 class="why-title"><%= t("why_nodal.reasons.affordable.title") %></h3>
           <p class="why-description">
-            Start free, grow gradually. Our pricing scales with your business — not enterprise budgets.
+            <%= t("why_nodal.reasons.affordable.description") %>
           </p>
         </div>
 
         <div class="why-card">
-          <div class="why-number">03</div>
-          <h3 class="why-title">Works with your tools</h3>
+          <div class="why-number"><%= t("why_nodal.reasons.tools.number") %></div>
+          <h3 class="why-title"><%= t("why_nodal.reasons.tools.title") %></h3>
           <p class="why-description">
-            Export to Excel, send email notifications, integrate with your existing workflow seamlessly.
+            <%= t("why_nodal.reasons.tools.description") %>
           </p>
         </div>
 
         <div class="why-card">
-          <div class="why-number">04</div>
-          <h3 class="why-title">AI that actually helps</h3>
+          <div class="why-number"><%= t("why_nodal.reasons.ai.number") %></div>
+          <h3 class="why-title"><%= t("why_nodal.reasons.ai.title") %></h3>
           <p class="why-description">
-            Not just buzzwords. Get actionable insights on what to sell, when to restock, and how to grow.
+            <%= t("why_nodal.reasons.ai.description") %>
           </p>
         </div>
       </div>
@@ -529,62 +529,62 @@
   <section id="coming-soon" class="roadmap-section" aria-labelledby="roadmap-heading">
     <div class="container">
       <header class="section-header">
-        <span class="section-label">COMING SOON</span>
-        <h2 id="roadmap-heading" class="section-title">What's next for Nodal</h2>
+        <span class="section-label"><%= t("roadmap.label") %></span>
+        <h2 id="roadmap-heading" class="section-title"><%= t("roadmap.title") %></h2>
         <p class="section-subtitle">
-          We're building the features that B2B businesses actually need. Here's what's in the pipeline.
+          <%= t("roadmap.subtitle") %>
         </p>
       </header>
 
       <div class="roadmap-grid">
         <!-- Feature 1: AI Shopping Assistant -->
         <article class="roadmap-card">
-          <div class="roadmap-badge">In Development</div>
+          <div class="roadmap-badge"><%= t("roadmap.in_development") %></div>
           <div class="roadmap-icon">
             <i class="fas fa-robot"></i>
           </div>
-          <h3 class="roadmap-title">AI Shopping Assistant</h3>
+          <h3 class="roadmap-title"><%= t("roadmap.features.ai_assistant.title") %></h3>
           <p class="roadmap-description">
-            An intelligent assistant that helps your clients find products, suggests reorders based on purchase history, and answers questions about your catalog — 24/7.
+            <%= t("roadmap.features.ai_assistant.description") %>
           </p>
           <ul class="roadmap-features">
-            <li><i class="fas fa-sparkles"></i> Smart product recommendations</li>
-            <li><i class="fas fa-sparkles"></i> Natural language search</li>
-            <li><i class="fas fa-sparkles"></i> Automated reorder suggestions</li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.ai_assistant.benefit_1") %></li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.ai_assistant.benefit_2") %></li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.ai_assistant.benefit_3") %></li>
           </ul>
         </article>
 
         <!-- Feature 2: Team Chat & Notifications -->
         <article class="roadmap-card">
-          <div class="roadmap-badge">In Development</div>
+          <div class="roadmap-badge"><%= t("roadmap.in_development") %></div>
           <div class="roadmap-icon">
             <i class="fas fa-comments"></i>
           </div>
-          <h3 class="roadmap-title">Team Chat & Notifications</h3>
+          <h3 class="roadmap-title"><%= t("roadmap.features.team_chat.title") %></h3>
           <p class="roadmap-description">
-            Real-time communication between your team and clients. Provide instant support and keep everyone updated with automated order notifications.
+            <%= t("roadmap.features.team_chat.description") %>
           </p>
           <ul class="roadmap-features">
-            <li><i class="fas fa-sparkles"></i> Direct client messaging</li>
-            <li><i class="fas fa-sparkles"></i> Automated status updates</li>
-            <li><i class="fas fa-sparkles"></i> Team collaboration tools</li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.team_chat.benefit_1") %></li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.team_chat.benefit_2") %></li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.team_chat.benefit_3") %></li>
           </ul>
         </article>
 
         <!-- Feature 3: Claims & Quality Tracking -->
         <article class="roadmap-card">
-          <div class="roadmap-badge">In Development</div>
+          <div class="roadmap-badge"><%= t("roadmap.in_development") %></div>
           <div class="roadmap-icon">
             <i class="fas fa-clipboard-check"></i>
           </div>
-          <h3 class="roadmap-title">Claims & Quality Tracking</h3>
+          <h3 class="roadmap-title"><%= t("roadmap.features.claims.title") %></h3>
           <p class="roadmap-description">
-            A complete claims management system to handle issues professionally. Track quality trends and generate automated scorecards for clients and suppliers.
+            <%= t("roadmap.features.claims.description") %>
           </p>
           <ul class="roadmap-features">
-            <li><i class="fas fa-sparkles"></i> Structured claims workflow</li>
-            <li><i class="fas fa-sparkles"></i> Product quality analytics</li>
-            <li><i class="fas fa-sparkles"></i> Supplier & client scorecards</li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.claims.benefit_1") %></li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.claims.benefit_2") %></li>
+            <li><i class="fas fa-sparkles"></i> <%= t("roadmap.features.claims.benefit_3") %></li>
           </ul>
         </article>
       </div>
@@ -598,81 +598,81 @@
   <section id="pricing" class="pricing-section" aria-labelledby="pricing-heading">
     <div class="container">
       <header class="section-header">
-        <span class="section-label">PRICING</span>
-        <h2 id="pricing-heading" class="section-title">Simple, transparent pricing</h2>
-        <p class="section-subtitle">Start free. Upgrade when you're ready. No surprises.</p>
+        <span class="section-label"><%= t("pricing.label") %></span>
+        <h2 id="pricing-heading" class="section-title"><%= t("pricing.title") %></h2>
+        <p class="section-subtitle"><%= t("pricing.subtitle") %></p>
       </header>
 
       <div class="pricing-grid pricing-grid--3col">
         <!-- Free Tier -->
         <div class="pricing-card">
-          <div class="pricing-badge pricing-badge--dark">BETA</div>
+          <div class="pricing-badge pricing-badge--dark"><%= t("pricing.tiers.free.badge") %></div>
           <div class="pricing-header">
-            <h3 class="pricing-name">Free</h3>
+            <h3 class="pricing-name"><%= t("pricing.tiers.free.name") %></h3>
             <div class="pricing-price">
               <span class="price-currency">€</span>
               <span class="price-amount">0</span>
-              <span class="price-period">/month</span>
+              <span class="price-period"><%= t("pricing.per_month") %></span>
             </div>
-            <p class="pricing-description">Free during Beta phase</p>
+            <p class="pricing-description"><%= t("pricing.tiers.free.description") %></p>
           </div>
           <div class="pricing-divider"></div>
           <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Up to 10 products</li>
-            <li><i class="fas fa-check"></i> 3 client accounts</li>
-            <li><i class="fas fa-check"></i> Basic order management</li>
-            <li><i class="fas fa-check"></i> Email support</li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.free.feature_1") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.free.feature_2") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.free.feature_3") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.free.feature_4") %></li>
           </ul>
-          <%= link_to "Get Started", "#contact", class: "btn btn-outline-dark btn-pricing" %>
+          <%= link_to t("pricing.tiers.free.cta"), "#contact", class: "btn btn-outline-dark btn-pricing" %>
         </div>
 
         <!-- Pro Tier (Recommended) -->
         <div class="pricing-card pricing-card--featured">
-          <div class="pricing-badge pricing-badge--green">RECOMMENDED</div>
+          <div class="pricing-badge pricing-badge--green"><%= t("pricing.tiers.pro.badge") %></div>
           <div class="pricing-header">
-            <h3 class="pricing-name">Pro</h3>
+            <h3 class="pricing-name"><%= t("pricing.tiers.pro.name") %></h3>
             <div class="pricing-price">
               <span class="price-currency">€</span>
               <span class="price-amount price-amount--featured">149</span>
-              <span class="price-period">/month</span>
+              <span class="price-period"><%= t("pricing.per_month") %></span>
             </div>
-            <p class="pricing-description">For growing businesses</p>
+            <p class="pricing-description"><%= t("pricing.tiers.pro.description") %></p>
           </div>
           <div class="pricing-divider"></div>
           <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Unlimited products</li>
-            <li><i class="fas fa-check"></i> Unlimited clients</li>
-            <li><i class="fas fa-check"></i> Client-specific pricing</li>
-            <li><i class="fas fa-check"></i> Advanced analytics dashboard</li>
-            <li><i class="fas fa-check"></i> Custom branding</li>
-            <li><i class="fas fa-check"></i> Priority support</li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_1") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_2") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_3") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_4") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_5") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_6") %></li>
           </ul>
-          <%= link_to "Get Started", "#contact", class: "btn btn-primary btn-pricing" %>
+          <%= link_to t("pricing.tiers.pro.cta"), "#contact", class: "btn btn-primary btn-pricing" %>
         </div>
 
         <!-- Business Tier -->
         <div class="pricing-card">
           <div class="pricing-header">
-            <h3 class="pricing-name">Business</h3>
+            <h3 class="pricing-name"><%= t("pricing.tiers.business.name") %></h3>
             <div class="pricing-price">
-              <span class="price-amount price-amount--custom">Let's talk</span>
+              <span class="price-amount price-amount--custom"><%= t("pricing.tiers.business.price") %></span>
             </div>
-            <p class="pricing-description">For established operations</p>
+            <p class="pricing-description"><%= t("pricing.tiers.business.description") %></p>
           </div>
           <div class="pricing-divider"></div>
           <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Everything in Pro</li>
-            <li><i class="fas fa-check"></i> API access</li>
-            <li><i class="fas fa-check"></i> Custom integrations</li>
-            <li><i class="fas fa-check"></i> Dedicated account manager</li>
-            <li><i class="fas fa-check"></i> SLA guarantee</li>
-            <li><i class="fas fa-check"></i> Phone support</li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_1") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_2") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_3") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_4") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_5") %></li>
+            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_6") %></li>
           </ul>
-          <%= link_to "Contact Us", "#contact", class: "btn btn-outline-dark btn-pricing" %>
+          <%= link_to t("pricing.tiers.business.cta"), "#contact", class: "btn btn-outline-dark btn-pricing" %>
         </div>
       </div>
 
-      <p class="pricing-disclaimer">No credit card required to get started.</p>
+      <p class="pricing-disclaimer"><%= t("pricing.disclaimer") %></p>
     </div>
   </section>
 
@@ -685,18 +685,18 @@
       <div class="results-grid">
         <div class="result-item">
           <span class="result-value">73%</span>
-          <span class="result-label">Reduction in order processing time</span>
+          <span class="result-label"><%= t("results.processing_time") %></span>
         </div>
         <div class="result-item">
           <span class="result-value">89%</span>
-          <span class="result-label">Fewer order errors</span>
+          <span class="result-label"><%= t("results.fewer_errors") %></span>
         </div>
         <div class="result-item">
           <span class="result-value">4.5h</span>
-          <span class="result-label">Saved per week on admin work</span>
+          <span class="result-label"><%= t("results.saved_weekly") %></span>
         </div>
       </div>
-      <p class="results-disclaimer">Average results based on customer data</p>
+      <p class="results-disclaimer"><%= t("results.disclaimer") %></p>
     </div>
   </section>
 
@@ -707,10 +707,10 @@
   <section id="contact" class="contact-section" aria-labelledby="contact-heading">
     <div class="container">
       <header class="section-header">
-        <span class="section-label">CONTACT</span>
-        <h2 id="contact-heading" class="section-title">Get in touch</h2>
+        <span class="section-label"><%= t("contact.label") %></span>
+        <h2 id="contact-heading" class="section-title"><%= t("contact.title") %></h2>
         <p class="section-subtitle">
-          Have questions? Want a demo? Drop us a message and we'll get back to you within 24 hours.
+          <%= t("contact.subtitle") %>
         </p>
       </header>
 
@@ -718,23 +718,23 @@
         <form action="https://formspree.io/f/xrezyewy" method="POST" class="contact-form">
           <div class="form-row">
             <div class="form-group">
-              <label for="contact-name">Name</label>
-              <input type="text" id="contact-name" name="name" required placeholder="Your name">
+              <label for="contact-name"><%= t("contact.form.name") %></label>
+              <input type="text" id="contact-name" name="name" required placeholder="<%= t('contact.form.name_placeholder') %>">
             </div>
             <div class="form-group">
-              <label for="contact-email">Email</label>
-              <input type="email" id="contact-email" name="email" required placeholder="you@company.com">
+              <label for="contact-email"><%= t("contact.form.email") %></label>
+              <input type="email" id="contact-email" name="email" required placeholder="<%= t('contact.form.email_placeholder') %>">
             </div>
           </div>
           <div class="form-group">
-            <label for="contact-company">Company <span class="optional">(optional)</span></label>
-            <input type="text" id="contact-company" name="company" placeholder="Your company name">
+            <label for="contact-company"><%= t("contact.form.company") %> <span class="optional"><%= t("contact.form.company_optional") %></span></label>
+            <input type="text" id="contact-company" name="company" placeholder="<%= t('contact.form.company_placeholder') %>">
           </div>
           <div class="form-group">
-            <label for="contact-message">Message</label>
-            <textarea id="contact-message" name="message" rows="4" required placeholder="How can we help you?"></textarea>
+            <label for="contact-message"><%= t("contact.form.message") %></label>
+            <textarea id="contact-message" name="message" rows="4" required placeholder="<%= t('contact.form.message_placeholder') %>"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+          <button type="submit" class="btn btn-primary btn-lg"><%= t("contact.form.submit") %></button>
         </form>
       </div>
     </div>
@@ -747,14 +747,14 @@
   <section class="cta-section" aria-labelledby="cta-heading">
     <div class="container">
       <div class="cta-content">
-        <h2 id="cta-heading" class="cta-headline">Your competitors are already<br>doing this</h2>
+        <h2 id="cta-heading" class="cta-headline"><%= t("cta.headline_html").html_safe %></h2>
         <p class="cta-subheadline">
-          Every day you wait, you're losing orders to businesses that make buying easy.
+          <%= t("cta.subheadline") %>
         </p>
         <div class="cta-buttons">
-          <%= link_to "Get Started", "#contact", class: "btn btn-outline-light btn-lg" %>
+          <%= link_to t("cta.button"), "#contact", class: "btn btn-outline-light btn-lg" %>
         </div>
-        <p class="cta-disclaimer">Setup takes 15 minutes. No credit card required.</p>
+        <p class="cta-disclaimer"><%= t("cta.disclaimer") %></p>
       </div>
     </div>
   </section>

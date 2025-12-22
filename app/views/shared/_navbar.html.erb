@@ -5,16 +5,28 @@
 
   <div class="nav-links">
     <div class="dropdown-wrapper">
-      <%= link_to "Product", "#" %>
+      <%= link_to t("navbar.product"), "#" %>
       <%= render "shared/sidebar" %>
     </div>
-    <%= link_to "How it works", "#how-it-works" %>
-    <%= link_to "Coming soon", "#coming-soon" %>
-    <%= link_to "Pricing", "#pricing" %>
+    <%= link_to t("navbar.how_it_works"), "#how-it-works" %>
+    <%= link_to t("navbar.coming_soon"), "#coming-soon" %>
+    <%= link_to t("navbar.pricing"), "#pricing" %>
   </div>
 
   <div class="nav-actions">
-    <%= link_to "Start free trial", "#", class: "nav-cta" %>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+      <button class="language-btn" type="button" aria-label="<%= t('language.switch') %>">
+        <i class="fas fa-globe"></i>
+        <span class="current-lang"><%= I18n.locale.to_s.upcase %></span>
+      </button>
+      <div class="language-dropdown">
+        <%= link_to t("language.en"), root_path(locale: :en), class: "language-option #{'active' if I18n.locale == :en}" %>
+        <%= link_to t("language.pt"), root_path(locale: :pt), class: "language-option #{'active' if I18n.locale == :pt}" %>
+        <%= link_to t("language.es"), root_path(locale: :es), class: "language-option #{'active' if I18n.locale == :es}" %>
+      </div>
+    </div>
+    <%= link_to t("navbar.start_free_trial"), "#", class: "nav-cta" %>
   </div>
 
   <div class="menu-toggle">

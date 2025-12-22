@@ -7,7 +7,7 @@
         <%= link_to root_path, class: "footer-logo" do %>
           <span class="logo-icon">N</span><span class="logo-text">odal</span>
         <% end %>
-        <p class="footer-tagline">The B2B ordering platform that grows with your business.</p>
+        <p class="footer-tagline"><%= t("footer.tagline") %></p>
         <!-- Social Links -->
         <div class="footer-social">
           <a href="#" aria-label="Twitter" data-placeholder="twitter-icon">
@@ -24,56 +24,56 @@
 
       <!-- Product Column -->
       <div class="footer-column">
-        <h4>Product</h4>
+        <h4><%= t("footer.product.title") %></h4>
         <ul>
-          <li><%= link_to "Catalog Management", "#" %></li>
-          <li><%= link_to "Order Management", "#" %></li>
-          <li><%= link_to "Pricing & Discounts", "#" %></li>
-          <li><%= link_to "Analytics", "#" %></li>
-          <li><%= link_to "Pricing", "#" %></li>
+          <li><%= link_to t("footer.product.catalog_management"), "#" %></li>
+          <li><%= link_to t("footer.product.order_management"), "#" %></li>
+          <li><%= link_to t("footer.product.pricing_discounts"), "#" %></li>
+          <li><%= link_to t("footer.product.analytics"), "#" %></li>
+          <li><%= link_to t("footer.product.pricing"), "#" %></li>
         </ul>
       </div>
 
       <!-- Solutions Column -->
       <div class="footer-column">
-        <h4>Solutions</h4>
+        <h4><%= t("footer.solutions.title") %></h4>
         <ul>
-          <li><%= link_to "Food & Beverage", "#" %></li>
-          <li><%= link_to "Wholesale Distribution", "#" %></li>
-          <li><%= link_to "Manufacturing", "#" %></li>
-          <li><%= link_to "B2B Retail", "#" %></li>
+          <li><%= link_to t("footer.solutions.food_beverage"), "#" %></li>
+          <li><%= link_to t("footer.solutions.wholesale"), "#" %></li>
+          <li><%= link_to t("footer.solutions.manufacturing"), "#" %></li>
+          <li><%= link_to t("footer.solutions.b2b_retail"), "#" %></li>
         </ul>
       </div>
 
       <!-- Resources Column -->
       <div class="footer-column">
-        <h4>Resources</h4>
+        <h4><%= t("footer.resources.title") %></h4>
         <ul>
-          <li><%= link_to "Getting Started", "#" %></li>
-          <li><%= link_to "Help Center", "#" %></li>
-          <li><%= link_to "API Documentation", "#" %></li>
-          <li><%= link_to "Blog", "#" %></li>
+          <li><%= link_to t("footer.resources.getting_started"), "#" %></li>
+          <li><%= link_to t("footer.resources.help_center"), "#" %></li>
+          <li><%= link_to t("footer.resources.api_docs"), "#" %></li>
+          <li><%= link_to t("footer.resources.blog"), "#" %></li>
         </ul>
       </div>
 
       <!-- Company Column -->
       <div class="footer-column">
-        <h4>Company</h4>
+        <h4><%= t("footer.company.title") %></h4>
         <ul>
-          <li><%= link_to "About Us", "#" %></li>
-          <li><%= link_to "Contact", "#" %></li>
-          <li><%= link_to "Careers", "#" %></li>
-          <li><%= link_to "Security", "#" %></li>
+          <li><%= link_to t("footer.company.about"), "#" %></li>
+          <li><%= link_to t("footer.company.contact"), "#" %></li>
+          <li><%= link_to t("footer.company.careers"), "#" %></li>
+          <li><%= link_to t("footer.company.security"), "#" %></li>
         </ul>
       </div>
     </div>
 
     <!-- Footer Bottom -->
     <div class="footer-bottom">
-      <p>&copy; <%= Date.current.year %> Nodal. All rights reserved.</p>
+      <p>&copy; <%= Date.current.year %> Nodal. <%= t("footer.legal.rights") %></p>
       <div class="footer-legal">
-        <%= link_to "Privacy Policy", "#" %>
-        <%= link_to "Terms of Service", "#" %>
+        <%= link_to t("footer.legal.privacy"), "#" %>
+        <%= link_to t("footer.legal.terms"), "#" %>
       </div>
     </div>
   </div>

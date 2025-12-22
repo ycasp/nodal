@@ -1,0 +1,250 @@
+es:
+  # Navigation
+  navbar:
+    product: "Producto"
+    how_it_works: "Cómo funciona"
+    coming_soon: "Próximamente"
+    pricing: "Precios"
+    start_free_trial: "Empezar gratis"
+
+  # Hero Section
+  hero:
+    headline_html: "El nuevo estándar<br><span class=\"text-primary\">para B2B</span>"
+    subheadline: "Una plataforma profesional para gestionar pedidos, clientes y transacciones — reemplazando el caos."
+    cta_primary: "Empezar"
+    cta_secondary: "Reservar Demo"
+    trust_badges:
+      live_minutes: "En línea en 15 minutos"
+      no_technical: "Sin configuración técnica"
+      free_beta: "Gratis durante el Beta"
+
+  # Stats Bar
+  stats:
+    orders_daily: "Pedidos procesados diariamente"
+    faster_processing: "Procesamiento más rápido"
+    setup_time: "Tiempo promedio de configuración"
+    technical_skills: "Conocimientos técnicos necesarios"
+
+  # Problem Section
+  problem:
+    label: "EL PROBLEMA"
+    title: "Todavía recibes pedidos como en 2010"
+    subtitle: "Mientras tus competidores automatizan, tú te ahogas en mensajes, hojas de cálculo y trabajo manual."
+    without_nodal: "SIN NODAL"
+    with_nodal: "CON NODAL"
+    without:
+      orders_buried:
+        title: "Pedidos perdidos en mensajes"
+        description: "SMS, llamadas, notas de voz, emails — todo disperso"
+      excel_sheets:
+        title: "Hojas Excel por todas partes"
+        description: "Conflictos de versión, errores de copy-paste, datos perdidos"
+      manual_work:
+        title: "Horas de trabajo manual"
+        description: "Escribir pedidos, calcular precios, enviar confirmaciones"
+      zero_visibility:
+        title: "Cero visibilidad"
+        description: "Sin saber qué clientes piden qué o cuándo"
+    with:
+      ordering_portal:
+        title: "Portal de pedidos profesional"
+        description: "Clientes navegan y piden — 24/7"
+      automatic:
+        title: "Todo automático"
+        description: "Precios, confirmaciones, notificaciones — resuelto"
+      orders_seconds:
+        title: "Pedidos en segundos"
+        description: "Sin escribir, sin llamadas, sin ir y venir"
+      complete_insights:
+        title: "Insights completos"
+        description: "Saber exactamente qué se vende y a quién"
+
+  # How It Works Section
+  how_it_works:
+    label: "CÓMO FUNCIONA"
+    title: "Todo cambia cuando cambias a Nodal"
+    features:
+      self_service:
+        title: "Tus clientes piden solos"
+        description: "Dale a cada cliente su propio login en un portal personalizado. Navegan tu catálogo, ven sus precios y hacen pedidos — a cualquier hora, sin llamarte."
+        benefit_1: "Pedidos self-service 24/7"
+        benefit_2: "Interfaz mobile-friendly"
+        benefit_3: "Historial y re-pedidos"
+      pricing:
+        title: "Precios en piloto automático"
+        description: "Define tus reglas una vez: descuentos por volumen, precios específicos por cliente, promociones estacionales. Nodal calcula todo automáticamente."
+        benefit_1: "Tablas de precios por cliente"
+        benefit_2: "Descuentos por volumen"
+        benefit_3: "Promociones acumulables"
+      catalog:
+        title: "Tu catálogo, siempre actualizado"
+        description: "Sube productos una vez. ¿Cambias un precio? Todos lo ven instantáneamente. No más PDFs desactualizados o \"déjame verificar el precio actual\"."
+        benefit_1: "Actualizaciones de precios en tiempo real"
+        benefit_2: "Categorías de productos"
+        benefit_3: "Visibilidad de stock"
+      analytics:
+        title: "Insights que impulsan crecimiento"
+        description: "Ve qué funciona y qué no. Tu dashboard muestra tendencias de ingresos, carritos abiertos, rendimiento de productos e impacto de descuentos — todo en tiempo real."
+        benefit_1: "Analytics de ingresos y pedidos"
+        benefit_2: "Carritos abiertos y conversión"
+        benefit_3: "Rendimiento de productos y descuentos"
+
+  # Why Nodal Section
+  why_nodal:
+    label: "POR QUÉ NODAL"
+    title: "Construido específicamente para PYMEs"
+    subtitle: "No es una herramienta enterprise diluida. No es una plataforma e-commerce genérica. Construido desde cero para cómo las pequeñas empresas realmente funcionan."
+    reasons:
+      live_minutes:
+        number: "01"
+        title: "En línea en 15 minutos"
+        description: "Sin programadores. Sin configuración compleja. Importa tus productos, invita al primer cliente, y estás funcionando."
+      affordable:
+        number: "02"
+        title: "Accesible desde el primer día"
+        description: "Empieza gratis, crece gradualmente. Nuestros precios escalan con tu negocio — no con presupuestos enterprise."
+      tools:
+        number: "03"
+        title: "Funciona con tus herramientas"
+        description: "Exporta a Excel, envía notificaciones por email, integra con tu workflow existente sin problemas."
+      ai:
+        number: "04"
+        title: "IA que realmente ayuda"
+        description: "No son solo buzzwords. Obtén insights accionables sobre qué vender, cuándo reabastecer, y cómo crecer."
+
+  # Roadmap / Coming Soon Section
+  roadmap:
+    label: "PRÓXIMAMENTE"
+    title: "Qué viene después en Nodal"
+    subtitle: "Estamos construyendo las funcionalidades que los negocios B2B realmente necesitan. Aquí está lo que está en desarrollo."
+    in_development: "En Desarrollo"
+    features:
+      ai_assistant:
+        title: "Asistente de Compras IA"
+        description: "Un asistente inteligente que ayuda a tus clientes a encontrar productos, sugiere re-pedidos basado en historial de compras, y responde preguntas sobre tu catálogo — 24/7."
+        benefit_1: "Recomendaciones inteligentes de productos"
+        benefit_2: "Búsqueda en lenguaje natural"
+        benefit_3: "Sugerencias automáticas de re-pedido"
+      team_chat:
+        title: "Chat de Equipo y Notificaciones"
+        description: "Comunicación en tiempo real entre tu equipo y clientes. Ofrece soporte instantáneo y mantén a todos actualizados con notificaciones automáticas de pedidos."
+        benefit_1: "Mensajes directos con clientes"
+        benefit_2: "Actualizaciones de estado automáticas"
+        benefit_3: "Herramientas de colaboración de equipo"
+      claims:
+        title: "Reclamaciones y Calidad"
+        description: "Un sistema completo de gestión de reclamaciones para manejar problemas profesionalmente. Rastrea tendencias de calidad y genera scorecards automáticos para clientes y proveedores."
+        benefit_1: "Workflow estructurado de reclamaciones"
+        benefit_2: "Analytics de calidad de producto"
+        benefit_3: "Scorecards de proveedores y clientes"
+
+  # Pricing Section
+  pricing:
+    label: "PRECIOS"
+    title: "Precios simples y transparentes"
+    subtitle: "Empieza gratis. Actualiza cuando estés listo. Sin sorpresas."
+    disclaimer: "No se requiere tarjeta de crédito para empezar."
+    per_month: "/mes"
+    tiers:
+      free:
+        badge: "BETA"
+        name: "Gratis"
+        description: "Gratis durante la fase Beta"
+        feature_1: "Hasta 10 productos"
+        feature_2: "3 cuentas de cliente"
+        feature_3: "Gestión básica de pedidos"
+        feature_4: "Soporte por email"
+        cta: "Empezar"
+      pro:
+        badge: "RECOMENDADO"
+        name: "Pro"
+        description: "Para negocios en crecimiento"
+        feature_1: "Productos ilimitados"
+        feature_2: "Clientes ilimitados"
+        feature_3: "Precios específicos por cliente"
+        feature_4: "Dashboard analytics avanzado"
+        feature_5: "Branding personalizado"
+        feature_6: "Soporte prioritario"
+        cta: "Empezar"
+      business:
+        name: "Business"
+        price: "Hablemos"
+        description: "Para operaciones establecidas"
+        feature_1: "Todo de Pro"
+        feature_2: "Acceso API"
+        feature_3: "Integraciones personalizadas"
+        feature_4: "Gestor de cuenta dedicado"
+        feature_5: "Garantía SLA"
+        feature_6: "Soporte telefónico"
+        cta: "Contactar"
+
+  # Results Section
+  results:
+    processing_time: "Reducción en tiempo de procesamiento"
+    fewer_errors: "Menos errores en pedidos"
+    saved_weekly: "Ahorradas por semana en admin"
+    disclaimer: "Resultados promedio basados en datos de clientes"
+
+  # Contact Section
+  contact:
+    label: "CONTACTO"
+    title: "Ponte en contacto"
+    subtitle: "¿Tienes preguntas? ¿Quieres una demo? Envíanos un mensaje y te respondemos en 24 horas."
+    form:
+      name: "Nombre"
+      name_placeholder: "Tu nombre"
+      email: "Email"
+      email_placeholder: "tu@empresa.com"
+      company: "Empresa"
+      company_optional: "(opcional)"
+      company_placeholder: "Nombre de tu empresa"
+      message: "Mensaje"
+      message_placeholder: "¿Cómo podemos ayudarte?"
+      submit: "Enviar Mensaje"
+
+  # CTA Section
+  cta:
+    headline_html: "Tus competidores ya<br>están haciendo esto"
+    subheadline: "Cada día que esperas, estás perdiendo pedidos ante negocios que hacen la compra fácil."
+    button: "Empezar"
+    disclaimer: "Configuración en 15 minutos. Sin tarjeta de crédito."
+
+  # Footer
+  footer:
+    tagline: "La plataforma de pedidos B2B que crece con tu negocio."
+    product:
+      title: "Producto"
+      catalog_management: "Gestión de Catálogo"
+      order_management: "Gestión de Pedidos"
+      pricing_discounts: "Precios y Descuentos"
+      analytics: "Analytics"
+      pricing: "Precios"
+    solutions:
+      title: "Soluciones"
+      food_beverage: "Alimentación y Bebidas"
+      wholesale: "Distribución Mayorista"
+      manufacturing: "Manufactura"
+      b2b_retail: "Retail B2B"
+    resources:
+      title: "Recursos"
+      getting_started: "Empezar"
+      help_center: "Centro de Ayuda"
+      api_docs: "Documentación API"
+      blog: "Blog"
+    company:
+      title: "Empresa"
+      about: "Sobre Nosotros"
+      contact: "Contacto"
+      careers: "Carreras"
+      security: "Seguridad"
+    legal:
+      rights: "Todos los derechos reservados."
+      privacy: "Política de Privacidad"
+      terms: "Términos de Servicio"
+
+  # Language Switcher
+  language:
+    en: "English"
+    pt: "Português"
+    es: "Español"
+    switch: "Idioma"

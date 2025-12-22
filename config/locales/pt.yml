@@ -1,0 +1,250 @@
+pt:
+  # Navigation
+  navbar:
+    product: "Produto"
+    how_it_works: "Como funciona"
+    coming_soon: "Em breve"
+    pricing: "Preços"
+    start_free_trial: "Começar grátis"
+
+  # Hero Section
+  hero:
+    headline_html: "O novo padrão<br><span class=\"text-primary\">para B2B</span>"
+    subheadline: "Uma plataforma profissional para gerir encomendas, clientes e transações — substituindo o caos."
+    cta_primary: "Começar"
+    cta_secondary: "Agendar Demo"
+    trust_badges:
+      live_minutes: "Online em 15 minutos"
+      no_technical: "Sem configuração técnica"
+      free_beta: "Grátis durante o Beta"
+
+  # Stats Bar
+  stats:
+    orders_daily: "Encomendas processadas diariamente"
+    faster_processing: "Processamento mais rápido"
+    setup_time: "Tempo médio de configuração"
+    technical_skills: "Conhecimentos técnicos necessários"
+
+  # Problem Section
+  problem:
+    label: "O PROBLEMA"
+    title: "Ainda recebes encomendas como em 2010"
+    subtitle: "Enquanto os teus concorrentes automatizam, tu estás a afogar-te em mensagens, folhas de cálculo e trabalho manual."
+    without_nodal: "SEM NODAL"
+    with_nodal: "COM NODAL"
+    without:
+      orders_buried:
+        title: "Encomendas perdidas em mensagens"
+        description: "SMS, chamadas, notas de voz, emails — tudo espalhado"
+      excel_sheets:
+        title: "Folhas Excel por todo o lado"
+        description: "Conflitos de versão, erros de copy-paste, dados perdidos"
+      manual_work:
+        title: "Horas de trabalho manual"
+        description: "Escrever encomendas, calcular preços, enviar confirmações"
+      zero_visibility:
+        title: "Zero visibilidade"
+        description: "Sem saber que clientes encomendam o quê ou quando"
+    with:
+      ordering_portal:
+        title: "Portal de encomendas profissional"
+        description: "Clientes navegam e encomendam — 24/7"
+      automatic:
+        title: "Tudo automático"
+        description: "Preços, confirmações, notificações — tratado"
+      orders_seconds:
+        title: "Encomendas em segundos"
+        description: "Sem escrever, sem chamadas, sem idas e vindas"
+      complete_insights:
+        title: "Insights completos"
+        description: "Saber exatamente o que vende e a quem"
+
+  # How It Works Section
+  how_it_works:
+    label: "COMO FUNCIONA"
+    title: "Tudo muda quando mudas para o Nodal"
+    features:
+      self_service:
+        title: "Os teus clientes encomendam sozinhos"
+        description: "Dá a cada cliente o seu próprio login num portal personalizado. Navegam no teu catálogo, veem os seus preços e fazem encomendas — a qualquer hora, sem te ligar."
+        benefit_1: "Encomendas self-service 24/7"
+        benefit_2: "Interface mobile-friendly"
+        benefit_3: "Histórico e re-encomendas"
+      pricing:
+        title: "Preços em piloto automático"
+        description: "Define as tuas regras uma vez: descontos por volume, preços específicos por cliente, promoções sazonais. O Nodal calcula tudo automaticamente."
+        benefit_1: "Tabelas de preços por cliente"
+        benefit_2: "Descontos por volume"
+        benefit_3: "Promoções acumuláveis"
+      catalog:
+        title: "O teu catálogo, sempre atualizado"
+        description: "Carrega produtos uma vez. Mudas um preço? Todos veem instantaneamente. Chega de PDFs desatualizados ou \"deixa-me verificar o preço atual\"."
+        benefit_1: "Atualizações de preços em tempo real"
+        benefit_2: "Categorias de produtos"
+        benefit_3: "Visibilidade de stock"
+      analytics:
+        title: "Insights que impulsionam crescimento"
+        description: "Vê o que funciona e o que não funciona. O teu dashboard mostra tendências de receita, carrinhos abertos, desempenho de produtos e impacto de descontos — tudo em tempo real."
+        benefit_1: "Analytics de receita e encomendas"
+        benefit_2: "Carrinhos abertos e conversão"
+        benefit_3: "Desempenho de produtos e descontos"
+
+  # Why Nodal Section
+  why_nodal:
+    label: "PORQUÊ NODAL"
+    title: "Construído especificamente para PMEs"
+    subtitle: "Não é uma ferramenta enterprise diluída. Não é uma plataforma e-commerce genérica. Construído de raiz para como as pequenas empresas realmente funcionam."
+    reasons:
+      live_minutes:
+        number: "01"
+        title: "Online em 15 minutos"
+        description: "Sem programadores. Sem configuração complexa. Importa os teus produtos, convida o primeiro cliente, e estás a funcionar."
+      affordable:
+        number: "02"
+        title: "Acessível desde o primeiro dia"
+        description: "Começa grátis, cresce gradualmente. Os nossos preços escalam com o teu negócio — não com orçamentos enterprise."
+      tools:
+        number: "03"
+        title: "Funciona com as tuas ferramentas"
+        description: "Exporta para Excel, envia notificações por email, integra com o teu workflow existente sem problemas."
+      ai:
+        number: "04"
+        title: "IA que realmente ajuda"
+        description: "Não são apenas buzzwords. Obtém insights acionáveis sobre o que vender, quando reabastecer, e como crescer."
+
+  # Roadmap / Coming Soon Section
+  roadmap:
+    label: "EM BREVE"
+    title: "O que vem a seguir no Nodal"
+    subtitle: "Estamos a construir as funcionalidades que os negócios B2B realmente precisam. Aqui está o que está no pipeline."
+    in_development: "Em Desenvolvimento"
+    features:
+      ai_assistant:
+        title: "Assistente de Compras IA"
+        description: "Um assistente inteligente que ajuda os teus clientes a encontrar produtos, sugere re-encomendas baseado no histórico de compras, e responde a perguntas sobre o teu catálogo — 24/7."
+        benefit_1: "Recomendações inteligentes de produtos"
+        benefit_2: "Pesquisa em linguagem natural"
+        benefit_3: "Sugestões automáticas de re-encomenda"
+      team_chat:
+        title: "Chat de Equipa e Notificações"
+        description: "Comunicação em tempo real entre a tua equipa e clientes. Oferece suporte instantâneo e mantém todos atualizados com notificações automáticas de encomendas."
+        benefit_1: "Mensagens diretas com clientes"
+        benefit_2: "Atualizações de estado automáticas"
+        benefit_3: "Ferramentas de colaboração de equipa"
+      claims:
+        title: "Reclamações e Qualidade"
+        description: "Um sistema completo de gestão de reclamações para tratar problemas profissionalmente. Acompanha tendências de qualidade e gera scorecards automáticos para clientes e fornecedores."
+        benefit_1: "Workflow estruturado de reclamações"
+        benefit_2: "Analytics de qualidade de produto"
+        benefit_3: "Scorecards de fornecedores e clientes"
+
+  # Pricing Section
+  pricing:
+    label: "PREÇOS"
+    title: "Preços simples e transparentes"
+    subtitle: "Começa grátis. Atualiza quando estiveres pronto. Sem surpresas."
+    disclaimer: "Não é necessário cartão de crédito para começar."
+    per_month: "/mês"
+    tiers:
+      free:
+        badge: "BETA"
+        name: "Grátis"
+        description: "Grátis durante a fase Beta"
+        feature_1: "Até 10 produtos"
+        feature_2: "3 contas de cliente"
+        feature_3: "Gestão básica de encomendas"
+        feature_4: "Suporte por email"
+        cta: "Começar"
+      pro:
+        badge: "RECOMENDADO"
+        name: "Pro"
+        description: "Para negócios em crescimento"
+        feature_1: "Produtos ilimitados"
+        feature_2: "Clientes ilimitados"
+        feature_3: "Preços específicos por cliente"
+        feature_4: "Dashboard analytics avançado"
+        feature_5: "Branding personalizado"
+        feature_6: "Suporte prioritário"
+        cta: "Começar"
+      business:
+        name: "Business"
+        price: "Vamos conversar"
+        description: "Para operações estabelecidas"
+        feature_1: "Tudo do Pro"
+        feature_2: "Acesso API"
+        feature_3: "Integrações personalizadas"
+        feature_4: "Gestor de conta dedicado"
+        feature_5: "Garantia SLA"
+        feature_6: "Suporte telefónico"
+        cta: "Contactar"
+
+  # Results Section
+  results:
+    processing_time: "Redução no tempo de processamento"
+    fewer_errors: "Menos erros em encomendas"
+    saved_weekly: "Poupadas por semana em admin"
+    disclaimer: "Resultados médios baseados em dados de clientes"
+
+  # Contact Section
+  contact:
+    label: "CONTACTO"
+    title: "Entra em contacto"
+    subtitle: "Tens perguntas? Queres uma demo? Envia-nos uma mensagem e respondemos em 24 horas."
+    form:
+      name: "Nome"
+      name_placeholder: "O teu nome"
+      email: "Email"
+      email_placeholder: "tu@empresa.com"
+      company: "Empresa"
+      company_optional: "(opcional)"
+      company_placeholder: "Nome da tua empresa"
+      message: "Mensagem"
+      message_placeholder: "Como podemos ajudar?"
+      submit: "Enviar Mensagem"
+
+  # CTA Section
+  cta:
+    headline_html: "Os teus concorrentes já<br>estão a fazer isto"
+    subheadline: "Cada dia que esperas, estás a perder encomendas para negócios que tornam a compra fácil."
+    button: "Começar"
+    disclaimer: "Configuração em 15 minutos. Sem cartão de crédito."
+
+  # Footer
+  footer:
+    tagline: "A plataforma de encomendas B2B que cresce com o teu negócio."
+    product:
+      title: "Produto"
+      catalog_management: "Gestão de Catálogo"
+      order_management: "Gestão de Encomendas"
+      pricing_discounts: "Preços e Descontos"
+      analytics: "Analytics"
+      pricing: "Preços"
+    solutions:
+      title: "Soluções"
+      food_beverage: "Alimentação e Bebidas"
+      wholesale: "Distribuição Grossista"
+      manufacturing: "Indústria"
+      b2b_retail: "Retalho B2B"
+    resources:
+      title: "Recursos"
+      getting_started: "Começar"
+      help_center: "Centro de Ajuda"
+      api_docs: "Documentação API"
+      blog: "Blog"
+    company:
+      title: "Empresa"
+      about: "Sobre Nós"
+      contact: "Contacto"
+      careers: "Carreiras"
+      security: "Segurança"
+    legal:
+      rights: "Todos os direitos reservados."
+      privacy: "Política de Privacidade"
+      terms: "Termos de Serviço"
+
+  # Language Switcher
+  language:
+    en: "English"
+    pt: "Português"
+    es: "Español"
+    switch: "Idioma"
