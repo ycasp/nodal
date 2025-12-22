@@ -265,8 +265,8 @@
             A professional platform to manage orders, clients, and transactions — replacing chaos.
           </p>
           <div class="hero-cta-group">
-            <%= link_to "Get Started", "#", class: "btn btn-primary btn-lg hero-cta-primary" %>
-            <%= link_to "Book a Demo", "#", class: "btn btn-outline-dark btn-lg hero-cta-secondary" %>
+            <%= link_to "Get Started", "#contact", class: "btn btn-primary btn-lg hero-cta-primary" %>
+            <%= link_to "Book a Demo", "#contact", class: "btn btn-outline-dark btn-lg hero-cta-secondary" %>
           </div>
           <div class="hero-trust-badges">
             <span class="trust-badge"><i class="fas fa-check-circle"></i> Live in 15 minutes</span>
@@ -623,7 +623,7 @@
             <li><i class="fas fa-check"></i> Basic order management</li>
             <li><i class="fas fa-check"></i> Email support</li>
           </ul>
-          <%= link_to "Get Started", "#", class: "btn btn-outline-dark btn-pricing" %>
+          <%= link_to "Get Started", "#contact", class: "btn btn-outline-dark btn-pricing" %>
         </div>
 
         <!-- Pro Tier (Recommended) -->
@@ -647,7 +647,7 @@
             <li><i class="fas fa-check"></i> Custom branding</li>
             <li><i class="fas fa-check"></i> Priority support</li>
           </ul>
-          <%= link_to "Get Started", "#", class: "btn btn-primary btn-pricing" %>
+          <%= link_to "Get Started", "#contact", class: "btn btn-primary btn-pricing" %>
         </div>
 
         <!-- Business Tier -->
@@ -668,7 +668,7 @@
             <li><i class="fas fa-check"></i> SLA guarantee</li>
             <li><i class="fas fa-check"></i> Phone support</li>
           </ul>
-          <%= link_to "Contact Us", "#", class: "btn btn-outline-dark btn-pricing" %>
+          <%= link_to "Contact Us", "#contact", class: "btn btn-outline-dark btn-pricing" %>
         </div>
       </div>
 
@@ -701,7 +701,47 @@
   </section>
 
   <!-- ========================================
-       SECTION 9: FINAL CTA
+       SECTION 9: CONTACT FORM
+       Purpose: Lead capture
+       ======================================== -->
+  <section id="contact" class="contact-section" aria-labelledby="contact-heading">
+    <div class="container">
+      <header class="section-header">
+        <span class="section-label">CONTACT</span>
+        <h2 id="contact-heading" class="section-title">Get in touch</h2>
+        <p class="section-subtitle">
+          Have questions? Want a demo? Drop us a message and we'll get back to you within 24 hours.
+        </p>
+      </header>
+
+      <div class="contact-form-wrapper">
+        <form action="https://formspree.io/f/xrezyewy" method="POST" class="contact-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact-name">Name</label>
+              <input type="text" id="contact-name" name="name" required placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" name="email" required placeholder="you@company.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="contact-company">Company <span class="optional">(optional)</span></label>
+            <input type="text" id="contact-company" name="company" placeholder="Your company name">
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" rows="4" required placeholder="How can we help you?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 10: FINAL CTA
        Purpose: Final conversion opportunity
        ======================================== -->
   <section class="cta-section" aria-labelledby="cta-heading">
@@ -712,7 +752,7 @@
           Every day you wait, you're losing orders to businesses that make buying easy.
         </p>
         <div class="cta-buttons">
-          <%= link_to "Get Started", "#", class: "btn btn-outline-light btn-lg" %>
+          <%= link_to "Get Started", "#contact", class: "btn btn-outline-light btn-lg" %>
         </div>
         <p class="cta-disclaimer">Setup takes 15 minutes. No credit card required.</p>
       </div>
