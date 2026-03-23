@@ -7,6 +7,7 @@ module BrandingHelper
     primary_hover = darken_color(primary, 15)
     contrast = contrast_color(primary)
     primary_rgb = hex_to_rgb(primary)
+    secondary_rgb = hex_to_rgb(secondary)
 
     content_tag(:style) do
       <<~CSS.html_safe
@@ -16,6 +17,7 @@ module BrandingHelper
           --org-secondary: #{secondary};
           --org-primary-contrast: #{contrast};
           --org-primary-rgb: #{primary_rgb};
+          --org-secondary-rgb: #{secondary_rgb};
         }
       CSS
     end

@@ -6,6 +6,8 @@ module ErpSyncable
     scope :not_synced_from_erp, -> { where(external_id: nil) }
     scope :with_sync_errors, -> { where.not(sync_error: nil) }
     scope :sync_stale, ->(hours = 24) { where('last_synced_at < ?', hours.hours.ago) }
+
+    before_update :sync_external_id_with_sku, if: :should_sync_external_id?
   end
 
   def synced_from_erp?
@@ -43,5 +45,21 @@ module ErpSyncable
     def find_by_external_id(external_id, source:)
       find_by(external_id: external_id, external_source: source)
     end
+  end
+
+  private
+
+  # When a user changes the SKU and the old SKU matched the external_id,
+  # update external_id to follow the new SKU so the sync links to the
+  # correct ERP entry.
+  def should_sync_external_id?
+    return false unless respond_to?(:sku) && sku_changed?
+    return false unless external_id.present?
+
+    sku_was == external_id
+  end
+
+  def sync_external_id_with_sku
+    self.external_id = sku
   end
 end

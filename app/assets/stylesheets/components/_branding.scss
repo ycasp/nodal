@@ -3,124 +3,163 @@
 @import "../config/colors";
 
 // Storefront-specific overrides using CSS custom properties
-// These only apply when the --org-primary variable is set
+// These only apply within the .storefront-layout context to prevent
+// bleeding into landing page and other non-tenant pages via Turbo navigation
 
-.btn-primary {
-  background-color: var(--org-primary, $teal);
-  border-color: var(--org-primary, $teal);
-  color: var(--org-primary-contrast, #ffffff);
-
-  &:hover,
-  &:focus {
-    background-color: var(--org-primary-hover, $teal-dark);
-    border-color: var(--org-primary-hover, $teal-dark);
-    color: var(--org-primary-contrast, #ffffff);
-  }
-
-  &:active,
-  &.active {
-    background-color: var(--org-primary-hover, $teal-dark);
-    border-color: var(--org-primary-hover, $teal-dark);
-  }
-}
-
-.btn-outline-primary {
-  border-color: var(--org-primary, $teal);
-  color: var(--org-primary, $teal);
-
-  &:hover,
-  &:focus,
-  &:active,
-  &.active {
+.storefront-layout {
+  .btn-primary {
     background-color: var(--org-primary, $teal);
     border-color: var(--org-primary, $teal);
     color: var(--org-primary-contrast, #ffffff);
-  }
-}
 
-// Override Bootstrap dropdown active state
-.dropdown-item.active,
-.dropdown-item:active {
-  background-color: var(--org-primary, $teal);
-  color: var(--org-primary-contrast, #ffffff);
-}
+    &:hover,
+    &:focus {
+      background-color: var(--org-primary-hover, $teal-dark);
+      border-color: var(--org-primary-hover, $teal-dark);
+      color: var(--org-primary-contrast, #ffffff);
+    }
 
-// Links with primary color
-a.text-primary {
-  color: var(--org-primary, $teal) !important;
-
-  &:hover {
-    color: var(--org-primary-hover, $teal-dark) !important;
-  }
-}
-
-// Badge primary
-.badge.bg-primary {
-  background-color: var(--org-primary, $teal) !important;
-  color: var(--org-primary-contrast, #ffffff);
-}
-
-// Map Bootstrap success colors to org branding
-// This ensures discount badges, success messages, etc. use the org's primary color
-.bg-success {
-  background-color: var(--org-primary, $teal) !important;
-}
-
-.text-success {
-  color: var(--org-primary, $teal) !important;
-}
-
-.bg-success-subtle {
-  background-color: rgba(var(--org-primary-rgb, 0, 128, 96), 0.1) !important;
-}
-
-.btn-success {
-  background-color: var(--org-primary, $teal);
-  border-color: var(--org-primary, $teal);
-  color: #ffffff;
-
-  &:hover,
-  &:focus {
-    background-color: var(--org-primary-hover, $teal-dark);
-    border-color: var(--org-primary-hover, $teal-dark);
-    color: #ffffff;
+    &:active,
+    &.active {
+      background-color: var(--org-primary-hover, $teal-dark);
+      border-color: var(--org-primary-hover, $teal-dark);
+    }
   }
 
-  &:active,
-  &.active {
-    background-color: var(--org-primary-hover, $teal-dark);
-    border-color: var(--org-primary-hover, $teal-dark);
-    color: #ffffff;
-  }
-}
-
-.badge.bg-success {
-  background-color: var(--org-primary, $teal) !important;
-  color: var(--org-primary-contrast, #ffffff);
-}
-
-// Override text-primary for all elements (not just links)
-.text-primary {
-  color: var(--org-primary, $teal) !important;
-}
-
-// Override Bootstrap form controls (radio buttons, checkboxes)
-.form-check-input:checked {
-  background-color: var(--org-primary, $teal);
-  border-color: var(--org-primary, $teal);
-}
-
-.form-check-input:focus {
-  border-color: var(--org-primary, $teal);
-  box-shadow: 0 0 0 0.25rem rgba(var(--org-primary-rgb, 0, 128, 96), 0.25);
-}
-
-// Breadcrumb links use org secondary color
-.breadcrumb a {
-  color: var(--org-secondary, $dark);
-  text-decoration: none;
-
-  &:hover {
+  .btn-outline-primary {
+    border-color: var(--org-primary, $teal);
     color: var(--org-primary, $teal);
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background-color: var(--org-primary, $teal);
+      border-color: var(--org-primary, $teal);
+      color: var(--org-primary-contrast, #ffffff);
+    }
+  }
+
+  // Override Bootstrap dropdown active state
+  .dropdown-item.active,
+  .dropdown-item:active {
+    background-color: var(--org-primary, $teal);
+    color: var(--org-primary-contrast, #ffffff);
+  }
+
+  // Links with primary color
+  a.text-primary {
+    color: var(--org-primary, $teal) !important;
+
+    &:hover {
+      color: var(--org-primary-hover, $teal-dark) !important;
+    }
+  }
+
+  // Badge primary
+  .badge.bg-primary {
+    background-color: var(--org-primary, $teal) !important;
+    color: var(--org-primary-contrast, #ffffff);
+  }
+
+  // Map Bootstrap success colors to org branding
+  // This ensures discount badges, success messages, etc. use the org's primary color
+  .bg-success {
+    background-color: var(--org-primary, $teal) !important;
+  }
+
+  .text-success {
+    color: var(--org-primary, $teal) !important;
+  }
+
+  .bg-success-subtle {
+    background-color: rgba(var(--org-primary-rgb, 0, 128, 96), 0.1) !important;
+  }
+
+  .btn-success {
+    background-color: var(--org-primary, $teal);
+    border-color: var(--org-primary, $teal);
+    color: #ffffff;
+
+    &:hover,
+    &:focus {
+      background-color: var(--org-primary-hover, $teal-dark);
+      border-color: var(--org-primary-hover, $teal-dark);
+      color: #ffffff;
+    }
+
+    &:active,
+    &.active {
+      background-color: var(--org-primary-hover, $teal-dark);
+      border-color: var(--org-primary-hover, $teal-dark);
+      color: #ffffff;
+    }
+  }
+
+  .badge.bg-success {
+    background-color: var(--org-primary, $teal) !important;
+    color: var(--org-primary-contrast, #ffffff);
+  }
+
+  // Override text-primary for all elements (not just links)
+  .text-primary {
+    color: var(--org-primary, $teal) !important;
+  }
+
+  // Override Bootstrap form controls (radio buttons, checkboxes)
+  .form-check-input:checked {
+    background-color: var(--org-primary, $teal);
+    border-color: var(--org-primary, $teal);
+  }
+
+  .form-check-input:focus {
+    border-color: var(--org-primary, $teal);
+    box-shadow: 0 0 0 0.25rem rgba(var(--org-primary-rgb, 0, 128, 96), 0.25);
+  }
+
+  // Breadcrumb links use org secondary color
+  .breadcrumb a {
+    color: var(--org-secondary, $dark);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--org-primary, $teal);
+    }
+  }
+
+  // Cart badge uses org secondary color
+  .cart-badge {
+    background-color: var(--org-secondary, $dark) !important;
+    color: #ffffff;
+  }
+
+  // Pagination uses org secondary color
+  .pagination {
+    .page-link {
+      color: var(--org-secondary, $dark);
+      border-color: #dee2e6;
+
+      &:hover {
+        color: var(--org-primary-contrast, #ffffff);
+        background-color: var(--org-secondary, $dark);
+        border-color: var(--org-secondary, $dark);
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(var(--org-primary-rgb, 0, 128, 96), 0.25);
+      }
+    }
+
+    .page-item.active .page-link {
+      background-color: var(--org-secondary, $dark);
+      border-color: var(--org-secondary, $dark);
+      color: var(--org-primary-contrast, #ffffff);
+    }
+
+    .page-item.disabled .page-link {
+      color: #6c757d;
+      background-color: #fff;
+      border-color: #dee2e6;
+    }
   }
 }

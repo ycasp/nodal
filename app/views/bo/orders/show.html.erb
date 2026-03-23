@@ -1,21 +1,20 @@
 <% content_for :bo_main_content do%>
 
-<div class="container-fluid py-4">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-start mb-4">
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_orders_path(org_slug: @current_organisation.slug), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
       <div>
-        <h1 class="h3 mb-0"><%= t('bo.orders.show.title') %></h1>
-        <div class="text-muted">
+        <h1><%= t('bo.orders.show.title') %></h1>
+        <p>
           <span class="fw-bold text-dark"><%= @order.order_number %></span>
           <span class="ms-2"><%= @order.placed_at&.strftime("%B %d, %Y") || @order.created_at.strftime("%B %d, %Y") %></span>
-        </div>
+        </p>
       </div>
     </div>
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <% status_bg_class = case @order.status
          when 'completed' then 'bg-success'
          when 'in_process', 'processed' then 'bg-primary'
@@ -33,7 +32,7 @@
       <span class="badge <%= payment_bg_class %> rounded-pill px-3 py-2">
         <%= t('bo.orders.show.payment') %>: <%= t("bo.common.payment_statuses.#{@order.payment_status}") %>
       </span>
-      <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "btn btn-outline-primary" do %>
+      <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: @order.id, **filter_params_hash), class: "btn btn-outline-primary" do %>
         <i class="fa-solid fa-pen-to-square me-1"></i> <%= t('bo.common.actions.edit') %>
       <% end %>
       <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id), method: :delete, form: { class: "d-inline" }, class: "btn btn-outline-danger", data: { turbo_confirm: t('bo.common.confirm.delete_order', number: @order.order_number) } do %>
@@ -41,7 +40,9 @@
       <% end %>
     </div>
   </div>
+</div>
 
+<div class="bo-page-body">
   <div class="row">
     <!-- Left Column -->
     <div class="col-lg-8">
@@ -133,6 +134,18 @@
                   <% end %>
                 </span>
                 <span>-<%= humanized_money_with_symbol(@order.order_discount_amount) %></span>
+              </div>
+            <% end %>
+
+            <% if @order.promo_code_discount_amount_cents.present? && @order.promo_code_discount_amount_cents > 0 %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>
+                  <i class="fa-solid fa-ticket me-1"></i> <%= t('bo.orders.show.promo_code_discount') %>
+                  <% if @order.promo_code.present? %>
+                    <span class="font-monospace">(<%= @order.promo_code.code %>)</span>
+                  <% end %>
+                </span>
+                <span>-<%= humanized_money_with_symbol(@order.promo_code_discount) %></span>
               </div>
             <% end %>
 
@@ -346,3 +359,4 @@
 </div>
 
 <% end %>
+

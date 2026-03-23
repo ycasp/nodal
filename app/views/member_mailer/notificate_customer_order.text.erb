@@ -31,6 +31,9 @@ humanized_money_with_symbol(@order.auto_order_discount_amount) %>
 Manual Discount (<%= @order.order_discount_display %>): -<%=
 humanized_money_with_symbol(@order.order_discount_amount) %>
 <% end %>
+<% if @order.has_promo_code? && @order.promo_code_discount.positive? %>
+Promo Code (<%= @order.promo_code.code %>): -<%= humanized_money_with_symbol(@order.promo_code_discount) %>
+<% end %>
 Tax: <%= humanized_money_with_symbol(@order.tax_amount || @order.calculated_tax) %>
 Shipping: <%= humanized_money_with_symbol(@order.shipping_amount || @order.calculated_shipping) %>
 Grand Total: <%= humanized_money_with_symbol(@order.grand_total) %>

@@ -1,0 +1,34 @@
+<% if current_customer %>
+  <% lists = current_customer.shopping_lists.where(organisation: current_organisation).ordered %>
+  <div class="dropdown mt-3" data-controller="list-quantity-sync">
+    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-action="click->list-quantity-sync#sync">
+      <i class="fa-solid fa-clipboard-list me-1"></i> <%= t('storefront.products.show.add_to_list') %>
+    </button>
+    <ul class="dropdown-menu">
+      <% if lists.any? %>
+        <% lists.each do |list| %>
+          <li>
+            <%= form_with url: shopping_list_items_path(org_slug: params[:org_slug], shopping_list_id: list), method: :post, data: { turbo: false }, class: "dropdown-item-form" do %>
+              <%= hidden_field_tag :product_id, product.id %>
+              <% if has_variants && default_variant %>
+                <%= hidden_field_tag :variant_id, default_variant.id, data: { variant_selector_target: "addToListVariantId" } %>
+              <% elsif default_variant %>
+                <%= hidden_field_tag :variant_id, default_variant.id %>
+              <% end %>
+              <%= hidden_field_tag "shopping_list_item[quantity]", 1, data: { list_quantity_sync_target: "quantity" } %>
+              <button type="submit" class="dropdown-item">
+                <i class="fa-solid fa-plus me-2 text-muted"></i><%= list.name %>
+              </button>
+            <% end %>
+          </li>
+        <% end %>
+        <li><hr class="dropdown-divider"></li>
+      <% end %>
+      <li>
+        <%= link_to new_shopping_list_path(org_slug: params[:org_slug]), class: "dropdown-item" do %>
+          <i class="fa-solid fa-plus-circle me-2 text-primary"></i><%= t('storefront.products.show.create_new_list') %>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+<% end %>

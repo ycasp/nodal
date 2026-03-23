@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do%>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_product_path(params[:org_slug], @product), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_product_path(params[:org_slug], @product, filter_params_hash), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded bg-primary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
@@ -16,13 +16,13 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.products.edit.title') %></h4>
-        <span class="text-muted"><%= @product.name %></span>
+        <h1><%= t('bo.products.edit.title') %></h1>
+        <p><%= @product.name %></p>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
-      <%= link_to bo_product_path(params[:org_slug], @product), class: "btn btn-outline-secondary" do %>
+    <div class="bo-page-actions">
+      <%= link_to bo_product_path(params[:org_slug], @product, filter_params_hash), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
       <button type="submit" form="product-form" class="btn btn-primary">
@@ -32,7 +32,8 @@
   </div>
 </div>
 
-<%= form_with model: @product, url: bo_product_path(params[:org_slug], @product), method: :patch, id: "product-form", multipart: true do |f| %>
+<div class="bo-page-body">
+<%= form_with model: @product, url: bo_product_path(params[:org_slug], @product, filter_params_hash), method: :patch, id: "product-form", multipart: true do |f| %>
   <div class="row g-3">
     <div class="col-md-8">
       <div class="card mb-3">
@@ -61,15 +62,28 @@
           <div class="row g-3 mt-1">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.products.form.categories') %> <span class="text-danger">*</span></label>
-              <%
-                category_options = current_organisation.categories.kept
-                  .order(:ancestry, :position)
-                  .map { |c| [c.full_path, c.id] }
-              %>
-              <%= f.select :category_ids,
-                    category_options,
-                    {},
-                    { class: "form-select", multiple: true, size: 5, required: true } %>
+              <div data-controller="checkbox-select">
+                <input type="text"
+                       class="form-control form-control-sm mb-2"
+                       placeholder="<%= t('bo.products.form.search_categories') %>"
+                       data-checkbox-select-target="search"
+                       data-action="input->checkbox-select#filter">
+                <div class="border rounded p-2" style="max-height: 200px; overflow-y: auto;">
+                  <% current_organisation.categories.kept.order(:ancestry, :position).each do |category| %>
+                    <div class="form-check" data-checkbox-select-target="item" data-label="<%= category.full_path %>">
+                      <input type="checkbox"
+                             name="product[category_ids][]"
+                             value="<%= category.id %>"
+                             class="form-check-input"
+                             id="category_<%= category.id %>"
+                             <%= 'checked' if @product.category_ids.include?(category.id) %>>
+                      <label class="form-check-label" for="category_<%= category.id %>">
+                        <%= category.full_path %>
+                      </label>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
               <small class="text-muted"><%= t('bo.products.form.categories_hint') %></small>
             </div>
             <div class="col-md-6">
@@ -116,10 +130,26 @@
           <% if @product.photos.attached? && @product.photos.any? %>
             <div class="mb-3">
               <label class="form-label"><%= t('bo.products.form.current_images') %></label>
-              <div class="d-flex flex-wrap gap-2">
+              <div class="d-flex flex-wrap gap-2" data-controller="lightbox">
+                <% main_blob_id = @product.cover_photo_blob_id || @product.photos.first&.blob_id %>
                 <% @product.photos.each do |photo| %>
                   <div class="position-relative border rounded p-1" style="width: 120px;">
-                    <%= image_tag photo, style: "width: 100%; height: 100px; object-fit: cover; border-radius: 4px;" %>
+                    <a href="#" data-action="lightbox#open" data-lightbox-url="<%= url_for(photo) %>" style="cursor: zoom-in;">
+                      <%= image_tag photo, style: "width: 100%; height: 100px; object-fit: cover; border-radius: 4px;" %>
+                    </a>
+                    <% if photo.blob_id == main_blob_id %>
+                      <span class="position-absolute badge bg-primary" style="bottom: 4px; left: 50%; transform: translateX(-50%); font-size: 10px;">
+                        <%= t('bo.products.form.main') %>
+                      </span>
+                    <% else %>
+                      <%= link_to set_main_photo_bo_product_path(params[:org_slug], @product, photo_id: photo.blob_id),
+                          data: { turbo_method: :patch },
+                          class: "position-absolute btn btn-primary btn-sm",
+                          style: "bottom: 4px; left: 50%; transform: translateX(-50%); font-size: 9px; padding: 1px 6px;",
+                          title: t('bo.products.form.set_as_main') do %>
+                        <i class="fa-solid fa-star" style="font-size: 9px;"></i>
+                      <% end %>
+                    <% end %>
                     <%= link_to delete_photo_bo_product_path(params[:org_slug], @product, photo_id: photo.id),
                         data: { turbo_method: :delete, turbo_confirm: t('bo.common.confirm.delete_image') },
                         class: "position-absolute top-0 end-0 btn btn-danger btn-sm rounded-circle",
@@ -128,6 +158,7 @@
                     <% end %>
                   </div>
                 <% end %>
+                <%= render "shared/lightbox" %>
               </div>
             </div>
           <% end %>
@@ -151,6 +182,12 @@
             <label class="form-check-label" for="availableSwitch"><%= t('bo.products.form.available_for_sale') %></label>
           </div>
           <small class="text-muted"><%= t('bo.products.form.unavailable_hint') %></small>
+
+          <div class="form-check form-switch mt-3">
+            <%= f.check_box :price_on_request, class: "form-check-input", role: "switch", id: "priceOnRequestSwitch" %>
+            <label class="form-check-label" for="priceOnRequestSwitch"><%= t('bo.products.form.price_on_request') %></label>
+          </div>
+          <small class="text-muted"><%= t('bo.products.form.price_on_request_hint') %></small>
         </div>
       </div>
 
@@ -189,5 +226,6 @@
     </div>
   </div>
 <% end %>
+</div>
 
 <% end %>

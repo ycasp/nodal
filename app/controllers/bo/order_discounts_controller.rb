@@ -12,8 +12,13 @@ class Bo::OrderDiscountsController < Bo::BaseController
     authorize @discount
 
     if @discount.save
-      CustomerMailer.with(discount: @discount, organisation: current_organisation).notify_clients_about_discount.deliver_now
-      redirect_to bo_pricing_path(params[:org_slug], tab: 'order_tiers'),
+      notification = DiscountEmailNotification.create!(
+        notifiable: @discount,
+        organisation: current_organisation,
+        status: 'pending',
+        recipient_count: DiscountEmailNotification.recipient_count_for(@discount, current_organisation)
+      )
+      redirect_to bo_pricing_path(params[:org_slug], tab: 'order_tiers', notification_id: notification.id),
                   notice: "Order discount created successfully."
     else
       render :new, status: :unprocessable_entity

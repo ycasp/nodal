@@ -89,7 +89,7 @@
               <% end %>
 
               <% if policy(org_member).edit? %>
-                <%= link_to edit_bo_team_member_path(params[:org_slug], org_member), class: "btn btn-sm btn-link text-muted", title: t('bo.team_members.index.edit_role') do %>
+                <%= link_to edit_bo_team_member_path(params[:org_slug], org_member), class: "btn btn-sm btn-link text-muted", title: is_self ? t('bo.team_members.index.edit_profile', default: 'Edit profile') : t('bo.team_members.index.edit_role') do %>
                   <i class="fa-solid fa-pen-to-square"></i>
                 <% end %>
               <% end %>

@@ -9,8 +9,8 @@ module Erp
     end
 
     def self.from_response(response)
-      status_code = response.status
-      body = response.body
+      status_code = response[:status]
+      body = response[:body]
 
       message = case status_code
       when 401

@@ -1,0 +1,86 @@
+<turbo-frame id="product_picker">
+  <%# Search and filter bar %>
+  <div class="d-flex gap-2 mb-3 flex-wrap">
+    <%= form_with url: product_picker_shopping_list_path(org_slug: params[:org_slug], id: shopping_list), method: :get, data: { turbo_frame: "product_picker" }, class: "d-flex gap-2 flex-grow-1" do %>
+      <div class="flex-grow-1">
+        <%= text_field_tag :search, params[:search], class: "form-control form-control-sm", placeholder: t('storefront.shopping_lists.product_picker.search_placeholder') %>
+      </div>
+      <% if categories.any? %>
+        <%= select_tag :category_id, options_from_collection_for_select(categories, :id, :name, params[:category_id]&.to_i), include_blank: t('storefront.shopping_lists.product_picker.all_categories'), class: "form-select form-select-sm", style: "max-width: 200px;" %>
+      <% end %>
+      <button type="submit" class="btn btn-outline-primary btn-sm">
+        <i class="fa-solid fa-search"></i>
+      </button>
+    <% end %>
+  </div>
+
+  <%# Product rows %>
+  <% if products.any? %>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle table-sm mb-0">
+        <thead class="table-light">
+          <tr>
+            <th style="width: 50px;"></th>
+            <th><%= t('storefront.shopping_lists.product_picker.product') %></th>
+            <th style="width: 120px;"><%= t('storefront.shopping_lists.product_picker.price') %></th>
+            <th style="width: 200px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.each do |product| %>
+            <tr>
+              <td>
+                <% if product.photo_attached? %>
+                  <%= image_tag product.photo.variant(resize_to_limit: [40, 40]), class: "rounded", style: "width: 36px; height: 36px; object-fit: cover;" %>
+                <% else %>
+                  <div class="rounded d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #f1f5f9;">
+                    <i class="fa-solid fa-image text-muted" style="font-size: 0.7rem;"></i>
+                  </div>
+                <% end %>
+              </td>
+              <td>
+                <div class="fw-medium small"><%= product.name %></div>
+                <% if product.sku.present? %>
+                  <small class="text-muted">SKU: <%= product.sku %></small>
+                <% end %>
+              </td>
+              <td>
+                <% if product.price_on_request? %>
+                  <small class="text-muted"><%= t('storefront.products.index.price_on_request') %></small>
+                <% else %>
+                  <small class="fw-medium"><%= product.display_price %></small>
+                <% end %>
+              </td>
+              <td>
+                <%= form_with url: shopping_list_items_path(org_slug: params[:org_slug], shopping_list_id: shopping_list), method: :post, class: "d-flex align-items-center gap-1" do %>
+                  <%= hidden_field_tag :product_id, product.id %>
+                  <% if product.has_variants? && product.product_variants.available.count > 1 %>
+                    <%= select_tag :variant_id,
+                      options_from_collection_for_select(product.product_variants.available.by_position, :id, :option_values_string, product.default_variant&.id),
+                      class: "form-select form-select-sm", style: "max-width: 100px; font-size: 0.75rem;" %>
+                  <% elsif product.default_variant %>
+                    <%= hidden_field_tag :variant_id, product.default_variant.id %>
+                  <% end %>
+                  <%= number_field_tag "shopping_list_item[quantity]", 1, min: 1, class: "form-control form-control-sm text-center", style: "width: 55px;" %>
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if pagy.pages > 1 %>
+      <div class="d-flex justify-content-center mt-3">
+        <%== pagy_bootstrap_nav(pagy) %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="text-center py-3">
+      <p class="text-muted small mb-0"><%= t('storefront.shopping_lists.product_picker.no_products') %></p>
+    </div>
+  <% end %>
+</turbo-frame>

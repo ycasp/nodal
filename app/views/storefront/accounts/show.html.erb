@@ -1,0 +1,230 @@
+<div class="container-fluid py-4 px-md-5">
+  <h1 class="h3 mb-4"><i class="fa-solid fa-user-gear me-2"></i><%= t('storefront.account.show.title') %></h1>
+
+  <style>
+    #accountAccordion .accordion-button { font-weight: 600; font-size: 1.05rem; }
+    #accountAccordion .accordion-button.collapsed { background-color: #f8f9fa; color: #6c757d; }
+    #accountAccordion .accordion-button:not(.collapsed) { background-color: #fff; color: #212529; }
+    #accountAccordion .form-label { font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem; }
+  </style>
+
+  <div class="accordion" id="accountAccordion">
+    <%# ── Section 1: Company & Contact Info ── %>
+    <div class="accordion-item border-0 shadow-sm mb-3" style="border-radius: 12px; overflow: hidden;">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#profileSection">
+          <i class="fa-solid fa-building me-2"></i><%= t('storefront.account.show.company_info') %>
+        </button>
+      </h2>
+      <div id="profileSection" class="accordion-collapse collapse show" data-bs-parent="#accountAccordion">
+        <div class="accordion-body">
+          <%= form_with model: @customer, url: account_path(org_slug: params[:org_slug]), method: :patch, id: "profile-form" do |f| %>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><%= t('storefront.account.show.company_name') %></label>
+                <%= f.text_field :company_name, class: "form-control" %>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><%= t('storefront.account.show.taxpayer_id') %></label>
+                <%= f.text_field :taxpayer_id, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+              <div class="col-md-6">
+                <label class="form-label"><%= t('storefront.account.show.contact_name') %></label>
+                <%= f.text_field :contact_name, class: "form-control" %>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><%= t('storefront.account.show.email') %></label>
+                <%= f.email_field :email, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+              <div class="col-md-6">
+                <label class="form-label"><%= t('storefront.account.show.phone') %></label>
+                <%= f.text_field :contact_phone, class: "form-control" %>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-check me-1"></i><%= t('storefront.account.show.save_profile') %>
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Section 2: Addresses ── %>
+    <div class="accordion-item border-0 shadow-sm mb-3" style="border-radius: 12px; overflow: hidden;">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addressesSection">
+          <i class="fa-solid fa-location-dot me-2"></i><%= t('storefront.account.show.addresses') %>
+        </button>
+      </h2>
+      <div id="addressesSection" class="accordion-collapse collapse" data-bs-parent="#accountAccordion">
+        <div class="accordion-body">
+          <%= form_with model: @customer, url: account_path(org_slug: params[:org_slug]), method: :patch, id: "addresses-form" do |f| %>
+            <%# Billing Address %>
+            <h6 class="mb-3"><%= t('storefront.account.show.billing_address') %></h6>
+
+            <%= f.fields_for :billing_address_with_archived do |ba| %>
+              <%= ba.hidden_field :address_type, value: "billing" %>
+
+              <div class="row g-3">
+                <div class="col-md-8">
+                  <label class="form-label"><%= t('storefront.account.show.address.street') %></label>
+                  <%= ba.text_field :street_name, class: "form-control" %>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"><%= t('storefront.account.show.address.number') %></label>
+                  <%= ba.text_field :street_nr, class: "form-control" %>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"><%= t('storefront.account.show.address.postal_code') %></label>
+                  <%= ba.text_field :postal_code, class: "form-control" %>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"><%= t('storefront.account.show.address.city') %></label>
+                  <%= ba.text_field :city, class: "form-control" %>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label"><%= t('storefront.account.show.address.country') %></label>
+                  <%= ba.text_field :country, class: "form-control" %>
+                </div>
+              </div>
+            <% end %>
+
+            <hr class="my-4">
+
+            <%# Shipping Addresses %>
+            <h6 class="mb-3"><%= t('storefront.account.show.shipping_addresses') %></h6>
+
+            <div data-controller="nested-addresses">
+              <div data-nested-addresses-target="container">
+                <%= f.fields_for :shipping_addresses_with_archived do |sa| %>
+                  <%= render "shipping_address_fields", f: sa %>
+                <% end %>
+              </div>
+
+              <template data-nested-addresses-target="template">
+                <%= f.fields_for(
+                  :shipping_addresses_with_archived,
+                  Address.new(address_type: "shipping", active: true),
+                  child_index: "NEW_RECORD"
+                ) do |sa| %>
+                  <%= render "shipping_address_fields", f: sa %>
+                <% end %>
+              </template>
+
+              <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                      data-action="nested-addresses#add">
+                <i class="fa-solid fa-plus me-1"></i><%= t('storefront.account.show.add_shipping_address') %>
+              </button>
+            </div>
+
+            <div class="mt-4">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-check me-1"></i><%= t('storefront.account.show.save_addresses') %>
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Section 3: Email Notifications ── %>
+    <div class="accordion-item border-0 shadow-sm mb-3" style="border-radius: 12px; overflow: hidden;">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#emailSection">
+          <i class="fa-solid fa-envelope me-2"></i><%= t('storefront.account.show.email_notifications') %>
+        </button>
+      </h2>
+      <div id="emailSection" class="accordion-collapse collapse" data-bs-parent="#accountAccordion">
+        <div class="accordion-body">
+          <%= form_with model: @customer, url: account_path(org_slug: params[:org_slug]), method: :patch, id: "email-form" do |f| %>
+            <div class="form-check form-switch">
+              <%= f.check_box :email_notifications_enabled, class: "form-check-input", role: "switch", id: "emailNotificationsSwitch" %>
+              <label class="form-check-label" for="emailNotificationsSwitch"><%= t('storefront.account.show.email_notifications_label') %></label>
+            </div>
+            <small class="text-muted"><%= t('storefront.account.show.email_notifications_hint') %></small>
+
+            <div class="mt-4">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-check me-1"></i><%= t('storefront.account.show.save_preferences') %>
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Section 3: Language ── %>
+    <div class="accordion-item border-0 shadow-sm mb-3" style="border-radius: 12px; overflow: hidden;">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#languageSection">
+          <i class="fa-solid fa-globe me-2"></i><%= t('storefront.account.show.language') %>
+        </button>
+      </h2>
+      <div id="languageSection" class="accordion-collapse collapse" data-bs-parent="#accountAccordion">
+        <div class="accordion-body">
+          <div class="d-flex flex-wrap gap-2">
+            <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'en'),
+                        data: { turbo_method: :patch },
+                        class: "btn #{ I18n.locale == :en ? 'btn-primary' : 'btn-outline-secondary' }" do %>
+              English
+            <% end %>
+            <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'pt'),
+                        data: { turbo_method: :patch },
+                        class: "btn #{ I18n.locale == :pt ? 'btn-primary' : 'btn-outline-secondary' }" do %>
+              Português
+            <% end %>
+            <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'es'),
+                        data: { turbo_method: :patch },
+                        class: "btn #{ I18n.locale == :es ? 'btn-primary' : 'btn-outline-secondary' }" do %>
+              Español
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Section 4: Change Password ── %>
+    <div class="accordion-item border-0 shadow-sm mb-3" style="border-radius: 12px; overflow: hidden;">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#passwordSection">
+          <i class="fa-solid fa-lock me-2"></i><%= t('storefront.account.show.change_password') %>
+        </button>
+      </h2>
+      <div id="passwordSection" class="accordion-collapse collapse" data-bs-parent="#accountAccordion">
+        <div class="accordion-body">
+          <%= form_with model: @customer, url: account_path(org_slug: params[:org_slug]), method: :patch, id: "password-form" do |f| %>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label"><%= t('storefront.account.show.current_password') %></label>
+                <%= f.password_field :current_password, class: "form-control", autocomplete: "current-password" %>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><%= t('storefront.account.show.new_password') %></label>
+                <%= f.password_field :password, class: "form-control", autocomplete: "new-password" %>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><%= t('storefront.account.show.password_confirmation') %></label>
+                <%= f.password_field :password_confirmation, class: "form-control", autocomplete: "new-password" %>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-key me-1"></i><%= t('storefront.account.show.update_password') %>
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

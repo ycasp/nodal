@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do%>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_products_path(params[:org_slug]), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_products_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
@@ -12,12 +12,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.products.new.title') %></h4>
+        <h1><%= t('bo.products.new.title') %></h1>
         <span class="text-muted"><%= t('bo.products.new.subtitle') %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_products_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -27,6 +27,8 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
 
 <%= form_with model: @product, url: bo_products_path(params[:org_slug]), method: :post, id: "product-form", multipart: true do |f| %>
   <div class="row g-3">
@@ -57,15 +59,28 @@
           <div class="row g-3 mt-1">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.products.form.categories') %> <span class="text-danger">*</span></label>
-              <%
-                category_options = current_organisation.categories.kept
-                  .order(:ancestry, :position)
-                  .map { |c| [c.full_path, c.id] }
-              %>
-              <%= f.select :category_ids,
-                    category_options,
-                    {},
-                    { class: "form-select", multiple: true, size: 5, required: true } %>
+              <div data-controller="checkbox-select">
+                <input type="text"
+                       class="form-control form-control-sm mb-2"
+                       placeholder="<%= t('bo.products.form.search_categories') %>"
+                       data-checkbox-select-target="search"
+                       data-action="input->checkbox-select#filter">
+                <div class="border rounded p-2" style="max-height: 200px; overflow-y: auto;">
+                  <% current_organisation.categories.kept.order(:ancestry, :position).each do |category| %>
+                    <div class="form-check" data-checkbox-select-target="item" data-label="<%= category.full_path %>">
+                      <input type="checkbox"
+                             name="product[category_ids][]"
+                             value="<%= category.id %>"
+                             class="form-check-input"
+                             id="category_<%= category.id %>"
+                             <%= 'checked' if @product.category_ids.include?(category.id) %>>
+                      <label class="form-check-label" for="category_<%= category.id %>">
+                        <%= category.full_path %>
+                      </label>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
               <small class="text-muted"><%= t('bo.products.form.categories_hint') %></small>
             </div>
             <div class="col-md-6">
@@ -128,10 +143,18 @@
             <label class="form-check-label" for="availableSwitch"><%= t('bo.products.form.available_for_sale') %></label>
           </div>
           <small class="text-muted"><%= t('bo.products.form.unavailable_hint') %></small>
+
+          <div class="form-check form-switch mt-3">
+            <%= f.check_box :price_on_request, class: "form-check-input", role: "switch", id: "priceOnRequestSwitch" %>
+            <label class="form-check-label" for="priceOnRequestSwitch"><%= t('bo.products.form.price_on_request') %></label>
+          </div>
+          <small class="text-muted"><%= t('bo.products.form.price_on_request_hint') %></small>
         </div>
       </div>
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>

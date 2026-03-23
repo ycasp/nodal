@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do%>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_team_members_path(params[:org_slug]), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_team_members_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -12,12 +12,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.team_members.new.title') %></h4>
+        <h1><%= t('bo.team_members.new.title') %></h1>
         <span class="text-muted"><%= t('bo.team_members.new.subtitle', organisation: current_organisation.name) %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_team_members_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -27,6 +27,8 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
 
 <%= form_with model: @org_member, url: bo_team_members_path(params[:org_slug]), method: :post, id: "invite-form" do |f| %>
   <div class="row g-3">
@@ -101,5 +103,7 @@
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>

@@ -26,6 +26,14 @@ module Erp
       self.class.name.demodulize.underscore.gsub('_adapter', '')
     end
 
+    def supports_push?
+      false
+    end
+
+    def push_order(_data)
+      raise NotImplementedError, "#{self.class} does not support pushing orders"
+    end
+
     protected
 
     def http_client

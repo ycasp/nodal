@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_pricing_path(params[:org_slug], tab: 'client_tiers'), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_pricing_path(params[:org_slug], tab: 'client_tiers'), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -12,12 +12,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.pricing.client_tiers.new.title') %></h4>
+        <h1><%= t('bo.pricing.client_tiers.new.title') %></h1>
         <span class="text-muted"><%= t('bo.pricing.client_tiers.new.subtitle') %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_pricing_path(params[:org_slug], tab: 'client_tiers'), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -27,6 +27,8 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
 
 <% if @discount.errors.any? %>
   <div class="alert alert-danger mb-4">
@@ -48,9 +50,25 @@
 
           <div class="row g-3">
             <div class="col-md-12">
-              <label class="form-label"><%= t('bo.pricing.form.client') %> <span class="text-danger">*</span></label>
-              <%= f.collection_select :customer_id, @customers, :id, :company_name, { prompt: t('bo.pricing.form.select_client') }, { class: "form-select", required: true } %>
+              <label class="form-label"><%= t('bo.pricing.form.clients') %></label>
+              <select name="customer_ids[]" multiple class="form-select" data-controller="tom-select" style="min-height: 100px;">
+                <% @customers.each do |c| %>
+                  <option value="<%= c.id %>"><%= "#{c.company_name} (#{c.email})" %></option>
+                <% end %>
+              </select>
+              <small class="text-muted"><%= t('bo.pricing.client_tiers.select_clients_hint') %></small>
             </div>
+            <% if @customer_categories.any? %>
+              <div class="col-md-12">
+                <label class="form-label"><%= t('bo.pricing.form.customer_categories') %></label>
+                <select name="customer_category_ids[]" multiple class="form-select" data-controller="tom-select" style="min-height: 100px;">
+                  <% @customer_categories.each do |cc| %>
+                    <option value="<%= cc.id %>"><%= cc.name %></option>
+                  <% end %>
+                </select>
+                <small class="text-muted"><%= t('bo.pricing.form.select_categories_hint') %></small>
+              </div>
+            <% end %>
           </div>
 
           <div class="row g-3 mt-1">
@@ -116,5 +134,7 @@
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>

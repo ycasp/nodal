@@ -52,6 +52,10 @@ class OrderPolicy < ApplicationPolicy
     customer_owner? && record.placed?
   end
 
+  def add_to_cart?
+    customer_owner? && record.placed?
+  end
+
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.is_a?(Customer)

@@ -2,5 +2,21 @@ Hello <%= @customer.contact_name %>
 
 Your order is confirmed. You ordered:
 <% @order.order_items.each do |item| %>
-- <%= item.product.name %><% if item.product_variant.present? && item.product.variable? %> (<%= item.product_variant.option_values_string %>)<% end %> x<%= item.quantity %>
+- <%= item.product.name %><% if item.product_variant.present? && item.product.variable? %> (<%= item.product_variant.sku.presence || item.product_variant.option_values_string %>)<% end %> x<%= item.quantity %> — <%= item.total_price.format %><% if item.discount_percentage && item.discount_percentage > 0 %> (-<%= (item.discount_percentage * 100).round(0) %>%)<% end %>
 <% end %>
+
+Subtotal: <%= @order.total_amount.format %>
+<% if @order.has_auto_discount_snapshot? %>
+Order Tier Discount (<%= @order.auto_discount_display %>): -<%= @order.auto_order_discount_amount.format %>
+<% end %>
+<% if @order.has_order_discount? %>
+Discount (<%= @order.order_discount_display %>): -<%= @order.order_discount_amount.format %>
+<% end %>
+<% if @order.has_promo_code? && @order.promo_code_discount.positive? %>
+Promo Code (<%= @order.promo_code.code %>): -<%= @order.promo_code_discount.format %>
+<% end %>
+Tax (<%= (@order.organisation.tax_rate * 100).round(1) %>%): <%= (@order.tax_amount || @order.calculated_tax).format %>
+Shipping: <%= (@order.shipping_amount || @order.calculated_shipping).format %>
+Total: <%= @order.grand_total.format %>
+
+Order #<%= @order.order_number %>

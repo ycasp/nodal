@@ -18,14 +18,20 @@
       <p><%= t('bo.customers.index.subtitle') %></p>
     </div>
     <div class="bo-page-actions">
-      <a href="#" class="btn btn-outline-secondary">
-        <i class="fa-solid fa-upload"></i> <%= t('bo.common.actions.import') %>
-      </a>
-      <a href="#" class="btn btn-outline-secondary">
-        <i class="fa-solid fa-download"></i> <%= t('bo.common.actions.export') %>
-      </a>
-      <%= link_to new_bo_customer_path(params[:org_slug]), class: "btn btn-primary" do %>
-        <i class="fa-solid fa-plus"></i> <%= t('bo.common.actions.add_new') %>
+      <% if @tab == 'categories' %>
+        <%= link_to new_bo_customer_category_path(params[:org_slug]), class: "btn btn-primary" do %>
+          <i class="fa-solid fa-plus"></i> <%= t('bo.customer_categories.add') %>
+        <% end %>
+      <% else %>
+        <a href="#" class="btn btn-outline-secondary">
+          <i class="fa-solid fa-upload"></i> <%= t('bo.common.actions.import') %>
+        </a>
+        <a href="#" class="btn btn-outline-secondary">
+          <i class="fa-solid fa-download"></i> <%= t('bo.common.actions.export') %>
+        </a>
+        <%= link_to new_bo_customer_path(params[:org_slug]), class: "btn btn-primary" do %>
+          <i class="fa-solid fa-plus"></i> <%= t('bo.common.actions.add_new') %>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -33,71 +39,222 @@
 
 <!-- Page Body -->
 <div class="bo-page-body">
-  <div class="card mb-4">
-  <div class="card-body">
-    <%= form_with url: bo_customers_path(params[:org_slug]), method: :get, class: "d-flex align-items-center" do %>
-      <div class="input-group flex-grow-1 me-3">
-        <span class="input-group-text bg-white border-end-0">
-          <i class="fa-solid fa-magnifying-glass text-muted"></i>
-        </span>
-        <%= text_field_tag :query,
-              params[:query],
-              class: "form-control border-start-0",
-              placeholder: t('bo.customers.index.search_placeholder')
-        %>
-      </div>
-      <button type="submit" class="btn btn-outline-secondary">
-        <i class="fa-solid fa-magnifying-glass"></i> <%= t('bo.common.actions.search') %>
-      </button>
-    <% end %>
-  </div>
-</div>
 
-<div class="card">
-  <table class="table table-hover mb-0">
-    <thead class="table-light">
-      <tr>
-        <th><%= t('bo.customers.index.table.customer') %></th>
-        <th><%= t('bo.customers.index.table.company') %></th>
-        <th><%= t('bo.customers.index.table.contact') %></th>
-        <th><%= t('bo.customers.index.table.status') %></th>
-        <th class="text-end"><%= t('bo.common.actions_column') %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @customers.each do |customer| %>
-        <tr class="customer-row" data-href="<%= bo_customer_path(params[:org_slug], customer) %>" style="cursor: pointer;">
-          <td>
-            <div class="fw-semibold"><%= customer.contact_name %></div>
-          </td>
-          <td><%= customer.company_name %></td>
-          <td>
-            <div><%= customer.email %></div>
-            <small class="text-muted"><%= customer.contact_phone %></small>
-          </td>
-          <td>
-            <% if customer.active? %>
-              <span class="badge rounded-pill bg-success-subtle text-success"><%= t('bo.common.statuses.active') %></span>
-            <% else %>
-              <span class="badge rounded-pill bg-secondary-subtle text-secondary"><%= t('bo.common.statuses.inactive') %></span>
-            <% end %>
-          </td>
-          <td class="text-end customer-actions" onclick="event.stopPropagation();">
-            <%= link_to bo_customer_path(params[:org_slug], customer), class: "btn btn-sm btn-link text-muted" do %>
-              <i class="fa-solid fa-eye"></i>
-            <% end %>
-            <%= link_to edit_bo_customer_path(params[:org_slug], customer), class: "btn btn-sm btn-link text-muted" do %>
-              <i class="fa-solid fa-pen-to-square"></i>
-            <% end %>
-            <%= button_to bo_customer_path(params[:org_slug], customer), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: t('bo.common.confirm.delete_customer') } do %>
-              <i class="fa-solid fa-trash"></i>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <!-- Tab Navigation -->
+  <div class="card mb-4">
+    <div class="card-body p-0">
+      <ul class="nav nav-pills nav-fill border-bottom" role="tablist">
+        <li class="nav-item" role="presentation">
+          <%= link_to bo_customers_path(params[:org_slug], tab: 'customers'),
+              class: "nav-link rounded-0 py-3 #{'active' if @tab == 'customers'}" do %>
+            <i class="fa-solid fa-users me-2"></i><%= t('bo.customers.index.tabs.customers') %>
+          <% end %>
+        </li>
+        <li class="nav-item" role="presentation">
+          <%= link_to bo_customers_path(params[:org_slug], tab: 'categories'),
+              class: "nav-link rounded-0 py-3 #{'active' if @tab == 'categories'}" do %>
+            <i class="fa-solid fa-layer-group me-2"></i><%= t('bo.customers.index.tabs.categories') %>
+          <% end %>
+        </li>
+      </ul>
+    </div>
   </div>
+
+  <% if @tab == 'customers' %>
+    <% if @last_customer_sync %>
+      <div class="border rounded d-flex align-items-center gap-2 py-2 px-3 mb-3 bg-light">
+        <i class="fa-solid fa-rotate text-muted"></i>
+        <small class="text-muted">
+          <%= t('bo.erp_sync.last_sync') %>: <%= l(@last_customer_sync.created_at, format: :short) %>
+          <% if @last_customer_sync.records_updated.to_i > 0 || @last_customer_sync.records_created.to_i > 0 %>
+            &middot; <%= t('bo.erp_sync.n_updated', count: @last_customer_sync.records_updated) %>, <%= t('bo.erp_sync.n_created', count: @last_customer_sync.records_created) %>
+          <% end %>
+          &middot; <%= t('bo.erp_sync.status_label') %>:
+          <% if @last_customer_sync.completed? %>
+            <span class="text-success fw-semibold"><%= t('bo.erp_sync.status_success') %></span>
+          <% elsif @last_customer_sync.failed? %>
+            <span class="text-danger fw-semibold"><%= t('bo.erp_sync.status_failed') %></span>
+          <% else %>
+            <span class="text-warning fw-semibold"><%= t('bo.erp_sync.status_running') %></span>
+          <% end %>
+        </small>
+      </div>
+    <% end %>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <%= form_with url: bo_customers_path(params[:org_slug]), method: :get do %>
+          <%= hidden_field_tag :tab, 'customers' %>
+          <%= hidden_field_tag :sort, params[:sort] if params[:sort].present? %>
+          <%= hidden_field_tag :direction, params[:direction] if params[:direction].present? %>
+          <div class="d-flex align-items-center mb-0">
+            <div class="input-group flex-grow-1 me-3">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="fa-solid fa-magnifying-glass text-muted"></i>
+              </span>
+              <%= text_field_tag :query,
+                    params[:query],
+                    class: "form-control border-start-0",
+                    placeholder: t('bo.customers.index.search_placeholder')
+              %>
+            </div>
+            <button type="submit" class="btn btn-outline-secondary me-2">
+              <i class="fa-solid fa-magnifying-glass"></i> <%= t('bo.common.actions.search') %>
+            </button>
+            <% if filter_params_hash.except(:tab).any? %>
+              <%= link_to bo_customers_path(params[:org_slug]), class: "btn btn-outline-danger" do %>
+                <i class="fa-solid fa-xmark"></i> <%= t('bo.common.actions.clear') %>
+              <% end %>
+            <% end %>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value=""><%= t('bo.customers.index.filters.all_statuses') %></option>
+                <option value="active" <%= 'selected' if params[:status] == 'active' %>><%= t('bo.common.statuses.active') %></option>
+                <option value="inactive" <%= 'selected' if params[:status] == 'inactive' %>><%= t('bo.common.statuses.inactive') %></option>
+                <option value="not_invited" <%= 'selected' if params[:status] == 'not_invited' %>><%= t('bo.common.statuses.not_invited') %></option>
+                <option value="pending" <%= 'selected' if params[:status] == 'pending' %>><%= t('bo.common.statuses.pending') %></option>
+              </select>
+            </div>
+            <% if @customer_categories.any? %>
+              <div class="col-md-4">
+                <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
+                  <option value=""><%= t('bo.customers.index.filters.all_categories') %></option>
+                  <% @customer_categories.each do |cat| %>
+                    <option value="<%= cat.id %>" <%= 'selected' if params[:category] == cat.id.to_s %>><%= cat.name %></option>
+                  <% end %>
+                </select>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <% if filter_params_hash.except(:tab).any? %>
+      <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+        <small class="text-muted"><%= t('bo.customers.index.filters.active_filters') %>:</small>
+        <% if params[:query].present? %>
+          <%= link_to bo_customers_path(params[:org_slug], filter_params_hash.except(:query)), class: "badge bg-secondary text-decoration-none" do %>
+            "<%= params[:query] %>" <i class="fa-solid fa-xmark ms-1"></i>
+          <% end %>
+        <% end %>
+        <% if params[:status].present? %>
+          <%= link_to bo_customers_path(params[:org_slug], filter_params_hash.except(:status)), class: "badge bg-secondary text-decoration-none" do %>
+            <%= t("bo.common.statuses.#{params[:status]}") %> <i class="fa-solid fa-xmark ms-1"></i>
+          <% end %>
+        <% end %>
+        <% if params[:category].present? %>
+          <% cat = @customer_categories.find { |c| c.id.to_s == params[:category] } %>
+          <%= link_to bo_customers_path(params[:org_slug], filter_params_hash.except(:category)), class: "badge bg-secondary text-decoration-none" do %>
+            <%= cat&.name %> <i class="fa-solid fa-xmark ms-1"></i>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="card">
+      <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>
+              <%= link_to bo_customers_path(params[:org_slug], sort_link_params("contact_name")), class: "text-decoration-none text-dark" do %>
+                <%= t('bo.customers.index.table.customer') %>
+                <% if @sort_column == "contact_name" %>
+                  <i class="fa-solid fa-sort-<%= @sort_direction == 'asc' ? 'up' : 'down' %> ms-1 small"></i>
+                <% end %>
+              <% end %>
+            </th>
+            <th>
+              <%= link_to bo_customers_path(params[:org_slug], sort_link_params("company_name")), class: "text-decoration-none text-dark" do %>
+                <%= t('bo.customers.index.table.company') %>
+                <% if @sort_column == "company_name" %>
+                  <i class="fa-solid fa-sort-<%= @sort_direction == 'asc' ? 'up' : 'down' %> ms-1 small"></i>
+                <% end %>
+              <% end %>
+            </th>
+            <th>
+              <%= link_to bo_customers_path(params[:org_slug], sort_link_params("email")), class: "text-decoration-none text-dark" do %>
+                <%= t('bo.customers.index.table.contact') %>
+                <% if @sort_column == "email" %>
+                  <i class="fa-solid fa-sort-<%= @sort_direction == 'asc' ? 'up' : 'down' %> ms-1 small"></i>
+                <% end %>
+              <% end %>
+            </th>
+            <th><%= t('bo.customers.index.table.category') %></th>
+            <th>
+              <%= link_to bo_customers_path(params[:org_slug], sort_link_params("active")), class: "text-decoration-none text-dark" do %>
+                <%= t('bo.customers.index.table.status') %>
+                <% if @sort_column == "active" %>
+                  <i class="fa-solid fa-sort-<%= @sort_direction == 'asc' ? 'up' : 'down' %> ms-1 small"></i>
+                <% end %>
+              <% end %>
+            </th>
+            <th class="text-end"><%= t('bo.common.actions_column') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @customers.each do |customer| %>
+            <tr class="customer-row" data-href="<%= bo_customer_path(params[:org_slug], customer, filter_params_hash) %>" style="cursor: pointer;">
+              <td>
+                <div class="fw-semibold"><%= customer.contact_name %></div>
+              </td>
+              <td><%= customer.company_name %></td>
+              <td>
+                <div><%= customer.email %></div>
+                <small class="text-muted"><%= customer.contact_phone %></small>
+              </td>
+              <td>
+                <% if customer.customer_category.present? %>
+                  <span class="badge bg-light text-dark border"><%= customer.customer_category.name %></span>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+              <td>
+                <% case customer.invitation_status %>
+                <% when :inactive %>
+                  <span class="badge rounded-pill bg-secondary-subtle text-secondary"><%= t('bo.common.statuses.inactive') %></span>
+                <% when :not_invited %>
+                  <span class="badge rounded-pill bg-warning-subtle text-warning">
+                    <i class="fa-solid fa-envelope"></i> <%= t('bo.common.statuses.not_invited') %>
+                  </span>
+                <% when :pending %>
+                  <span class="badge rounded-pill bg-info-subtle text-info">
+                    <i class="fa-solid fa-clock"></i> <%= t('bo.common.statuses.pending') %>
+                  </span>
+                <% when :active %>
+                  <span class="badge rounded-pill bg-success-subtle text-success"><%= t('bo.common.statuses.active') %></span>
+                <% end %>
+              </td>
+              <td class="text-end customer-actions" style="white-space: nowrap;" onclick="event.stopPropagation();">
+                <%= link_to bo_customer_path(params[:org_slug], customer, filter_params_hash), class: "btn btn-sm btn-link text-muted" do %>
+                  <i class="fa-solid fa-eye"></i>
+                <% end %>
+                <%= link_to edit_bo_customer_path(params[:org_slug], customer, filter_params_hash), class: "btn btn-sm btn-link text-muted" do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+                <%= button_to bo_customer_path(params[:org_slug], customer, filter_params_hash), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: t('bo.common.confirm.delete_customer') } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <% if @pagy.pages > 1 %>
+      <div class="card-footer d-flex justify-content-center">
+        <%== pagy_bootstrap_nav(@pagy) %>
+      </div>
+    <% end %>
+
+  <% elsif @tab == 'categories' %>
+    <%= render 'customer_categories' %>
+  <% end %>
 </div>
 
 <% end %>

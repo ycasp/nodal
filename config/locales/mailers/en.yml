@@ -27,18 +27,22 @@ en:
       pickup_icon: "🏪 Pickup"
       order_tier_discount: "Order Tier Discount"
       discount: "Discount"
+      promo_code: "Promo Code"
       valid: "Valid"
       original_price: "Original Price"
       min_quantity: "Min. Quantity"
       min_order: "Minimum Order"
       product_details: "Product Details"
+      category_details: "Category Details"
       discount_details: "Discount Details"
       off: "OFF"
       shop_now: "Shop Now →"
       view_product: "View Product →"
+      view_category: "View Category →"
       dont_miss_out: "Don't miss out!"
 
     customer_mailer:
+      generic_greeting: "Customer"
       confirm_order:
         subject: "Order confirmation for Order %{order_number}"
         banner_title: "Order Confirmed!"
@@ -71,6 +75,7 @@ en:
         subject: "New personal Discount for YOU!"
         banner_title: "Exclusive Discount Just for You!"
         greeting: "Hello %{name},"
+        greeting_generic: "Hello,"
         intro: "Great news! We've created a special personal discount just for you as a valued customer."
         your_personal_discount: "Your Personal Discount"
         on_all_orders: "on all your orders"
@@ -81,6 +86,7 @@ en:
         subject: "New Discount on %{product_name}"
         banner_title: "Special Product Discount for You!"
         greeting: "Hello %{name},"
+        greeting_generic: "Hello,"
         intro: "Great news! We've created a special discount on a product just for you."
         exclusive_to_you: "exclusive to you"
         exclusive_awaits_title: "Your exclusive discount awaits!"
@@ -88,10 +94,22 @@ en:
 
       product_discount:
         subject: "New Product Discount on %{product_name}"
+        category_subject: "New Category Discount on %{category_name}"
         banner_title: "Special Discount Available!"
         greeting: "Hello,"
         intro: "Great news! We have a special discount on one of our products that we thought you'd like to know about."
+        category_intro: "Great news! We have a special discount on an entire category that we thought you'd like to know about."
         order_now: "Order now to take advantage of this special discount."
+
+      promo_code:
+        subject: "New Promo Code: %{code}"
+        banner_title: "You've Got a Promo Code!"
+        greeting: "Hello,"
+        intro: "Great news! We have a special promo code for you."
+        promo_details: "Promo Details"
+        your_code: "Your Code"
+        on_your_order: "on your order"
+        use_code_cta: "Use code %{code} at checkout to get your discount!"
 
       order_discount:
         subject: "New Discount on new Order"

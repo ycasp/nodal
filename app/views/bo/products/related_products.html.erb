@@ -1,0 +1,146 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_product_path(params[:org_slug], @product), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+      <div>
+        <h1><%= t('bo.products.related.title') %></h1>
+        <span class="text-muted"><%= @product.name %></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+
+  <%= form_with url: update_related_products_bo_product_path(params[:org_slug], @product), method: :patch, local: true, data: { controller: "related-products" } do |f| %>
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <%# Selected Products Card %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-3">
+              <i class="fa-solid fa-star me-2 text-warning"></i>
+              <%= t('bo.products.related.selected_products') %>
+            </h5>
+            <p class="text-muted small mb-3"><%= t('bo.products.related.selected_description') %></p>
+
+            <div id="selected-products-list" data-related-products-target="selectedList" data-controller="sortable" data-sortable-resource-name-value="positions">
+              <% if @selected_products.any? %>
+                <% @selected_products.each do |product| %>
+                  <div class="d-flex align-items-center gap-3 p-2 mb-2 bg-light rounded" data-sortable-id="<%= product.id %>">
+                    <i class="fa-solid fa-grip-vertical text-muted handle" style="cursor: grab;"></i>
+                    <input type="hidden" name="related_product_ids[]" value="<%= product.id %>">
+                    <% if product.photo_attached? %>
+                      <%= image_tag product.photo, style: "width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" %>
+                    <% else %>
+                      <div class="bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 4px;">
+                        <i class="fa-solid fa-image text-white"></i>
+                      </div>
+                    <% end %>
+                    <div class="flex-grow-1">
+                      <strong><%= product.name %></strong>
+                      <small class="text-muted d-block"><%= product.primary_category&.name %></small>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger" data-action="click->related-products#remove" data-product-id="<%= product.id %>">
+                      <i class="fa-solid fa-times"></i>
+                    </button>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+
+            <div id="empty-state" data-related-products-target="emptyState" class="<%= 'visually-hidden' if @selected_products.any? %>">
+              <div class="text-center py-4 text-muted">
+                <i class="fa-solid fa-link fa-2x mb-2"></i>
+                <p class="mb-0"><%= t('bo.products.related.no_products_selected') %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# Available Products Card %>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-3">
+              <i class="fa-solid fa-box me-2"></i>
+              <%= t('bo.products.related.available_products') %>
+            </h5>
+
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="<%= t('bo.products.related.search_placeholder') %>" data-related-products-target="search" data-action="input->related-products#filter">
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto;">
+              <% @available_products.each do |product| %>
+                <div class="d-flex align-items-center gap-3 p-2 mb-2 border rounded" data-related-products-target="availableItem" data-product-id="<%= product.id %>" data-product-name="<%= product.name.downcase %>">
+                  <% if product.photo_attached? %>
+                    <%= image_tag product.photo, style: "width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" %>
+                  <% else %>
+                    <div class="bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 4px;">
+                      <i class="fa-solid fa-image text-white"></i>
+                    </div>
+                  <% end %>
+                  <div class="flex-grow-1">
+                    <strong><%= product.name %></strong>
+                    <small class="text-muted d-block"><%= product.primary_category&.name %></small>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->related-products#add" data-product-id="<%= product.id %>" data-product-name="<%= product.name %>" data-product-category="<%= product.primary_category&.name %>" data-product-image="<%= product.photo_attached? ? url_for(product.photo) : '' %>">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              <% end %>
+              <% if @available_products.empty? %>
+                <div class="text-center py-4 text-muted">
+                  <p class="mb-0"><%= t('bo.products.related.no_products_available') %></p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <%# Settings Card %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-3">
+              <i class="fa-solid fa-cog me-2"></i>
+              <%= t('bo.products.related.settings') %>
+            </h5>
+
+            <div class="form-check form-switch mb-3">
+              <input type="hidden" name="hide_related_products" value="0">
+              <input type="checkbox" name="hide_related_products" value="1" class="form-check-input" role="switch" id="hide_related_products" <%= 'checked' if @product.hide_related_products? %>>
+              <label class="form-check-label" for="hide_related_products">
+                <%= t('bo.products.related.hide_for_product') %>
+              </label>
+            </div>
+            <p class="text-muted small"><%= t('bo.products.related.hide_description') %></p>
+          </div>
+        </div>
+
+        <%# Auto-fill Info Card %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-3">
+              <i class="fa-solid fa-wand-magic-sparkles me-2"></i>
+              <%= t('bo.products.related.auto_fill') %>
+            </h5>
+            <p class="text-muted small mb-0"><%= t('bo.products.related.auto_fill_description') %></p>
+          </div>
+        </div>
+
+        <%# Save Button %>
+        <div class="d-grid">
+          <%= f.submit t('bo.common.actions.save'), class: "btn btn-primary btn-lg" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% end %>

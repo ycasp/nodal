@@ -1,0 +1,46 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_customers_path(params[:org_slug], tab: 'categories'), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+      <div>
+        <h1><%= t('bo.customer_categories.new.title') %></h1>
+        <span class="text-muted"><%= t('bo.customer_categories.new.subtitle') %></span>
+      </div>
+    </div>
+    <div class="bo-page-actions">
+      <%= link_to bo_customers_path(params[:org_slug], tab: 'categories'), class: "btn btn-outline-secondary" do %>
+        <%= t('bo.common.actions.cancel') %>
+      <% end %>
+      <button type="submit" form="category-form" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> <%= t('bo.customer_categories.new.create') %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <%= form_with model: @customer_category, url: bo_customer_categories_path(params[:org_slug]), method: :post, id: "category-form" do |f| %>
+    <div class="row g-3">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label"><%= t('bo.customer_categories.form.name') %> <span class="text-danger">*</span></label>
+              <%= f.text_field :name, class: "form-control", placeholder: t('bo.customer_categories.form.name_placeholder'), required: true %>
+            </div>
+            <div class="mb-0">
+              <label class="form-label"><%= t('bo.customer_categories.form.description') %></label>
+              <%= f.text_area :description, class: "form-control", rows: 3, placeholder: t('bo.customer_categories.form.description_placeholder') %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% end %>

@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_customers_path(params[:org_slug]), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_customers_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -12,12 +12,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.customers.new.title') %></h4>
+        <h1><%= t('bo.customers.new.title') %></h1>
         <span class="text-muted"><%= t('bo.customers.new.subtitle') %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_customers_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -27,6 +27,8 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
 
 <%= form_with model: @customer, url: bo_customers_path(params[:org_slug]), method: :post, id: "customer-form" do |f| %>
   <div class="row g-3">
@@ -38,18 +40,18 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.contact_name') %> <span class="text-danger">*</span></label>
-              <%= f.text_field :contact_name, class: "form-control", placeholder: t('bo.customers.form.placeholders.contact_name'), required: true %>
+              <%= f.text_field :contact_name, class: "form-control", placeholder: t('bo.customers.form.contact_name_placeholder'), required: true %>
             </div>
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.email') %> <span class="text-danger">*</span></label>
-              <%= f.email_field :email, class: "form-control", placeholder: t('bo.customers.form.placeholders.email'), required: true %>
+              <%= f.email_field :email, class: "form-control", placeholder: t('bo.customers.form.email_placeholder'), required: true %>
             </div>
           </div>
 
           <div class="row g-3 mt-1">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.phone') %></label>
-              <%= f.text_field :contact_phone, class: "form-control", placeholder: t('bo.customers.form.placeholders.phone') %>
+              <%= f.text_field :contact_phone, class: "form-control", placeholder: t('bo.customers.form.phone_placeholder') %>
             </div>
           </div>
         </div>
@@ -62,7 +64,7 @@
           <div class="row g-3">
             <div class="col-md-12">
               <label class="form-label"><%= t('bo.customers.form.company_name') %> <span class="text-danger">*</span></label>
-              <%= f.text_field :company_name, class: "form-control", placeholder: t('bo.customers.form.placeholders.company_name'), required: true %>
+              <%= f.text_field :company_name, class: "form-control", placeholder: t('bo.customers.form.company_name_placeholder'), required: true %>
             </div>
           </div>
 
@@ -83,12 +85,12 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.password') %> <span class="text-danger">*</span></label>
-              <%= f.password_field :password, class: "form-control", placeholder: t('bo.customers.form.placeholders.password'), required: true, autocomplete: "new-password" %>
+              <%= f.password_field :password, class: "form-control", placeholder: t('bo.customers.form.password_placeholder'), required: true, autocomplete: "new-password" %>
               <small class="text-muted"><%= t('bo.customers.form.password_hint') %></small>
             </div>
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.confirm_password') %> <span class="text-danger">*</span></label>
-              <%= f.password_field :password_confirmation, class: "form-control", placeholder: t('bo.customers.form.placeholders.confirm_password'), required: true, autocomplete: "new-password" %>
+              <%= f.password_field :password_confirmation, class: "form-control", placeholder: t('bo.customers.form.confirm_password_placeholder'), required: true, autocomplete: "new-password" %>
             </div>
           </div>
         </div>
@@ -96,7 +98,7 @@
     </div>
 
     <div class="col-md-4">
-      <div class="card">
+      <div class="card mb-3">
         <div class="card-body">
           <h5 class="card-title mb-4"><%= t('bo.customers.form.account_status') %></h5>
 
@@ -107,8 +109,20 @@
           <small class="text-muted"><%= t('bo.customers.form.inactive_hint') %></small>
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.customers.form.category') %></h5>
+          <%= f.select :customer_category_id,
+              options_from_collection_for_select(@customer_categories, :id, :name),
+              { include_blank: t('bo.customers.form.no_category') },
+              class: "form-select" %>
+        </div>
+      </div>
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>

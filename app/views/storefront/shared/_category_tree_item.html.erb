@@ -1,45 +1,42 @@
 <%
-  current_category_ids = Array(params[:categories]).map(&:to_i)
-  is_selected = current_category_ids.include?(category.id)
+  current_category_id = params[:category].present? ? params[:category].to_i : nil
+  is_selected = category.id == current_category_id
   is_ancestor = local_assigns[:current_categories]&.any? { |c| c.ancestor_ids.include?(category.id) }
-  has_children = category.children.kept.any?
+  children_list = @category_children[category.id] || []
+  has_children = children_list.any?
   is_expanded = is_selected || is_ancestor || local_assigns[:expanded]
 
-  # Toggle logic: add if not selected, remove if selected
-  if is_selected
-    new_categories = current_category_ids - [category.id]
-  else
-    new_categories = current_category_ids + [category.id]
-  end
+  # Single-select: click selects, click again deselects
   link_params = { org_slug: params[:org_slug], queries: params[:queries] }
-  link_params[:categories] = new_categories if new_categories.any?
+  link_params[:category] = category.id unless is_selected
+  link_params[:sort] = params[:sort] if params[:sort].present?
 %>
 
 <li class="category-tree-item" data-storefront-category-tree-target="item" data-category-id="<%= category.id %>">
   <div class="d-flex align-items-center">
     <% if has_children %>
       <button type="button"
-              class="btn btn-sm btn-link text-muted p-0 me-1 toggle-btn"
+              class="toggle-btn text-muted"
               data-action="storefront-category-tree#toggle"
               data-storefront-category-tree-target="toggle"
               aria-expanded="<%= is_expanded %>">
-        <i class="fa-solid fa-chevron-right toggle-icon <%= 'rotated' if is_expanded %>"></i>
+        <i class="fa-solid <%= is_expanded ? 'fa-minus' : 'fa-plus' %> toggle-icon" data-storefront-category-tree-target="icon"></i>
       </button>
     <% else %>
-      <span class="me-3"></span>
+      <span class="toggle-btn-spacer"></span>
     <% end %>
 
     <%= link_to products_path(**link_params),
         class: "category-link flex-grow-1 py-1 #{'active fw-bold text-primary' if is_selected}" do %>
       <%= category.name %>
-      <span class="badge bg-secondary-subtle text-secondary ms-1"><%= category.all_products_count %></span>
+      <span class="category-count">(<%= @category_counts[category.id] || 0 %>)</span>
     <% end %>
   </div>
 
   <% if has_children %>
     <ul class="list-unstyled ms-3 category-children <%= 'collapsed' unless is_expanded %>"
         data-storefront-category-tree-target="children">
-      <% category.children.kept.by_position.each do |child| %>
+      <% children_list.each do |child| %>
         <%= render 'storefront/shared/category_tree_item', category: child, current_categories: local_assigns[:current_categories] %>
       <% end %>
     </ul>

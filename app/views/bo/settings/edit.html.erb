@@ -1,6 +1,6 @@
 <% content_for :bo_main_content do%>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
       <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -8,12 +8,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.settings.edit.title') %></h4>
+        <h1><%= t('bo.settings.edit.title') %></h1>
         <span class="text-muted"><%= @organisation.name %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_path, class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -23,6 +23,10 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
+
+<%= render "bo/shared/settings_tabs" %>
 
 <%= form_with model: @organisation, url: bo_settings_path, method: :patch, id: "settings-form" do |f| %>
   <div class="row g-3">
@@ -125,12 +129,40 @@
               <label class="form-label"><%= t('bo.settings.edit.whatsapp') %></label>
               <%= f.text_field :whatsapp, class: "form-control", placeholder: t('bo.settings.edit.whatsapp_placeholder') %>
               <small class="text-muted"><%= t('bo.settings.edit.whatsapp_hint') %></small>
+
+              <div class="form-check form-switch mt-2">
+                <%= f.check_box :show_whatsapp_button, class: "form-check-input", role: "switch" %>
+                <label class="form-check-label" for="organisation_show_whatsapp_button">
+                  <%= t('bo.settings.edit.show_whatsapp_button') %>
+                </label>
+              </div>
+              <small class="text-muted"><%= t('bo.settings.edit.show_whatsapp_button_hint') %></small>
             </div>
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.settings.edit.business_hours') %></label>
               <%= f.text_area :business_hours, class: "form-control", rows: 2, placeholder: t('bo.settings.edit.business_hours_placeholder') %>
             </div>
           </div>
+
+          <hr class="my-4">
+
+          <h6 class="mb-3"><%= t('bo.settings.edit.social_links') %></h6>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label"><i class="fa-brands fa-instagram me-1"></i> Instagram</label>
+              <%= f.text_field :instagram_url, class: "form-control", placeholder: t('bo.settings.edit.instagram_placeholder') %>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"><i class="fa-brands fa-facebook me-1"></i> Facebook</label>
+              <%= f.text_field :facebook_url, class: "form-control", placeholder: t('bo.settings.edit.facebook_placeholder') %>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"><i class="fa-brands fa-linkedin me-1"></i> LinkedIn</label>
+              <%= f.text_field :linkedin_url, class: "form-control", placeholder: t('bo.settings.edit.linkedin_placeholder') %>
+            </div>
+          </div>
+          <small class="text-muted"><%= t('bo.settings.edit.social_links_hint') %></small>
 
           <hr class="my-4">
 
@@ -198,6 +230,153 @@
               <label class="form-label"><%= t('bo.settings.edit.free_shipping_threshold') %></label>
               <%= f.number_field :free_shipping_threshold, class: "form-control", step: 0.01, min: 0, placeholder: t('bo.settings.edit.free_shipping_threshold_placeholder') %>
               <small class="text-muted"><%= t('bo.settings.edit.free_shipping_threshold_hint') %></small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.settings.edit.storefront_features') %></h5>
+
+          <div class="form-check form-switch">
+            <%= f.check_box :show_related_products, class: "form-check-input", role: "switch" %>
+            <label class="form-check-label" for="organisation_show_related_products">
+              <%= t('bo.settings.edit.show_related_products') %>
+            </label>
+          </div>
+          <small class="text-muted d-block mb-3"><%= t('bo.settings.edit.show_related_products_hint') %></small>
+
+          <div class="form-check form-switch">
+            <%= f.check_box :show_product_sku, class: "form-check-input", role: "switch" %>
+            <label class="form-check-label" for="organisation_show_product_sku">
+              <%= t('bo.settings.edit.show_product_sku') %>
+            </label>
+          </div>
+          <small class="text-muted d-block mb-3"><%= t('bo.settings.edit.show_product_sku_hint') %></small>
+
+          <div class="form-check form-switch">
+            <%= f.check_box :show_product_min_quantity, class: "form-check-input", role: "switch" %>
+            <label class="form-check-label" for="organisation_show_product_min_quantity">
+              <%= t('bo.settings.edit.show_product_min_quantity') %>
+            </label>
+          </div>
+          <small class="text-muted d-block mb-3"><%= t('bo.settings.edit.show_product_min_quantity_hint') %></small>
+
+          <div class="form-check form-switch">
+            <%= f.check_box :show_product_category, class: "form-check-input", role: "switch" %>
+            <label class="form-check-label" for="organisation_show_product_category">
+              <%= t('bo.settings.edit.show_product_category') %>
+            </label>
+          </div>
+          <small class="text-muted d-block mb-3"><%= t('bo.settings.edit.show_product_category_hint') %></small>
+
+          <div class="form-check form-switch">
+            <%= f.check_box :show_product_availability, class: "form-check-input", role: "switch" %>
+            <label class="form-check-label" for="organisation_show_product_availability">
+              <%= t('bo.settings.edit.show_product_availability') %>
+            </label>
+          </div>
+          <small class="text-muted d-block mb-3"><%= t('bo.settings.edit.show_product_availability_hint') %></small>
+
+          <div class="form-check form-switch">
+            <%= f.check_box :show_scroll_to_top, class: "form-check-input", role: "switch" %>
+            <label class="form-check-label" for="organisation_show_scroll_to_top">
+              <%= t('bo.settings.edit.show_scroll_to_top') %>
+            </label>
+          </div>
+          <small class="text-muted"><%= t('bo.settings.edit.show_scroll_to_top_hint') %></small>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.settings.edit.legal') %></h5>
+
+          <div class="mb-4">
+            <label class="form-label"><%= t('bo.settings.edit.terms_and_conditions') %></label>
+            <%= f.rich_text_area :terms_and_conditions, class: "form-control" %>
+            <small class="text-muted"><%= t('bo.settings.edit.terms_and_conditions_hint') %></small>
+          </div>
+
+          <div class="mb-0">
+            <label class="form-label"><%= t('bo.settings.edit.privacy_policy') %></label>
+            <%= f.rich_text_area :privacy_policy, class: "form-control" %>
+            <small class="text-muted"><%= t('bo.settings.edit.privacy_policy_hint') %></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.settings.edit.stock_management') %></h5>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label"><%= t('bo.settings.edit.out_of_stock_strategy') %></label>
+              <%= f.select :out_of_stock_strategy,
+                           options_for_select([
+                             [t('bo.settings.edit.out_of_stock_do_nothing'), 'do_nothing'],
+                             [t('bo.settings.edit.out_of_stock_deactivate'), 'deactivate'],
+                             [t('bo.settings.edit.out_of_stock_hide'), 'hide']
+                           ], @organisation.out_of_stock_strategy),
+                           {},
+                           class: "form-control" %>
+              <small class="text-muted"><%= t('bo.settings.edit.out_of_stock_strategy_hint') %></small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.settings.edit.delivery_scheduling') %></h5>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label"><%= t('bo.settings.edit.timezone') %></label>
+              <%= f.select :timezone,
+                           options_for_select(
+                             ActiveSupport::TimeZone.all.map { |tz| ["#{tz.name} (#{tz.formatted_offset})", tz.tzinfo.name] },
+                             @organisation.timezone
+                           ),
+                           {},
+                           class: "form-control" %>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-2">
+            <div class="col-md-12">
+              <label class="form-label"><%= t('bo.settings.edit.delivery_days') %></label>
+              <div class="d-flex flex-wrap gap-3">
+                <% Organisation::WEEKDAY_NAMES.each_with_index do |day, index| %>
+                  <div class="form-check">
+                    <input type="checkbox"
+                           name="organisation[delivery_day_flags][]"
+                           value="<%= index %>"
+                           id="delivery_day_<%= index %>"
+                           class="form-check-input"
+                           <%= 'checked' if @organisation.delivers_on?(index) %>>
+                    <label class="form-check-label" for="delivery_day_<%= index %>">
+                      <%= t("date.day_names")[index].capitalize %>
+                    </label>
+                  </div>
+                <% end %>
+              </div>
+              <small class="text-muted"><%= t('bo.settings.edit.delivery_days_hint') %></small>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-2">
+            <div class="col-md-6">
+              <label class="form-label"><%= t('bo.settings.edit.lead_time_days') %></label>
+              <%= f.number_field :lead_time_days, class: "form-control", min: 0, step: 1 %>
+              <small class="text-muted"><%= t('bo.settings.edit.lead_time_days_hint') %></small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label"><%= t('bo.settings.edit.order_cutoff_time') %></label>
+              <%= f.time_field :order_cutoff_time, class: "form-control", value: @organisation.order_cutoff_time %>
+              <small class="text-muted"><%= t('bo.settings.edit.order_cutoff_time_hint') %></small>
             </div>
           </div>
         </div>
@@ -343,5 +522,7 @@
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>

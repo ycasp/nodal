@@ -72,8 +72,13 @@
     <div class="footer-bottom">
       <p>&copy; <%= Date.current.year %> Nodal. <%= t("footer.legal.rights") %></p>
       <div class="footer-legal">
-        <%= link_to t("footer.legal.privacy"), "#" %>
-        <%= link_to t("footer.legal.terms"), "#" %>
+        <% if defined?(current_organisation) && current_organisation.present? %>
+          <%= link_to t("footer.legal.privacy"), privacy_path(org_slug: current_organisation.slug) %>
+          <%= link_to t("footer.legal.terms"), terms_path(org_slug: current_organisation.slug) %>
+        <% else %>
+          <%= link_to t("footer.legal.privacy"), "#" %>
+          <%= link_to t("footer.legal.terms"), "#" %>
+        <% end %>
       </div>
     </div>
   </div>

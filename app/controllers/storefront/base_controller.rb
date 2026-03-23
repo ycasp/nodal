@@ -3,8 +3,8 @@ class Storefront::BaseController < ApplicationController
 
   before_action :authenticate_customer!
 
-  helper_method :current_cart, :cart_item_count, :active_order_discounts, :has_order_discounts?,
-                :browsing_as_member?, :current_storefront_user
+  helper_method :current_cart, :cart_item_count, :cart_line_item_count, :active_order_discounts,
+                :has_order_discounts?, :browsing_as_member?, :current_storefront_user
 
   def current_cart
     @current_cart ||= current_customer&.current_cart(current_organisation)
@@ -12,6 +12,10 @@ class Storefront::BaseController < ApplicationController
 
   def cart_item_count
     current_cart&.item_count || 0
+  end
+
+  def cart_line_item_count
+    current_cart&.line_item_count || 0
   end
 
   def active_order_discounts

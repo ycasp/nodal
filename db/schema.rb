@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_23_175354) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "unaccent"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -88,8 +99,18 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.index ["product_id"], name: "index_category_products_on_product_id"
   end
 
+  create_table "customer_categories", force: :cascade do |t|
+    t.bigint "organisation_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organisation_id", "name"], name: "index_customer_categories_on_organisation_id_and_name", unique: true
+    t.index ["organisation_id"], name: "index_customer_categories_on_organisation_id"
+  end
+
   create_table "customer_discounts", force: :cascade do |t|
-    t.bigint "customer_id", null: false
+    t.bigint "customer_id"
     t.bigint "organisation_id", null: false
     t.string "discount_type", default: "percentage", null: false
     t.decimal "discount_value", precision: 10, scale: 4, null: false
@@ -100,14 +121,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "customer_category_id"
+    t.index ["customer_category_id"], name: "index_customer_discounts_on_customer_category_id"
     t.index ["customer_id", "organisation_id"], name: "index_customer_discounts_on_customer_id_and_organisation_id"
     t.index ["customer_id"], name: "index_customer_discounts_on_customer_id"
     t.index ["organisation_id"], name: "index_customer_discounts_on_organisation_id"
   end
 
   create_table "customer_product_discounts", force: :cascade do |t|
-    t.bigint "customer_id", null: false
-    t.bigint "product_id", null: false
+    t.bigint "customer_id"
+    t.bigint "product_id"
     t.bigint "organisation_id", null: false
     t.decimal "discount_percentage", precision: 5, scale: 4, default: "0.0"
     t.date "valid_from"
@@ -117,6 +140,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.string "discount_type", default: "percentage", null: false
     t.boolean "stackable", default: false, null: false
     t.boolean "active", default: true, null: false
+    t.bigint "category_id"
+    t.bigint "customer_category_id"
+    t.index ["category_id"], name: "index_customer_product_discounts_on_category_id"
+    t.index ["customer_category_id"], name: "index_customer_product_discounts_on_customer_category_id"
     t.index ["customer_id"], name: "index_customer_product_discounts_on_customer_id"
     t.index ["organisation_id"], name: "index_customer_product_discounts_on_organisation_id"
     t.index ["product_id"], name: "index_customer_product_discounts_on_product_id"
@@ -149,6 +176,14 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.datetime "last_synced_at"
     t.text "sync_error"
     t.string "taxpayer_id"
+    t.boolean "email_notifications_enabled", default: true, null: false
+    t.bigint "customer_category_id"
+    t.integer "sign_in_count"
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.index ["customer_category_id"], name: "index_customers_on_customer_category_id"
     t.index ["email", "organisation_id"], name: "index_customers_on_email_and_organisation_id", unique: true
     t.index ["invitation_token"], name: "index_customers_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_customers_on_invited_by_id"
@@ -157,6 +192,43 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.index ["organisation_id", "external_id", "external_source"], name: "index_customers_on_org_external_id_source", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["organisation_id"], name: "index_customers_on_organisation_id"
     t.index ["reset_password_token"], name: "index_customers_on_reset_password_token", unique: true
+  end
+
+  create_table "discount_email_notifications", force: :cascade do |t|
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "status", default: "pending", null: false
+    t.integer "recipient_count", default: 0
+    t.datetime "sent_at"
+    t.bigint "sent_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notifiable_type", "notifiable_id"], name: "idx_den_on_notifiable", unique: true
+    t.index ["notifiable_type", "notifiable_id"], name: "index_discount_email_notifications_on_notifiable"
+    t.index ["organisation_id", "status"], name: "idx_on_organisation_id_status_7657d575d3"
+    t.index ["organisation_id"], name: "index_discount_email_notifications_on_organisation_id"
+    t.index ["sent_by_id"], name: "index_discount_email_notifications_on_sent_by_id"
+  end
+
+  create_table "email_logs", force: :cascade do |t|
+    t.bigint "organisation_id", null: false
+    t.bigint "customer_id"
+    t.bigint "member_id"
+    t.string "email_type", null: false
+    t.string "mailer_class", null: false
+    t.string "recipient_email", null: false
+    t.string "subject"
+    t.string "status", default: "sent", null: false
+    t.string "error_message"
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_email_logs_on_customer_id"
+    t.index ["member_id"], name: "index_email_logs_on_member_id"
+    t.index ["organisation_id", "sent_at"], name: "index_email_logs_on_organisation_id_and_sent_at"
+    t.index ["organisation_id"], name: "index_email_logs_on_organisation_id"
+    t.index ["status"], name: "index_email_logs_on_status"
   end
 
   create_table "erp_configurations", force: :cascade do |t|
@@ -173,6 +245,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.text "last_sync_error"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "product_sync_mode"
     t.index ["organisation_id"], name: "index_erp_configurations_on_organisation_id", unique: true
   end
 
@@ -192,6 +265,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.text "summary"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "change_details"
     t.index ["erp_configuration_id"], name: "index_erp_sync_logs_on_erp_configuration_id"
     t.index ["organisation_id", "created_at"], name: "index_erp_sync_logs_on_organisation_id_and_created_at"
     t.index ["organisation_id"], name: "index_erp_sync_logs_on_organisation_id"
@@ -269,14 +343,24 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.string "auto_discount_type"
     t.decimal "auto_discount_value", precision: 10, scale: 4
     t.integer "auto_discount_amount_cents"
+    t.string "external_id"
+    t.string "external_source"
+    t.datetime "last_synced_at"
+    t.text "sync_error"
+    t.datetime "viewed_at"
+    t.datetime "terms_accepted_at"
+    t.bigint "promo_code_id"
+    t.integer "promo_code_discount_amount_cents", default: 0
     t.index ["applied_by_id"], name: "index_orders_on_applied_by_id"
     t.index ["billing_address_id"], name: "index_orders_on_billing_address_id"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["order_discount_id"], name: "index_orders_on_order_discount_id"
     t.index ["order_number"], name: "index_orders_on_order_number", unique: true
     t.index ["organisation_id", "customer_id"], name: "index_orders_on_organisation_id_and_customer_id"
+    t.index ["organisation_id", "external_id", "external_source"], name: "index_orders_on_org_external_id_source", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["organisation_id", "placed_at"], name: "index_orders_on_organisation_id_and_placed_at"
     t.index ["organisation_id"], name: "index_orders_on_organisation_id"
+    t.index ["promo_code_id"], name: "index_orders_on_promo_code_id"
     t.index ["shipping_address_id"], name: "index_orders_on_shipping_address_id"
   end
 
@@ -293,6 +377,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.bigint "invited_by_id"
     t.datetime "invitation_accepted_at"
     t.string "invited_email"
+    t.boolean "receive_order_notifications"
     t.index ["invitation_token"], name: "index_org_members_on_invitation_token", unique: true
     t.index ["member_id"], name: "index_org_members_on_member_id"
     t.index ["organisation_id"], name: "index_org_members_on_organisation_id"
@@ -321,6 +406,27 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.string "taxpayer_id"
     t.integer "free_shipping_threshold_cents"
     t.string "free_shipping_threshold_currency", default: "EUR"
+    t.boolean "show_related_products", default: true, null: false
+    t.string "out_of_stock_strategy", default: "do_nothing", null: false
+    t.boolean "show_product_sku"
+    t.boolean "show_product_min_quantity"
+    t.boolean "show_product_category"
+    t.boolean "show_product_availability"
+    t.string "instagram_url"
+    t.string "facebook_url"
+    t.string "linkedin_url"
+    t.boolean "show_whatsapp_button"
+    t.boolean "show_scroll_to_top"
+    t.string "email_sender_name"
+    t.string "email_reply_to"
+    t.boolean "email_order_confirmation_enabled", default: true, null: false
+    t.boolean "email_discount_notification_enabled", default: true, null: false
+    t.boolean "email_customer_invitation_enabled", default: true, null: false
+    t.boolean "email_member_order_notification_enabled", default: true, null: false
+    t.integer "delivery_days", default: 62, null: false
+    t.string "order_cutoff_time"
+    t.integer "lead_time_days", default: 1, null: false
+    t.string "timezone", default: "Europe/Lisbon", null: false
     t.index ["default_locale"], name: "index_organisations_on_default_locale"
     t.index ["slug"], name: "index_organisations_on_slug", unique: true
   end
@@ -365,7 +471,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
   end
 
   create_table "product_discounts", force: :cascade do |t|
-    t.bigint "product_id", null: false
+    t.bigint "product_id"
     t.bigint "organisation_id", null: false
     t.string "discount_type", default: "percentage", null: false
     t.decimal "discount_value", precision: 10, scale: 4, null: false
@@ -376,6 +482,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_product_discounts_on_category_id"
     t.index ["organisation_id"], name: "index_product_discounts_on_organisation_id"
     t.index ["product_id", "organisation_id"], name: "index_product_discounts_on_product_id_and_organisation_id"
     t.index ["product_id"], name: "index_product_discounts_on_product_id"
@@ -400,7 +508,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.integer "unit_price_cents"
     t.string "unit_price_currency", default: "EUR"
     t.integer "stock_quantity", default: 0
-    t.boolean "track_stock", default: false, null: false
+    t.boolean "track_stock", default: true, null: false
     t.boolean "available", default: true, null: false
     t.boolean "is_default", default: false, null: false
     t.integer "position"
@@ -410,6 +518,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.string "external_source"
     t.datetime "last_synced_at"
     t.text "sync_error"
+    t.boolean "hide_when_unavailable"
+    t.boolean "exclude_from_discounts"
+    t.string "custom_discount_type"
+    t.decimal "custom_discount_value"
     t.index ["organisation_id", "sku"], name: "index_product_variants_on_organisation_id_and_sku", unique: true, where: "((sku IS NOT NULL) AND ((sku)::text <> ''::text))"
     t.index ["organisation_id"], name: "index_product_variants_on_organisation_id"
     t.index ["product_id", "available"], name: "index_product_variants_on_product_id_and_available"
@@ -440,10 +552,101 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
     t.string "external_source"
     t.datetime "last_synced_at"
     t.text "sync_error"
+    t.boolean "hide_related_products", default: false, null: false
+    t.bigint "cover_photo_blob_id"
+    t.boolean "price_on_request"
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["organisation_id", "external_id", "external_source"], name: "index_products_on_org_external_id_source", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["organisation_id"], name: "index_products_on_organisation_id"
     t.index ["slug"], name: "index_products_on_slug", unique: true
+  end
+
+  create_table "promo_code_customer_categories", force: :cascade do |t|
+    t.bigint "promo_code_id", null: false
+    t.bigint "customer_category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_category_id"], name: "index_promo_code_customer_categories_on_customer_category_id"
+    t.index ["promo_code_id", "customer_category_id"], name: "idx_promo_code_customer_categories_unique", unique: true
+    t.index ["promo_code_id"], name: "index_promo_code_customer_categories_on_promo_code_id"
+  end
+
+  create_table "promo_code_customers", force: :cascade do |t|
+    t.bigint "promo_code_id", null: false
+    t.bigint "customer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_promo_code_customers_on_customer_id"
+    t.index ["promo_code_id", "customer_id"], name: "index_promo_code_customers_on_promo_code_id_and_customer_id", unique: true
+    t.index ["promo_code_id"], name: "index_promo_code_customers_on_promo_code_id"
+  end
+
+  create_table "promo_code_redemptions", force: :cascade do |t|
+    t.bigint "promo_code_id", null: false
+    t.bigint "customer_id", null: false
+    t.bigint "order_id", null: false
+    t.integer "discount_amount_cents", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_promo_code_redemptions_on_customer_id"
+    t.index ["order_id"], name: "index_promo_code_redemptions_on_order_id", unique: true
+    t.index ["promo_code_id"], name: "index_promo_code_redemptions_on_promo_code_id"
+  end
+
+  create_table "promo_codes", force: :cascade do |t|
+    t.bigint "organisation_id", null: false
+    t.string "code", null: false
+    t.text "description"
+    t.string "discount_type", null: false
+    t.decimal "discount_value", precision: 10, scale: 4, null: false
+    t.integer "min_order_amount_cents", default: 0
+    t.integer "usage_limit"
+    t.integer "usage_count", default: 0, null: false
+    t.integer "per_customer_limit", default: 1, null: false
+    t.string "eligibility", default: "all_customers", null: false
+    t.date "valid_from"
+    t.date "valid_until"
+    t.boolean "stackable", default: false, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organisation_id", "code"], name: "index_promo_codes_on_organisation_id_and_code", unique: true
+    t.index ["organisation_id"], name: "index_promo_codes_on_organisation_id"
+  end
+
+  create_table "related_products", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "related_product_id", null: false
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_related_products_on_product_id"
+    t.index ["related_product_id"], name: "index_related_products_on_related_product_id"
+  end
+
+  create_table "shopping_list_items", force: :cascade do |t|
+    t.bigint "shopping_list_id", null: false
+    t.bigint "product_id", null: false
+    t.bigint "product_variant_id"
+    t.integer "quantity", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_shopping_list_items_on_product_id"
+    t.index ["product_variant_id"], name: "index_shopping_list_items_on_product_variant_id"
+    t.index ["shopping_list_id", "product_id", "product_variant_id"], name: "idx_shopping_list_items_uniqueness", unique: true
+    t.index ["shopping_list_id"], name: "index_shopping_list_items_on_shopping_list_id"
+  end
+
+  create_table "shopping_lists", force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "notes"
+    t.index ["customer_id", "organisation_id"], name: "index_shopping_lists_on_customer_id_and_organisation_id"
+    t.index ["customer_id"], name: "index_shopping_lists_on_customer_id"
+    t.index ["organisation_id"], name: "index_shopping_lists_on_organisation_id"
   end
 
   create_table "variant_attribute_values", force: :cascade do |t|
@@ -461,12 +664,22 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
   add_foreign_key "categories", "organisations"
   add_foreign_key "category_products", "categories"
   add_foreign_key "category_products", "products"
+  add_foreign_key "customer_categories", "organisations"
+  add_foreign_key "customer_discounts", "customer_categories"
   add_foreign_key "customer_discounts", "customers"
   add_foreign_key "customer_discounts", "organisations"
+  add_foreign_key "customer_product_discounts", "categories"
+  add_foreign_key "customer_product_discounts", "customer_categories"
   add_foreign_key "customer_product_discounts", "customers"
   add_foreign_key "customer_product_discounts", "organisations"
   add_foreign_key "customer_product_discounts", "products"
+  add_foreign_key "customers", "customer_categories"
   add_foreign_key "customers", "organisations"
+  add_foreign_key "discount_email_notifications", "members", column: "sent_by_id"
+  add_foreign_key "discount_email_notifications", "organisations"
+  add_foreign_key "email_logs", "customers"
+  add_foreign_key "email_logs", "members"
+  add_foreign_key "email_logs", "organisations"
   add_foreign_key "erp_configurations", "organisations"
   add_foreign_key "erp_sync_logs", "erp_configurations"
   add_foreign_key "erp_sync_logs", "organisations"
@@ -480,12 +693,14 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
   add_foreign_key "orders", "members", column: "applied_by_id"
   add_foreign_key "orders", "order_discounts"
   add_foreign_key "orders", "organisations"
+  add_foreign_key "orders", "promo_codes"
   add_foreign_key "org_members", "members"
   add_foreign_key "org_members", "organisations"
   add_foreign_key "product_attribute_values", "product_attributes"
   add_foreign_key "product_attributes", "organisations"
   add_foreign_key "product_available_values", "product_attribute_values"
   add_foreign_key "product_available_values", "products"
+  add_foreign_key "product_discounts", "categories"
   add_foreign_key "product_discounts", "organisations"
   add_foreign_key "product_discounts", "products"
   add_foreign_key "product_product_attributes", "product_attributes"
@@ -494,6 +709,21 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_29_174050) do
   add_foreign_key "product_variants", "products"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "organisations"
+  add_foreign_key "promo_code_customer_categories", "customer_categories"
+  add_foreign_key "promo_code_customer_categories", "promo_codes"
+  add_foreign_key "promo_code_customers", "customers"
+  add_foreign_key "promo_code_customers", "promo_codes"
+  add_foreign_key "promo_code_redemptions", "customers"
+  add_foreign_key "promo_code_redemptions", "orders"
+  add_foreign_key "promo_code_redemptions", "promo_codes"
+  add_foreign_key "promo_codes", "organisations"
+  add_foreign_key "related_products", "products"
+  add_foreign_key "related_products", "products", column: "related_product_id", name: "fk_rails_related_product_id"
+  add_foreign_key "shopping_list_items", "product_variants"
+  add_foreign_key "shopping_list_items", "products"
+  add_foreign_key "shopping_list_items", "shopping_lists"
+  add_foreign_key "shopping_lists", "customers"
+  add_foreign_key "shopping_lists", "organisations"
   add_foreign_key "variant_attribute_values", "product_attribute_values"
   add_foreign_key "variant_attribute_values", "product_variants"
 end

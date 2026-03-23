@@ -1,0 +1,81 @@
+// Sidebar Card Styles
+// Subtle styling to match product cards
+
+.sidebar-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  background-color: #f8f9fa; // Same as product card image area
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+}
+
+// Rounded search bar with icon inside
+.search-minimal {
+  position: relative;
+  width: 100%;
+
+  .form-control {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 50px;
+    padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+    background-color: #f5f6f8;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+    &::placeholder {
+      color: #adb5bd;
+    }
+
+    &:focus {
+      outline: none;
+      background-color: #fff;
+      border-color: var(--org-primary, #0d6efd);
+      box-shadow: 0 0 0 3px rgba(var(--org-primary-rgb, 13, 110, 253), 0.1);
+    }
+  }
+
+  .search-minimal-icon {
+    position: absolute;
+    left: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+    font-size: 0.875rem;
+    pointer-events: none;
+    transition: color 0.2s ease;
+  }
+
+  .form-control:focus ~ .search-minimal-icon {
+    color: var(--org-primary, #0d6efd);
+  }
+
+  .search-minimal-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    color: #6c757d;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+      color: var(--org-primary, #0d6efd);
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+}

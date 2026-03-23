@@ -37,7 +37,7 @@
           <div class="row g-3">
             <div class="col-md-12">
               <div class="form-check">
-                <%= f.check_box :track_stock, class: "form-check-input", data: { controller: "toggle-field", toggle_field_target_value: "#stock-quantity-field" } %>
+                <%= f.check_box :track_stock, class: "form-check-input", data: { controller: "toggle-field", toggle_field_target_value: "#stock-quantity-field", action: "change->toggle-field#change" } %>
                 <%= f.label :track_stock, t('bo.product_variants.form.track_stock'), class: "form-check-label" %>
               </div>
               <small class="text-muted"><%= t('bo.product_variants.form.track_stock_hint') %></small>
@@ -60,7 +60,10 @@
           <% if variant.photo.attached? %>
             <div class="mb-3">
               <%= image_tag variant.photo.variant(resize_to_limit: [200, 200]), class: "rounded mb-2" %>
-              <p class="text-muted small mb-0"><%= t('bo.product_variants.form.current_image') %></p>
+              <div class="form-check mt-1">
+                <%= check_box_tag "product_variant[remove_photo]", "1", false, class: "form-check-input", id: "remove_photo" %>
+                <label class="form-check-label text-danger small" for="remove_photo"><%= t('bo.product_variants.form.remove_image') %></label>
+              </div>
             </div>
           <% end %>
 
@@ -82,6 +85,12 @@
             <%= f.label :available, t('bo.product_variants.form.available'), class: "form-check-label" %>
           </div>
 
+          <div class="form-check mb-3">
+            <%= f.check_box :hide_when_unavailable, class: "form-check-input" %>
+            <%= f.label :hide_when_unavailable, t('bo.product_variants.form.hide_when_unavailable'), class: "form-check-label" %>
+            <small class="text-muted d-block"><%= t('bo.product_variants.form.hide_when_unavailable_hint') %></small>
+          </div>
+
           <% if variant.persisted? && !variant.is_default? %>
             <div class="form-check">
               <%= f.check_box :is_default, class: "form-check-input" %>
@@ -92,7 +101,24 @@
         </div>
       </div>
 
-      <% if variant.persisted? && variant.attribute_values.any? %>
+      <% if !variant.persisted? && @available_values_by_attribute.present? %>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-3"><%= t('bo.product_variants.form.options') %></h5>
+            <% @available_values_by_attribute.each do |attribute, values| %>
+              <div class="mb-3">
+                <label class="form-label"><%= attribute.name %></label>
+                <select name="product_variant[attribute_value_ids][]" class="form-select">
+                  <option value=""><%= t('bo.product_variants.form.select_option', attribute: attribute.name) %></option>
+                  <% values.each do |value| %>
+                    <option value="<%= value.id %>"><%= value.value %></option>
+                  <% end %>
+                </select>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% elsif variant.persisted? && variant.attribute_values.any? %>
         <div class="card">
           <div class="card-body">
             <h5 class="card-title mb-3"><%= t('bo.product_variants.form.options') %></h5>

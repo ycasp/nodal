@@ -1,0 +1,9 @@
+<% if current_organisation.show_scroll_to_top? %>
+  <button class="scroll-to-top"
+          data-controller="scroll-to-top"
+          data-scroll-to-top-target="button"
+          data-action="click->scroll-to-top#scrollToTop"
+          aria-label="<%= t('storefront.scroll_to_top.label') %>">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+<% end %>

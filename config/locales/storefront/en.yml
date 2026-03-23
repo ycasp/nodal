@@ -19,16 +19,95 @@ en:
 
     # Customer navbar
     navbar:
+      home: "Home"
       products: "Products"
       orders: "Orders"
+      shopping_lists: "Lists"
       contact: "Contact"
       cart: "Cart"
+      account: "Account"
       sign_out: "Sign out"
+      language: "Language"
       order_discounts_available: "Order discounts available!"
+
+    # Home page
+    home:
+      good_morning: "Good morning, %{name}"
+      good_afternoon: "Good afternoon, %{name}"
+      good_evening: "Good evening, %{name}"
+      browse_catalog: "Browse Catalog"
+      frequent_products:
+        title: "Your Preferred Products"
+        subtitle:
+          one: "%{count} most-ordered item"
+          other: "%{count} most-ordered items"
+        empty: "No frequent products yet"
+        empty_hint: "Products you order regularly will appear here for quick reordering."
+        start_shopping: "Start Shopping"
+      last_order:
+        title: "Last Order"
+        view_order: "View Order"
+        no_orders: "No orders yet"
+        no_orders_hint: "Place your first order and it will appear here."
+        items_label: "items"
+        total_label: "total"
+        steps:
+          in_process: "Placed"
+          processed: "Processing"
+          completed: "Completed"
+      new_products:
+        title: "New Arrivals"
+        badge:
+          one: "%{count} NEW"
+          other: "%{count} NEW"
+        subtitle: "Added to the catalog since your last order"
+      tier_discount:
+        member_label: "Tier Member"
+        active_badge: "ACTIVE"
+        off_every_product: "off every product"
+        exclusive_prices: "exclusive prices"
+        off_orders_over: "off orders over %{amount}"
+        free_label: "Free"
+        free_shipping_over: "on orders over %{amount}"
+        promo_code: "Code: %{code}"
+        auto_applied: "Your account pricing is applied automatically to every order."
+      shopping_lists:
+        title: "Your Lists"
+        view_all: "View All Lists"
+      delivery_info:
+        title: "Delivery Info"
+        cutoff: "Order by %{time} for same-day processing"
+        next_delivery: "Next delivery: %{date}"
+      quick_links:
+        title: "Quick Links"
+        group_orders: "Orders"
+        group_catalog: "Catalog"
+        group_account: "Account"
+        all_orders: "All Orders"
+        shopping_lists: "Shopping Lists"
+        shopping_lists_hint: "Saved products for quick ordering"
+        orders_placed:
+          zero: "No orders placed"
+          one: "%{count} order placed"
+          other: "%{count} orders placed"
+        products_available:
+          one: "%{count} product available"
+          other: "%{count} products available"
+        my_account: "My Account"
+        manage_profile: "Manage your profile"
+        contact_support: "Contact Support"
 
     # Free shipping
     free_shipping:
       banner: "Free shipping on orders over %{amount}"
+
+    # Scroll to top button
+    scroll_to_top:
+      label: "Scroll to top"
+
+    # WhatsApp floating button
+    whatsapp_button:
+      tooltip: "Chat with us on WhatsApp"
 
     # Footer
     footer:
@@ -41,6 +120,7 @@ en:
       email: "Email"
       phone: "Phone"
       whatsapp: "WhatsApp"
+      location_and_hours: "Location & Hours"
       address: "Our Location"
       business_hours: "Business Hours"
       no_contact_info: "Contact information is not available at this time."
@@ -49,11 +129,13 @@ en:
     products:
       index:
         title: "Product Catalog"
-        subtitle: "Browse our products"
+        subtitle: "%{org_name}"
         search: "Search"
         search_placeholder: "Search products..."
         categories: "Categories"
         all_products: "All Products"
+        filters_button: "Filters"
+        filters_title: "Filters & Categories"
         clear_filters: "Clear filters"
         filters:
           active: "Active filters"
@@ -62,11 +144,22 @@ en:
         empty_catalog: "No products are available at this time."
         sale_badge: "SALE"
         min_order: "Min. order"
+        price_on_request: "Price on Request"
+        showing_products: "Showing %{from}-%{to} of %{count} products"
+        sort:
+          label: "Sort by"
+          name_asc: "Name A-Z"
+          name_desc: "Name Z-A"
+          price_asc: "Price: low to high"
+          price_desc: "Price: high to low"
+          newest: "Newest"
+      not_available: "This product is no longer available."
       show:
         back_to_products: "Back to products"
         zoom: "Zoom"
         available_discounts: "Available Discounts"
         product_discount: "Product Discount"
+        category_discount: "Category Discount"
         customer_tier_discount: "Customer Tier Discount"
         your_special_price: "Your Special Price"
         min_quantity_met: "Min. quantity met"
@@ -75,6 +168,9 @@ en:
         valid_until: "Valid until %{date}"
         min_order: "Min. order"
         category: "Category"
+        n_more_categories:
+          one: "1 more category"
+          other: "%{count} more categories"
         availability: "Availability"
         in_stock: "In Stock"
         out_of_stock: "Out of Stock"
@@ -90,6 +186,19 @@ en:
         select_options: "Select Options"
         select_option: "Select %{attribute}..."
         from_price: "From %{price}"
+        related_products: "You may also like"
+        price_on_request: "Price on Request"
+        price_on_request_contact: "Please contact us for pricing on this product."
+        price_on_request_not_purchasable: "This product requires a price quote. Please contact us for pricing."
+        price_on_request_cta_title: "Interested in this product?"
+        price_on_request_cta_subtitle: "Contact us to get a quote for this product."
+        price_request_email_btn: "Send Email"
+        price_request_whatsapp_btn: "WhatsApp"
+        price_request_email_subject: "Price Request — %{product}"
+        price_request_email_body: "Hello,\n\nI would like to request pricing for the following product:\n\nProduct: %{product}\nSKU: %{sku}\n\nPlease send me a quote.\n\nBest regards,\n%{customer}"
+        price_request_whatsapp_body: "Hello, I would like to request pricing for: *%{product}* (SKU: %{sku}). Could you send me a quote?"
+        add_to_list: "Save to List"
+        create_new_list: "Create New List"
 
     # Cart section
     cart:
@@ -111,6 +220,9 @@ en:
         clear_cart: "Clear Cart"
         confirm_remove_item: "Remove this item?"
         confirm_clear_cart: "Are you sure you want to clear your cart?"
+        remove_item: "Remove"
+        decrease_quantity: "Decrease quantity"
+        increase_quantity: "Increase quantity"
         order_summary: "Order Summary"
         subtotal: "Subtotal"
         subtotal_items: "Subtotal (%{count} items)"
@@ -118,6 +230,7 @@ en:
         available_discounts: "Available Order Discounts"
         spend_more_to_unlock: "Spend %{amount} more to unlock"
         discount_applied: "Applied to your order!"
+        discount_off_orders_over: "%{value} off orders over %{amount}"
         proceed_to_checkout: "Proceed to Checkout"
         remove: "Remove"
         sku: "SKU"
@@ -140,6 +253,7 @@ en:
           free: "Free"
         delivery_date:
           title: "Delivery Date"
+          pickup_title: "Pickup Date"
           hint: "Select when you'd like to receive your order"
         shipping_address: "Shipping Address"
         billing_address: "Billing Address"
@@ -166,12 +280,22 @@ en:
           discount: "Discount"
           total: "Total"
         place_order: "Place Order"
-        terms_agreement: "By placing your order, you agree to our terms and conditions."
+        terms_checkbox_html: "I have read and accept the %{terms_link} and the %{privacy_link}."
+        terms_link: "Terms and Conditions"
+        privacy_link: "Privacy Policy"
         table:
           product: "Product"
           quantity: "Qty"
           price: "Price"
           total: "Total"
+
+    # Legal pages
+    legal_pages:
+      terms:
+        title: "Terms and Conditions"
+      privacy:
+        title: "Privacy Policy"
+      no_content: "This page is not available yet."
 
     # Orders section
     orders:
@@ -185,9 +309,13 @@ en:
           total: "Total"
           actions: "Actions"
         reorder: "Reorder"
+        add_to_cart: "Add to Cart"
         view: "View"
         no_orders: "No orders yet"
         no_orders_hint: "Once you place an order, it will appear here."
+      add_to_cart:
+        success: "Items from order %{order_number} added to your cart."
+        skipped: "Some items were unavailable and skipped: %{items}"
       show:
         back_to_orders: "Back to Orders"
         order_number: "Order #%{number}"
@@ -216,6 +344,121 @@ en:
         billing_address: "Billing Address"
         delivery: "Delivery"
         pickup: "Pickup"
+
+    # Account settings
+    account:
+      show:
+        title: "Account Settings"
+        company_info: "Company & Contact Information"
+        company_name: "Company Name"
+        taxpayer_id: "Taxpayer ID"
+        contact_name: "Contact Name"
+        email: "Email"
+        phone: "Phone"
+        save_profile: "Save Profile"
+        addresses: "Addresses"
+        billing_address: "Billing Address"
+        shipping_addresses: "Shipping Addresses"
+        add_shipping_address: "Add Shipping Address"
+        remove_address: "Remove"
+        save_addresses: "Save Addresses"
+        address:
+          street: "Street"
+          number: "Number"
+          postal_code: "Postal Code"
+          city: "City"
+          country: "Country"
+        language: "Language"
+        email_notifications: "Email Notifications"
+        email_notifications_label: "Receive email notifications"
+        email_notifications_hint: "When disabled, you will not receive promotional or order confirmation emails. Password reset emails will still be sent."
+        save_preferences: "Save Preferences"
+        change_password: "Change Password"
+        current_password: "Current Password"
+        new_password: "New Password"
+        password_confirmation: "Password Confirmation"
+        update_password: "Update Password"
+      flash:
+        profile_updated: "Profile updated successfully."
+        password_updated: "Password updated successfully."
+
+    # Shopping lists
+    shopping_lists:
+      index:
+        title: "Shopping Lists"
+        subtitle: "Save your favorite products for quick ordering"
+        new_list: "New List"
+        view: "View"
+        add_to_cart: "Add to Cart"
+        empty: "No shopping lists yet"
+        empty_hint: "Create your first list to save products you order regularly."
+        create_first: "Create First List"
+        lines:
+          one: "%{count} product"
+          other: "%{count} products"
+      new:
+        title: "New Shopping List"
+        back: "Back to Lists"
+        name_label: "List Name"
+        name_placeholder: "e.g. Weekly Order, Office Supplies..."
+        notes_label: "Notes"
+        notes_placeholder: "Notes or observations about this list..."
+        optional: "optional"
+        create: "Create List"
+      show:
+        back: "Back to Lists"
+        edit_details: "Edit Details"
+        add_all_to_cart: "Add All to Cart"
+        delete_list: "Delete List"
+        confirm_delete: "Are you sure you want to delete this list?"
+        rename: "Rename"
+        save: "Save"
+        notes_placeholder: "Add notes to this list..."
+        items_title: "List Items"
+        empty: "Empty list"
+        empty_hint: "Use the catalog below to add products to your list."
+        add_products: "Add Products"
+        table:
+          product: "Product"
+          variant: "Variant"
+          quantity: "Quantity"
+          update: "Update"
+      product_picker:
+        search_placeholder: "Search products..."
+        all_categories: "All Categories"
+        product: "Product"
+        price: "Price"
+        no_products: "No products found."
+      flash:
+        created: "Shopping list created successfully."
+        updated: "List updated successfully."
+        deleted: "List deleted successfully."
+        item_added: "Product added to list."
+        item_added_to_list: "'%{product}' added to '%{list}' successfully."
+        item_updated: "Quantity updated."
+        item_removed: "Product removed from list."
+        add_to_cart_success: "Items from list '%{name}' added to your cart."
+        add_to_cart_skipped: "Some items were unavailable and skipped: %{items}"
+
+    # Promo codes
+    promo_codes:
+      label: "Promo Code"
+      have_code: "Have a promo code?"
+      placeholder: "Enter code"
+      apply: "Apply"
+      confirm_remove: "Remove this promo code?"
+      applied: "Promo code %{code} applied! You save %{discount}."
+      removed: "Promo code removed."
+      errors:
+        blank: "Please enter a promo code."
+        not_found: "This promo code is not valid."
+        inactive: "This promo code is not active."
+        expired: "This promo code has expired."
+        usage_limit: "This promo code has reached its usage limit."
+        customer_limit: "You have already used this promo code."
+        not_eligible: "This promo code is not available for your account."
+        min_amount: "Your order must be at least %{amount} to use this code."
+        invalid: "This promo code could not be applied."
 
     # Flash messages
     flash:

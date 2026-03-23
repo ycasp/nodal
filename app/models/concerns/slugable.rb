@@ -24,7 +24,15 @@ module Slugable
         base = "#{base}-#{secondary.to_s.parameterize}" if secondary.present?
       end
 
-      self.slug = base
+      # Handle uniqueness collisions by appending a counter
+      candidate = base
+      counter = 1
+      while self.class.where.not(id: id).exists?(slug: candidate)
+        counter += 1
+        candidate = "#{base}-#{counter}"
+      end
+
+      self.slug = candidate
     end
   end
 

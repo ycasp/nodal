@@ -1,11 +1,20 @@
-<div class="card mt-3">
+<div class="card sidebar-card sidebar-sticky">
   <div class="card-body">
+    <% if params[:category].present? || Array(params[:queries]).any? %>
+      <div class="mb-3">
+        <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary btn-sm w-100" do %>
+          <i class="fa-solid fa-times me-2"></i><%= t('storefront.products.index.clear_filters') %>
+        <% end %>
+      </div>
+    <% end %>
     <h6 class="card-title mb-3"><%= t('storefront.products.index.categories') %></h6>
     <div class="category-sidebar" data-controller="storefront-category-tree">
       <ul class="list-unstyled mb-0">
         <li>
-          <%= link_to products_path(org_slug: params[:org_slug], queries: params[:queries]),
-              class: "category-link d-block py-1 #{'active fw-bold' if Array(params[:categories]).empty?}" do %>
+          <% all_params = { org_slug: params[:org_slug], queries: params[:queries] } %>
+          <% all_params[:sort] = params[:sort] if params[:sort].present? %>
+          <%= link_to products_path(**all_params),
+              class: "category-link d-block py-1 #{'active fw-bold' if params[:category].blank?}" do %>
             <i class="fa-solid fa-grid-2 me-2"></i>
             <%= t('storefront.products.index.all_products') %>
           <% end %>

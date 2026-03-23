@@ -61,7 +61,17 @@
           <tr>
             <th><%= t('bo.orders.index.table.order_id') %></th>
             <th><%= t('bo.orders.index.table.client') %></th>
-            <th><%= t('bo.orders.index.table.date') %></th>
+            <th>
+              <% next_dir = params[:sort_dir] == "asc" ? "desc" : "asc" %>
+              <%= link_to bo_orders_path(org_slug: @current_organisation.slug, search: params[:search], status: params[:status], payment_status: params[:payment_status], sort_dir: next_dir), class: "text-decoration-none text-dark" do %>
+                <%= t('bo.orders.index.table.date') %>
+                <% if params[:sort_dir] == "asc" %>
+                  <i class="fa-solid fa-arrow-up-short-wide fa-xs"></i>
+                <% else %>
+                  <i class="fa-solid fa-arrow-down-wide-short fa-xs"></i>
+                <% end %>
+              <% end %>
+            </th>
             <th><%= t('bo.orders.index.table.items') %></th>
             <th><%= t('bo.common.total') %></th>
             <th><%= t('bo.common.tables.status') %></th>
@@ -71,16 +81,21 @@
         </thead>
         <tbody>
           <% @orders.each do |order| %>
-            <tr class="order-row" data-href="<%= bo_order_path(org_slug: @current_organisation.slug, id: order.id) %>" style="cursor: pointer;">
+            <tr class="order-row<%= ' table-active fw-semibold' if order.viewed_at.nil? %>" data-href="<%= bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash) %>" style="cursor: pointer;">
               <td>
-                <div class="fw-semibold"><%= order.order_number %></div>
+                <div class="fw-semibold" title="<%= order.order_number %>">
+                  <%= order.order_number.split('-').last(2).join('-') %>
+                  <% if order.viewed_at.nil? %>
+                    <span class="badge bg-danger ms-1" style="font-size: 0.65rem; vertical-align: middle;"><%= t('bo.orders.index.new_badge', default: 'New') %></span>
+                  <% end %>
+                </div>
               </td>
               <td>
                 <div><%= order.customer.company_name %></div>
                 <small class="text-muted"><%= order.customer.contact_name %></small>
               </td>
               <td><%= order.placed_at&.strftime("%m/%d/%Y") || order.created_at.strftime("%m/%d/%Y") %></td>
-              <td><%= order.order_items.count %></td>
+              <td><%= order.order_items.size %></td>
               <td><%= humanized_money_with_symbol(order.total_amount) %></td>
               <td>
                 <% status_class = case order.status
@@ -105,13 +120,13 @@
                 </span>
               </td>
               <td class="text-end order-actions" onclick="event.stopPropagation();">
-                <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
+                <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash), class: "btn btn-sm btn-link text-muted" do %>
                   <i class="fa-solid fa-eye"></i>
                 <% end %>
-                <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
+                <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash), class: "btn btn-sm btn-link text-muted" do %>
                   <i class="fa-solid fa-pen-to-square"></i>
                 <% end %>
-                <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: t('bo.common.confirm.delete_order', number: order.order_number) } do %>
+                <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: t('bo.common.confirm.delete_order', number: order.order_number) } do %>
                   <i class="fa-solid fa-trash"></i>
                 <% end %>
               </td>
@@ -128,6 +143,11 @@
         </tbody>
       </table>
     </div>
+    <% if @pagy.pages > 1 %>
+      <div class="card-footer d-flex justify-content-center">
+        <%== pagy_bootstrap_nav(@pagy) %>
+      </div>
+    <% end %>
   </div>
 </div>
 

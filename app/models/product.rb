@@ -15,6 +15,12 @@ class Product < ApplicationRecord
   has_many :category_products, dependent: :destroy
   has_many :categories, through: :category_products
 
+  # Related products
+  has_many :related_product_associations, class_name: "RelatedProduct", dependent: :destroy
+  has_many :manual_related_products, through: :related_product_associations, source: :related_product
+  has_many :inverse_related_product_associations, class_name: "RelatedProduct",
+           foreign_key: :related_product_id, dependent: :destroy
+
   # Variants and attributes
   has_many :product_variants, dependent: :destroy
   has_many :product_product_attributes, dependent: :destroy
@@ -24,9 +30,13 @@ class Product < ApplicationRecord
 
   has_many_attached :photos
 
-  # Backward compatibility: returns first photo
+  # Returns the cover photo if set, otherwise falls back to first photo
   def photo
-    photos.first
+    if cover_photo_blob_id.present?
+      photos.find { |p| p.blob_id == cover_photo_blob_id } || photos.first
+    else
+      photos.first
+    end
   end
 
   # Check if any photos are attached
@@ -47,7 +57,18 @@ class Product < ApplicationRecord
 
   def active_discount_for(customer)
     return nil unless customer
-    customer_product_discounts.active.find_by(customer: customer)
+    # Direct customer match takes precedence
+    direct = customer_product_discounts.active.find_by(customer: customer)
+    return direct if direct
+
+    # Fall back to customer category match
+    if customer.customer_category_id.present?
+      customer_product_discounts.active.find_by(customer_category_id: customer.customer_category_id)
+    end
+  end
+
+  def show_related_products?
+    organisation.show_related_products? && !hide_related_products?
   end
 
   def discounted_price_for(discount)
@@ -77,6 +98,7 @@ class Product < ApplicationRecord
   end
 
   def purchasable?
+    return false if price_on_request?
     product_variants.available.any?(&:purchasable?)
   end
 

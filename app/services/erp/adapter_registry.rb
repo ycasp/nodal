@@ -11,6 +11,23 @@ module Erp
           products_endpoint: { label: 'Products Endpoint', type: :text, required: false, placeholder: '/products', default: '/products' },
           customers_endpoint: { label: 'Customers Endpoint', type: :text, required: false, placeholder: '/customers', default: '/customers' }
         }
+      },
+      'firebird' => {
+        class_name: 'Erp::Adapters::FirebirdAdapter',
+        display_name: 'Firebird Database',
+        description: 'Direct connection to a Firebird 2.5 database (no API needed)',
+        credentials: {
+          host: { label: 'Database Host', type: :text, required: true, placeholder: '192.168.1.100' },
+          port: { label: 'Port', type: :text, required: false, placeholder: '3050', default: '3050' },
+          database_path: { label: 'Database Path', type: :text, required: true, placeholder: '/path/to/database.fdb' },
+          username: { label: 'Username', type: :text, required: true, placeholder: 'SYSDBA', default: 'SYSDBA' },
+          password: { label: 'Password', type: :password, required: true, placeholder: 'Database password' },
+          products_table: { label: 'Products Table', type: :text, required: false, placeholder: 'PRODUCTS', default: 'PRODUCTS' },
+          customers_table: { label: 'Customers Table', type: :text, required: false, placeholder: 'CUSTOMERS', default: 'CUSTOMERS' },
+          orders_table: { label: 'Orders Table', type: :text, required: false, placeholder: 'ORDERS', default: 'ORDERS' },
+          order_items_table: { label: 'Order Items Table', type: :text, required: false, placeholder: 'ORDER_ITEMS', default: 'ORDER_ITEMS' },
+          encoding: { label: 'Character Encoding', type: :text, required: false, placeholder: 'WIN1252', default: 'WIN1252' }
+        }
       }
     }.freeze
 

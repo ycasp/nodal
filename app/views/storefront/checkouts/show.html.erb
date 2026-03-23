@@ -1,6 +1,8 @@
-<%= link_to cart_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
-  <i class="fa-solid fa-arrow-left me-2"></i><%= t('storefront.common.back') %> <%= t('storefront.navbar.cart') %>
-<% end %>
+<%= render "storefront/shared/page_header",
+  title: t('storefront.checkouts.show.title'),
+  subtitle: t('storefront.checkouts.show.subtitle'),
+  back_path: cart_path(org_slug: params[:org_slug]),
+  back_label: "#{t('storefront.common.back')} #{t('storefront.navbar.cart')}" %>
 
 <div class="row g-4"
      data-controller="checkout"
@@ -9,15 +11,12 @@
      data-checkout-shipping-cost-value="<%= @current_organisation.shipping_cost.cents %>"
      data-checkout-currency-symbol-value="<%= @current_organisation.currency_symbol %>"
      data-checkout-free-shipping-threshold-value="<%= @current_organisation.free_shipping_threshold_cents || 0 %>"
-     data-checkout-free-shipping-enabled-value="<%= @current_organisation.free_shipping_enabled? %>">
+     data-checkout-free-shipping-enabled-value="<%= @current_organisation.free_shipping_enabled? %>"
+     data-checkout-delivery-label-value="<%= t('storefront.checkouts.show.delivery_date.title') %>"
+     data-checkout-pickup-label-value="<%= t('storefront.checkouts.show.delivery_date.pickup_title') %>"
+     data-checkout-delivery-days-value="<%= current_organisation.delivery_wdays.to_json %>"
+     data-checkout-earliest-date-value="<%= @earliest_delivery_date.iso8601 %>">
   <div class="col-lg-8">
-    <!-- Checkout Header -->
-    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
-      <div class="card-body">
-        <h1 class="h3 mb-1"><%= t('storefront.checkouts.show.title') %></h1>
-        <p class="text-muted mb-0"><%= t('storefront.checkouts.show.subtitle') %></p>
-      </div>
-    </div>
 
     <%= form_with model: @order, url: checkout_path(org_slug: params[:org_slug]), method: :patch, id: "checkout-form" do |f| %>
 
@@ -26,57 +25,98 @@
         <div class="card-body">
           <h5 class="card-title mb-3"><%= t('storefront.checkouts.show.order_items') %></h5>
 
-          <table class="table">
-            <thead>
-              <tr>
-                <th><%= t('storefront.checkouts.show.table.product') %></th>
-                <th class="text-center"><%= t('storefront.checkouts.show.table.quantity') %></th>
-                <th class="text-end"><%= t('storefront.checkouts.show.table.price') %></th>
-                <th class="text-end"><%= t('storefront.checkouts.show.table.total') %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @order_items.each do |item| %>
+          <%# Desktop table view (hidden on mobile) %>
+          <div class="d-none d-md-block">
+            <table class="table">
+              <thead>
                 <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <% if item.effective_photo.present? %>
-                        <%= image_tag item.effective_photo, style: "width: 50px; height: 50px; object-fit: cover; border-radius: 6px;", class: "me-3" %>
-                      <% else %>
-                        <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 6px;">
-                          <i class="fa-solid fa-image text-muted"></i>
-                        </div>
-                      <% end %>
-                      <div>
-                        <div class="fw-medium"><%= item.product.name %></div>
-                        <% if item.product_variant.present? && item.product.variable? %>
-                          <small class="text-primary"><%= item.product_variant.option_values_string %></small><br>
+                  <th><%= t('storefront.checkouts.show.table.product') %></th>
+                  <th class="text-center"><%= t('storefront.checkouts.show.table.quantity') %></th>
+                  <th class="text-end"><%= t('storefront.checkouts.show.table.price') %></th>
+                  <th class="text-end"><%= t('storefront.checkouts.show.table.total') %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @order_items.each do |item| %>
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <% if item.effective_photo.present? %>
+                          <%= image_tag item.effective_photo, style: "width: 50px; height: 50px; object-fit: cover; border-radius: 6px;", class: "me-3" %>
+                        <% else %>
+                          <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 6px;">
+                            <i class="fa-solid fa-image text-muted"></i>
+                          </div>
                         <% end %>
-                        <small class="text-muted"><%= item.product.category&.name %></small>
+                        <div>
+                          <div class="fw-medium"><%= item.product.name %></div>
+                          <% if item.product_variant.present? && item.product.variable? %>
+                            <small class="text-primary"><%= item.product_variant.sku.presence || item.product_variant.option_values_string %></small><br>
+                          <% end %>
+                          <small class="text-muted"><%= item.product.category&.name %></small>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center"><%= item.quantity %></td>
+                    <td class="text-end">
+                      <% if item.discount_percentage && item.discount_percentage > 0 %>
+                        <span class="text-muted text-decoration-line-through small"><%= humanized_money_with_symbol(item.price) %></span>
+                        <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
+                      <% else %>
+                        <%= humanized_money_with_symbol(item.price) %>
+                      <% end %>
+                    </td>
+                    <td class="text-end fw-medium">
+                      <% if item.discount_percentage && item.discount_percentage > 0 %>
+                        <span class="text-muted text-decoration-line-through small"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                        <span class="text-success"><%= humanized_money_with_symbol(item.total_price) %></span>
+                      <% else %>
+                        <%= humanized_money_with_symbol(item.total_price) %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <%# Mobile card view (hidden on desktop) %>
+          <div class="d-md-none">
+            <% @order_items.each_with_index do |item, index| %>
+              <div class="checkout-item-card <%= 'border-bottom pb-3 mb-3' unless index == @order_items.length - 1 %>">
+                <div class="d-flex align-items-start">
+                  <% if item.effective_photo.present? %>
+                    <%= image_tag item.effective_photo, class: "me-3 flex-shrink-0", style: "width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" %>
+                  <% else %>
+                    <div class="me-3 flex-shrink-0 bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 8px;">
+                      <i class="fa-solid fa-image text-muted"></i>
+                    </div>
+                  <% end %>
+                  <div class="flex-grow-1 min-width-0">
+                    <div class="fw-semibold text-truncate"><%= item.product.name %></div>
+                    <% if item.product_variant.present? && item.product.variable? %>
+                      <small class="text-primary"><%= item.product_variant.sku.presence || item.product_variant.option_values_string %></small><br>
+                    <% end %>
+                    <small class="text-muted"><%= item.product.category&.name %></small>
+
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                      <span class="text-muted small">
+                        <%= t('storefront.checkouts.show.table.quantity') %>: <strong><%= item.quantity %></strong>
+                      </span>
+                      <div class="text-end">
+                        <% if item.discount_percentage && item.discount_percentage > 0 %>
+                          <span class="text-muted text-decoration-line-through small d-block"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
+                          <span class="text-success fw-bold"><%= humanized_money_with_symbol(item.total_price) %></span>
+                        <% else %>
+                          <span class="fw-bold"><%= humanized_money_with_symbol(item.total_price) %></span>
+                        <% end %>
                       </div>
                     </div>
-                  </td>
-                  <td class="text-center"><%= item.quantity %></td>
-                  <td class="text-end">
-                    <% if item.discount_percentage && item.discount_percentage > 0 %>
-                      <span class="text-muted text-decoration-line-through small"><%= humanized_money_with_symbol(item.price) %></span>
-                      <span class="text-success"><%= humanized_money_with_symbol(item.price - (item.price * item.discount_percentage)) %></span>
-                    <% else %>
-                      <%= humanized_money_with_symbol(item.price) %>
-                    <% end %>
-                  </td>
-                  <td class="text-end fw-medium">
-                    <% if item.discount_percentage && item.discount_percentage > 0 %>
-                      <span class="text-muted text-decoration-line-through small"><%= humanized_money_with_symbol(item.price * item.quantity) %></span>
-                      <span class="text-success"><%= humanized_money_with_symbol(item.total_price) %></span>
-                    <% else %>
-                      <%= humanized_money_with_symbol(item.total_price) %>
-                    <% end %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
 
@@ -137,8 +177,9 @@
           <div class="mb-3">
             <%= f.date_field :receive_on,
                 class: "form-control",
-                min: Date.tomorrow,
-                value: @order.receive_on || Date.tomorrow %>
+                min: @earliest_delivery_date,
+                value: (@order.receive_on.present? && @order.receive_on >= @earliest_delivery_date) ? @order.receive_on : @earliest_delivery_date,
+                data: { checkout_target: "dateField", action: "change->checkout#validateDate" } %>
             <div class="form-text"><%= t('storefront.checkouts.show.delivery_date.hint') %></div>
           </div>
         </div>
@@ -258,13 +299,13 @@
   </div>
 
   <div class="col-lg-4">
-    <!-- Order Summary -->
-    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; position: sticky; top: 20px;">
+    <!-- Order Summary (sticky on desktop only) -->
+    <div class="card border-0 shadow-sm mb-4 checkout-summary-card" style="border-radius: 12px;">
       <div class="card-body">
         <h5 class="card-title mb-3"><%= t('storefront.carts.show.order_summary') %></h5>
 
         <div class="d-flex justify-content-between mb-2">
-          <span class="text-muted"><%= t('storefront.checkouts.show.summary.subtotal') %> (<%= @order.item_count %> <%= t('storefront.common.items', count: @order.item_count) %>)</span>
+          <span class="text-muted"><%= t('storefront.checkouts.show.summary.subtotal') %> (<%= t('storefront.common.items', count: @order.item_count) %>)</span>
           <span><%= humanized_money_with_symbol(@order.total_amount) %></span>
         </div>
 
@@ -274,6 +315,8 @@
             <span>-<%= humanized_money_with_symbol(@order.auto_order_discount_amount) %></span>
           </div>
         <% end %>
+
+        <%= render 'storefront/checkouts/promo_code' %>
 
         <div class="d-flex justify-content-between mb-2">
           <span class="text-muted"><%= t('storefront.checkouts.show.summary.tax') %> (<%= (@current_organisation.tax_rate * 100).round(1) %>%)</span>
@@ -296,9 +339,14 @@
           <i class="fa-solid fa-check me-2"></i><%= t('storefront.checkouts.show.place_order') %>
         </button>
 
-        <p class="text-muted small text-center mt-3 mb-0">
-          <%= t('storefront.checkouts.show.terms_agreement') %>
-        </p>
+        <div class="form-check mt-3 mb-0">
+          <input type="checkbox" name="order[terms_accepted]" value="1" id="terms_accepted" class="form-check-input" required form="checkout-form">
+          <label class="form-check-label small" for="terms_accepted">
+            <%= t('storefront.checkouts.show.terms_checkbox_html',
+                  terms_link: link_to(t('storefront.checkouts.show.terms_link'), terms_path(org_slug: current_organisation.slug), target: "_blank", class: "fw-medium text-primary"),
+                  privacy_link: link_to(t('storefront.checkouts.show.privacy_link'), privacy_path(org_slug: current_organisation.slug), target: "_blank", class: "fw-medium text-primary")) %>
+          </label>
+        </div>
       </div>
     </div>
   </div>

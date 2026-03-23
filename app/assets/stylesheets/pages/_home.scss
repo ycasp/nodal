@@ -135,8 +135,8 @@ $section-padding-mobile: 64px 0;
 
   @media (max-width: 576px) {
     flex-direction: column;
+    align-items: center;
     width: 100%;
-    max-width: 300px;
   }
 }
 
@@ -1007,6 +1007,75 @@ $section-padding-mobile: 64px 0;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     letter-spacing: 0;
+  }
+}
+
+// ========================================
+// BENEFITS SECTION
+// ========================================
+.benefits-section {
+  padding: $section-padding;
+  background: linear-gradient(180deg, #ffffff 0%, #f8faf9 100%);
+
+  @media (max-width: 768px) {
+    padding: $section-padding-mobile;
+  }
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.benefit-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .benefit-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba($teal, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+
+    i {
+      font-size: 1.5rem;
+      color: $teal;
+    }
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $dark;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: $gray;
+    line-height: 1.6;
+    margin: 0;
   }
 }
 

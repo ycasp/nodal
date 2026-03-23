@@ -1,11 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="container-fluid py-4">
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_customers_path(params[:org_slug]), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_customers_path(params[:org_slug], filter_params_hash), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -13,113 +12,310 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= @customer.contact_name %></h4>
-        <span class="text-muted"><%= @customer.company_name %></span>
+        <h1><%= @customer.contact_name %></h1>
+        <p><%= @customer.company_name %></p>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
-      <% if @customer.active? %>
-        <span class="badge bg-primary rounded-pill px-3 py-2"><%= t('bo.common.statuses.active') %></span>
-      <% else %>
+    <div class="bo-page-actions">
+      <% case @customer.invitation_status %>
+      <% when :inactive %>
         <span class="badge bg-secondary rounded-pill px-3 py-2"><%= t('bo.common.statuses.inactive') %></span>
+      <% when :not_invited %>
+        <span class="badge bg-warning rounded-pill px-3 py-2"><i class="fa-solid fa-envelope me-1"></i><%= t('bo.common.statuses.not_invited') %></span>
+      <% when :pending %>
+        <span class="badge bg-info rounded-pill px-3 py-2"><i class="fa-solid fa-clock me-1"></i><%= t('bo.common.statuses.pending') %></span>
+      <% when :active %>
+        <span class="badge bg-primary rounded-pill px-3 py-2"><%= t('bo.common.statuses.active') %></span>
       <% end %>
-      <%= link_to edit_bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-primary" do %>
+      <%= link_to edit_bo_customer_path(params[:org_slug], @customer, filter_params_hash), class: "btn btn-outline-primary" do %>
         <i class="fa-solid fa-pen-to-square me-1"></i> <%= t('bo.common.actions.edit') %>
       <% end %>
       <%= render "bo/customers/invite" %>
-      <%= link_to bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-danger", data: { turbo_method: :delete, turbo_confirm: t('bo.common.confirm.delete_customer') } do %>
+      <%= link_to bo_customer_path(params[:org_slug], @customer, filter_params_hash), class: "btn btn-outline-danger", data: { turbo_method: :delete, turbo_confirm: t('bo.common.confirm.delete_customer') } do %>
         <i class="fa-solid fa-trash me-1"></i> <%= t('bo.common.actions.delete') %>
       <% end %>
     </div>
   </div>
 </div>
 
-<div class="row g-3 mb-4">
-  <div class="col-md-8">
-    <div class="card h-100">
-      <div class="card-body">
-        <h5 class="card-title mb-4"><%= t('bo.customers.show.contact_information') %></h5>
+<div class="bo-page-body">
 
-        <div class="row mb-4">
-          <div class="col-md-6">
-            <div class="d-flex align-items-start gap-3">
-              <i class="fa-solid fa-envelope text-muted mt-1"></i>
-              <div>
-                <small class="text-muted d-block"><%= t('bo.customers.form.email') %></small>
-                <span><%= @customer.email %></span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="d-flex align-items-start gap-3">
-              <i class="fa-solid fa-phone text-muted mt-1"></i>
-              <div>
-                <small class="text-muted d-block"><%= t('bo.customers.form.phone') %></small>
-                <span><%= @customer.contact_phone || t('bo.common.not_provided') %></span>
-              </div>
-            </div>
-          </div>
-        </div>
+  <%# === Row 1: Contact Info + Account Details === %>
+  <div class="row g-3 mb-4">
+    <div class="col-md-8">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.customers.show.contact_information') %></h5>
 
-        <div class="row mb-4">
-          <div class="col-md-6">
-            <div class="d-flex align-items-start gap-3">
-              <i class="fa-solid fa-building text-muted mt-1"></i>
-              <div>
-                <small class="text-muted d-block"><%= t('bo.customers.form.taxpayer_id') %></small>
-                <span><%= @customer.taxpayer_id.presence || t('bo.common.not_provided') %></span>
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="d-flex align-items-start gap-3">
+                <i class="fa-solid fa-envelope text-muted mt-1"></i>
+                <div>
+                  <small class="text-muted d-block"><%= t('bo.customers.form.email') %></small>
+                  <span><%= @customer.email %></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-start gap-3">
+                <i class="fa-solid fa-phone text-muted mt-1"></i>
+                <div>
+                  <small class="text-muted d-block"><%= t('bo.customers.form.phone') %></small>
+                  <span><%= @customer.contact_phone || t('bo.common.not_provided') %></span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="d-flex align-items-start gap-3">
-              <i class="fa-solid fa-location-dot text-muted mt-1"></i>
-              <div>
-                <small class="text-muted d-block"><%= t('bo.customers.form.billing_address') %></small>
-                <span class="text-muted"><%= @customer.billing_address&.full_address|| t('bo.common.not_provided') %></span>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="row mb-4">
-          <div class="col-md-6">
-            <div class="d-flex align-items-start gap-3">
-              <i class="fa-solid fa-truck text-muted mt-1"></i>
-              <div>
-                <small class="text-muted d-block"><%= t('bo.customers.show.active_shipping_addresses') %></small>
-                  <% if @customer.shipping_addresses.any? %>
-                    <ul class="text-muted ps-3 mb-0">
-                    <% @customer.shipping_addresses.each do |address| %>
-                      <li><span class="text-muted d-block"><%= address.full_address %></span></li>
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="d-flex align-items-start gap-3">
+                <i class="fa-solid fa-building text-muted mt-1"></i>
+                <div>
+                  <small class="text-muted d-block"><%= t('bo.customers.form.taxpayer_id') %></small>
+                  <span><%= @customer.taxpayer_id.presence || t('bo.common.not_provided') %></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-start gap-3">
+                <i class="fa-solid fa-location-dot text-muted mt-1"></i>
+                <div>
+                  <small class="text-muted d-block"><%= t('bo.customers.form.billing_address') %></small>
+                  <span class="text-muted"><%= @customer.billing_address&.full_address || t('bo.common.not_provided') %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="d-flex align-items-start gap-3">
+                <i class="fa-solid fa-truck text-muted mt-1"></i>
+                <div>
+                  <small class="text-muted d-block"><%= t('bo.customers.show.active_shipping_addresses') %></small>
+                    <% if @customer.shipping_addresses.any? %>
+                      <ul class="text-muted ps-3 mb-0">
+                      <% @customer.shipping_addresses.each do |address| %>
+                        <li><span class="text-muted d-block"><%= address.full_address %></span></li>
+                      <% end %>
+                    </ul>
+                    <% else %>
+                      <span class="text-muted"><%= t('bo.common.not_provided') %></span>
                     <% end %>
-                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <% if @customer.synced_from_erp? %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h6 class="card-title mb-3"><i class="fa-solid fa-rotate me-1"></i> <%= t('bo.erp_sync.title') %></h6>
+
+            <div class="mb-2">
+              <small class="text-muted d-block"><%= t('bo.erp_sync.status_label') %></small>
+              <% case @customer.sync_status %>
+              <% when :synced %>
+                <span class="badge bg-success"><%= t('bo.erp_sync.synced') %></span>
+              <% when :error %>
+                <span class="badge bg-danger"><%= t('bo.erp_sync.error') %></span>
+              <% else %>
+                <span class="badge bg-secondary"><%= t('bo.erp_sync.not_synced') %></span>
+              <% end %>
+            </div>
+
+            <div class="mb-2">
+              <small class="text-muted d-block"><%= t('bo.erp_sync.external_id') %></small>
+              <code><%= @customer.external_id %></code>
+            </div>
+
+            <% if @customer.last_synced_at %>
+              <div class="mb-2">
+                <small class="text-muted d-block"><%= t('bo.erp_sync.last_synced') %></small>
+                <span title="<%= l(@customer.last_synced_at) %>"><%= t('bo.erp_sync.synced_ago', time: time_ago_in_words(@customer.last_synced_at)) %></span>
+              </div>
+            <% end %>
+
+            <% if @customer.has_sync_error? %>
+              <div class="border border-danger rounded bg-danger-subtle py-2 px-3 mb-0 mt-2">
+                <small class="text-danger"><i class="fa-solid fa-triangle-exclamation me-1"></i> <%= @customer.sync_error %></small>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.customers.show.account_details') %></h5>
+
+          <% if @customer.external_id.present? && !@customer.synced_from_erp? %>
+          <div class="border-bottom pb-3 mb-3">
+            <small class="text-muted d-block"><%= t('bo.erp_sync.external_id') %></small>
+            <span class="font-monospace"><%= @customer.external_id %></span>
+          </div>
+          <% end %>
+
+          <div class="border-bottom pb-3 mb-3">
+            <small class="text-muted d-block"><%= t('bo.customers.show.category') %></small>
+            <% if @customer.customer_category.present? %>
+              <span class="badge bg-light text-dark border"><%= @customer.customer_category.name %></span>
+            <% else %>
+              <span class="text-muted"><%= t('bo.customers.form.no_category') %></span>
+            <% end %>
+          </div>
+
+          <div class="border-bottom pb-3 mb-3">
+            <small class="text-muted d-block"><%= t('bo.customers.show.invitation_status') %></small>
+            <% case @customer.invitation_status %>
+            <% when :not_invited %>
+              <span class="badge bg-warning-subtle text-warning"><i class="fa-solid fa-envelope me-1"></i><%= t('bo.common.statuses.not_invited') %></span>
+            <% when :pending %>
+              <span class="badge bg-info-subtle text-info"><i class="fa-solid fa-clock me-1"></i><%= t('bo.common.statuses.pending') %></span>
+              <% if @customer.invitation_sent_at %>
+                <br><small class="text-muted"><%= t('bo.customers.show.invited_on') %>: <%= l(@customer.invitation_sent_at, format: :short) %></small>
+              <% end %>
+            <% when :active %>
+              <span class="badge bg-success-subtle text-success"><%= t('bo.customers.show.invitation_accepted') %></span>
+              <% if @customer.invitation_sent_at %>
+                <br><small class="text-muted"><%= t('bo.customers.show.invited_on') %>: <%= l(@customer.invitation_sent_at, format: :short) %></small>
+              <% end %>
+              <% if @customer.invitation_accepted_at %>
+                <br><small class="text-muted"><%= t('bo.customers.show.accepted_on') %>: <%= l(@customer.invitation_accepted_at, format: :short) %></small>
+              <% end %>
+            <% when :inactive %>
+              <span class="badge bg-secondary-subtle text-secondary"><%= t('bo.common.statuses.inactive') %></span>
+            <% end %>
+          </div>
+
+          <div>
+            <small class="text-muted d-block"><%= t('bo.customers.show.member_since') %></small>
+            <span><%= @customer.created_at.strftime("%-m/%-d/%Y") %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# === Row 2: Activity Overview === %>
+  <div class="row g-3 mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><i class="fa-solid fa-chart-line me-2"></i><%= t('bo.customers.show.activity_overview') %></h5>
+          <div class="row g-3">
+            <div class="col">
+              <div class="border rounded p-3 text-center">
+                <small class="text-muted d-block mb-1"><%= t('bo.customers.show.total_orders') %></small>
+                <span class="fs-4 fw-semibold"><%= @total_orders %></span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="border rounded p-3 text-center">
+                <small class="text-muted d-block mb-1"><%= t('bo.customers.show.total_spent') %></small>
+                <span class="fs-4 fw-semibold"><%= humanized_money_with_symbol(@total_spent) %></span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="border rounded p-3 text-center">
+                <small class="text-muted d-block mb-1"><%= t('bo.customers.show.avg_order_value') %></small>
+                <span class="fs-4 fw-semibold"><%= humanized_money_with_symbol(@average_order_value) %></span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="border rounded p-3 text-center">
+                <small class="text-muted d-block mb-1"><%= t('bo.customers.show.last_login') %></small>
+                <span class="fs-4 fw-semibold">
+                  <% if @customer.last_sign_in_at %>
+                    <%= l(@customer.last_sign_in_at, format: :short) %>
                   <% else %>
-                    <span class="text-muted"><%= t('bo.common.not_provided') %></span>
+                    <%= t('bo.customers.show.never') %>
                   <% end %>
+                </span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="border rounded p-3 text-center<%= ' border-warning bg-warning-subtle' if @open_cart&.order_items&.any? %>">
+                <small class="text-muted d-block mb-1"><%= t('bo.customers.show.open_cart') %></small>
+                <% if @open_cart&.order_items&.any? %>
+                  <span class="fs-4 fw-semibold"><%= humanized_money_with_symbol(@open_cart.total_amount) %></span>
+                  <br><small class="text-muted"><%= @open_cart.order_items.size %> <%= t('bo.orders.index.table.items').downcase %></small>
+                <% else %>
+                  <span class="fs-4 fw-semibold text-muted">—</span>
+                <% end %>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <h5 class="card-title mb-4"><%= t('bo.customers.show.account_details') %></h5>
+  <%# === Row 3: Recent Orders === %>
+  <div class="row g-3 mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="card-title mb-0"><i class="fa-solid fa-receipt me-2"></i><%= t('bo.customers.show.recent_orders') %></h5>
+            <% if @total_orders > 0 %>
+              <%= link_to bo_orders_path(params[:org_slug]), class: "btn btn-sm btn-outline-primary" do %>
+                <%= t('bo.customers.show.view_all_orders') %> <i class="fa-solid fa-arrow-right ms-1"></i>
+              <% end %>
+            <% end %>
+          </div>
 
-        <div>
-          <small class="text-muted d-block"><%= t('bo.customers.show.member_since') %></small>
-          <span><%= @customer.created_at.strftime("%-m/%-d/%Y") %></span>
+          <% if @recent_orders.any? %>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th><%= t('bo.orders.index.table.order_id') %></th>
+                    <th><%= t('bo.orders.index.table.date') %></th>
+                    <th><%= t('bo.orders.index.table.items') %></th>
+                    <th><%= t('bo.orders.index.table.total') %></th>
+                    <th><%= t('bo.orders.index.table.status') %></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @recent_orders.each do |order| %>
+                    <tr style="cursor: pointer;" onclick="window.location='<%= bo_order_path(org_slug: params[:org_slug], id: order.id) %>'">
+                      <td class="fw-semibold"><%= order.order_number %></td>
+                      <td><%= order.placed_at&.strftime("%-d/%m/%Y") %></td>
+                      <td><%= order.order_items.size %></td>
+                      <td><%= humanized_money_with_symbol(order.grand_total) %></td>
+                      <td>
+                        <% status_class = case order.status
+                           when 'completed' then 'text-success'
+                           when 'in_process', 'processed' then 'text-primary'
+                           else 'text-warning'
+                           end %>
+                        <span class="badge bg-light <%= status_class %>"><%= order.status.titleize %></span>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <div class="text-center text-muted py-4">
+              <i class="fa-solid fa-receipt fa-2x mb-2 opacity-25"></i>
+              <p class="mb-0"><%= t('bo.customers.show.no_orders') %></p>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
   </div>
-</div>
+
 </div>
 
 <% end %>

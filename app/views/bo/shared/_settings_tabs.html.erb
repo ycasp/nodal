@@ -1,0 +1,24 @@
+<div class="card mb-4">
+  <div class="card-body p-0">
+    <ul class="nav nav-pills nav-fill border-bottom" role="tablist">
+      <li class="nav-item" role="presentation">
+        <%= link_to edit_bo_settings_path(params[:org_slug]),
+            class: "nav-link rounded-0 py-3 #{'active' if controller_name == 'settings'}" do %>
+          <i class="fa-solid fa-gear me-2"></i><%= t('bo.settings.tabs.general', default: 'General') %>
+        <% end %>
+      </li>
+      <li class="nav-item" role="presentation">
+        <%= link_to edit_bo_email_settings_path(params[:org_slug]),
+            class: "nav-link rounded-0 py-3 #{'active' if controller_name == 'email_settings'}" do %>
+          <i class="fa-solid fa-envelope me-2"></i><%= t('bo.settings.tabs.email', default: 'Email') %>
+        <% end %>
+      </li>
+      <li class="nav-item" role="presentation">
+        <%= link_to edit_bo_erp_settings_path(params[:org_slug]),
+            class: "nav-link rounded-0 py-3 #{'active' if controller_name == 'erp_settings'}" do %>
+          <i class="fa-solid fa-plug me-2"></i><%= t('bo.settings.tabs.erp_integration', default: 'ERP Integration') %>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+</div>

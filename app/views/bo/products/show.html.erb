@@ -1,31 +1,39 @@
 <% content_for :bo_main_content do %>
 
-<div class="container-fluid py-4">
-<div class="d-flex justify-content-between align-items-start mb-4">
-  <div class="d-flex align-items-center gap-3">
-    <%= link_to bo_products_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
-      <i class="fa-solid fa-arrow-left fa-lg"></i>
-    <% end %>
-    <div>
-      <h1 class="mb-0"><%= @product.name %></h1>
-      <span class="text-muted">SKU: <%= @product.sku %></span>
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_products_path(params[:org_slug], filter_params_hash), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+      <div>
+        <h1><%= @product.name %></h1>
+        <p>SKU: <%= @product.sku %></p>
+      </div>
     </div>
-  </div>
-  <div class="d-flex align-items-center gap-2">
-    <%= link_to configure_variants_bo_product_path(params[:org_slug], @product), class: "btn btn-outline-secondary" do %>
-      <i class="fa-solid fa-cubes me-1"></i> <%= t('bo.products.show.manage_variants') %>
-    <% end %>
-    <%= link_to edit_bo_product_path(params[:org_slug], @product), class: "btn btn-outline-primary" do %>
-      <i class="fa-solid fa-pen-to-square me-1"></i> <%= t('bo.common.actions.edit') %>
-    <% end %>
-    <%= link_to bo_product_path(params[:org_slug], @product),
-        class: "btn btn-outline-danger ms-2",
-        data: { turbo_method: :delete, turbo_confirm: t('bo.common.confirm.delete_product_name', name: @product.name) } do %>
-      <i class="fa-solid fa-trash me-1"></i> <%= t('bo.common.actions.delete') %>
-    <% end %>
+    <div class="bo-page-actions">
+      <%= link_to product_path(params[:org_slug], @product), class: "btn btn-outline-secondary", target: "_blank" do %>
+        <i class="fa-solid fa-store me-1"></i> <%= t('bo.products.show.view_in_storefront') %>
+      <% end %>
+      <%= link_to related_products_bo_product_path(params[:org_slug], @product), class: "btn btn-outline-secondary" do %>
+        <i class="fa-solid fa-link me-1"></i> <%= t('bo.products.show.manage_related') %>
+      <% end %>
+      <%= link_to configure_variants_bo_product_path(params[:org_slug], @product), class: "btn btn-outline-secondary" do %>
+        <i class="fa-solid fa-cubes me-1"></i> <%= t('bo.products.show.manage_variants') %>
+      <% end %>
+      <%= link_to edit_bo_product_path(params[:org_slug], @product, filter_params_hash), class: "btn btn-outline-primary" do %>
+        <i class="fa-solid fa-pen-to-square me-1"></i> <%= t('bo.common.actions.edit') %>
+      <% end %>
+      <%= link_to bo_product_path(params[:org_slug], @product, filter_params_hash),
+          class: "btn btn-outline-danger",
+          data: { turbo_method: :delete, turbo_confirm: t('bo.common.confirm.delete_product_name', name: @product.name) } do %>
+        <i class="fa-solid fa-trash me-1"></i> <%= t('bo.common.actions.delete') %>
+      <% end %>
+    </div>
   </div>
 </div>
 
+<div class="bo-page-body">
 <div class="row g-4">
   <%# Left Column %>
   <div class="col-lg-8">
@@ -58,7 +66,11 @@
           </div>
           <div class="col-md-6 mb-3">
             <small class="text-muted d-block"><%= t('bo.products.form.unit_price', currency: @current_organisation.currency_symbol) %></small>
-            <strong><%= humanized_money_with_symbol(@product.price) || '-'  %></strong>
+            <% if @product.price_on_request? %>
+              <span class="badge bg-warning-subtle text-warning"><i class="fa-solid fa-tag me-1"></i><%= t('bo.products.form.price_on_request') %></span>
+            <% else %>
+              <strong><%= humanized_money_with_symbol(@product.price) || '-'  %></strong>
+            <% end %>
           </div>
           <div class="col-md-6 mb-3">
             <small class="text-muted d-block"><%= t('bo.products.form.unit_description') %></small>
@@ -82,15 +94,19 @@
         <div>
           <small class="text-muted d-block mb-2"><%= t('bo.products.form.product_images') %></small>
           <% if @product.photos.attached? && @product.photos.any? %>
-            <div class="d-flex flex-wrap gap-2">
-              <% @product.photos.each_with_index do |photo, index| %>
+            <div class="d-flex flex-wrap gap-2" data-controller="lightbox">
+              <% main_blob_id = @product.cover_photo_blob_id || @product.photos.first&.blob_id %>
+              <% @product.photos.each do |photo| %>
                 <div class="border rounded p-1 position-relative" style="width: 120px;">
-                  <%= image_tag photo, style: "width: 100%; height: 100px; object-fit: cover; border-radius: 4px;" %>
-                  <% if index == 0 %>
+                  <a href="#" data-action="lightbox#open" data-lightbox-url="<%= url_for(photo) %>" style="cursor: zoom-in;">
+                    <%= image_tag photo, style: "width: 100%; height: 100px; object-fit: cover; border-radius: 4px;" %>
+                  </a>
+                  <% if photo.blob_id == main_blob_id %>
                     <span class="badge bg-primary position-absolute" style="bottom: 4px; left: 4px; font-size: 10px;"><%= t('bo.products.show.main') %></span>
                   <% end %>
                 </div>
               <% end %>
+              <%= render "shared/lightbox" %>
             </div>
           <% else %>
             <p class="text-muted mb-0"><%= t('bo.products.show.no_images') %></p>
@@ -135,7 +151,9 @@
                 <th><%= t('bo.products.show.variant') %></th>
                 <th><%= t('bo.products.show.sku') %></th>
                 <th><%= t('bo.products.show.price') %></th>
+                <th><%= t('bo.products.show.stock') %></th>
                 <th><%= t('bo.products.show.status') %></th>
+                <th><%= t('bo.products.show.storefront_column') %></th>
               </tr>
             </thead>
             <tbody>
@@ -150,10 +168,32 @@
                   <td><code><%= variant.sku.presence || '-' %></code></td>
                   <td><%= variant.price&.format %></td>
                   <td>
+                    <% if variant.track_stock? %>
+                      <span class="text-<%= variant.in_stock? ? 'success' : 'danger' %>"><%= variant.stock_quantity %></span>
+                    <% else %>
+                      <span class="text-muted"><%= t('bo.products.show.unlimited') %></span>
+                    <% end %>
+                  </td>
+                  <td>
                     <% if variant.available? %>
                       <span class="text-success"><i class="fa-solid fa-check"></i></span>
                     <% else %>
                       <span class="text-danger"><i class="fa-solid fa-times"></i></span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if variant.is_default? && @product.has_variants? %>
+                      <span class="badge bg-light text-muted"><%= t('bo.products.show.variant_storefront_base') %></span>
+                    <% elsif variant.available? && variant.purchasable? %>
+                      <span class="badge bg-success"><%= t('bo.products.show.variant_storefront_purchasable') %></span>
+                    <% elsif variant.available? && !variant.purchasable? %>
+                      <span class="badge bg-warning text-dark"><%= t('bo.products.show.variant_storefront_visible_no_stock') %></span>
+                    <% elsif !variant.available? && !variant.hide_when_unavailable? && current_organisation.hide_out_of_stock? %>
+                      <span class="badge bg-warning text-dark"><%= t('bo.products.show.variant_storefront_badge_no_stock') %></span>
+                    <% elsif !variant.available? && current_organisation.hide_out_of_stock? %>
+                      <span class="badge bg-danger"><%= t('bo.products.show.variant_storefront_hidden') %></span>
+                    <% elsif !variant.available? %>
+                      <span class="badge bg-secondary"><%= t('bo.products.show.variant_storefront_unavailable') %></span>
                     <% end %>
                   </td>
                 </tr>
@@ -171,6 +211,160 @@
       </div>
     </div>
 
+  </div>
+
+  <%# Right Column — Info Cards %>
+  <div class="col-lg-4">
+    <%# Card A: ERP Sync Status %>
+    <% synced_variants = @product.product_variants.synced_from_erp %>
+    <% if @product.synced_from_erp? || synced_variants.any? %>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="card-title mb-3"><i class="fa-solid fa-rotate me-1"></i> <%= t('bo.erp_sync.title') %></h6>
+
+          <div class="mb-2">
+            <small class="text-muted d-block"><%= t('bo.erp_sync.status_label') %></small>
+            <% if @product.synced_from_erp? %>
+              <% case @product.sync_status %>
+              <% when :synced %>
+                <span class="badge bg-success"><%= t('bo.erp_sync.synced') %></span>
+              <% when :error %>
+                <span class="badge bg-danger"><%= t('bo.erp_sync.error') %></span>
+              <% end %>
+            <% else %>
+              <span class="badge bg-success"><%= t('bo.erp_sync.synced') %></span>
+              <small class="text-muted ms-1">(<%= t('bo.erp_sync.via_variants') %>)</small>
+            <% end %>
+          </div>
+
+          <% if @product.external_id.present? %>
+            <div class="mb-2">
+              <small class="text-muted d-block"><%= t('bo.erp_sync.external_id') %></small>
+              <code><%= @product.external_id %></code>
+            </div>
+          <% end %>
+
+          <% if synced_variants.any? %>
+            <div class="mb-2">
+              <small class="text-muted d-block"><%= t('bo.erp_sync.synced_variants') %></small>
+              <% synced_variants.each do |variant| %>
+                <div><code><%= variant.external_id %></code> <small class="text-muted"><%= variant.name %></small></div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% last_synced = @product.last_synced_at || synced_variants.maximum(:last_synced_at) %>
+          <% if last_synced %>
+            <div class="mb-2">
+              <small class="text-muted d-block"><%= t('bo.erp_sync.last_synced') %></small>
+              <span title="<%= l(last_synced) %>"><%= t('bo.erp_sync.synced_ago', time: time_ago_in_words(last_synced)) %></span>
+            </div>
+          <% end %>
+
+          <% if @product.has_sync_error? %>
+            <div class="border border-danger rounded bg-danger-subtle py-2 px-3 mb-0 mt-2">
+              <small class="text-danger"><i class="fa-solid fa-triangle-exclamation me-1"></i> <%= @product.sync_error %></small>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Card B: Storefront Visibility & Stock Rules %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h6 class="card-title mb-3"><i class="fa-solid fa-eye me-1"></i> <%= t('bo.products.show.storefront_visibility') %></h6>
+
+        <%# Net result: what does the customer see? %>
+        <div class="mb-3">
+          <small class="text-muted d-block mb-1"><%= t('bo.products.show.storefront_result') %></small>
+          <%
+            strategy = current_organisation.out_of_stock_strategy
+            product_visible = @product.available?
+            # For hide strategy, product may also be visible if any variant opts out of hiding
+            if !product_visible && strategy == 'hide'
+              product_visible = @product.product_variants.where(hide_when_unavailable: false).exists?
+            end
+          %>
+          <% if product_visible %>
+            <div class="border rounded p-2 bg-success-subtle">
+              <i class="fa-solid fa-circle-check text-success me-1"></i>
+              <strong><%= t('bo.products.show.product_visible_in_storefront') %></strong>
+            </div>
+          <% else %>
+            <div class="border rounded p-2 bg-danger-subtle">
+              <i class="fa-solid fa-circle-xmark text-danger me-1"></i>
+              <strong><%= t('bo.products.show.product_hidden_from_storefront') %></strong>
+              <% if strategy == 'hide' %>
+                <small class="text-muted d-block mt-1"><%= t('bo.products.show.hidden_reason_all_out_of_stock') %></small>
+              <% elsif !@product.available? %>
+                <small class="text-muted d-block mt-1"><%= t('bo.products.show.hidden_reason_unavailable') %></small>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <%# Per-variant storefront status %>
+        <% variants = @product.product_variants.by_position %>
+        <% if variants.any? %>
+          <small class="text-muted d-block mb-2"><%= t('bo.products.show.variant_storefront_status') %></small>
+          <ul class="list-unstyled mb-0 small">
+            <% variants.each do |variant| %>
+              <li class="mb-2 border-bottom pb-2">
+                <strong><%= variant.sku.presence || variant.name %></strong>
+                <small class="text-muted">(<%= variant.option_values_string.presence || t('bo.products.show.default') %>)</small>
+                <div class="ms-3 mt-1">
+                  <% if variant.is_default? && @product.has_variants? %>
+                    <i class="fa-solid fa-circle text-muted me-1" style="font-size: 8px; vertical-align: middle;"></i>
+                    <%= t('bo.products.show.variant_result_base_variant') %>
+                  <% elsif variant.available? && variant.purchasable? %>
+                    <i class="fa-solid fa-circle text-success me-1" style="font-size: 8px; vertical-align: middle;"></i>
+                    <%= t('bo.products.show.variant_result_purchasable') %>
+                  <% elsif variant.available? && !variant.purchasable? %>
+                    <i class="fa-solid fa-circle text-warning me-1" style="font-size: 8px; vertical-align: middle;"></i>
+                    <%= t('bo.products.show.variant_result_visible_not_purchasable') %>
+                  <% elsif !variant.available? && !variant.hide_when_unavailable? && current_organisation.hide_out_of_stock? %>
+                    <i class="fa-solid fa-circle text-warning me-1" style="font-size: 8px; vertical-align: middle;"></i>
+                    <%= t('bo.products.show.variant_result_badge_no_stock') %>
+                  <% elsif !variant.available? && current_organisation.hide_out_of_stock? %>
+                    <i class="fa-solid fa-circle text-danger me-1" style="font-size: 8px; vertical-align: middle;"></i>
+                    <%= t('bo.products.show.variant_result_hidden') %>
+                  <% elsif !variant.available? %>
+                    <i class="fa-solid fa-circle text-danger me-1" style="font-size: 8px; vertical-align: middle;"></i>
+                    <%= t('bo.products.show.variant_result_unavailable') %>
+                  <% end %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+
+        <hr>
+
+        <%# Strategy info %>
+        <div class="mb-2">
+          <small class="text-muted d-block"><%= t('bo.products.show.stock_strategy') %></small>
+          <% case current_organisation.out_of_stock_strategy %>
+          <% when 'do_nothing' %>
+            <span class="badge bg-secondary"><%= t('bo.products.show.stock_do_nothing') %></span>
+          <% when 'deactivate' %>
+            <span class="badge bg-warning text-dark"><%= t('bo.products.show.stock_deactivate') %></span>
+          <% when 'hide' %>
+            <span class="badge bg-danger"><%= t('bo.products.show.stock_hide') %></span>
+          <% end %>
+          <small class="text-muted d-block mt-1">
+            <% case current_organisation.out_of_stock_strategy %>
+            <% when 'do_nothing' %>
+              <%= t('bo.products.show.stock_do_nothing_desc') %>
+            <% when 'deactivate' %>
+              <%= t('bo.products.show.stock_deactivate_desc') %>
+            <% when 'hide' %>
+              <%= t('bo.products.show.stock_hide_desc') %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </div>

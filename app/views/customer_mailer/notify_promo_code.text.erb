@@ -1,0 +1,16 @@
+<%= t('mailers.customer_mailer.promo_code.greeting') %>
+
+<%= t('mailers.customer_mailer.promo_code.intro') %>
+
+Code: <%= @promo_code.code %>
+Discount: <%= @promo_code.value_display %> OFF
+<% if @promo_code.min_order_amount_cents.present? && @promo_code.min_order_amount_cents > 0 %>
+Minimum order: <%= @promo_code.min_order_amount.format %>
+<% end %>
+Valid: <%= @promo_code.valid_period_display %>
+<% if @promo_code.description.present? %>
+
+<%= @promo_code.description %>
+<% end %>
+
+<%= t('mailers.customer_mailer.promo_code.use_code_cta', code: @promo_code.code) %>

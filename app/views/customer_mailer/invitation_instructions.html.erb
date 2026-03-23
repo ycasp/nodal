@@ -12,7 +12,7 @@
   <tr>
     <td style="background-color: <%= @organisation.effective_primary_color %>; border-radius: 6px;">
       <%= link_to t('mailers.customer_mailer.invitation_instructions.accept_button'),
-          accept_invitation_url(@resource, invitation_token: @token, org_slug: @organisation.slug),
+          accept_customer_invitation_url(invitation_token: @token, org_slug: @organisation.slug),
           style: 'display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px;' %>
     </td>
   </tr>

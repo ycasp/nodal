@@ -6,29 +6,45 @@
       <%= link_to t('storefront.member_browse.return_to_dashboard'), bo_path(org_slug: current_organisation.slug), class: "ms-2", style: "color: #000; text-decoration: underline;" %>
     </div>
   <% end %>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom" style="position: relative !important; top: auto !important; left: auto !important; height: auto !important; padding: 0.5rem 1rem !important;">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom" style="position: relative !important; top: auto !important; left: auto !important; height: auto !important; padding: 0.25rem 1rem !important;">
     <div class="container">
-      <%= link_to products_path(org_slug: params[:org_slug]), class: "navbar-brand fw-bold d-flex align-items-center gap-1" do %>
+      <%= link_to home_path(org_slug: params[:org_slug]), class: "navbar-brand fw-bold d-flex align-items-center gap-1" do %>
         <% if current_organisation&.logo&.attached? %>
-          <%= image_tag current_organisation.logo, style: "max-height: 32px;", alt: current_organisation.name %>
+          <%= image_tag current_organisation.logo, style: "max-height: 60px; width: auto; object-fit: contain;", alt: current_organisation.name %>
         <% else %>
           <span class="logo-icon"><%= current_organisation&.name&.first&.upcase || 'N' %></span>
           <span class="logo-text"><%= current_organisation&.name || 'odal' %></span>
         <% end %>
       <% end %>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#customerNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <%# Mobile cart icon + hamburger (visible only on mobile) %>
+      <div class="d-flex align-items-center d-lg-none">
+        <% if current_customer %>
+          <%= link_to cart_path(org_slug: params[:org_slug]), class: "btn btn-outline-primary border-0 position-relative me-2 #{'active' if controller_name == 'carts'}" do %>
+            <i class="fa-solid fa-cart-shopping"></i>
+            <% if cart_line_item_count > 0 %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">
+                <%= cart_line_item_count %>
+              </span>
+            <% end %>
+          <% end %>
+        <% end %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#customerNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
 
       <div class="collapse navbar-collapse" id="customerNav">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <%= link_to t('storefront.navbar.home'), home_path(org_slug: params[:org_slug]), class: "nav-link #{'active' if controller_name == 'home'}" %>
+          </li>
           <li class="nav-item">
             <%= link_to t('storefront.navbar.products'), products_path(org_slug: params[:org_slug]), class: "nav-link #{'active' if controller_name == 'products'}" %>
           </li>
           <% unless browsing_as_member? %>
             <li class="nav-item">
-              <%= link_to t('storefront.navbar.orders'), orders_path(org_slug: params[:org_slug]), class: "nav-link #{'active' if controller_name == 'orders'}" %>
+              <%= link_to t('storefront.navbar.orders'), orders_path(org_slug: params[:org_slug]), class: "nav-link #{'active' if controller_name == 'orders' || controller_name == 'shopping_lists'}" %>
             </li>
           <% end %>
           <% if current_organisation.has_contact_info? %>
@@ -38,44 +54,14 @@
           <% end %>
         </ul>
 
-        <div class="d-flex align-items-center gap-3">
-          <!-- Language Switcher -->
-          <div class="dropdown">
-            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-              <i class="fa-solid fa-globe me-1"></i>
-              <%= I18n.locale.to_s.upcase %>
-            </button>
-            <ul class="dropdown-menu">
-              <li>
-                <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'en'),
-                            data: { turbo_method: :patch },
-                            class: "dropdown-item #{'active' if I18n.locale == :en}" do %>
-                  <i class="fa-solid fa-check me-2 <%= 'invisible' unless I18n.locale == :en %>"></i>English
-                <% end %>
-              </li>
-              <li>
-                <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'pt'),
-                            data: { turbo_method: :patch },
-                            class: "dropdown-item #{'active' if I18n.locale == :pt}" do %>
-                  <i class="fa-solid fa-check me-2 <%= 'invisible' unless I18n.locale == :pt %>"></i>Português
-                <% end %>
-              </li>
-              <li>
-                <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'es'),
-                            data: { turbo_method: :patch },
-                            class: "dropdown-item #{'active' if I18n.locale == :es}" do %>
-                  <i class="fa-solid fa-check me-2 <%= 'invisible' unless I18n.locale == :es %>"></i>Español
-                <% end %>
-              </li>
-            </ul>
-          </div>
+        <div class="d-flex align-items-center gap-4">
           <% if current_customer %>
-            <!-- Cart Icon -->
-            <%= link_to cart_path(org_slug: params[:org_slug]), class: "btn btn-outline-primary position-relative #{'active' if controller_name == 'carts'}" do %>
+            <!-- Cart Icon (desktop only, mobile cart is in header) -->
+            <%= link_to cart_path(org_slug: params[:org_slug]), class: "btn btn-outline-primary border-0 position-relative d-none d-lg-inline-flex #{'active' if controller_name == 'carts'}" do %>
               <i class="fa-solid fa-cart-shopping"></i>
-              <% if cart_item_count > 0 %>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  <%= cart_item_count %>
+              <% if cart_line_item_count > 0 %>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">
+                  <%= cart_line_item_count %>
                 </span>
               <% end %>
               <% if has_order_discounts? %>
@@ -84,16 +70,22 @@
                 </span>
               <% end %>
             <% end %>
-            <span class="text-muted small">
+            <span class="text-muted small d-none d-lg-inline">
               <i class="fa-regular fa-building me-1"></i>
               <%= current_customer.company_name %>
             </span>
             <div class="dropdown">
-              <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <button class="btn btn-sm dropdown-toggle user-dropdown-btn text-muted" type="button" data-bs-toggle="dropdown">
                 <i class="fa-regular fa-user me-1"></i>
                 <%= current_customer.contact_name %>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <%= link_to account_path(org_slug: params[:org_slug]), class: "dropdown-item" do %>
+                    <i class="fa-solid fa-user-gear me-2"></i><%= t('storefront.navbar.account') %>
+                  <% end %>
+                </li>
+                <li><hr class="dropdown-divider"></li>
                 <li>
                   <%= link_to destroy_customer_session_path(org_slug: params[:org_slug]), class: "dropdown-item", data: { turbo_method: :delete } do %>
                     <i class="fa-solid fa-right-from-bracket me-2"></i><%= t('storefront.navbar.sign_out') %>
@@ -114,7 +106,7 @@
       </div>
     </div>
   </nav>
-  <% if current_organisation&.free_shipping_enabled? %>
+  <% if current_organisation&.free_shipping_enabled? && controller_name != 'home' %>
     <div class="py-2 text-center small fw-medium" style="background-color: #d1e7dd; color: #0f5132;">
       <i class="fa-solid fa-truck me-1"></i>
       <%= t('storefront.free_shipping.banner', amount: humanized_money_with_symbol(current_organisation.free_shipping_threshold)) %>

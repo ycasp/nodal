@@ -24,8 +24,15 @@ Rails.application.routes.draw do
                   passwords: 'customers/passwords'
                 }
 
+    # Legal pages (public, no auth required)
+    scope module: :storefront do
+      get 'terms', to: 'legal_pages#terms', as: :terms
+      get 'privacy', to: 'legal_pages#privacy', as: :privacy
+    end
+
     # storefront (customer-facing)
     scope module: :storefront do
+      get 'home', to: 'home#show', as: :home
       resource :contact, only: [:show]
       resources :products, only: [:index, :show]
 
@@ -37,13 +44,34 @@ Rails.application.routes.draw do
       # Checkout
       resource :checkout, only: [:show, :update]
 
+      # Promo codes (apply/remove at checkout)
+      resource :promo_code, only: [] do
+        post :apply
+        delete :remove
+      end
+
       # Order items (add/update/remove from cart)
       resources :order_items, only: [:create, :update, :destroy]
 
       # Order history (placed orders only)
       resources :orders, only: [:index, :show] do
-        post :reorder, on: :member
+        member do
+          post :reorder
+          post :add_to_cart
+        end
       end
+
+      # Shopping lists
+      resources :shopping_lists, except: [:edit] do
+        member do
+          post :add_to_cart
+          get :product_picker
+        end
+        resources :shopping_list_items, only: [:create, :update, :destroy], as: :items
+      end
+
+      # Customer account settings
+      resource :account, only: [:show, :update]
     end
 
     # bo routes
@@ -62,6 +90,12 @@ Rails.application.routes.draw do
           post :invite
         end
       end
+      resources :customer_categories, except: [:index, :show] do
+        member do
+          post :add_customers
+          delete :remove_customer
+        end
+      end
       resources :products do
         collection do
           get :import
@@ -72,6 +106,10 @@ Rails.application.routes.draw do
           get :configure_variants
           patch :update_variant_configuration
           delete :delete_photo
+          patch :set_main_photo
+          get :related_products
+          patch :update_related_products
+          patch :reorder_related_products
         end
         resources :variants, controller: 'product_variants', except: [:show] do
           collection do
@@ -99,12 +137,16 @@ Rails.application.routes.draw do
         collection do
           patch :reorder
         end
+        resources :product_attribute_values, only: [:create]
       end
 
       # Unified Pricing section
       get 'pricing', to: 'pricing#index', as: :pricing
 
       resources :product_discounts, except: [:index, :show] do
+        collection do
+          get :variant_overrides
+        end
         member do
           patch :toggle_active
         end
@@ -117,6 +159,9 @@ Rails.application.routes.draw do
       end
 
       resources :customer_product_discounts, except: [:index, :show] do
+        collection do
+          get :variant_overrides
+        end
         member do
           patch :toggle_active
         end
@@ -128,9 +173,27 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :promo_codes, except: [:index, :show] do
+        member do
+          patch :toggle_active
+        end
+      end
+
+      resources :discount_email_notifications, only: [] do
+        member do
+          post :send_email
+          get :recipients
+        end
+      end
+
       # Profile & Settings
       resource :profile, only: [:edit, :update]
       resource :settings, only: [:edit, :update]
+
+      # Email Settings
+      resource :email_settings, only: [:edit, :update] do
+        get :email_logs
+      end
 
       # ERP Integration
       resource :erp_settings, only: [:edit, :update] do

@@ -1,0 +1,186 @@
+label: "Beleza & Higiene Profissional"
+emoji: "💄"
+
+categories:
+  - name: "Cabelo"
+    slug: "cabelo"
+    description: "Produtos profissionais para cuidado e styling de cabelo"
+    color: "#6A1B9A"
+
+  - name: "Corpo & Rosto"
+    slug: "corpo-rosto"
+    description: "Cuidados de pele, hidratantes e tratamentos faciais"
+    color: "#AD1457"
+
+  - name: "Unhas"
+    slug: "unhas"
+    description: "Vernizes, géis e acessórios para manicure e pedicure"
+    color: "#C62828"
+
+  - name: "Consumíveis & Acessórios"
+    slug: "consumiveis-acessorios"
+    description: "Toalhas, luvas, algodão e material descartável para salão"
+    color: "#37474F"
+
+products:
+  - name: "Champô Reparador 1000ml"
+    category: "Cabelo"
+    sku: "BZ-CHA-REP"
+    price: 1490
+    unit: "un"
+    min_qty: 6
+    stock: 300
+    description: "Champô profissional reparador com queratina. Embalagem salão 1000ml."
+
+  - name: "Máscara Capilar Hidratante 500ml"
+    category: "Cabelo"
+    sku: "BZ-MAS-HID"
+    price: 1890
+    unit: "un"
+    min_qty: 6
+    stock: 250
+    description: "Máscara intensiva com ácido hialurónico. Para cabelos secos e danificados."
+
+  - name: "Spray Fixador Forte 400ml"
+    category: "Cabelo"
+    sku: "BZ-SPR-FIX"
+    price: 790
+    unit: "un"
+    min_qty: 12
+    stock: 400
+    description: "Spray de fixação forte com acabamento natural. Seca rapidamente."
+
+  - name: "Óleo de Argão 100ml"
+    category: "Cabelo"
+    sku: "BZ-OLE-ARG"
+    price: 1290
+    unit: "un"
+    min_qty: 6
+    stock: 200
+    description: "Óleo de argão puro para brilho e proteção térmica."
+
+  - name: "Creme Hidratante Corporal 500ml"
+    category: "Corpo & Rosto"
+    sku: "BZ-CRE-COR"
+    price: 890
+    unit: "un"
+    min_qty: 12
+    stock: 400
+    description: "Creme hidratante profissional para massagem e tratamentos corporais."
+
+  - name: "Esfoliante Facial 250ml"
+    category: "Corpo & Rosto"
+    sku: "BZ-ESF-FAC"
+    price: 1190
+    unit: "un"
+    min_qty: 6
+    stock: 200
+    description: "Esfoliante facial com micropartículas naturais. Para todos os tipos de pele."
+
+  - name: "Base Coat UV/LED 15ml"
+    category: "Unhas"
+    sku: "BZ-BAS-UV"
+    price: 590
+    unit: "un"
+    min_qty: 12
+    stock: 500
+    description: "Base coat de gel UV/LED. Aderência superior, fácil remoção."
+
+  - name: "Top Coat Brilho UV/LED 15ml"
+    category: "Unhas"
+    sku: "BZ-TOP-UV"
+    price: 590
+    unit: "un"
+    min_qty: 12
+    stock: 500
+    description: "Top coat de acabamento brilhante. Proteção duradoura até 3 semanas."
+
+  - name: "Removedor de Verniz Gel 250ml"
+    category: "Unhas"
+    sku: "BZ-REM-GEL"
+    price: 490
+    unit: "un"
+    min_qty: 12
+    stock: 400
+    description: "Acetona profissional para remoção de gel e acrílico."
+
+  - name: "Toalha Descartável 40x80cm"
+    category: "Consumíveis & Acessórios"
+    sku: "BZ-TOA-DES"
+    price: 890
+    unit: "rolo 100un"
+    min_qty: 10
+    stock: 600
+    description: "Toalhas descartáveis em TNT macio. Rolo de 100 unidades."
+
+variant_products:
+  - name: "Verniz Gel UV/LED 15ml"
+    category: "Unhas"
+    sku: "BZ-VER-GEL"
+    unit: "un"
+    min_qty: 6
+    attribute: "Cor"
+    description: "Verniz gel profissional de longa duração. Cura em 60s sob lâmpada LED."
+    variants:
+      - name: "Vermelho Clássico"
+        sku_suffix: "RED"
+        price: 690
+        stock: 300
+      - name: "Nude Rosé"
+        sku_suffix: "NUD"
+        price: 690
+        stock: 350
+      - name: "Preto Intenso"
+        sku_suffix: "BLK"
+        price: 690
+        stock: 250
+      - name: "Branco French"
+        sku_suffix: "WHT"
+        price: 690
+        stock: 200
+
+  - name: "Coloração Permanente"
+    category: "Cabelo"
+    sku: "BZ-COL-PER"
+    unit: "tubo 100ml"
+    min_qty: 6
+    attribute: "Tom"
+    description: "Coloração profissional permanente com cobertura total de brancos."
+    variants:
+      - name: "Castanho Escuro (3.0)"
+        sku_suffix: "30"
+        price: 490
+        stock: 400
+      - name: "Castanho Médio (5.0)"
+        sku_suffix: "50"
+        price: 490
+        stock: 350
+      - name: "Louro Escuro (6.0)"
+        sku_suffix: "60"
+        price: 490
+        stock: 300
+      - name: "Louro Claro (8.0)"
+        sku_suffix: "80"
+        price: 490
+        stock: 250
+
+  - name: "Luvas de Nitrilo Salão"
+    category: "Consumíveis & Acessórios"
+    sku: "BZ-LUV-NIT"
+    unit: "caixa 100un"
+    min_qty: 10
+    attribute: "Tamanho"
+    description: "Luvas de nitrilo pretas sem pó. Ideais para coloração e tratamentos químicos."
+    variants:
+      - name: "S"
+        sku_suffix: "S"
+        price: 590
+        stock: 500
+      - name: "M"
+        sku_suffix: "M"
+        price: 590
+        stock: 600
+      - name: "L"
+        sku_suffix: "L"
+        price: 590
+        stock: 400

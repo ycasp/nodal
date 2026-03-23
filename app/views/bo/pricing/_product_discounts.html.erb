@@ -29,7 +29,7 @@
   <table class="table table-hover mb-0">
     <thead class="table-light">
       <tr>
-        <th><%= t('bo.common.product') %></th>
+        <th><%= t('bo.pricing.product_discounts.target_column') %></th>
         <th><%= t('bo.pricing.form.discount_type') %></th>
         <th><%= t('bo.pricing.form.value') %></th>
         <th><%= t('bo.pricing.form.min_quantity') %></th>
@@ -43,8 +43,19 @@
         <% @product_discounts.each do |discount| %>
           <tr>
             <td>
-              <div class="fw-semibold"><%= discount.product.name %></div>
-              <small class="text-muted"><%= discount.product.sku %></small>
+              <div class="d-flex align-items-start gap-2">
+                <div>
+                  <div class="fw-semibold"><%= discount.target_name %></div>
+                  <% if discount.product? %>
+                    <small class="text-muted"><%= discount.product.sku %></small>
+                  <% end %>
+                </div>
+                <% if discount.category? %>
+                  <span class="badge bg-info-subtle text-info"><%= t('bo.pricing.product_discounts.category_badge') %></span>
+                <% else %>
+                  <span class="badge bg-secondary-subtle text-secondary"><%= t('bo.pricing.product_discounts.product_badge') %></span>
+                <% end %>
+              </div>
             </td>
             <td>
               <span class="badge bg-secondary-subtle text-secondary">
@@ -74,6 +85,20 @@
             </td>
             <td>
               <div class="d-flex gap-2">
+                <% if discount.email_pending? %>
+                  <a href="#" class="text-warning" title="<%= t('bo.pricing.email_notifications.pending') %>"
+                     data-action="click->email-notification#open"
+                     data-send-url="<%= send_email_bo_discount_email_notification_path(params[:org_slug], discount.email_notification) %>"
+                     data-recipients-url="<%= recipients_bo_discount_email_notification_path(params[:org_slug], discount.email_notification) %>"
+                     data-recipient-count="<%= discount.email_notification.recipient_count %>"
+                     data-discount-type="<%= discount.discount_type.titleize %>">
+                    <i class="fa-solid fa-envelope"></i>
+                  </a>
+                <% elsif discount.email_sent? %>
+                  <span class="text-success" title="<%= t('bo.pricing.email_notifications.sent') %>">
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+                  </span>
+                <% end %>
                 <%= link_to edit_bo_product_discount_path(params[:org_slug], discount), class: "text-muted", title: t('bo.common.actions.edit') do %>
                   <i class="fa-solid fa-pen-to-square"></i>
                 <% end %>

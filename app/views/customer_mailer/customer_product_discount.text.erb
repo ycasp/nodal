@@ -1,2 +1,2 @@
-Hello <%= @customer.contact_name %>
+Hello<%= @customer.contact_name.present? ? " #{@customer.contact_name}" : "" %>
 Customer Product Discount

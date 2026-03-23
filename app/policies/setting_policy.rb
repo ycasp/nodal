@@ -8,6 +8,10 @@ class SettingPolicy < ApplicationPolicy
     admin_or_owner?
   end
 
+  def email_logs?
+    admin_or_owner?
+  end
+
   private
 
   def admin_or_owner?

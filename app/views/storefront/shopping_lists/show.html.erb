@@ -1,0 +1,139 @@
+<% actions = capture do %>
+  <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#renameForm">
+    <i class="fa-solid fa-pen me-1"></i> <%= t('storefront.shopping_lists.show.edit_details') %>
+  </button>
+  <% if @items.any? %>
+    <%= button_to add_to_cart_shopping_list_path(org_slug: params[:org_slug], id: @shopping_list), method: :post, class: "btn btn-primary btn-sm" do %>
+      <i class="fa-solid fa-cart-plus me-1"></i> <%= t('storefront.shopping_lists.show.add_all_to_cart') %>
+    <% end %>
+  <% end %>
+  <%= button_to shopping_list_path(org_slug: params[:org_slug], id: @shopping_list), method: :delete, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: t('storefront.shopping_lists.show.confirm_delete') } do %>
+    <i class="fa-solid fa-trash-can me-1"></i> <%= t('storefront.shopping_lists.show.delete_list') %>
+  <% end %>
+<% end %>
+<%= render "storefront/shared/page_header",
+  title: @shopping_list.name,
+  back_path: shopping_lists_path(org_slug: params[:org_slug]),
+  back_label: t('storefront.shopping_lists.show.back'),
+  actions: actions %>
+
+<%# Notes display (when present and edit form is collapsed) %>
+<% if @shopping_list.notes.present? %>
+  <p class="text-muted small mb-3"><i class="fa-solid fa-sticky-note me-1"></i> <%= @shopping_list.notes %></p>
+<% end %>
+
+<%# Inline edit form (collapsed by default) %>
+<div class="collapse mb-4" id="renameForm">
+  <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body py-3">
+      <%= form_with model: @shopping_list, url: shopping_list_path(org_slug: params[:org_slug], id: @shopping_list), method: :patch do |f| %>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <%= f.text_field :name, class: "form-control", style: "max-width: 300px;" %>
+        </div>
+        <div class="mb-2">
+          <%= f.text_area :notes, class: "form-control form-control-sm", rows: 2, placeholder: t('storefront.shopping_lists.show.notes_placeholder') %>
+        </div>
+        <%= f.submit t('storefront.shopping_lists.show.save'), class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%# List items %>
+<div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+  <div class="card-body">
+    <h5 class="card-title mb-3">
+      <i class="fa-solid fa-list me-2" style="color: var(--org-secondary);"></i>
+      <%= t('storefront.shopping_lists.show.items_title') %>
+      <span class="badge bg-secondary ms-2"><%= @items.size %></span>
+    </h5>
+
+    <turbo-frame id="shopping_list_items">
+      <% if @items.any? %>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 60px;"></th>
+                <th><%= t('storefront.shopping_lists.show.table.product') %></th>
+                <th><%= t('storefront.shopping_lists.show.table.variant') %></th>
+                <th style="width: 140px;"><%= t('storefront.shopping_lists.show.table.quantity') %></th>
+                <th style="width: 60px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @items.each do |item| %>
+                <tr id="<%= dom_id(item) %>">
+                  <td>
+                    <% photo = item.effective_photo %>
+                    <% if photo %>
+                      <%= image_tag photo.variant(resize_to_limit: [50, 50]), class: "rounded", style: "width: 40px; height: 40px; object-fit: cover;" %>
+                    <% else %>
+                      <div class="rounded d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: #f1f5f9;">
+                        <i class="fa-solid fa-image text-muted" style="font-size: 0.8rem;"></i>
+                      </div>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to item.product.name, product_path(org_slug: params[:org_slug], id: item.product), class: "text-decoration-none text-body fw-medium" %>
+                    <% if item.product.sku.present? %>
+                      <br><small class="text-muted">SKU: <%= item.product.sku %></small>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if item.product_variant && item.product_variant.option_values_string.present? %>
+                      <span class="badge bg-light text-dark"><%= item.product_variant.option_values_string %></span>
+                    <% else %>
+                      <span class="text-muted">-</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center gap-1">
+                      <%= form_with model: item, url: shopping_list_item_path(org_slug: params[:org_slug], shopping_list_id: @shopping_list, id: item), method: :patch do |f| %>
+                        <%= f.number_field :quantity, min: 1, class: "form-control form-control-sm text-center", style: "width: 70px;", onchange: "this.form.requestSubmit()" %>
+                      <% end %>
+                      <% if item.product.unit_description.present? %>
+                        <span class="text-muted small"><%= item.product.unit_description %></span>
+                      <% end %>
+                    </div>
+                  </td>
+                  <td>
+                    <%= button_to shopping_list_item_path(org_slug: params[:org_slug], shopping_list_id: @shopping_list, id: item), method: :delete, class: "btn btn-sm btn-outline-danger border-0" do %>
+                      <i class="fa-solid fa-xmark"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="text-center py-4">
+          <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+            <i class="fa-solid fa-clipboard-list"></i>
+          </div>
+          <p class="fw-medium mb-1"><%= t('storefront.shopping_lists.show.empty') %></p>
+          <p class="text-muted small mb-0"><%= t('storefront.shopping_lists.show.empty_hint') %></p>
+        </div>
+      <% end %>
+    </turbo-frame>
+  </div>
+</div>
+
+<%# Product picker %>
+<div class="card border-0 shadow-sm" style="border-radius: 12px;">
+  <div class="card-body">
+    <h5 class="card-title mb-3">
+      <i class="fa-solid fa-plus-circle me-2" style="color: var(--org-primary);"></i>
+      <%= t('storefront.shopping_lists.show.add_products') %>
+    </h5>
+
+    <turbo-frame id="product_picker" src="<%= product_picker_shopping_list_path(org_slug: params[:org_slug], id: @shopping_list) %>" loading="lazy">
+      <div class="text-center py-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden"><%= t('storefront.common.loading') %></span>
+        </div>
+      </div>
+    </turbo-frame>
+  </div>
+</div>

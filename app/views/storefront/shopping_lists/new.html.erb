@@ -1,0 +1,38 @@
+<%= render "storefront/shared/page_header",
+  title: t('storefront.shopping_lists.new.title'),
+  back_path: shopping_lists_path(org_slug: params[:org_slug]),
+  back_label: t('storefront.shopping_lists.new.back') %>
+
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+      <div class="card-body p-4">
+        <%= form_with model: @shopping_list, url: shopping_lists_path(org_slug: params[:org_slug]), method: :post do |f| %>
+          <% if @shopping_list.errors.any? %>
+            <div class="alert alert-danger">
+              <% @shopping_list.errors.full_messages.each do |msg| %>
+                <p class="mb-0"><%= msg %></p>
+              <% end %>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= f.label :name, t('storefront.shopping_lists.new.name_label'), class: "form-label fw-semibold" %>
+            <%= f.text_field :name, class: "form-control", placeholder: t('storefront.shopping_lists.new.name_placeholder'), autofocus: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :notes, t('storefront.shopping_lists.new.notes_label'), class: "form-label fw-semibold" %>
+            <span class="text-muted small">(<%= t('storefront.shopping_lists.new.optional') %>)</span>
+            <%= f.text_area :notes, class: "form-control", rows: 2, placeholder: t('storefront.shopping_lists.new.notes_placeholder') %>
+          </div>
+
+          <div class="d-flex gap-2">
+            <%= f.submit t('storefront.shopping_lists.new.create'), class: "btn btn-primary" %>
+            <%= link_to t('storefront.common.back'), shopping_lists_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 class ErpSyncLog < ApplicationRecord
   SYNC_TYPES = %w[full incremental manual].freeze
-  ENTITY_TYPES = %w[products customers].freeze
+  ENTITY_TYPES = %w[products customers orders].freeze
   STATUSES = %w[running completed failed].freeze
 
   belongs_to :organisation
@@ -61,6 +61,21 @@ class ErpSyncLog < ApplicationRecord
   def add_error(record_identifier, error_message)
     self.error_details ||= []
     self.error_details << { record: record_identifier, error: error_message, at: Time.current.iso8601 }
+  end
+
+  def add_change(external_id, record_type, action, changes = {})
+    self.change_details ||= []
+    self.change_details << {
+      external_id: external_id,
+      record_type: record_type,
+      action: action,
+      changes: changes,
+      at: Time.current.iso8601
+    }
+  end
+
+  def save_change_details!
+    save! if change_details_changed?
   end
 
   def increment_processed!

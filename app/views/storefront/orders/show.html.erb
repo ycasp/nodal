@@ -1,34 +1,26 @@
-<%= link_to orders_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
-  <i class="fa-solid fa-arrow-left me-2"></i><%= t('storefront.orders.show.back_to_orders') %>
+<% status_class = case @order.status
+   when 'completed' then 'bg-success'
+   when 'processed' then 'bg-info'
+   when 'in_process' then 'bg-warning text-dark'
+   else 'bg-secondary'
+   end %>
+<% actions = capture do %>
+  <span class="badge <%= status_class %> fs-6"><%= @order.status.titleize %></span>
 <% end %>
+<% subtitle = if @order.placed?
+     t('storefront.orders.show.placed_on', date: l(@order.placed_at, format: :long))
+   else
+     t('storefront.orders.show.draft_order')
+   end %>
+<%= render "storefront/shared/page_header",
+  title: t('storefront.orders.show.order_number', number: @order.order_number),
+  subtitle: subtitle,
+  back_path: orders_path(org_slug: params[:org_slug]),
+  back_label: t('storefront.orders.show.back_to_orders'),
+  actions: actions %>
 
 <div class="row g-4">
   <div class="col-lg-8">
-    <!-- Order Header -->
-    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start">
-          <div>
-            <h1 class="h3 mb-1"><%= t('storefront.orders.show.order_number', number: @order.order_number) %></h1>
-            <p class="text-muted mb-0">
-              <% if @order.placed? %>
-                <%= t('storefront.orders.show.placed_on', date: l(@order.placed_at, format: :long)) %>
-              <% else %>
-                <%= t('storefront.orders.show.draft_order') %>
-              <% end %>
-            </p>
-          </div>
-          <% status_class = case @order.status
-             when 'completed' then 'bg-success'
-             when 'processed' then 'bg-info'
-             when 'in_process' then 'bg-warning text-dark'
-             else 'bg-secondary'
-             end %>
-          <span class="badge <%= status_class %> fs-6"><%= @order.status.titleize %></span>
-        </div>
-      </div>
-    </div>
-
     <!-- Order Items -->
     <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
       <div class="card-body">
@@ -58,7 +50,7 @@
                     <div>
                       <div class="fw-medium"><%= item.product.name %></div>
                       <% if item.product_variant.present? && item.product.variable? %>
-                        <small class="text-primary"><%= item.product_variant.option_values_string %></small><br>
+                        <small class="text-primary"><%= item.product_variant.sku.presence || item.product_variant.option_values_string %></small><br>
                       <% end %>
                       <small class="text-muted">SKU: <%= item.product_variant&.sku.presence || item.product.sku || '-' %></small>
                     </div>
@@ -105,6 +97,18 @@
               <div class="d-flex justify-content-between mb-2 text-success">
                 <span><%= t('storefront.orders.show.summary.discount') %> (<%= @order.order_discount_display %>)</span>
                 <span>-<%= humanized_money_with_symbol(@order.order_discount_amount) %></span>
+              </div>
+            <% end %>
+            <% if @order.promo_code_discount_amount_cents.present? && @order.promo_code_discount_amount_cents > 0 %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>
+                  <i class="fa-solid fa-ticket me-1"></i>
+                  <%= t('storefront.promo_codes.label') %>
+                  <% if @order.promo_code.present? %>
+                    <span class="font-monospace">(<%= @order.promo_code.code %>)</span>
+                  <% end %>
+                </span>
+                <span>-<%= humanized_money_with_symbol(@order.promo_code_discount) %></span>
               </div>
             <% end %>
             <% if @order.tax_amount.present? %>
@@ -181,6 +185,9 @@
 
     <!-- Reorder -->
     <div class="mt-4">
+      <%= button_to add_to_cart_order_path(org_slug: params[:org_slug], id: @order), method: :post, class: "btn btn-outline-secondary w-100 mb-2" do %>
+        <i class="fa-solid fa-cart-plus me-2"></i><%= t('storefront.orders.index.add_to_cart') %>
+      <% end %>
       <%= button_to reorder_order_path(org_slug: params[:org_slug], id: @order, confirm: params[:confirm_reorder]), method: :post, class: "btn btn-outline-secondary w-100 mb-2" do %>
         <i class="fa-solid fa-rotate-right me-2"></i><%= t('storefront.orders.index.reorder') %>
       <% end %>

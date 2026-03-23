@@ -16,7 +16,7 @@
   </tr>
 </table>
 
-<p style="margin: 0 0 8px 0; font-size: 16px;"><%= t('mailers.customer_mailer.customer_discount.greeting', name: @customer.contact_name) %></p>
+<p style="margin: 0 0 8px 0; font-size: 16px;"><%= @customer.contact_name.present? ? t('mailers.customer_mailer.customer_discount.greeting', name: @customer.contact_name) : t('mailers.customer_mailer.customer_discount.greeting_generic') %></p>
 
 <p style="margin: 0 0 24px 0; color: #4b5563;">
   <%= t('mailers.customer_mailer.customer_discount.intro') %>
@@ -52,11 +52,7 @@
               <tr>
                 <td style="background-color: #fef3c7; padding: 16px 24px; border-radius: 12px; text-align: center;">
                   <span style="font-size: 28px; font-weight: 700; color: #92400e;">
-                    <% if @discount.percentage? %>
-                      <%= @discount.value_display %> <%= t('mailers.common.off') %>
-                    <% else %>
-                      <%= @discount.discount_value.format %> <%= t('mailers.common.off') %>
-                    <% end %>
+                    <%= @discount.value_display %> <%= t('mailers.common.off') %>
                   </span>
                   <p style="margin: 4px 0 0 0; font-size: 14px; color: #92400e;"><%= t('mailers.customer_mailer.customer_discount.on_all_orders') %></p>
                 </td>

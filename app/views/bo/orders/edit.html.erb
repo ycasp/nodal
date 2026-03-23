@@ -1,24 +1,25 @@
 <% content_for :bo_main_content do%>
 
-<div class="container-fluid py-4">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-start mb-4">
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id, **filter_params_hash), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
       <div>
-        <h1 class="h3 mb-0"><%= t('bo.orders.edit.title') %></h1>
-        <div class="text-muted">
+        <h1><%= t('bo.orders.edit.title') %></h1>
+        <p>
           <span class="fw-bold text-dark"><%= @order.order_number %></span>
-        </div>
+        </p>
       </div>
     </div>
   </div>
+</div>
 
+<div class="bo-page-body">
   <div class="row">
     <div class="col-lg-9">
-      <%= form_with model: @order, url: bo_order_path(org_slug: @current_organisation.slug, id: @order.id), method: :patch do |f| %>
+      <%= form_with model: @order, url: bo_order_path(org_slug: @current_organisation.slug, id: @order.id, **filter_params_hash), method: :patch do |f| %>
 
         <% if @order.errors.any? %>
           <div class="alert alert-danger mb-4">
@@ -145,7 +146,7 @@
         <!-- Actions -->
         <div class="d-flex gap-2">
           <%= f.submit t('bo.common.actions.save_changes'), class: "btn btn-primary" %>
-          <%= link_to t('bo.common.actions.cancel'), bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "btn btn-outline-secondary" %>
+          <%= link_to t('bo.common.actions.cancel'), bo_order_path(org_slug: @current_organisation.slug, id: @order.id, **filter_params_hash), class: "btn btn-outline-secondary" %>
         </div>
       <% end %>
     </div>

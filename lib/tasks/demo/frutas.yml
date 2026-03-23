@@ -1,0 +1,178 @@
+label: "Frutas & Legumes"
+emoji: "🍊"
+
+categories:
+  - name: "Frutas"
+    slug: "frutas"
+    description: "Frutas frescas de época, nacionais e importadas"
+    color: "#E65100"
+
+  - name: "Legumes"
+    slug: "legumes"
+    description: "Legumes frescos colhidos diariamente de produtores locais"
+    color: "#2E7D32"
+
+  - name: "Ervas Aromáticas"
+    slug: "ervas-aromaticas"
+    description: "Ervas frescas e aromáticas para restauração"
+    color: "#558B2F"
+
+  - name: "Tubérculos & Raízes"
+    slug: "tuberculos-raizes"
+    description: "Batatas, cenouras e outros tubérculos de produção nacional"
+    color: "#795548"
+
+products:
+  - name: "Laranja do Algarve"
+    category: "Frutas"
+    sku: "FR-LAR-ALG"
+    price: 120
+    unit: "kg"
+    min_qty: 20
+    stock: 800
+    description: "Laranja doce do Algarve. Ideal para sumo ou consumo direto."
+
+  - name: "Maçã Royal Gala"
+    category: "Frutas"
+    sku: "FR-MAC-GAL"
+    price: 150
+    unit: "kg"
+    min_qty: 20
+    stock: 600
+    description: "Maçã Royal Gala nacional. Crocante e doce."
+
+  - name: "Banana da Madeira"
+    category: "Frutas"
+    sku: "FR-BAN-MAD"
+    price: 180
+    unit: "kg"
+    min_qty: 15
+    stock: 500
+    description: "Banana da Madeira DOP. Pequena, doce e aromática."
+
+  - name: "Limão Nacional"
+    category: "Frutas"
+    sku: "FR-LIM-NAC"
+    price: 190
+    unit: "kg"
+    min_qty: 10
+    stock: 400
+    description: "Limão nacional com casca fina. Muito sumarento."
+
+  - name: "Alface Frisada"
+    category: "Legumes"
+    sku: "LG-ALF-FRI"
+    price: 60
+    unit: "un"
+    min_qty: 20
+    stock: 500
+    description: "Alface frisada fresca, colhida de manhã. Produção local."
+
+  - name: "Tomate Chucha"
+    category: "Legumes"
+    sku: "LG-TOM-CHU"
+    price: 190
+    unit: "kg"
+    min_qty: 10
+    stock: 600
+    description: "Tomate chucha de estufa. Firme e versátil para cozinha."
+
+  - name: "Cebola Amarela"
+    category: "Legumes"
+    sku: "LG-CEB-AMA"
+    price: 80
+    unit: "kg"
+    min_qty: 20
+    stock: 1000
+    description: "Cebola amarela nacional, calibre médio. Saco de 20kg disponível."
+
+  - name: "Pimento Vermelho"
+    category: "Legumes"
+    sku: "LG-PIM-VER"
+    price: 290
+    unit: "kg"
+    min_qty: 5
+    stock: 300
+    description: "Pimento vermelho de estufa. Carnudo e doce."
+
+  - name: "Salsa Fresca"
+    category: "Ervas Aromáticas"
+    sku: "EA-SAL-FRE"
+    price: 80
+    unit: "molho"
+    min_qty: 20
+    stock: 400
+    description: "Salsa fresca em molhos de 100g. Produção local."
+
+  - name: "Coentros Frescos"
+    category: "Ervas Aromáticas"
+    sku: "EA-COE-FRE"
+    price: 80
+    unit: "molho"
+    min_qty: 20
+    stock: 350
+    description: "Coentros frescos em molhos de 100g. Essenciais na cozinha portuguesa."
+
+variant_products:
+  - name: "Batata"
+    category: "Tubérculos & Raízes"
+    sku: "TB-BAT-NAC"
+    unit: "saco 20kg"
+    min_qty: 5
+    attribute: "Variedade"
+    description: "Batata nacional de qualidade. Disponível em várias variedades."
+    variants:
+      - name: "Branca (para cozer)"
+        sku_suffix: "BRA"
+        price: 890
+        stock: 500
+      - name: "Vermelha (para assar)"
+        sku_suffix: "VER"
+        price: 950
+        stock: 400
+      - name: "Doce (sweet potato)"
+        sku_suffix: "DOC"
+        price: 1290
+        stock: 250
+
+  - name: "Tomate"
+    category: "Legumes"
+    sku: "LG-TOM-VAR"
+    unit: "kg"
+    min_qty: 10
+    attribute: "Variedade"
+    description: "Tomates premium para restauração. Várias variedades."
+    variants:
+      - name: "Cherry (cacho)"
+        sku_suffix: "CHE"
+        price: 390
+        stock: 300
+      - name: "Coração de Boi"
+        sku_suffix: "CDB"
+        price: 450
+        stock: 200
+      - name: "Rama"
+        sku_suffix: "RAM"
+        price: 290
+        stock: 400
+
+  - name: "Cogumelos"
+    category: "Legumes"
+    sku: "LG-COG-VAR"
+    unit: "kg"
+    min_qty: 5
+    attribute: "Tipo"
+    description: "Cogumelos frescos para restauração profissional."
+    variants:
+      - name: "Champignon Branco"
+        sku_suffix: "CHA"
+        price: 350
+        stock: 400
+      - name: "Shiitake"
+        sku_suffix: "SHI"
+        price: 890
+        stock: 200
+      - name: "Pleurotus"
+        sku_suffix: "PLE"
+        price: 590
+        stock: 250

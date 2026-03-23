@@ -15,7 +15,12 @@ class ProductVariant < ApplicationRecord
 
   validates :name, presence: true
   validates :sku, uniqueness: { scope: :organisation_id, allow_blank: true }
+  validates :custom_discount_type, inclusion: { in: %w[percentage fixed] }, allow_blank: true
+  validates :custom_discount_value, presence: true, if: -> { custom_discount_type.present? }
+  validates :custom_discount_type, presence: true, if: -> { custom_discount_value.present? }
+  validates :custom_discount_value, numericality: { greater_than: 0 }, allow_nil: true
 
+  before_validation :normalize_custom_discount_fields
   before_validation :set_organisation_from_product
   before_validation :set_currency_from_organisation
   before_validation :inherit_product_price, on: :create
@@ -30,7 +35,7 @@ class ProductVariant < ApplicationRecord
   end
 
   def purchasable?
-    available? && in_stock?
+    available? && in_stock? && !product.price_on_request?
   end
 
   def option_values_string
@@ -45,6 +50,10 @@ class ProductVariant < ApplicationRecord
     end
   end
 
+  def has_custom_discount?
+    custom_discount_type.present? && custom_discount_value.present?
+  end
+
   def effective_photo
     return photo if photo.attached?
     return product.photo if product.photo_attached?
@@ -52,6 +61,11 @@ class ProductVariant < ApplicationRecord
   end
 
   private
+
+  def normalize_custom_discount_fields
+    self.custom_discount_type = nil if custom_discount_type.blank?
+    self.custom_discount_value = nil if custom_discount_value.blank?
+  end
 
   def set_organisation_from_product
     self.organisation ||= product&.organisation

@@ -65,13 +65,32 @@ class Bo::TeamMembersController < Bo::BaseController
   end
 
   def edit
+    @editing_self = editing_self?
+    @member = @org_member.member if @editing_self
   end
 
   def update
-    if @org_member.update(org_member_update_params)
-      redirect_to bo_team_members_path(params[:org_slug]), notice: "Team member updated successfully."
+    @editing_self = editing_self?
+
+    if @editing_self
+      @member = @org_member.member
+      filtered_params = member_params
+      if filtered_params[:password].blank?
+        filtered_params = filtered_params.except(:password, :password_confirmation)
+      end
+
+      if @member.update(filtered_params)
+        bypass_sign_in(@member) if member_params[:password].present?
+        redirect_to bo_team_members_path(params[:org_slug]), notice: "Profile updated successfully."
+      else
+        render :edit, status: :unprocessable_entity
+      end
     else
-      render :edit, status: :unprocessable_entity
+      if @org_member.update(org_member_update_params)
+        redirect_to bo_team_members_path(params[:org_slug]), notice: "Team member updated successfully."
+      else
+        render :edit, status: :unprocessable_entity
+      end
     end
   end
 
@@ -110,5 +129,13 @@ class Bo::TeamMembersController < Bo::BaseController
 
   def org_member_update_params
     params.require(:org_member).permit(:role, :active)
+  end
+
+  def member_params
+    params.require(:member).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+  end
+
+  def editing_self?
+    @org_member.member_id == current_member.id
   end
 end

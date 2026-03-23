@@ -1,35 +1,38 @@
-<nav class="navbar">
+<nav class="navbar" data-controller="navbar-toggle">
   <%= link_to root_path, class: "logo" do %>
     <span class="logo-icon">N</span><span class="logo-text">odal</span>
   <% end %>
 
-  <div class="nav-links">
-    <div class="dropdown-wrapper">
-      <%= link_to t("navbar.product"), "#" %>
-      <%= render "shared/sidebar" %>
-    </div>
-    <%= link_to t("navbar.how_it_works"), "#how-it-works" %>
-    <%= link_to t("navbar.coming_soon"), "#coming-soon" %>
-    <%= link_to t("navbar.pricing"), "#pricing" %>
-  </div>
-
-  <div class="nav-actions">
-    <!-- Language Switcher -->
-    <div class="language-switcher">
-      <button class="language-btn" type="button" aria-label="<%= t('language.switch') %>">
-        <i class="fas fa-globe"></i>
-        <span class="current-lang"><%= I18n.locale.to_s.upcase %></span>
-      </button>
-      <div class="language-dropdown">
-        <%= link_to t("language.en"), root_path(locale: :en), class: "language-option #{'active' if I18n.locale == :en}" %>
-        <%= link_to t("language.pt"), root_path(locale: :pt), class: "language-option #{'active' if I18n.locale == :pt}" %>
-        <%= link_to t("language.es"), root_path(locale: :es), class: "language-option #{'active' if I18n.locale == :es}" %>
+  <div class="nav-menu" data-navbar-toggle-target="menu">
+    <div class="nav-links">
+      <div class="dropdown-wrapper">
+        <%= link_to t("navbar.product"), "#", data: { action: "navbar-toggle#close" } %>
+        <%= render "shared/sidebar" %>
       </div>
+      <%= link_to t("navbar.why_it_matters"), "#benefits", data: { action: "navbar-toggle#close" } %>
+      <%= link_to t("navbar.how_it_works"), "#how-it-works", data: { action: "navbar-toggle#close" } %>
+      <%= link_to t("navbar.coming_soon"), "#coming-soon", data: { action: "navbar-toggle#close" } %>
+      <%= link_to t("navbar.pricing"), "#pricing", data: { action: "navbar-toggle#close" } %>
     </div>
-    <%= link_to t("navbar.start_free_trial"), "#", class: "nav-cta" %>
+
+    <div class="nav-actions">
+      <!-- Language Switcher -->
+      <div class="language-switcher">
+        <button class="language-btn" type="button" aria-label="<%= t('language.switch') %>">
+          <i class="fas fa-globe"></i>
+          <span class="current-lang"><%= I18n.locale.to_s.upcase %></span>
+        </button>
+        <div class="language-dropdown">
+          <%= link_to t("language.en"), root_path(locale: :en), class: "language-option #{'active' if I18n.locale == :en}" %>
+          <%= link_to t("language.pt"), root_path(locale: :pt), class: "language-option #{'active' if I18n.locale == :pt}" %>
+          <%= link_to t("language.es"), root_path(locale: :es), class: "language-option #{'active' if I18n.locale == :es}" %>
+        </div>
+      </div>
+      <%= link_to t("navbar.our_dna"), "https://www.seiri.dev/", class: "nav-cta", target: "_blank", rel: "noopener" %>
+    </div>
   </div>
 
-  <div class="menu-toggle">
+  <div class="menu-toggle" data-action="click->navbar-toggle#toggle">
     <span></span>
     <span></span>
     <span></span>

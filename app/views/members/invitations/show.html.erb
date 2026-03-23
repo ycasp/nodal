@@ -3,33 +3,43 @@
   <span class="auth-logo-text">odal</span>
 </div>
 
-<h1 class="auth-title">Accept Invitation</h1>
-<p class="auth-subtitle">Join <strong><%= @org_member.organisation.name %></strong> as a <%= @org_member.role.capitalize %></p>
+<h1 class="auth-title"><%= t('auth.member_invitation.title') %></h1>
+<p class="auth-subtitle"><%= t('auth.member_invitation.subtitle_html', organisation: @org_member.organisation.name, role: @org_member.role.capitalize).html_safe %></p>
 
 <%= form_with model: @member, url: accept_invitation_path(params[:org_slug], params[:token]), method: :post, html: { class: "auth-form" } do |f| %>
   <div class="auth-field">
-    <label class="auth-label">Email</label>
+    <label class="auth-label"><%= t('auth.member_invitation.email') %></label>
     <input type="email" class="form-control" value="<%= @org_member.invited_email %>" disabled>
   </div>
 
   <div class="auth-field">
-    <label class="auth-label">First Name</label>
-    <%= f.text_field :first_name, class: "form-control", placeholder: "Enter your first name", required: true %>
+    <label class="auth-label"><%= t('auth.member_invitation.first_name') %></label>
+    <%= f.text_field :first_name, class: "form-control", placeholder: t('auth.member_invitation.first_name_placeholder'), required: true %>
   </div>
 
   <div class="auth-field">
-    <label class="auth-label">Last Name</label>
-    <%= f.text_field :last_name, class: "form-control", placeholder: "Enter your last name", required: true %>
+    <label class="auth-label"><%= t('auth.member_invitation.last_name') %></label>
+    <%= f.text_field :last_name, class: "form-control", placeholder: t('auth.member_invitation.last_name_placeholder'), required: true %>
   </div>
 
   <div class="auth-field">
-    <label class="auth-label">Password</label>
-    <%= f.password_field :password, class: "form-control", placeholder: "Create a password", required: true, autocomplete: "new-password" %>
+    <label class="auth-label"><%= t('auth.member_invitation.password') %></label>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.password_field :password, class: "form-control", placeholder: t('auth.member_invitation.password_placeholder'), required: true, autocomplete: "new-password", data: { password_visibility_target: "input" } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
   </div>
 
   <div class="auth-field">
-    <label class="auth-label">Confirm Password</label>
-    <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm your password", required: true, autocomplete: "new-password" %>
+    <label class="auth-label"><%= t('auth.member_invitation.confirm_password') %></label>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.password_field :password_confirmation, class: "form-control", placeholder: t('auth.member_invitation.confirm_password_placeholder'), required: true, autocomplete: "new-password", data: { password_visibility_target: "input" } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
   </div>
 
   <% if @member.errors.any? %>
@@ -43,10 +53,10 @@
   <% end %>
 
   <div class="auth-actions">
-    <%= f.submit "Create Account & Join Team", class: "auth-submit-btn" %>
+    <%= f.submit t('auth.member_invitation.submit'), class: "auth-submit-btn" %>
   </div>
 <% end %>
 
 <div class="auth-footer">
-  <p>Already have an account? <%= link_to "Sign in", new_member_session_path, class: "auth-link" %></p>
+  <p><%= t('auth.member_invitation.already_have_account') %> <%= link_to t('auth.member_invitation.sign_in'), new_member_session_path, class: "auth-link" %></p>
 </div>

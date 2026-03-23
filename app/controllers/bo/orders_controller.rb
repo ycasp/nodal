@@ -8,7 +8,7 @@ class Bo::OrdersController < Bo::BaseController
     if params[:search].present?
       search_term = "%#{params[:search]}%"
       @orders = @orders.joins(:customer).where(
-        "orders.order_number ILIKE :search OR customers.company_name ILIKE :search OR customers.contact_name ILIKE :search",
+        "unaccent(orders.order_number) ILIKE unaccent(:search) OR unaccent(customers.company_name) ILIKE unaccent(:search) OR unaccent(customers.contact_name) ILIKE unaccent(:search)",
         search: search_term
       )
     end
@@ -19,10 +19,13 @@ class Bo::OrdersController < Bo::BaseController
     # Filter by payment status
     @orders = @orders.where(payment_status: params[:payment_status]) if params[:payment_status].present?
 
-    @orders = @orders.order(created_at: :desc)
+    sort_direction = %w[asc desc].include?(params[:sort_dir]) ? params[:sort_dir] : "desc"
+    @orders = @orders.order(Arel.sql("COALESCE(orders.placed_at, orders.created_at) #{sort_direction}"))
+    @pagy, @orders = pagy(@orders)
   end
 
   def show
+    @order.mark_as_reviewed!
   end
 
   def edit
@@ -53,7 +56,7 @@ class Bo::OrdersController < Bo::BaseController
 
   def update
     if @order.update(order_params)
-      redirect_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id), notice: "Order updated successfully."
+      redirect_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id, **filter_params_hash), notice: "Order updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -61,7 +64,7 @@ class Bo::OrdersController < Bo::BaseController
 
   def destroy
     @order.destroy
-    redirect_to bo_orders_path(org_slug: @current_organisation.slug), notice: "Order deleted successfully."
+    redirect_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash), notice: "Order deleted successfully."
   end
 
   def apply_discount
@@ -80,7 +83,14 @@ class Bo::OrdersController < Bo::BaseController
                 notice: "Discount removed."
   end
 
+  helper_method :filter_params_hash
+
   private
+
+  def filter_params_hash
+    { search: params[:search], status: params[:status],
+      payment_status: params[:payment_status], sort_dir: params[:sort_dir] }.compact_blank
+  end
 
   def set_order
     @order = Order.find(params[:id])

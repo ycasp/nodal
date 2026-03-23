@@ -140,19 +140,29 @@
     align-items: center;
     justify-content: center;
     color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 0.25rem;
 
     &:hover {
       color: var(--org-primary, $teal);
+      text-decoration: none;
+    }
+
+    &:focus {
+      outline: none;
     }
   }
 
-  .toggle-icon {
-    transition: transform 0.2s ease;
-    font-size: 0.625rem;
+  .toggle-btn-spacer {
+    width: 20px;
+    margin-right: 0.25rem;
+    display: inline-block;
+  }
 
-    &.rotated {
-      transform: rotate(90deg);
-    }
+  .toggle-icon {
+    font-size: 0.625rem;
+    transition: color 0.15s ease;
   }
 
   .category-children {
@@ -163,13 +173,24 @@
     }
   }
 
-  .badge {
-    font-size: 0.625rem;
-    font-weight: 500;
+  .category-count {
+    font-size: 0.8em;
+    font-style: italic;
+    opacity: 0.6;
+    margin-left: 0.25rem;
   }
 }
 
 // Hover background utility
 .hover-bg:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+// Sticky sidebar for desktop
+// Account for sticky navbar (~60px) + free shipping banner (~40px) + spacing
+.sidebar-sticky {
+  position: sticky;
+  top: 120px;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
 }

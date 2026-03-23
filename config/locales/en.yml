@@ -1,11 +1,46 @@
 en:
+  activerecord:
+    errors:
+      models:
+        order:
+          attributes:
+            receive_on:
+              invalid_delivery_day: "is not a valid delivery day"
+              too_early: "is too early, please select a later date"
+        product_attribute_value:
+          attributes:
+            value:
+              value_already_exists: "already exists in this attribute"
+
   # Navigation
   navbar:
     product: "Product"
+    why_it_matters: "Why it matters"
     how_it_works: "How it works"
     coming_soon: "Coming soon"
     pricing: "Pricing"
-    start_free_trial: "Start free trial"
+    our_dna: "Our DNA"
+
+  # Product Dropdown Sidebar
+  sidebar:
+    smart_pricing:
+      title: "Smart Pricing Engine"
+      description: "Volume discounts, customer tiers, and custom pricing that stack automatically."
+    product_variants:
+      title: "Product Variants"
+      description: "Size, color, and custom attributes with individual pricing and stock tracking."
+    multi_currency:
+      title: "Multi-Currency"
+      description: "EUR, CHF, USD, GBP with automatic formatting and tax calculation."
+    customer_management:
+      title: "Customer Management"
+      description: "Invitation-only access, tier discounts, and complete address books."
+    analytics_dashboard:
+      title: "Analytics Dashboard"
+      description: "Sales trends, top customers, discount impact, and open cart tracking."
+    stock_inventory:
+      title: "Stock & Inventory"
+      description: "Real-time availability, low stock alerts, and variant-level tracking."
 
   # Hero Section
   hero:
@@ -16,7 +51,7 @@ en:
     trust_badges:
       live_minutes: "Live in 15 minutes"
       no_technical: "No technical setup"
-      free_beta: "Free tier during Beta"
+      multi_currency: "Multi-currency support"
 
   # Stats Bar
   stats:
@@ -59,6 +94,30 @@ en:
         title: "Complete insights"
         description: "Know exactly what's selling and to whom"
 
+  # Benefits Section
+  benefits:
+    label: "WHY IT MATTERS"
+    title: "What changes for your business"
+    subtitle: "Real outcomes that impact your bottom line"
+    always_open:
+      title: "Your business runs while you sleep"
+      description: "Clients browse and order whenever they want — nights, weekends, holidays. No sales calls needed."
+    upsell:
+      title: "Every order is an upsell opportunity"
+      description: "Clients discover your full catalog, not just what they usually buy. More visibility, more revenue."
+    update_once:
+      title: "Update once. Reach everyone."
+      description: "Change a price and every client sees it instantly. No more 50 phone calls or individual messages."
+    direct_fulfillment:
+      title: "From their cart to your warehouse"
+      description: "Orders flow directly to your team or ERP. Skip the middleman — you just fulfill."
+    transparency:
+      title: "No more 'let me check and get back to you'"
+      description: "Clients see real-time prices and stock. They know what to expect before they order."
+    no_emails:
+      title: "Zero time on confirmation emails"
+      description: "Automatic order confirmations and notifications. You focus on shipping, not typing."
+
   # How It Works Section
   how_it_works:
     label: "HOW IT WORKS"
@@ -66,28 +125,28 @@ en:
     features:
       self_service:
         title: "Your clients order themselves"
-        description: "Give each client their own login to a branded portal. They browse your catalog, see their prices, and place orders — anytime, without calling you."
+        description: "Each client gets their own login to your branded portal. They browse, see their personalized prices, and place orders — 24/7, without calling you."
         benefit_1: "24/7 self-service ordering"
-        benefit_2: "Mobile-friendly interface"
-        benefit_3: "Order history & reordering"
+        benefit_2: "Branded storefront with your logo"
+        benefit_3: "Order history & one-click reordering"
       pricing:
-        title: "Pricing runs on autopilot"
-        description: "Set your rules once: volume discounts, client-specific prices, seasonal promotions. Nodal calculates everything automatically."
-        benefit_1: "Client-specific pricing tiers"
-        benefit_2: "Volume discounts"
-        benefit_3: "Stackable promotions"
+        title: "Smart Pricing Engine"
+        description: "Four discount types that stack intelligently: volume discounts, customer tiers, custom pricing, and order thresholds. Set the rules once — Nodal handles the math."
+        benefit_1: "4 discount types that stack"
+        benefit_2: "Customer-specific pricing"
+        benefit_3: "Automatic threshold discounts"
       catalog:
-        title: "Your catalog, always updated"
-        description: "Upload products once. Change a price? Everyone sees it instantly. No more outdated PDFs or \"let me check the current price.\""
-        benefit_1: "Real-time price updates"
-        benefit_2: "Product categories"
-        benefit_3: "Stock visibility"
+        title: "Complete Product Catalog"
+        description: "Products with variants (size, color, custom attributes), categories, photos, and stock tracking. Import from Excel or add manually — always up to date."
+        benefit_1: "Product variants & attributes"
+        benefit_2: "CSV import & categories"
+        benefit_3: "Real-time stock tracking"
       analytics:
-        title: "Insights that drive growth"
-        description: "See what's working and what's not. Your dashboard shows revenue trends, open carts, product performance, and discount impact — all in real time."
-        benefit_1: "Revenue & order analytics"
-        benefit_2: "Open carts & conversion tracking"
-        benefit_3: "Product & discount performance"
+        title: "Real-time Analytics"
+        description: "Know exactly what's selling, who's buying, and where you're leaving money on the table. Track revenue, retention, discount impact, and open carts."
+        benefit_1: "Revenue & customer insights"
+        benefit_2: "Discount impact analysis"
+        benefit_3: "Open cart recovery"
 
   # Why Nodal Section
   why_nodal:
@@ -102,7 +161,7 @@ en:
       affordable:
         number: "02"
         title: "Affordable from day one"
-        description: "Start free, grow gradually. Our pricing scales with your business — not enterprise budgets."
+        description: "Our pricing scales with your business — not enterprise budgets."
       tools:
         number: "03"
         title: "Works with your tools"
@@ -141,42 +200,10 @@ en:
   # Pricing Section
   pricing:
     label: "PRICING"
-    title: "Simple, transparent pricing"
-    subtitle: "Start free. Upgrade when you're ready. No surprises."
-    disclaimer: "No credit card required to get started."
-    per_month: "/month"
-    tiers:
-      free:
-        badge: "BETA"
-        name: "Free"
-        description: "Free during Beta phase"
-        feature_1: "Up to 10 products"
-        feature_2: "3 client accounts"
-        feature_3: "Basic order management"
-        feature_4: "Email support"
-        cta: "Get Started"
-      pro:
-        badge: "RECOMMENDED"
-        name: "Pro"
-        description: "For growing businesses"
-        feature_1: "Unlimited products"
-        feature_2: "Unlimited clients"
-        feature_3: "Client-specific pricing"
-        feature_4: "Advanced analytics dashboard"
-        feature_5: "Custom branding"
-        feature_6: "Priority support"
-        cta: "Get Started"
-      business:
-        name: "Business"
-        price: "Let's talk"
-        description: "For established operations"
-        feature_1: "Everything in Pro"
-        feature_2: "API access"
-        feature_3: "Custom integrations"
-        feature_4: "Dedicated account manager"
-        feature_5: "SLA guarantee"
-        feature_6: "Phone support"
-        cta: "Contact Us"
+    title: "Tailored to Your Business"
+    subtitle: "Our Beta testing spots are full. We now work directly with each client to build a proposal that fits your needs, volume, and goals."
+    note: "Every business is different — let's find what works for you."
+    cta: "Let's Talk"
 
   # Results Section
   results:
@@ -282,4 +309,28 @@ en:
       submit: "Change my password"
       or: "or"
       remember_password: "Remember your password?"
+      sign_in: "Sign in"
+    accept_invitation:
+      title: "Set your password"
+      subtitle: "Choose a password to access your account"
+      password: "Password"
+      password_placeholder: "Enter your password"
+      password_hint: "Minimum %{count} characters"
+      confirm_password: "Confirm password"
+      confirm_password_placeholder: "Confirm your password"
+      submit: "Create account"
+    member_invitation:
+      title: "Accept Invitation"
+      subtitle_html: "Join <strong>%{organisation}</strong> as a %{role}"
+      email: "Email"
+      first_name: "First Name"
+      first_name_placeholder: "Enter your first name"
+      last_name: "Last Name"
+      last_name_placeholder: "Enter your last name"
+      password: "Password"
+      password_placeholder: "Create a password"
+      confirm_password: "Confirm Password"
+      confirm_password_placeholder: "Confirm your password"
+      submit: "Create Account & Join Team"
+      already_have_account: "Already have an account?"
       sign_in: "Sign in"

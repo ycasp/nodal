@@ -54,7 +54,7 @@ namespace :sync do
         attr_name = row["Atributo #{i + 1} nome"]&.strip
         attr_vals = row["Atributo #{i + 1} valor(es)"]&.strip
         next if attr_name.blank? || attr_vals.blank?
-        attr_vals.split(",").each { |v| csv_attr_values[attr_name] << v.strip }
+        attr_vals.split(", ").each { |v| csv_attr_values[attr_name] << v.strip }
       end
 
       if tipo == "variation"
@@ -122,8 +122,8 @@ namespace :sync do
     db_products = org.products.includes(:product_variants).index_by(&:sku)
 
     product_changes = {
+      create: [],      # { sku:, row: } — products in CSV but not in DB
       update: [],      # { product:, changes: { field: [old, new] } }
-      not_in_db: [],   # SKUs in CSV but not in DB
       not_in_csv: []   # SKUs in DB but not in CSV
     }
 
@@ -132,7 +132,7 @@ namespace :sync do
       db_product = db_products[sku]
 
       unless db_product
-        product_changes[:not_in_db] << sku
+        product_changes[:create] << { sku: sku, row: row }
         next
       end
 
@@ -169,12 +169,14 @@ namespace :sync do
       product_changes[:not_in_csv] << sku unless csv_products[sku]
     end
 
+    puts "  Products to create: #{product_changes[:create].size}"
     puts "  Products to update: #{product_changes[:update].size}"
-    puts "  In CSV but not DB: #{product_changes[:not_in_db].size}"
     puts "  In DB but not CSV: #{product_changes[:not_in_csv].size}"
 
-    if product_changes[:not_in_db].any? && product_changes[:not_in_db].size <= 10
-      puts "    Missing: #{product_changes[:not_in_db].join(', ')}"
+    if product_changes[:create].any?
+      simple_to_create = product_changes[:create].count { |c| c[:row]["Tipo"] == "simple" }
+      variable_to_create = product_changes[:create].count { |c| c[:row]["Tipo"] == "variable" }
+      puts "    To create: #{simple_to_create} simple, #{variable_to_create} variable"
     end
 
     # ═══════════════════════════════════════════════════════════════════════
@@ -260,16 +262,25 @@ namespace :sync do
       end
     end
 
-    # Check for orphan variations (parent not in DB)
+    # Count variations that will be created along with new parent products
+    new_product_skus = product_changes[:create].map { |c| c[:sku] }.to_set
+    new_product_variations = 0
+
+    # Check for orphan variations (parent not in DB AND not being created)
     csv_variations.each do |parent_sku, vars|
       next if db_products[parent_sku]
-      variation_changes[:orphan] << { parent_sku: parent_sku, count: vars.size }
+      if new_product_skus.include?(parent_sku)
+        new_product_variations += vars.size
+      else
+        variation_changes[:orphan] << { parent_sku: parent_sku, count: vars.size }
+      end
     end
 
     puts "  Variants to update: #{variation_changes[:update].size}"
-    puts "  Variants to create: #{variation_changes[:create].size}"
+    puts "  Variants to create (existing products): #{variation_changes[:create].size}"
+    puts "  Variants to create (new products): #{new_product_variations}"
     puts "  Variants to delete: #{variation_changes[:delete].size}"
-    puts "  Orphan variations (parent missing): #{variation_changes[:orphan].sum { |o| o[:count] }}"
+    puts "  Orphan variations (parent missing): #{variation_changes[:orphan].any? ? variation_changes[:orphan].sum { |o| o[:count] } : 0}"
 
     # Show some examples
     if dry_run
@@ -300,13 +311,14 @@ namespace :sync do
       puts "DRY RUN SUMMARY"
       puts "=" * 70
       puts "Products:"
+      puts "  - #{product_changes[:create].size} to CREATE"
       puts "  - #{product_changes[:update].size} to update"
-      puts "  - #{product_changes[:not_in_db].size} in CSV but missing from DB"
-      puts "  - #{product_changes[:not_in_csv].size} in DB but not in CSV"
+      puts "  - #{product_changes[:not_in_csv].size} in DB but not in CSV (untouched)"
       puts ""
       puts "Variants:"
       puts "  - #{variation_changes[:update].size} to update"
-      puts "  - #{variation_changes[:create].size} to create"
+      puts "  - #{variation_changes[:create].size} to create (existing products)"
+      puts "  - #{new_product_variations} to create (new products)"
       puts "  - #{variation_changes[:delete].size} to delete"
       puts ""
       puts "Attribute value normalizations: #{normalization_map.values.sum(&:size)}"
@@ -323,6 +335,7 @@ namespace :sync do
 
     stats = {
       attr_values_normalized: 0,
+      products_created: 0,
       products_updated: 0,
       variants_updated: 0,
       variants_created: 0,
@@ -371,7 +384,134 @@ namespace :sync do
         end
       end
 
-      # Step 3: Update existing variants
+      # Step 2b: Rebuild available values for existing variable products
+      puts "  Rebuilding available values for existing variable products..."
+      rebuilt_count = 0
+      csv_products.each do |sku, row|
+        next unless row["Tipo"] == "variable"
+        product = db_products[sku]
+        next unless product
+
+        product.product_available_values.delete_all
+        product.product_product_attributes.delete_all
+
+        4.times do |i|
+          attr_name = row["Atributo #{i + 1} nome"]&.strip
+          attr_vals_str = row["Atributo #{i + 1} valor(es)"]&.strip
+          next if attr_name.blank? || attr_vals_str.blank?
+
+          attr = org.product_attributes.find_or_create_by!(name: attr_name) do |a|
+            a.slug = attr_name.parameterize
+          end
+
+          product.product_product_attributes.find_or_create_by!(product_attribute: attr)
+
+          attr_vals_str.split(", ").each do |val_str|
+            val = val_str.strip
+            next if val.blank?
+            av = attr.product_attribute_values.find_or_create_by!(value: val)
+            product.product_available_values.find_or_create_by!(product_attribute_value: av)
+          end
+        end
+        rebuilt_count += 1
+      end
+      puts "    Rebuilt available values for #{rebuilt_count} variable products"
+
+      # Step 3: Create new products
+      puts "  Creating new products..."
+      created_products = {} # sku => product (for variation linking)
+      product_changes[:create].each do |item|
+        row = item[:row]
+        sku = item[:sku]
+        begin
+          is_variable = row["Tipo"] == "variable"
+          csv_price = parse_price(row["Preço normal"])
+
+          product = org.products.create!(
+            name: row["Nome"]&.strip,
+            sku: sku,
+            description: row["Descrição breve"]&.strip,
+            unit_price: is_variable ? nil : csv_price,
+            has_variants: is_variable,
+            available: true
+          )
+          created_products[sku] = product
+
+          # For variable products, set up product attributes and available values
+          if is_variable
+            4.times do |i|
+              attr_name = row["Atributo #{i + 1} nome"]&.strip
+              attr_vals_str = row["Atributo #{i + 1} valor(es)"]&.strip
+              next if attr_name.blank? || attr_vals_str.blank?
+
+              attr = org.product_attributes.find_or_create_by!(name: attr_name) do |a|
+                a.slug = attr_name.parameterize
+              end
+
+              # Link attribute to product
+              product.product_product_attributes.find_or_create_by!(product_attribute: attr)
+
+              # Create and link available values
+              attr_vals_str.split(", ").each do |val_str|
+                val = val_str.strip
+                next if val.blank?
+
+                av = attr.product_attribute_values.find_or_create_by!(value: val)
+                product.product_available_values.find_or_create_by!(product_attribute_value: av)
+              end
+            end
+          end
+
+          # Update the default variant's price for simple products
+          if !is_variable && csv_price
+            default_variant = product.default_variant
+            default_variant&.update!(unit_price_cents: csv_price)
+          end
+
+          stats[:products_created] += 1
+          puts "    Created: #{sku} - #{product.name} (#{row['Tipo']})"
+        rescue => e
+          stats[:errors] << "Create product #{sku}: #{e.message}"
+          puts "    ERROR: #{sku} - #{e.message}"
+        end
+      end
+
+      # Step 3b: Create variations for newly created products
+      puts "  Creating variations for new products..."
+      created_products.each do |parent_sku, parent_product|
+        csv_vars = csv_variations[parent_sku] || []
+        csv_vars.each do |var_row|
+          begin
+            attrs = extract_attrs(var_row)
+            var_price = parse_price(var_row["Preço normal"])
+
+            variant = parent_product.product_variants.create!(
+              name: var_row["Nome"]&.strip || parent_product.name,
+              sku: var_row["REF"]&.strip.presence,
+              unit_price_cents: var_price,
+              unit_price_currency: org.currency,
+              available: true,
+              is_default: false,
+              organisation: org
+            )
+
+            attrs.each do |attr_name, attr_val|
+              attr = org.product_attributes.find_by(name: attr_name)
+              next unless attr
+
+              av = attr.product_attribute_values.find_or_create_by!(value: attr_val)
+              variant.variant_attribute_values.create!(product_attribute_value: av)
+            end
+
+            stats[:variants_created] += 1
+          rescue => e
+            stats[:errors] << "Create variant #{var_row['REF']} for #{parent_sku}: #{e.message}"
+            puts "    ERROR: #{var_row['REF']} - #{e.message}"
+          end
+        end
+      end
+
+      # Step 4: Update existing variants
       puts "  Updating variants..."
       variation_changes[:update].each do |item|
         variant = item[:variant]
@@ -388,8 +528,23 @@ namespace :sync do
         end
       end
 
-      # Step 4: Create new variants
-      puts "  Creating variants..."
+      # Step 5: Delete orphan variants (before creating new ones to free up SKUs)
+      puts "  Deleting orphan variants..."
+      variation_changes[:delete].each do |variant|
+        begin
+          if variant.order_items.any?
+            stats[:errors] << "Cannot delete #{variant.product.sku}/#{variant.name} - has orders"
+          else
+            variant.destroy!
+            stats[:variants_deleted] += 1
+          end
+        rescue => e
+          stats[:errors] << "Delete variant #{variant.product.sku}/#{variant.name}: #{e.message}"
+        end
+      end
+
+      # Step 6: Create new variants (for existing products — after deletes freed up SKUs)
+      puts "  Creating variants for existing products..."
       variation_changes[:create].each do |item|
         begin
           variant = item[:parent].product_variants.create!(
@@ -407,30 +562,13 @@ namespace :sync do
             attr = org.product_attributes.find_by(name: attr_name)
             next unless attr
 
-            av = attr.product_attribute_values.find_or_create_by!(value: attr_val) do |new_av|
-              new_av.slug = attr_val.parameterize
-            end
+            av = attr.product_attribute_values.find_or_create_by!(value: attr_val)
             variant.variant_attribute_values.create!(product_attribute_value: av)
           end
 
           stats[:variants_created] += 1
         rescue => e
           stats[:errors] << "Create variant for #{item[:parent].sku}: #{e.message}"
-        end
-      end
-
-      # Step 5: Delete orphan variants
-      puts "  Deleting orphan variants..."
-      variation_changes[:delete].each do |variant|
-        begin
-          if variant.order_items.any?
-            stats[:errors] << "Cannot delete #{variant.product.sku}/#{variant.name} - has orders"
-          else
-            variant.destroy!
-            stats[:variants_deleted] += 1
-          end
-        rescue => e
-          stats[:errors] << "Delete variant #{variant.product.sku}/#{variant.name}: #{e.message}"
         end
       end
     end
@@ -442,6 +580,7 @@ namespace :sync do
     puts "SYNC COMPLETE"
     puts "=" * 70
     puts "Attribute values normalized: #{stats[:attr_values_normalized]}"
+    puts "Products created: #{stats[:products_created]}"
     puts "Products updated: #{stats[:products_updated]}"
     puts "Variants updated: #{stats[:variants_updated]}"
     puts "Variants created: #{stats[:variants_created]}"

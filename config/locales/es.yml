@@ -1,11 +1,53 @@
 es:
+  date:
+    day_names: [Domingo, Lunes, Martes, Miércoles, Jueves, Viernes, Sábado]
+    abbr_day_names: [Dom, Lun, Mar, Mié, Jue, Vie, Sáb]
+    month_names: [~, Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]
+    abbr_month_names: [~, Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic]
+    formats:
+      long: "%d de %B de %Y"
+  activerecord:
+    errors:
+      models:
+        order:
+          attributes:
+            receive_on:
+              invalid_delivery_day: "no es un día de entrega válido"
+              too_early: "es demasiado pronto, por favor seleccione una fecha posterior"
+        product_attribute_value:
+          attributes:
+            value:
+              value_already_exists: "ya existe en este atributo"
+
   # Navigation
   navbar:
     product: "Producto"
+    why_it_matters: "Por qué importa"
     how_it_works: "Cómo funciona"
     coming_soon: "Próximamente"
     pricing: "Precios"
-    start_free_trial: "Empezar gratis"
+    our_dna: "Nuestro DNA"
+
+  # Product Dropdown Sidebar
+  sidebar:
+    smart_pricing:
+      title: "Motor de Precios Inteligente"
+      description: "Descuentos por volumen, niveles de cliente y precios personalizados que se acumulan automáticamente."
+    product_variants:
+      title: "Variantes de Producto"
+      description: "Talla, color y atributos personalizados con precios y stock individuales."
+    multi_currency:
+      title: "Multi-Moneda"
+      description: "EUR, CHF, USD, GBP con formato automático y cálculo de impuestos."
+    customer_management:
+      title: "Gestión de Clientes"
+      description: "Acceso solo por invitación, descuentos por nivel y libreta de direcciones completa."
+    analytics_dashboard:
+      title: "Panel de Analytics"
+      description: "Tendencias de ventas, mejores clientes, impacto de descuentos y carritos abiertos."
+    stock_inventory:
+      title: "Stock e Inventario"
+      description: "Disponibilidad en tiempo real, alertas de stock bajo y seguimiento por variante."
 
   # Hero Section
   hero:
@@ -16,7 +58,7 @@ es:
     trust_badges:
       live_minutes: "En línea en 15 minutos"
       no_technical: "Sin configuración técnica"
-      free_beta: "Gratis durante el Beta"
+      multi_currency: "Soporte multi-moneda"
 
   # Stats Bar
   stats:
@@ -59,6 +101,30 @@ es:
         title: "Insights completos"
         description: "Saber exactamente qué se vende y a quién"
 
+  # Benefits Section
+  benefits:
+    label: "POR QUÉ IMPORTA"
+    title: "Lo que cambia para tu negocio"
+    subtitle: "Resultados reales que impactan tu rentabilidad"
+    always_open:
+      title: "Tu negocio funciona mientras duermes"
+      description: "Los clientes navegan y piden cuando quieran — noches, fines de semana, festivos. Sin llamadas de ventas."
+    upsell:
+      title: "Cada pedido es una oportunidad de venta"
+      description: "Los clientes descubren todo tu catálogo, no solo lo que suelen comprar. Más visibilidad, más ingresos."
+    update_once:
+      title: "Actualiza una vez. Llega a todos."
+      description: "Cambia un precio y todos los clientes lo ven instantáneamente. No más 50 llamadas o mensajes individuales."
+    direct_fulfillment:
+      title: "De su carrito a tu almacén"
+      description: "Los pedidos van directamente a tu equipo o ERP. Sin intermediarios — tú solo entregas."
+    transparency:
+      title: "No más 'déjame verificar y te digo'"
+      description: "Los clientes ven precios y stock en tiempo real. Saben qué esperar antes de pedir."
+    no_emails:
+      title: "Cero tiempo en emails de confirmación"
+      description: "Confirmaciones y notificaciones automáticas. Tú te enfocas en enviar, no en escribir."
+
   # How It Works Section
   how_it_works:
     label: "CÓMO FUNCIONA"
@@ -66,28 +132,28 @@ es:
     features:
       self_service:
         title: "Tus clientes piden solos"
-        description: "Dale a cada cliente su propio login en un portal personalizado. Navegan tu catálogo, ven sus precios y hacen pedidos — a cualquier hora, sin llamarte."
+        description: "Cada cliente tiene su propio login en tu portal personalizado. Navegan, ven sus precios personalizados y piden — 24/7, sin llamarte."
         benefit_1: "Pedidos self-service 24/7"
-        benefit_2: "Interfaz mobile-friendly"
-        benefit_3: "Historial y re-pedidos"
+        benefit_2: "Tienda con tu marca y logo"
+        benefit_3: "Historial y re-pedidos con un clic"
       pricing:
-        title: "Precios en piloto automático"
-        description: "Define tus reglas una vez: descuentos por volumen, precios específicos por cliente, promociones estacionales. Nodal calcula todo automáticamente."
-        benefit_1: "Tablas de precios por cliente"
-        benefit_2: "Descuentos por volumen"
-        benefit_3: "Promociones acumulables"
+        title: "Motor de Precios Inteligente"
+        description: "Cuatro tipos de descuento que se acumulan: volumen, niveles de cliente, precios personalizados y umbrales de pedido. Define las reglas — Nodal hace las cuentas."
+        benefit_1: "4 tipos de descuento que se acumulan"
+        benefit_2: "Precios específicos por cliente"
+        benefit_3: "Descuentos automáticos por valor"
       catalog:
-        title: "Tu catálogo, siempre actualizado"
-        description: "Sube productos una vez. ¿Cambias un precio? Todos lo ven instantáneamente. No más PDFs desactualizados o \"déjame verificar el precio actual\"."
-        benefit_1: "Actualizaciones de precios en tiempo real"
-        benefit_2: "Categorías de productos"
-        benefit_3: "Visibilidad de stock"
+        title: "Catálogo de Productos Completo"
+        description: "Productos con variantes (talla, color, atributos), categorías, fotos y control de stock. Importa desde Excel o añade manualmente — siempre actualizado."
+        benefit_1: "Variantes y atributos de producto"
+        benefit_2: "Importación CSV y categorías"
+        benefit_3: "Control de stock en tiempo real"
       analytics:
-        title: "Insights que impulsan crecimiento"
-        description: "Ve qué funciona y qué no. Tu dashboard muestra tendencias de ingresos, carritos abiertos, rendimiento de productos e impacto de descuentos — todo en tiempo real."
-        benefit_1: "Analytics de ingresos y pedidos"
-        benefit_2: "Carritos abiertos y conversión"
-        benefit_3: "Rendimiento de productos y descuentos"
+        title: "Analytics en Tiempo Real"
+        description: "Sabe exactamente qué se vende, quién compra y dónde estás perdiendo dinero. Sigue ingresos, retención, impacto de descuentos y carritos abiertos."
+        benefit_1: "Insights de ingresos y clientes"
+        benefit_2: "Análisis de impacto de descuentos"
+        benefit_3: "Recuperación de carritos abiertos"
 
   # Why Nodal Section
   why_nodal:
@@ -102,7 +168,7 @@ es:
       affordable:
         number: "02"
         title: "Accesible desde el primer día"
-        description: "Empieza gratis, crece gradualmente. Nuestros precios escalan con tu negocio — no con presupuestos enterprise."
+        description: "Nuestros precios escalan con tu negocio — no con presupuestos enterprise."
       tools:
         number: "03"
         title: "Funciona con tus herramientas"
@@ -141,42 +207,10 @@ es:
   # Pricing Section
   pricing:
     label: "PRECIOS"
-    title: "Precios simples y transparentes"
-    subtitle: "Empieza gratis. Actualiza cuando estés listo. Sin sorpresas."
-    disclaimer: "No se requiere tarjeta de crédito para empezar."
-    per_month: "/mes"
-    tiers:
-      free:
-        badge: "BETA"
-        name: "Gratis"
-        description: "Gratis durante la fase Beta"
-        feature_1: "Hasta 10 productos"
-        feature_2: "3 cuentas de cliente"
-        feature_3: "Gestión básica de pedidos"
-        feature_4: "Soporte por email"
-        cta: "Empezar"
-      pro:
-        badge: "RECOMENDADO"
-        name: "Pro"
-        description: "Para negocios en crecimiento"
-        feature_1: "Productos ilimitados"
-        feature_2: "Clientes ilimitados"
-        feature_3: "Precios específicos por cliente"
-        feature_4: "Dashboard analytics avanzado"
-        feature_5: "Branding personalizado"
-        feature_6: "Soporte prioritario"
-        cta: "Empezar"
-      business:
-        name: "Business"
-        price: "Hablemos"
-        description: "Para operaciones establecidas"
-        feature_1: "Todo de Pro"
-        feature_2: "Acceso API"
-        feature_3: "Integraciones personalizadas"
-        feature_4: "Gestor de cuenta dedicado"
-        feature_5: "Garantía SLA"
-        feature_6: "Soporte telefónico"
-        cta: "Contactar"
+    title: "Adaptado a Tu Negocio"
+    subtitle: "Nuestros lugares de prueba Beta están completos. Ahora trabajamos directamente con cada cliente para crear una propuesta que se adapte a tus necesidades, volumen y objetivos."
+    note: "Cada negocio es diferente — encontremos lo que funciona para ti."
+    cta: "Hablemos"
 
   # Results Section
   results:
@@ -282,4 +316,28 @@ es:
       submit: "Cambiar contraseña"
       or: "o"
       remember_password: "¿Recuerdas tu contraseña?"
+      sign_in: "Iniciar sesión"
+    accept_invitation:
+      title: "Define tu contraseña"
+      subtitle: "Elige una contraseña para acceder a tu cuenta"
+      password: "Contraseña"
+      password_placeholder: "Introduce tu contraseña"
+      password_hint: "Mínimo de %{count} caracteres"
+      confirm_password: "Confirmar contraseña"
+      confirm_password_placeholder: "Confirma tu contraseña"
+      submit: "Crear cuenta"
+    member_invitation:
+      title: "Aceptar Invitación"
+      subtitle_html: "Únete a <strong>%{organisation}</strong> como %{role}"
+      email: "Email"
+      first_name: "Nombre"
+      first_name_placeholder: "Introduce tu nombre"
+      last_name: "Apellido"
+      last_name_placeholder: "Introduce tu apellido"
+      password: "Contraseña"
+      password_placeholder: "Crea una contraseña"
+      confirm_password: "Confirmar contraseña"
+      confirm_password_placeholder: "Confirma tu contraseña"
+      submit: "Crear Cuenta y Unirse al Equipo"
+      already_have_account: "¿Ya tienes una cuenta?"
       sign_in: "Iniciar sesión"

@@ -1,0 +1,41 @@
+<div class="modal fade" id="emailNotificationModal" tabindex="-1" aria-labelledby="emailNotificationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="emailNotificationModalLabel">
+          <i class="fa-solid fa-envelope me-2"></i><%= t('bo.pricing.email_notifications.modal.title') %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-2">
+          <%= t('bo.pricing.email_notifications.modal.send_question') %>
+          <strong id="emailNotificationCount"></strong>
+          <%= t('bo.pricing.email_notifications.modal.customers') %>
+        </p>
+        <p class="text-muted small mb-3">
+          <%= t('bo.pricing.email_notifications.modal.discount_type') %>:
+          <span class="badge bg-secondary-subtle text-secondary" id="emailNotificationType"></span>
+        </p>
+        <div id="emailNotificationRecipients">
+          <div class="text-center py-2">
+            <div class="spinner-border spinner-border-sm text-muted" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <i class="fa-solid fa-clock me-1"></i><%= t('bo.pricing.email_notifications.modal.send_later') %>
+        </button>
+        <form id="emailNotificationForm" method="post" action="#">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-paper-plane me-1"></i><%= t('bo.pricing.email_notifications.modal.send_now') %>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

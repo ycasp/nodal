@@ -1,22 +1,50 @@
-<%= link_to products_path(org_slug: params[:org_slug], category: params[:category], query: params[:query]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
+<%= link_to products_path(org_slug: params[:org_slug], category: params[:category], queries: params[:queries], page: params[:page]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
   <i class="fa-solid fa-arrow-left me-2"></i><%= t('storefront.products.show.back_to_products') %>
 <% end %>
 
-<div class="row g-4" data-controller="image-gallery">
+<%
+  controllers = "image-gallery"
+  row_data = {}
+  if @product.has_variants? && @attributes_with_values.present?
+    controllers += " variant-selector"
+    row_data.merge!(
+      "variant-selector-variants-value" => @variants.map { |v|
+        vd = @variant_discounts[v.id] || { has_discount: false, final_price_cents: v.unit_price_cents, discount_percentage: 0 }
+        {
+          id: v.id, name: v.name, sku: v.sku,
+          price_cents: v.unit_price_cents,
+          original_price_cents: @product.unit_price,
+          attribute_value_ids: v.attribute_values.pluck(:id),
+          in_stock: v.in_stock?, stock_quantity: v.stock_quantity,
+          track_stock: v.track_stock?, purchasable: v.purchasable?,
+          photo_url: v.photo.attached? ? url_for(v.photo.variant(resize_to_limit: [400, 400])) : nil,
+          has_discount: vd[:has_discount],
+          final_price_cents: vd[:final_price_cents],
+          discount_percentage: vd[:discount_percentage]
+        }
+      }.to_json,
+      "variant-selector-currency-symbol-value" => current_organisation.currency_symbol,
+      "variant-selector-default-price-cents-value" => @default_variant&.unit_price_cents || @product.unit_price,
+      "variant-selector-default-final-price-cents-value" => @discount_calculator.final_price.cents,
+      "variant-selector-default-has-discount-value" => @discount_calculator.discount_breakdown[:has_discount].to_s,
+      "variant-selector-default-discount-percentage-value" => (@discount_calculator.discount_breakdown[:has_discount] ? (@discount_calculator.discount_breakdown[:effective_discount][:percentage] * 100).round(0) : 0).to_s,
+      "variant-selector-min-quantity-value" => @product.min_quantity || 1,
+      "variant-selector-default-sku-value" => @product.sku,
+      "variant-selector-in-stock-text-value" => t('storefront.products.show.in_stock'),
+      "variant-selector-out-of-stock-text-value" => t('storefront.products.show.out_of_stock')
+    )
+  end
+%>
+<div class="row g-4" data-controller="<%= controllers %>" <%= row_data.map { |k, v| "data-#{k}=\"#{ERB::Util.html_escape(v)}\"" }.join(" ").html_safe %>>
   <!-- Left Column - Product Image -->
   <div class="col-lg-6">
     <div class="card border-0 shadow-sm position-relative" style="background-color: #f8f9fa; border-radius: 12px; overflow: hidden;">
-      <!-- Category Badge on Image -->
-      <span class="badge bg-dark position-absolute" style="top: 16px; left: 16px; z-index: 10; padding: 8px 14px; border-radius: 20px;">
-        <i class="fa-solid fa-tag me-1"></i><%= @product.category&.name %>
-      </span>
-
       <% discount_breakdown = @discount_calculator.discount_breakdown %>
 
       <!-- Main Image -->
       <div class="d-flex align-items-center justify-content-center" style="min-height: 400px; padding: 40px;">
         <% if @product.photo_attached? %>
-          <%= image_tag @product.photo, class: "img-fluid", style: "max-height: 350px; object-fit: contain;", data: { image_gallery_target: "mainImage" } %>
+          <%= image_tag @product.photo, class: "img-fluid", style: "max-height: 350px; object-fit: contain;", data: { image_gallery_target: "mainImage", variant_selector_target: "image" } %>
         <% else %>
           <i class="fa-solid fa-image fa-5x text-muted"></i>
         <% end %>
@@ -50,47 +78,37 @@
   <div class="col-lg-6">
     <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
       <div class="card-body p-4">
-        <!-- Product Name & Category -->
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <h1 class="mb-0" style="font-size: 2rem; font-weight: 600;"><%= @product.name %></h1>
-          <span class="badge bg-secondary-subtle text-secondary" style="padding: 6px 12px; border-radius: 20px;">
-            <i class="fa-solid fa-box me-1"></i><%= @product.category&.name %>
-          </span>
-        </div>
+        <!-- Product Name -->
+        <h1 class="mb-2" style="font-size: 2rem; font-weight: 600;"><%= @product.name %></h1>
 
         <!-- Description -->
         <p class="text-muted mb-4"><%= @product.description %></p>
 
-        <%# Build variants JSON for Stimulus controller if product has variants %>
-        <% if @product.has_variants? && @attributes_with_values.present? %>
-          <%
-            variants_json = @variants.map do |v|
-              {
-                id: v.id,
-                name: v.name,
-                sku: v.sku,
-                price_cents: v.unit_price_cents,
-                original_price_cents: @product.unit_price,
-                attribute_value_ids: v.attribute_values.pluck(:id),
-                in_stock: v.in_stock?,
-                stock_quantity: v.stock_quantity,
-                track_stock: v.track_stock?,
-                purchasable: v.purchasable?,
-                photo_url: v.photo.attached? ? url_for(v.photo.variant(resize_to_limit: [400, 400])) : nil
-              }
-            end
-          %>
-          <div data-controller="variant-selector"
-               data-variant-selector-variants-value="<%= variants_json.to_json %>"
-               data-variant-selector-currency-symbol-value="<%= current_organisation.currency_symbol %>"
-               data-variant-selector-default-price-cents-value="<%= @default_variant&.unit_price_cents || @product.unit_price %>"
-               data-variant-selector-min-quantity-value="<%= @product.min_quantity || 1 %>"
-               data-variant-selector-default-sku-value="<%= @product.sku %>">
-        <% end %>
-
         <!-- Price -->
         <div class="mb-3">
-          <% if discount_breakdown[:has_discount] %>
+          <% if @product.price_on_request? %>
+            <span class="text-primary" style="font-size: 2rem; font-weight: 700;"><%= t('storefront.products.show.price_on_request') %></span>
+          <% elsif @product.variable? %>
+            <div class="price-with-discount">
+              <span class="original-price text-muted text-decoration-line-through <%= 'd-none' unless discount_breakdown[:has_discount] %>" style="font-size: 1.5rem;" data-variant-selector-target="originalPrice">
+                <% if discount_breakdown[:has_discount] %>
+                  <%= humanized_money_with_symbol(discount_breakdown[:base_price]) %>
+                <% end %>
+              </span>
+              <span class="<%= discount_breakdown[:has_discount] ? 'text-success' : 'text-primary' %>" data-variant-selector-target="mainPrice" style="font-size: 2.5rem; font-weight: 700;">
+                <% if discount_breakdown[:has_discount] %>
+                  <%= humanized_money_with_symbol(discount_breakdown[:final_price]) %>
+                <% else %>
+                  <%= @default_variant&.price ? humanized_money_with_symbol(@default_variant.price) : @product.display_price %>
+                <% end %>
+              </span>
+              <span class="badge bg-success fs-6 <%= 'd-none' unless discount_breakdown[:has_discount] %>" data-variant-selector-target="discountBadge">
+                <% if discount_breakdown[:has_discount] %>
+                  -<%= (discount_breakdown[:effective_discount][:percentage] * 100).round(0) %>% OFF
+                <% end %>
+              </span>
+            </div>
+          <% elsif discount_breakdown[:has_discount] %>
             <div class="price-with-discount">
               <span class="original-price text-muted text-decoration-line-through" style="font-size: 1.5rem;">
                 <%= humanized_money_with_symbol(discount_breakdown[:base_price]) %>
@@ -101,26 +119,26 @@
               <span class="badge bg-success fs-6">
                 -<%= (discount_breakdown[:effective_discount][:percentage] * 100).round(0) %>% OFF
               </span>
-              <% if discount_breakdown[:all_discounts].any? { |d| d[:type] == :product } %>
+              <% if discount_breakdown[:applied_discounts].any? { |d| d[:type] == :product || d[:type] == :category } %>
                 <span class="badge bg-danger fs-6 ms-1"><%= t('storefront.products.index.sale_badge') %></span>
               <% end %>
             </div>
-          <% elsif @product.variable? %>
-            <span class="text-primary" data-variant-selector-target="mainPrice" style="font-size: 2.5rem; font-weight: 700;"><%= @default_variant&.price ? humanized_money_with_symbol(@default_variant.price) : @product.display_price %></span>
           <% else %>
             <span class="text-primary" style="font-size: 2.5rem; font-weight: 700;"><%= humanized_money_with_symbol(@product.price) %></span>
           <% end %>
-          <span class="text-muted fs-5">/ <%= @product.unit_description || 'unit' %></span>
+          <% if @product.unit_description.present? && !@product.price_on_request? %>
+            <span class="text-muted fs-5">/ <%= @product.unit_description %></span>
+          <% end %>
         </div>
 
         <!-- Discount Details Section -->
-        <% if discount_breakdown[:has_discount] %>
+        <% if discount_breakdown[:has_discount] && !@product.price_on_request? %>
           <div class="alert alert-success mb-4" style="border-radius: 10px;">
             <h6 class="alert-heading mb-3">
               <i class="fa-solid fa-tags me-2"></i><%= t('storefront.products.show.available_discounts') %>
             </h6>
-            <% discount_breakdown[:all_discounts].each do |discount| %>
-              <div class="d-flex justify-content-between align-items-center py-2 <%= 'border-bottom' unless discount == discount_breakdown[:all_discounts].last %>">
+            <% discount_breakdown[:applied_discounts].each do |discount| %>
+              <div class="d-flex justify-content-between align-items-center py-2 <%= 'border-bottom' unless discount == discount_breakdown[:applied_discounts].last %>">
                 <div>
                   <% case discount[:type] %>
                   <% when :product %>
@@ -137,10 +155,22 @@
                         </small>
                       <% end %>
                     <% end %>
+                  <% when :category %>
+                    <span class="badge bg-danger me-2"><%= t('storefront.products.index.sale_badge') %></span>
+                    <strong><%= t('storefront.products.show.category_discount') %></strong>
+                    <% if discount[:min_quantity_required] && discount[:min_quantity_required] > 1 %>
+                      <% if discount[:meets_min_quantity] %>
+                        <small class="text-success d-block">
+                          <i class="fa-solid fa-check me-1"></i><%= t('storefront.products.show.min_quantity_met') %> (<%= discount[:min_quantity_required] %>+ units)
+                        </small>
+                      <% else %>
+                        <small class="text-warning d-block">
+                          <i class="fa-solid fa-info-circle me-1"></i><%= t('storefront.products.show.buy_to_unlock', quantity: discount[:min_quantity_required]) %>
+                        </small>
+                      <% end %>
+                    <% end %>
                   <% when :customer %>
-                    <span class="badge bg-info me-2">VIP</span>
                     <strong><%= t('storefront.products.show.customer_tier_discount') %></strong>
-                    <small class="text-muted d-block">Special pricing for your account</small>
                   <% when :customer_product %>
                     <span class="badge bg-primary me-2">SPECIAL</span>
                     <strong><%= t('storefront.products.show.your_special_price') %></strong>
@@ -171,40 +201,59 @@
         <% end %>
 
         <!-- Additional Price Info -->
-        <div class="mb-4 text-muted">
-          <% display_sku = @product.variable? ? (@default_variant&.sku || @product.sku) : @product.sku %>
-          <div class="sku-container <%= 'd-none' unless display_sku.present? %>"><i class="fa-solid fa-barcode me-2"></i>SKU: <span data-variant-selector-target="sku"><%= display_sku || '-' %></span></div>
-        </div>
+        <% if current_organisation.show_product_sku? %>
+          <div class="mb-4 text-muted">
+            <% display_sku = @product.variable? ? (@default_variant&.sku || @product.sku) : @product.sku %>
+            <div class="sku-container <%= 'd-none' unless display_sku.present? %>"><i class="fa-solid fa-barcode me-2"></i>SKU: <span data-variant-selector-target="sku"><%= display_sku || '-' %></span></div>
+          </div>
+        <% end %>
 
         <!-- Info Grid -->
-        <div class="row g-3 mb-4 py-3 border-top border-bottom">
-          <div class="col-4">
-            <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.min_order') %></div>
-            <div>
-              <i class="fa-solid fa-layer-group me-1 text-muted"></i>
-              <%= @product.min_quantity || 1 %> <%= @product.min_quantity_type || @product.unit_description || 'unit' %>
-            </div>
+        <% show_min_qty = current_organisation.show_product_min_quantity? %>
+        <% show_category = current_organisation.show_product_category? %>
+        <% show_availability = current_organisation.show_product_availability? %>
+        <% if show_min_qty || show_category || show_availability %>
+          <div class="row g-3 mb-4 py-3 border-top border-bottom">
+            <% if show_min_qty %>
+              <div class="col-4">
+                <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.min_order') %></div>
+                <div>
+                  <i class="fa-solid fa-layer-group me-1 text-muted"></i>
+                  <%= @product.min_quantity || 1 %> <%= @product.min_quantity_type || @product.unit_description || 'unit' %>
+                </div>
+              </div>
+            <% end %>
+            <% if show_category %>
+              <div class="col-4">
+                <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.category') %></div>
+                <div>
+                  <% if @product.categories.any? %>
+                    <%= @product.categories.first.name %>
+                    <% if @product.categories.size > 1 %>
+                      <span class="text-muted small" role="button" title="<%= @product.categories.drop(1).map(&:name).join(', ') %>" data-bs-toggle="tooltip">+<%= t('storefront.products.show.n_more_categories', count: @product.categories.size - 1) %></span>
+                    <% end %>
+                  <% else %>
+                    -
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+            <% if show_availability %>
+              <div class="col-4">
+                <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.availability') %></div>
+                <div data-variant-selector-target="stock">
+                  <% if @product.available? %>
+                    <i class="fa-solid fa-circle-check me-1 text-success"></i>
+                    <%= t('storefront.products.show.in_stock') %>
+                  <% else %>
+                    <i class="fa-solid fa-circle-xmark me-1 text-danger"></i>
+                    <%= t('storefront.products.show.out_of_stock') %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
           </div>
-          <div class="col-4">
-            <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.category') %></div>
-            <div>
-              <i class="fa-solid fa-folder me-1 text-muted"></i>
-              <%= @product.category&.name || '-' %>
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.availability') %></div>
-            <div>
-              <% if @product.available? %>
-                <i class="fa-solid fa-circle-check me-1 text-success"></i>
-                <%= t('storefront.products.show.in_stock') %>
-              <% else %>
-                <i class="fa-solid fa-circle-xmark me-1 text-danger"></i>
-                <%= t('storefront.products.show.out_of_stock') %>
-              <% end %>
-            </div>
-          </div>
-        </div>
+        <% end %>
 
         <!-- Variant Selector (for variable products) -->
         <% if @product.has_variants? && @attributes_with_values.present? %>
@@ -230,10 +279,13 @@
             <% end %>
 
             <!-- Add to Cart Section -->
-            <% unless browsing_as_member? %>
+            <% unless browsing_as_member? || @product.price_on_request? %>
               <%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, local: true, class: "d-flex align-items-center gap-3 flex-wrap" do |f| %>
                 <%= hidden_field_tag :product_id, @product.id %>
                 <%= hidden_field_tag :variant_id, @default_variant&.id, data: { variant_selector_target: "variantId" } %>
+                <%= hidden_field_tag :category, params[:category] if params[:category].present? %>
+                <%= hidden_field_tag :queries, params[:queries] if params[:queries].present? %>
+                <%= hidden_field_tag :page, params[:page] if params[:page].present? %>
 
                 <div class="d-flex align-items-center">
                   <label class="text-muted small me-2"><%= t('storefront.products.show.quantity') %></label>
@@ -258,14 +310,19 @@
                 </div>
               <% end %>
             <% end %>
+            <% unless browsing_as_member? %>
+              <%= render 'storefront/products/add_to_list_dropdown', product: @product, default_variant: @default_variant, has_variants: true %>
+            <% end %>
           </div>
-          </div><%# Close variant-selector controller wrapper %>
         <% else %>
           <!-- Add to Cart Section (simple product) -->
-          <% unless browsing_as_member? %>
+          <% unless browsing_as_member? || @product.price_on_request? %>
             <%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, local: true, class: "d-flex align-items-center gap-3 flex-wrap" do |f| %>
               <%= hidden_field_tag :product_id, @product.id %>
               <%= hidden_field_tag :variant_id, @default_variant&.id %>
+              <%= hidden_field_tag :category, params[:category] if params[:category].present? %>
+              <%= hidden_field_tag :queries, params[:queries] if params[:queries].present? %>
+              <%= hidden_field_tag :page, params[:page] if params[:page].present? %>
               <div class="d-flex align-items-center">
                 <label class="text-muted small me-2"><%= t('storefront.products.show.quantity') %></label>
                 <%= number_field_tag "order_item[quantity]", @product.min_quantity || 1, min: @product.min_quantity || 1, class: "form-control text-center", style: "width: 70px;" %>
@@ -286,9 +343,48 @@
               </div>
             <% end %>
           <% end %>
+          <% unless browsing_as_member? %>
+            <%= render 'storefront/products/add_to_list_dropdown', product: @product, default_variant: @default_variant, has_variants: false %>
+          <% end %>
         <% end %>
 
-        <% unless @product.available? %>
+        <% if @product.price_on_request? %>
+          <%
+            price_request_subject = t('storefront.products.show.price_request_email_subject', product: @product.name)
+            price_request_body = t('storefront.products.show.price_request_email_body',
+              product: @product.name,
+              sku: @product.sku.presence || '-',
+              customer: current_customer&.contact_name || (current_member ? "#{current_member.first_name} #{current_member.last_name}" : ''))
+            whatsapp_message = t('storefront.products.show.price_request_whatsapp_body',
+              product: @product.name,
+              sku: @product.sku.presence || '-')
+          %>
+          <div class="card border-0 shadow-sm mt-3" style="border-radius: 10px; background-color: #f0f7ff;">
+            <div class="card-body text-center py-4">
+              <h6 class="mb-2"><i class="fa-solid fa-tag me-2"></i><%= t('storefront.products.show.price_on_request_cta_title') %></h6>
+              <p class="text-muted small mb-3"><%= t('storefront.products.show.price_on_request_cta_subtitle') %></p>
+              <div class="d-flex justify-content-center gap-2 flex-wrap">
+                <% if current_organisation.contact_email.present? %>
+                  <%= mail_to current_organisation.contact_email, nil,
+                        subject: price_request_subject,
+                        body: price_request_body,
+                        class: "btn btn-primary px-4",
+                        style: "border-radius: 8px;" do %>
+                    <i class="fa-solid fa-envelope me-2"></i><%= t('storefront.products.show.price_request_email_btn') %>
+                  <% end %>
+                <% end %>
+                <% if current_organisation.whatsapp.present? %>
+                  <%= link_to "https://wa.me/#{current_organisation.whatsapp.gsub(/\D/, '')}?text=#{ERB::Util.url_encode(whatsapp_message)}",
+                        target: "_blank",
+                        class: "btn btn-success px-4",
+                        style: "border-radius: 8px;" do %>
+                    <i class="fa-brands fa-whatsapp me-2"></i><%= t('storefront.products.show.price_request_whatsapp_btn') %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% elsif !@product.available? %>
           <small class="text-danger d-block mt-3">
             <i class="fa-solid fa-circle-xmark me-1"></i><%= t('storefront.products.show.out_of_stock_message') %>
           </small>
@@ -297,6 +393,8 @@
     </div>
   </div>
 </div>
+
+<%= render 'related_products' if @related_products&.any? %>
 
 <!-- Image Zoom Modal -->
 <% if @product.photo_attached? %>

@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do%>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_customer_path(params[:org_slug], @customer), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_customer_path(params[:org_slug], @customer, filter_params_hash), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -12,13 +12,13 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.customers.edit.title') %></h4>
-        <span class="text-muted"><%= @customer.company_name %></span>
+        <h1><%= t('bo.customers.edit.title') %></h1>
+        <p><%= @customer.company_name %></p>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
-      <%= link_to bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-secondary" do %>
+    <div class="bo-page-actions">
+      <%= link_to bo_customer_path(params[:org_slug], @customer, filter_params_hash), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
       <button type="submit" form="customer-form" class="btn btn-primary">
@@ -28,7 +28,8 @@
   </div>
 </div>
 
-<%= form_with model: @customer, url: bo_customer_path(params[:org_slug], @customer), method: :patch, id: "customer-form" do |f| %>
+<div class="bo-page-body">
+<%= form_with model: @customer, url: bo_customer_path(params[:org_slug], @customer, filter_params_hash), method: :patch, id: "customer-form" do |f| %>
   <div class="row g-3">
     <div class="col-md-8">
       <div class="card mb-3">
@@ -38,18 +39,18 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.contact_name') %></label>
-              <%= f.text_field :contact_name, class: "form-control", placeholder: t('bo.customers.form.placeholders.contact_name') %>
+              <%= f.text_field :contact_name, class: "form-control", placeholder: t('bo.customers.form.contact_name_placeholder') %>
             </div>
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.email') %></label>
-              <%= f.email_field :email, class: "form-control", placeholder: t('bo.customers.form.placeholders.email') %>
+              <%= f.email_field :email, class: "form-control", placeholder: t('bo.customers.form.email_placeholder') %>
             </div>
           </div>
 
           <div class="row g-3 mt-1">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.phone') %></label>
-              <%= f.text_field :contact_phone, class: "form-control", placeholder: t('bo.customers.form.placeholders.phone') %>
+              <%= f.text_field :contact_phone, class: "form-control", placeholder: t('bo.customers.form.phone_placeholder') %>
             </div>
           </div>
         </div>
@@ -62,7 +63,7 @@
           <div class="row g-3">
             <div class="col-md-12">
               <label class="form-label"><%= t('bo.customers.form.company_name') %></label>
-              <%= f.text_field :company_name, class: "form-control", placeholder: t('bo.customers.form.placeholders.company_name') %>
+              <%= f.text_field :company_name, class: "form-control", placeholder: t('bo.customers.form.company_name_placeholder') %>
             </div>
           </div>
 
@@ -152,6 +153,24 @@
             <label class="form-check-label" for="activeSwitch"><%= t('bo.customers.form.active_customer') %></label>
           </div>
           <small class="text-muted"><%= t('bo.customers.form.inactive_hint') %></small>
+
+          <hr class="my-3">
+
+          <div class="form-check form-switch">
+            <%= f.check_box :email_notifications_enabled, class: "form-check-input", role: "switch", id: "emailNotificationsSwitch" %>
+            <label class="form-check-label" for="emailNotificationsSwitch"><%= t('bo.customers.form.email_notifications') %></label>
+          </div>
+          <small class="text-muted"><%= t('bo.customers.form.email_notifications_hint') %></small>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.customers.form.category') %></h5>
+          <%= f.select :customer_category_id,
+              options_from_collection_for_select(@customer_categories, :id, :name, @customer.customer_category_id),
+              { include_blank: t('bo.customers.form.no_category') },
+              class: "form-select" %>
         </div>
       </div>
 
@@ -173,5 +192,6 @@
     </div>
   </div>
 <% end %>
+</div>
 
 <% end %>

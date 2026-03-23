@@ -13,13 +13,13 @@ class OrgMemberPolicy < ApplicationPolicy
     admin_or_owner?
   end
 
-  # Only owner can edit roles
+  # Anyone can edit their own profile; owner can edit others' roles
   def edit?
-    owner? && !editing_self?
+    editing_self? || owner?
   end
 
   def update?
-    owner? && !editing_self?
+    editing_self? || owner?
   end
 
   # Owner can remove anyone except themselves

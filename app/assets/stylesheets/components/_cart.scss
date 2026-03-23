@@ -1,0 +1,145 @@
+// Cart Component Styles
+// Responsive cart with table (desktop) and compact cards (mobile)
+
+// Mobile cart item cards
+.cart-item-card {
+  .min-width-0 {
+    min-width: 0; // Allow text truncation in flex children
+  }
+}
+
+// Compact mobile cart item layout
+.cart-item-compact {
+  .min-width-0 {
+    min-width: 0;
+  }
+}
+
+// Touch-friendly quantity controls (44px minimum touch target)
+.cart-quantity-group {
+  width: 140px;
+
+  .cart-quantity-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .cart-quantity-input {
+    height: 44px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-left: 0;
+    border-right: 0;
+
+    // Hide number input spinners
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type="number"] {
+      -moz-appearance: textfield;
+    }
+  }
+}
+
+// Compact quantity controls for mobile cart
+.cart-quantity-group-compact {
+  width: 110px;
+
+  .cart-quantity-btn-compact {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .cart-quantity-input-compact {
+    height: 36px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-left: 0;
+    border-right: 0;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type="number"] {
+      -moz-appearance: textfield;
+    }
+  }
+}
+
+// Compact remove button (icon-only)
+.cart-remove-btn-compact {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+// Desktop quantity controls (smaller)
+.table .input-group-sm {
+  .form-control {
+    // Hide number input spinners
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type="number"] {
+      -moz-appearance: textfield;
+    }
+  }
+}
+
+// Checkout mobile item cards
+.checkout-item-card {
+  .min-width-0 {
+    min-width: 0;
+  }
+}
+
+// Checkout summary card - sticky only on desktop
+.checkout-summary-card {
+  @media (min-width: 992px) {
+    position: sticky;
+    top: 20px;
+  }
+}
+
+// Sticky bottom checkout bar (mobile only)
+.cart-sticky-bar {
+  z-index: 1030;
+}
+
+// Add bottom padding when sticky bar is present so last items aren't hidden
+@media (max-width: 991.98px) {
+  body:has(.cart-sticky-bar) {
+    padding-bottom: 160px;
+  }
+}

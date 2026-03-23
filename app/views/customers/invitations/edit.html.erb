@@ -1,0 +1,50 @@
+<%= render "customers/shared/auth_logo" %>
+
+<h1 class="auth-title"><%= t('auth.accept_invitation.title') %></h1>
+<p class="auth-subtitle"><%= t('auth.accept_invitation.subtitle') %></p>
+
+<%= simple_form_for(resource, as: resource_name, url: customer_invitation_path(org_slug: @organisation.slug), html: { method: :put, class: "auth-form" }) do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.input :invitation_token, as: :hidden %>
+
+  <div class="auth-field">
+    <label class="auth-label"><%= t('auth.accept_invitation.password') %></label>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.input :password,
+                  label: false,
+                  required: true,
+                  autofocus: true,
+                  placeholder: t('auth.accept_invitation.password_placeholder'),
+                  hint: (@minimum_password_length ? t('auth.accept_invitation.password_hint', count: @minimum_password_length) : nil),
+                  input_html: { autocomplete: "new-password", data: { password_visibility_target: "input" } } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="auth-field">
+    <label class="auth-label"><%= t('auth.accept_invitation.confirm_password') %></label>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.input :password_confirmation,
+                  label: false,
+                  required: true,
+                  placeholder: t('auth.accept_invitation.confirm_password_placeholder'),
+                  input_html: { autocomplete: "new-password", data: { password_visibility_target: "input" } } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="auth-actions">
+    <%= f.button :submit, t('auth.accept_invitation.submit'), class: "auth-submit-btn" %>
+  </div>
+<% end %>
+
+<div class="auth-powered-by">
+  <a href="https://www.nodal-seiri.dev" target="_blank" rel="noopener">
+    <%= t('auth.sign_in.powered_by') %> <span class="auth-powered-logo"><span class="auth-powered-icon">N</span>odal</span>
+  </a>
+</div>

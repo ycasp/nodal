@@ -11,7 +11,6 @@
       <li><%= link_to bo_orders_path, class: "dropdown-item" do %><i class="fa-solid fa-clipboard-list me-2"></i><%= t('bo.sidebar.orders') %><% end %></li>
       <li><%= link_to bo_customer_product_discounts_path, class: "dropdown-item" do %><i class="fa-solid fa-percent me-2"></i><%= t('bo.sidebar.pricing') %><% end %></li>
       <li><hr class="dropdown-divider"></li>
-      <li><%= link_to edit_bo_profile_path, class: "dropdown-item" do %><i class="fa-solid fa-circle-user me-2"></i><%= t('bo.sidebar.profile') %><% end %></li>
       <li><%= link_to bo_team_members_path, class: "dropdown-item" do %><i class="fa-solid fa-users-gear me-2"></i><%= t('bo.sidebar.team') %><% end %></li>
       <% if admin_or_owner? %>
         <li><%= link_to edit_bo_settings_path, class: "dropdown-item" do %><i class="fa-solid fa-gear me-2"></i><%= t('bo.sidebar.settings') %><% end %></li>

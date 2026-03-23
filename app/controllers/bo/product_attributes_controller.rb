@@ -22,6 +22,7 @@ class Bo::ProductAttributesController < Bo::BaseController
     if @product_attribute.save
       redirect_to bo_product_attributes_path(params[:org_slug]), notice: t('bo.flash.product_attribute_created')
     else
+      flash.now[:alert] = collect_nested_errors
       render :new, status: :unprocessable_entity
     end
   end
@@ -31,8 +32,9 @@ class Bo::ProductAttributesController < Bo::BaseController
 
   def update
     if @product_attribute.update(product_attribute_params)
-      redirect_to bo_product_attributes_path(params[:org_slug]), notice: t('bo.flash.product_attribute_updated')
+      redirect_to edit_bo_product_attribute_path(params[:org_slug], @product_attribute), notice: t('bo.flash.product_attribute_updated')
     else
+      flash.now[:alert] = collect_nested_errors
       render :edit, status: :unprocessable_entity
     end
   end
@@ -66,6 +68,17 @@ class Bo::ProductAttributesController < Bo::BaseController
   def set_product_attribute
     @product_attribute = current_organisation.product_attributes.find(params[:id])
     authorize @product_attribute
+  end
+
+  def collect_nested_errors
+    messages = @product_attribute.errors.full_messages.reject { |m| m.include?("Product attribute values") }
+    @product_attribute.product_attribute_values.each do |value|
+      next if value.errors.empty?
+      value.errors.full_messages.each do |msg|
+        messages << "\"#{value.value.presence || 'Value'}\": #{msg}"
+      end
+    end
+    messages.uniq.join(". ")
   end
 
   def product_attribute_params

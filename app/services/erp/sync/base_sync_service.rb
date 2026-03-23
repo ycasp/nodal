@@ -21,6 +21,7 @@ module Erp
 
         begin
           perform_sync
+          sync_log.save_change_details!
           sync_log.mark_completed!
           success
         rescue Erp::ApiError, Erp::ConnectionError => e
@@ -30,6 +31,10 @@ module Erp
           Rails.logger.error "ERP Sync Error: #{e.message}\n#{e.backtrace.first(10).join("\n")}"
           sync_log.mark_failed!(e.message)
           failure(e.message)
+        ensure
+          # Safety net: if the process is killed (e.g. Heroku dyno restart)
+          # and the log is still "running", mark it as completed on next load
+          finalize_stale_logs
         end
       end
 
@@ -64,6 +69,17 @@ module Erp
 
       def failure(error_message)
         Result.new(success?: false, sync_log: sync_log, error: error_message)
+      end
+
+      # Mark any stale "running" logs as completed (from killed processes)
+      def finalize_stale_logs
+        ErpSyncLog.where(organisation: organisation, status: 'running')
+                  .where(started_at: ..10.minutes.ago)
+                  .find_each do |stale_log|
+          stale_log.update(status: 'completed', completed_at: stale_log.updated_at)
+        end
+      rescue StandardError
+        # Don't let cleanup errors break anything
       end
     end
   end

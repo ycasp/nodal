@@ -1,8 +1,13 @@
-<%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
-  <i class="fa-solid fa-arrow-left me-2"></i><%= t('storefront.products.show.back_to_products') %>
+<% actions = capture do %>
+  <%= link_to shopping_lists_path(org_slug: params[:org_slug]), class: "btn btn-outline-primary btn-sm" do %>
+    <i class="fa-solid fa-clipboard-list me-1"></i> <%= t('storefront.shopping_lists.index.title') %>
+  <% end %>
 <% end %>
-
-<h1 class="mb-4"><%= t('storefront.orders.index.title') %></h1>
+<%= render "storefront/shared/page_header",
+  title: t('storefront.orders.index.title'),
+  back_path: products_path(org_slug: params[:org_slug]),
+  back_label: t('storefront.products.show.back_to_products'),
+  actions: actions %>
 
 <% if @orders.any? %>
   <div class="card border-0 shadow-sm" style="border-radius: 12px;">
@@ -35,7 +40,10 @@
                 <span class="badge <%= status_class %>"><%= order.status.titleize %></span>
               </td>
               <td class="text-end pe-4">
-                <div class="d-flex justify-content-end gap-3">
+                <div class="d-flex justify-content-end gap-2">
+                  <%= button_to add_to_cart_order_path(org_slug: params[:org_slug], id: order), method: :post, class: "btn btn-sm btn-outline-secondary" do %>
+                    <i class="fa-solid fa-cart-plus me-1"></i><%= t('storefront.orders.index.add_to_cart') %>
+                  <% end %>
                   <%= button_to reorder_order_path(org_slug: params[:org_slug], id: order), method: :post, class: "btn btn-sm btn-outline-secondary" do %>
                     <i class="fa-solid fa-rotate-right me-1"></i><%= t('storefront.orders.index.reorder') %>
                   <% end %>

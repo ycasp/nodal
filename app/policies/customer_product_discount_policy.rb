@@ -13,6 +13,10 @@ class CustomerProductDiscountPolicy < ApplicationPolicy
     true
   end
 
+  def variant_overrides?
+    true
+  end
+
   def edit?
     user_works_for_records_organisation?
   end

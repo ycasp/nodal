@@ -19,16 +19,95 @@ pt:
 
     # Barra de navegação
     navbar:
+      home: "Início"
       products: "Produtos"
       orders: "Encomendas"
+      shopping_lists: "Listas"
       contact: "Contacto"
       cart: "Carrinho"
+      account: "Conta"
       sign_out: "Terminar sessão"
+      language: "Idioma"
       order_discounts_available: "Descontos de encomenda disponíveis!"
+
+    # Página inicial
+    home:
+      good_morning: "Bom dia, %{name}"
+      good_afternoon: "Boa tarde, %{name}"
+      good_evening: "Boa noite, %{name}"
+      browse_catalog: "Ver Catálogo"
+      frequent_products:
+        title: "Os Seus Produtos Preferidos"
+        subtitle:
+          one: "%{count} item mais encomendado"
+          other: "%{count} itens mais encomendados"
+        empty: "Ainda sem produtos frequentes"
+        empty_hint: "Os produtos que encomendar regularmente aparecerão aqui para repetir rapidamente."
+        start_shopping: "Começar a Comprar"
+      last_order:
+        title: "Última Encomenda"
+        view_order: "Ver Encomenda"
+        no_orders: "Ainda sem encomendas"
+        no_orders_hint: "Faça a sua primeira encomenda e ela aparecerá aqui."
+        items_label: "itens"
+        total_label: "total"
+        steps:
+          in_process: "Efetuada"
+          processed: "Em Processamento"
+          completed: "Concluída"
+      new_products:
+        title: "Novidades"
+        badge:
+          one: "%{count} NOVO"
+          other: "%{count} NOVOS"
+        subtitle: "Adicionados ao catálogo desde a sua última encomenda"
+      tier_discount:
+        member_label: "Cliente Preferencial"
+        active_badge: "ATIVO"
+        off_every_product: "em todos os produtos"
+        exclusive_prices: "preços exclusivos"
+        off_orders_over: "em encomendas acima de %{amount}"
+        free_label: "Grátis"
+        free_shipping_over: "em encomendas acima de %{amount}"
+        promo_code: "Código: %{code}"
+        auto_applied: "Os seus preços são aplicados automaticamente em cada encomenda."
+      shopping_lists:
+        title: "As Suas Listas"
+        view_all: "Ver Todas as Listas"
+      delivery_info:
+        title: "Info de Entrega"
+        cutoff: "Encomende até às %{time} para processamento no próprio dia"
+        next_delivery: "Próxima entrega: %{date}"
+      quick_links:
+        title: "Acesso Rápido"
+        group_orders: "Encomendas"
+        group_catalog: "Catálogo"
+        group_account: "Conta"
+        all_orders: "Todas as Encomendas"
+        shopping_lists: "Listas de Compras"
+        shopping_lists_hint: "Produtos guardados para compra rápida"
+        orders_placed:
+          zero: "Nenhuma encomenda efetuada"
+          one: "%{count} encomenda efetuada"
+          other: "%{count} encomendas efetuadas"
+        products_available:
+          one: "%{count} produto disponível"
+          other: "%{count} produtos disponíveis"
+        my_account: "A Minha Conta"
+        manage_profile: "Gerir o seu perfil"
+        contact_support: "Contactar Suporte"
 
     # Envio grátis
     free_shipping:
       banner: "Envio grátis em encomendas acima de %{amount}"
+
+    # Botão voltar ao topo
+    scroll_to_top:
+      label: "Voltar ao topo"
+
+    # Botão flutuante WhatsApp
+    whatsapp_button:
+      tooltip: "Fale connosco no WhatsApp"
 
     # Rodapé
     footer:
@@ -41,6 +120,7 @@ pt:
       email: "Email"
       phone: "Telefone"
       whatsapp: "WhatsApp"
+      location_and_hours: "Localização e Horário"
       address: "A Nossa Localização"
       business_hours: "Horário de Funcionamento"
       no_contact_info: "Informações de contacto não disponíveis de momento."
@@ -49,11 +129,13 @@ pt:
     products:
       index:
         title: "Catálogo de Produtos"
-        subtitle: "Explore os nossos produtos"
+        subtitle: "%{org_name}"
         search: "Pesquisar"
         search_placeholder: "Pesquisar produtos..."
         categories: "Categorias"
         all_products: "Todos os Produtos"
+        filters_button: "Filtros"
+        filters_title: "Filtros e Categorias"
         clear_filters: "Limpar filtros"
         filters:
           active: "Filtros ativos"
@@ -62,11 +144,22 @@ pt:
         empty_catalog: "Não existem produtos disponíveis de momento."
         sale_badge: "PROMOÇÃO"
         min_order: "Encomenda mín."
+        price_on_request: "Preço sob consulta"
+        showing_products: "A mostrar %{from}-%{to} de %{count} produtos"
+        sort:
+          label: "Ordenar por"
+          name_asc: "Nome A-Z"
+          name_desc: "Nome Z-A"
+          price_asc: "Preço: menor para maior"
+          price_desc: "Preço: maior para menor"
+          newest: "Mais recentes"
+      not_available: "Este produto já não está disponível."
       show:
         back_to_products: "Voltar aos produtos"
         zoom: "Ampliar"
         available_discounts: "Descontos Disponíveis"
         product_discount: "Desconto de Produto"
+        category_discount: "Desconto de Categoria"
         customer_tier_discount: "Desconto de Cliente"
         your_special_price: "O Seu Preço Especial"
         min_quantity_met: "Quantidade mín. atingida"
@@ -75,6 +168,9 @@ pt:
         valid_until: "Válido até %{date}"
         min_order: "Encomenda mín."
         category: "Categoria"
+        n_more_categories:
+          one: "1 categoria"
+          other: "%{count} categorias"
         availability: "Disponibilidade"
         in_stock: "Em Stock"
         out_of_stock: "Sem Stock"
@@ -90,6 +186,19 @@ pt:
         select_options: "Selecionar Opções"
         select_option: "Selecione %{attribute}..."
         from_price: "A partir de %{price}"
+        related_products: "Também pode gostar"
+        price_on_request: "Preço sob consulta"
+        price_on_request_contact: "Por favor, contacte-nos para obter o preço deste produto."
+        price_on_request_not_purchasable: "Este produto requer uma cotação. Por favor, contacte-nos para obter preço."
+        price_on_request_cta_title: "Tem interesse neste produto?"
+        price_on_request_cta_subtitle: "Contacte-nos para obter um orçamento."
+        price_request_email_btn: "Enviar Email"
+        price_request_whatsapp_btn: "WhatsApp"
+        price_request_email_subject: "Pedido de Preço — %{product}"
+        price_request_email_body: "Olá,\n\nGostaria de solicitar o preço do seguinte produto:\n\nProduto: %{product}\nSKU: %{sku}\n\nPor favor envie-me um orçamento.\n\nCom os melhores cumprimentos,\n%{customer}"
+        price_request_whatsapp_body: "Olá, gostaria de solicitar o preço de: *%{product}* (SKU: %{sku}). Poderiam enviar-me um orçamento?"
+        add_to_list: "Guardar em Lista"
+        create_new_list: "Criar Nova Lista"
 
     # Secção do carrinho
     cart:
@@ -111,6 +220,9 @@ pt:
         clear_cart: "Limpar Carrinho"
         confirm_remove_item: "Remover este item?"
         confirm_clear_cart: "Tem a certeza que deseja limpar o carrinho?"
+        remove_item: "Remover"
+        decrease_quantity: "Diminuir quantidade"
+        increase_quantity: "Aumentar quantidade"
         order_summary: "Resumo da Encomenda"
         subtotal: "Subtotal"
         subtotal_items: "Subtotal (%{count} itens)"
@@ -118,7 +230,8 @@ pt:
         available_discounts: "Descontos de Encomenda Disponíveis"
         spend_more_to_unlock: "Gaste mais %{amount} para desbloquear"
         discount_applied: "Aplicado à sua encomenda!"
-        proceed_to_checkout: "Avançar para Checkout"
+        discount_off_orders_over: "%{value} em encomendas acima de %{amount}"
+        proceed_to_checkout: "Finalizar Pedido"
         remove: "Remover"
         sku: "SKU"
         min_order: "Mín"
@@ -140,6 +253,7 @@ pt:
           free: "Grátis"
         delivery_date:
           title: "Data de Entrega"
+          pickup_title: "Data de Levantamento"
           hint: "Selecione quando gostaria de receber a sua encomenda"
         shipping_address: "Morada de Envio"
         billing_address: "Morada de Faturação"
@@ -166,12 +280,22 @@ pt:
           discount: "Desconto"
           total: "Total"
         place_order: "Efetuar Encomenda"
-        terms_agreement: "Ao efetuar a encomenda, aceita os nossos termos e condições."
+        terms_checkbox_html: "Li e aceito os %{terms_link} e a %{privacy_link}."
+        terms_link: "Termos e Condições"
+        privacy_link: "Política de Privacidade"
         table:
           product: "Produto"
           quantity: "Qtd"
           price: "Preço"
           total: "Total"
+
+    # Páginas legais
+    legal_pages:
+      terms:
+        title: "Termos e Condições"
+      privacy:
+        title: "Política de Privacidade"
+      no_content: "Esta página ainda não está disponível."
 
     # Secção de encomendas
     orders:
@@ -185,9 +309,13 @@ pt:
           total: "Total"
           actions: "Ações"
         reorder: "Repetir"
+        add_to_cart: "Adicionar ao Carrinho"
         view: "Ver"
         no_orders: "Ainda não tem encomendas"
         no_orders_hint: "Quando efetuar uma encomenda, ela aparecerá aqui."
+      add_to_cart:
+        success: "Itens da encomenda %{order_number} adicionados ao carrinho."
+        skipped: "Alguns itens não estavam disponíveis e foram ignorados: %{items}"
       show:
         back_to_orders: "Voltar às Encomendas"
         order_number: "Encomenda #%{number}"
@@ -216,6 +344,121 @@ pt:
         billing_address: "Morada de Faturação"
         delivery: "Entrega"
         pickup: "Levantamento"
+
+    # Definições da conta
+    account:
+      show:
+        title: "Definições da Conta"
+        company_info: "Empresa e Informação de Contacto"
+        company_name: "Nome da Empresa"
+        taxpayer_id: "NIF"
+        contact_name: "Nome do Contacto"
+        email: "Email"
+        phone: "Telefone"
+        save_profile: "Guardar Perfil"
+        addresses: "Moradas"
+        billing_address: "Morada de Faturação"
+        shipping_addresses: "Moradas de Envio"
+        add_shipping_address: "Adicionar Morada de Envio"
+        remove_address: "Remover"
+        save_addresses: "Guardar Moradas"
+        address:
+          street: "Rua"
+          number: "Número"
+          postal_code: "Código Postal"
+          city: "Cidade"
+          country: "País"
+        language: "Idioma"
+        email_notifications: "Notificações por Email"
+        email_notifications_label: "Receber notificações por email"
+        email_notifications_hint: "Quando desativado, não receberá emails promocionais ou de confirmação de encomenda. Emails de recuperação de senha continuarão a ser enviados."
+        save_preferences: "Guardar Preferências"
+        change_password: "Alterar Palavra-passe"
+        current_password: "Palavra-passe Atual"
+        new_password: "Nova Palavra-passe"
+        password_confirmation: "Confirmar Palavra-passe"
+        update_password: "Atualizar Palavra-passe"
+      flash:
+        profile_updated: "Perfil atualizado com sucesso."
+        password_updated: "Palavra-passe atualizada com sucesso."
+
+    # Listas de compras
+    shopping_lists:
+      index:
+        title: "Listas de Compras"
+        subtitle: "Guarde os seus produtos favoritos para compra rápida"
+        new_list: "Nova Lista"
+        view: "Ver"
+        add_to_cart: "Adicionar ao Carrinho"
+        empty: "Ainda sem listas de compras"
+        empty_hint: "Crie a sua primeira lista para guardar os produtos que encomenda regularmente."
+        create_first: "Criar Primeira Lista"
+        lines:
+          one: "%{count} produto"
+          other: "%{count} produtos"
+      new:
+        title: "Nova Lista de Compras"
+        back: "Voltar às Listas"
+        name_label: "Nome da Lista"
+        name_placeholder: "Ex: Encomenda Semanal, Material de Escritório..."
+        notes_label: "Notas"
+        notes_placeholder: "Notas ou observações sobre esta lista..."
+        optional: "opcional"
+        create: "Criar Lista"
+      show:
+        back: "Voltar às Listas"
+        edit_details: "Editar Detalhes"
+        add_all_to_cart: "Adicionar Tudo ao Carrinho"
+        delete_list: "Eliminar Lista"
+        confirm_delete: "Tem a certeza que deseja eliminar esta lista?"
+        rename: "Renomear"
+        save: "Guardar"
+        notes_placeholder: "Adicionar notas à lista..."
+        items_title: "Itens da Lista"
+        empty: "Lista vazia"
+        empty_hint: "Use o catálogo abaixo para adicionar produtos à sua lista."
+        add_products: "Adicionar Produtos"
+        table:
+          product: "Produto"
+          variant: "Variante"
+          quantity: "Quantidade"
+          update: "Atualizar"
+      product_picker:
+        search_placeholder: "Pesquisar produtos..."
+        all_categories: "Todas as Categorias"
+        product: "Produto"
+        price: "Preço"
+        no_products: "Nenhum produto encontrado."
+      flash:
+        created: "Lista de compras criada com sucesso."
+        updated: "Lista atualizada com sucesso."
+        deleted: "Lista eliminada com sucesso."
+        item_added: "Produto adicionado à lista."
+        item_added_to_list: "'%{product}' adicionado à lista '%{list}' com sucesso."
+        item_updated: "Quantidade atualizada."
+        item_removed: "Produto removido da lista."
+        add_to_cart_success: "Itens da lista '%{name}' adicionados ao carrinho."
+        add_to_cart_skipped: "Alguns itens não estavam disponíveis e foram ignorados: %{items}"
+
+    # Códigos promocionais
+    promo_codes:
+      label: "Código Promocional"
+      have_code: "Tem um código promocional?"
+      placeholder: "Introduza o código"
+      apply: "Aplicar"
+      confirm_remove: "Remover este código promocional?"
+      applied: "Código %{code} aplicado! Poupa %{discount}."
+      removed: "Código promocional removido."
+      errors:
+        blank: "Por favor introduza um código promocional."
+        not_found: "Este código promocional não é válido."
+        inactive: "Este código promocional não está ativo."
+        expired: "Este código promocional expirou."
+        usage_limit: "Este código promocional atingiu o limite de utilização."
+        customer_limit: "Já utilizou este código promocional."
+        not_eligible: "Este código promocional não está disponível para a sua conta."
+        min_amount: "A sua encomenda deve ser de pelo menos %{amount} para usar este código."
+        invalid: "Este código promocional não pôde ser aplicado."
 
     # Mensagens flash
     flash:

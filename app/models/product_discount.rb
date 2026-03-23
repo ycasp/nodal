@@ -1,7 +1,10 @@
 class ProductDiscount < ApplicationRecord
+  include HasEmailNotification
+
   DISCOUNT_TYPES = %w[percentage fixed].freeze
 
-  belongs_to :product
+  belongs_to :product, optional: true
+  belongs_to :category, optional: true
   belongs_to :organisation
 
   validates :discount_type, presence: true, inclusion: { in: DISCOUNT_TYPES }
@@ -11,12 +14,16 @@ class ProductDiscount < ApplicationRecord
   validate :discount_value_valid_for_type
   validate :valid_until_after_valid_from
   validate :min_quantity_not_below_product_minimum
+  validate :must_have_product_or_category
 
   scope :active, -> {
     where(active: true)
       .where("(valid_from IS NULL OR valid_from <= ?) AND (valid_until IS NULL OR valid_until >= ?)",
              Date.current, Date.current)
   }
+
+  scope :for_product, -> { where.not(product_id: nil) }
+  scope :for_category, -> { where.not(category_id: nil) }
 
   def percentage?
     discount_type == 'percentage'
@@ -28,6 +35,23 @@ class ProductDiscount < ApplicationRecord
 
   def perpetual?
     valid_from.nil? && valid_until.nil?
+  end
+
+  def product?
+    product_id.present?
+  end
+
+  def category?
+    category_id.present?
+  end
+
+  # Display name: product name or category path
+  def target_name
+    if product?
+      product.name
+    elsif category?
+      category.full_path
+    end
   end
 
   def value_display
@@ -69,11 +93,19 @@ class ProductDiscount < ApplicationRecord
   end
 
   def min_quantity_not_below_product_minimum
-    return if product.blank? || min_quantity.blank?
+    return unless product? && product.present? && min_quantity.present?
 
     product_min = product.min_quantity || 1
     if min_quantity < product_min
       errors.add(:min_quantity, "cannot be less than the product's minimum order quantity (#{product_min})")
+    end
+  end
+
+  def must_have_product_or_category
+    if product_id.blank? && category_id.blank?
+      errors.add(:base, "must target either a product or a category")
+    elsif product_id.present? && category_id.present?
+      errors.add(:base, "cannot target both a product and a category")
     end
   end
 end

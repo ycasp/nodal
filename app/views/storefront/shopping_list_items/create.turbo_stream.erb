@@ -1,0 +1,71 @@
+<%= turbo_stream.replace "shopping_list_items" do %>
+  <turbo-frame id="shopping_list_items">
+    <% if @items.any? %>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 60px;"></th>
+              <th><%= t('storefront.shopping_lists.show.table.product') %></th>
+              <th><%= t('storefront.shopping_lists.show.table.variant') %></th>
+              <th style="width: 140px;"><%= t('storefront.shopping_lists.show.table.quantity') %></th>
+              <th style="width: 60px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @items.each do |item| %>
+              <tr id="<%= dom_id(item) %>">
+                <td>
+                  <% photo = item.effective_photo %>
+                  <% if photo %>
+                    <%= image_tag photo.variant(resize_to_limit: [50, 50]), class: "rounded", style: "width: 40px; height: 40px; object-fit: cover;" %>
+                  <% else %>
+                    <div class="rounded d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: #f1f5f9;">
+                      <i class="fa-solid fa-image text-muted" style="font-size: 0.8rem;"></i>
+                    </div>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to item.product.name, product_path(org_slug: params[:org_slug], id: item.product), class: "text-decoration-none text-body fw-medium" %>
+                  <% if item.product.sku.present? %>
+                    <br><small class="text-muted">SKU: <%= item.product.sku %></small>
+                  <% end %>
+                </td>
+                <td>
+                  <% if item.product_variant && item.product_variant.option_values_string.present? %>
+                    <span class="badge bg-light text-dark"><%= item.product_variant.option_values_string %></span>
+                  <% else %>
+                    <span class="text-muted">-</span>
+                  <% end %>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-1">
+                    <%= form_with model: item, url: shopping_list_item_path(org_slug: params[:org_slug], shopping_list_id: @shopping_list, id: item), method: :patch do |f| %>
+                      <%= f.number_field :quantity, min: 1, class: "form-control form-control-sm text-center", style: "width: 70px;", onchange: "this.form.requestSubmit()" %>
+                    <% end %>
+                    <% if item.product.unit_description.present? %>
+                      <span class="text-muted small"><%= item.product.unit_description %></span>
+                    <% end %>
+                  </div>
+                </td>
+                <td>
+                  <%= button_to shopping_list_item_path(org_slug: params[:org_slug], shopping_list_id: @shopping_list, id: item), method: :delete, class: "btn btn-sm btn-outline-danger border-0" do %>
+                    <i class="fa-solid fa-xmark"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="text-center py-4">
+        <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+          <i class="fa-solid fa-clipboard-list"></i>
+        </div>
+        <p class="fw-medium mb-1"><%= t('storefront.shopping_lists.show.empty') %></p>
+        <p class="text-muted small mb-0"><%= t('storefront.shopping_lists.show.empty_hint') %></p>
+      </div>
+    <% end %>
+  </turbo-frame>
+<% end %>

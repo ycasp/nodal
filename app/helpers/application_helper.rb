@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Pagy::Frontend
+
   # Returns the OrgMember record for current_member in current_organisation
   def current_org_member
     return nil unless defined?(current_member) && current_member

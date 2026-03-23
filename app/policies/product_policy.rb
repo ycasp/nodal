@@ -36,11 +36,27 @@ class ProductPolicy < ApplicationPolicy
     belongs_to_organisation?
   end
 
+  def set_main_photo?
+    belongs_to_organisation?
+  end
+
   def configure_variants?
     belongs_to_organisation?
   end
 
   def update_variant_configuration?
+    belongs_to_organisation?
+  end
+
+  def related_products?
+    belongs_to_organisation?
+  end
+
+  def update_related_products?
+    belongs_to_organisation?
+  end
+
+  def reorder_related_products?
     belongs_to_organisation?
   end
 

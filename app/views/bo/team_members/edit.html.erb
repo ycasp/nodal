@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do%>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_team_members_path(params[:org_slug]), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_team_members_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -16,12 +16,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.team_members.edit.title') %></h4>
+        <h1><%= @editing_self ? t('bo.profiles.edit.title') : t('bo.team_members.edit.title') %></h1>
         <span class="text-muted"><%= @org_member.display_name %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_team_members_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -32,91 +32,191 @@
   </div>
 </div>
 
-<%= form_with model: @org_member, url: bo_team_member_path(params[:org_slug], @org_member), method: :patch, id: "edit-form" do |f| %>
-  <div class="row g-3">
-    <div class="col-md-8">
-      <div class="card mb-3">
-        <div class="card-body">
-          <h5 class="card-title mb-4"><%= t('bo.team_members.edit.member_info') %></h5>
+<div class="bo-page-body">
 
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label"><%= t('bo.team_members.edit.name') %></label>
-              <p class="form-control-plaintext"><%= @org_member.display_name %></p>
+<% if @editing_self %>
+  <%# ===== SELF-EDIT: Personal info + password (profile) ===== %>
+  <% if @member.errors.any? %>
+    <div class="alert alert-danger mb-4">
+      <h6 class="alert-heading"><%= t('bo.common.fix_errors') %></h6>
+      <ul class="mb-0">
+        <% @member.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @member, url: bo_team_member_path(params[:org_slug], @org_member), method: :patch, id: "edit-form" do |f| %>
+    <div class="row g-3">
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.profiles.edit.personal_info') %></h5>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><%= t('bo.profiles.edit.first_name') %></label>
+                <%= f.text_field :first_name, class: "form-control", placeholder: t('bo.profiles.edit.first_name_placeholder') %>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><%= t('bo.profiles.edit.last_name') %></label>
+                <%= f.text_field :last_name, class: "form-control", placeholder: t('bo.profiles.edit.last_name_placeholder') %>
+              </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label"><%= t('bo.team_members.form.email') %></label>
-              <p class="form-control-plaintext"><%= @org_member.display_email %></p>
+
+            <div class="row g-3 mt-1">
+              <div class="col-md-12">
+                <label class="form-label"><%= t('bo.profiles.edit.email') %></label>
+                <%= f.email_field :email, class: "form-control", placeholder: t('bo.profiles.edit.email_placeholder') %>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-4"><%= t('bo.team_members.edit.role_status') %></h5>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.profiles.edit.change_password') %></h5>
+            <p class="text-muted small mb-3"><%= t('bo.profiles.edit.password_hint') %></p>
 
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label"><%= t('bo.team_members.form.role') %></label>
-              <%= f.select :role, [
-                [t('bo.team_members.roles.member'), 'member'],
-                [t('bo.team_members.roles.admin'), 'admin'],
-                [t('bo.team_members.roles.owner'), 'owner']
-              ], {}, class: "form-select" %>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label"><%= t('bo.common.tables.status') %></label>
-              <div class="form-check form-switch mt-2">
-                <%= f.check_box :active, class: "form-check-input", role: "switch", id: "activeSwitch" %>
-                <label class="form-check-label" for="activeSwitch"><%= t('bo.common.statuses.active') %></label>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><%= t('bo.profiles.edit.new_password') %></label>
+                <%= f.password_field :password, class: "form-control", placeholder: t('bo.profiles.edit.new_password_placeholder'), autocomplete: "new-password" %>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><%= t('bo.profiles.edit.confirm_password') %></label>
+                <%= f.password_field :password_confirmation, class: "form-control", placeholder: t('bo.profiles.edit.confirm_password_placeholder'), autocomplete: "new-password" %>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-4"><%= t('bo.team_members.edit.member_details') %></h5>
+      <div class="col-md-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.profiles.edit.role_in_org', organisation: current_organisation.name) %></h5>
 
-          <div class="border-bottom pb-3 mb-3">
-            <small class="text-muted d-block"><%= t('bo.team_members.edit.current_role') %></small>
-            <span class="badge <%= @org_member.role == 'owner' ? 'bg-danger' : @org_member.role == 'admin' ? 'bg-warning text-dark' : 'bg-secondary' %>">
-              <%= t("bo.team_members.roles.#{@org_member.role}") %>
-            </span>
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <% role = current_org_member&.role %>
+              <span class="badge <%= role == 'owner' ? 'bg-danger' : role == 'admin' ? 'bg-warning text-dark' : 'bg-secondary' %>">
+                <%= t("bo.team_members.roles.#{role}") %>
+              </span>
+            </div>
+            <small class="text-muted"><%= t('bo.profiles.edit.role_change_hint') %></small>
           </div>
+        </div>
 
-          <div class="border-bottom pb-3 mb-3">
-            <small class="text-muted d-block"><%= t('bo.common.tables.status') %></small>
-            <% if @org_member.pending_invitation? %>
-              <span class="badge bg-info"><%= t('bo.team_members.edit.pending_invitation') %></span>
-            <% elsif @org_member.active? %>
-              <span class="badge bg-success"><%= t('bo.common.statuses.active') %></span>
-            <% else %>
-              <span class="badge bg-secondary"><%= t('bo.common.statuses.inactive') %></span>
-            <% end %>
-          </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.profiles.edit.account_info') %></h5>
 
-          <% if @org_member.joined_at.present? %>
             <div class="border-bottom pb-3 mb-3">
-              <small class="text-muted d-block"><%= t('bo.team_members.edit.joined') %></small>
-              <span><%= @org_member.joined_at.strftime("%-m/%-d/%Y") %></span>
+              <small class="text-muted d-block"><%= t('bo.profiles.edit.member_since') %></small>
+              <span><%= @member.created_at.strftime("%-m/%-d/%Y") %></span>
             </div>
-          <% end %>
 
-          <% if @org_member.invited_by.present? %>
             <div>
-              <small class="text-muted d-block"><%= t('bo.team_members.edit.invited_by') %></small>
-              <span><%= @org_member.invited_by.first_name %> <%= @org_member.invited_by.last_name %></span>
+              <small class="text-muted d-block"><%= t('bo.profiles.edit.last_updated') %></small>
+              <span><%= @member.updated_at.strftime("%-m/%-d/%Y") %></span>
             </div>
-          <% end %>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <% end %>
+
+<% else %>
+  <%# ===== ADMIN EDIT: Role & status (other member) ===== %>
+  <%= form_with model: @org_member, url: bo_team_member_path(params[:org_slug], @org_member), method: :patch, id: "edit-form" do |f| %>
+    <div class="row g-3">
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.team_members.edit.member_info') %></h5>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><%= t('bo.team_members.edit.name') %></label>
+                <p class="form-control-plaintext"><%= @org_member.display_name %></p>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><%= t('bo.team_members.form.email') %></label>
+                <p class="form-control-plaintext"><%= @org_member.display_email %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.team_members.edit.role_status') %></h5>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><%= t('bo.team_members.form.role') %></label>
+                <%= f.select :role, [
+                  [t('bo.team_members.roles.member'), 'member'],
+                  [t('bo.team_members.roles.admin'), 'admin'],
+                  [t('bo.team_members.roles.owner'), 'owner']
+                ], {}, class: "form-select" %>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><%= t('bo.common.tables.status') %></label>
+                <div class="form-check form-switch mt-2">
+                  <%= f.check_box :active, class: "form-check-input", role: "switch", id: "activeSwitch" %>
+                  <label class="form-check-label" for="activeSwitch"><%= t('bo.common.statuses.active') %></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.team_members.edit.member_details') %></h5>
+
+            <div class="border-bottom pb-3 mb-3">
+              <small class="text-muted d-block"><%= t('bo.team_members.edit.current_role') %></small>
+              <span class="badge <%= @org_member.role == 'owner' ? 'bg-danger' : @org_member.role == 'admin' ? 'bg-warning text-dark' : 'bg-secondary' %>">
+                <%= t("bo.team_members.roles.#{@org_member.role}") %>
+              </span>
+            </div>
+
+            <div class="border-bottom pb-3 mb-3">
+              <small class="text-muted d-block"><%= t('bo.common.tables.status') %></small>
+              <% if @org_member.pending_invitation? %>
+                <span class="badge bg-info"><%= t('bo.team_members.edit.pending_invitation') %></span>
+              <% elsif @org_member.active? %>
+                <span class="badge bg-success"><%= t('bo.common.statuses.active') %></span>
+              <% else %>
+                <span class="badge bg-secondary"><%= t('bo.common.statuses.inactive') %></span>
+              <% end %>
+            </div>
+
+            <% if @org_member.joined_at.present? %>
+              <div class="border-bottom pb-3 mb-3">
+                <small class="text-muted d-block"><%= t('bo.team_members.edit.joined') %></small>
+                <span><%= @org_member.joined_at.strftime("%-m/%-d/%Y") %></span>
+              </div>
+            <% end %>
+
+            <% if @org_member.invited_by.present? %>
+              <div>
+                <small class="text-muted d-block"><%= t('bo.team_members.edit.invited_by') %></small>
+                <span><%= @org_member.invited_by.first_name %> <%= @org_member.invited_by.last_name %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 <% end %>
+
+</div>
 
 <% end %>

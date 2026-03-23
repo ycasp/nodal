@@ -1,0 +1,37 @@
+<% if @order.has_promo_code? %>
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+      <span class="text-success">
+        <i class="fa-solid fa-ticket me-1"></i>
+        <%= t('storefront.promo_codes.label') %>
+        <span class="badge bg-success-subtle text-success font-monospace ms-1"><%= @order.promo_code.code %></span>
+      </span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="text-success fw-medium">-<%= humanized_money_with_symbol(@order.promo_code_discount) %></span>
+      <%= button_to remove_promo_code_path(org_slug: params[:org_slug]),
+          method: :delete,
+          class: "btn btn-link btn-sm text-danger p-0",
+          data: { turbo_confirm: t('storefront.promo_codes.confirm_remove') } do %>
+        <i class="fa-solid fa-xmark"></i>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="border rounded p-3 mb-3" style="border-style: dashed !important;">
+    <a class="text-primary text-decoration-none fw-medium" data-bs-toggle="collapse" href="#promoCodeInput" role="button" aria-expanded="false" aria-controls="promoCodeInput">
+      <i class="fa-solid fa-ticket me-2"></i><%= t('storefront.promo_codes.have_code') %>
+      <i class="fa-solid fa-chevron-down ms-1 small"></i>
+    </a>
+    <div class="collapse mt-3" id="promoCodeInput">
+      <%= form_with url: apply_promo_code_path(org_slug: params[:org_slug]), method: :post, local: true do |f| %>
+        <div class="input-group">
+          <%= f.text_field :code, class: "form-control font-monospace", placeholder: t('storefront.promo_codes.placeholder'), style: "text-transform: uppercase;" %>
+          <button type="submit" class="btn btn-primary">
+            <%= t('storefront.promo_codes.apply') %>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -30,16 +30,20 @@ module Erp
 
         update_customer_attributes(customer, data, was_new)
 
-        if customer.save
-          customer.mark_synced!(source: external_source)
+        if was_new || customer.changed?
+          if customer.save
+            customer.mark_synced!(source: external_source)
 
-          if was_new
-            sync_log.increment_created!
+            if was_new
+              sync_log.increment_created!
+            else
+              sync_log.increment_updated!
+            end
           else
-            sync_log.increment_updated!
+            sync_log.increment_failed!(external_id, customer.errors.full_messages.join(', '))
           end
         else
-          sync_log.increment_failed!(external_id, customer.errors.full_messages.join(', '))
+          sync_log.increment_processed!
         end
       rescue StandardError => e
         sync_log.increment_failed!(data[:external_id], e.message)
@@ -77,6 +81,7 @@ module Erp
           contact_name: data[:contact_name],
           email: data[:email],
           contact_phone: data[:phone],
+          taxpayer_id: data[:taxpayer_id],
           active: data[:active]
         )
 

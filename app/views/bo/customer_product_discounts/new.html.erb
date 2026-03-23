@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_pricing_path(params[:org_slug], tab: 'custom_pricing'), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_pricing_path(params[:org_slug], tab: 'custom_pricing'), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -12,12 +12,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.pricing.custom_pricing.new.title') %></h4>
+        <h1><%= t('bo.pricing.custom_pricing.new.title') %></h1>
         <span class="text-muted"><%= t('bo.pricing.custom_pricing.new.subtitle') %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_pricing_path(params[:org_slug], tab: 'custom_pricing'), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -27,6 +27,8 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
 
 <% if @discount.errors.any? %>
   <div class="alert alert-danger mb-4">
@@ -46,14 +48,73 @@
         <div class="card-body">
           <h5 class="card-title mb-4"><%= t('bo.pricing.custom_pricing.card_title') %></h5>
 
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label"><%= t('bo.pricing.form.client') %> <span class="text-danger">*</span></label>
-              <%= f.collection_select :customer_id, @customers, :id, :company_name, { prompt: t('bo.pricing.form.select_client') }, { class: "form-select", required: true } %>
+          <div class="row g-3" data-controller="discount-target variant-overrides"
+               data-variant-overrides-url-value="<%= variant_overrides_bo_customer_product_discounts_path(params[:org_slug]) %>"
+               data-discount-target-url-value="<%= variant_overrides_bo_customer_product_discounts_path(params[:org_slug]) %>">
+            <div class="col-md-12 mb-2">
+              <label class="form-label"><%= t('bo.pricing.form.clients') %></label>
+              <select name="customer_ids[]" id="customer_product_discount_customer_ids" class="form-select" multiple
+                      data-controller="tom-select" style="min-height: 100px;">
+                <% @customers.each do |customer| %>
+                  <option value="<%= customer.id %>"><%= "#{customer.company_name} (#{customer.email})" %></option>
+                <% end %>
+              </select>
+              <small class="text-muted"><%= t('bo.pricing.custom_pricing.select_clients_hint') %></small>
             </div>
-            <div class="col-md-6">
+            <% if @customer_categories.any? %>
+              <div class="col-md-12 mb-2">
+                <label class="form-label"><%= t('bo.pricing.form.customer_categories') %></label>
+                <select name="customer_category_ids[]" multiple class="form-select" data-controller="tom-select" style="min-height: 100px;">
+                  <% @customer_categories.each do |cc| %>
+                    <option value="<%= cc.id %>"><%= cc.name %></option>
+                  <% end %>
+                </select>
+                <small class="text-muted"><%= t('bo.pricing.form.select_categories_hint') %></small>
+              </div>
+            <% end %>
+
+            <div class="col-md-12 mb-2">
+              <label class="form-label"><%= t('bo.pricing.product_discounts.target_type') %></label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="target_type" id="target_product" value="product"
+                         data-action="change->discount-target#toggle"
+                         <%= 'checked' unless @discount.category? %>>
+                  <label class="form-check-label" for="target_product"><%= t('bo.pricing.product_discounts.product_target') %></label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="target_type" id="target_category" value="category"
+                         data-action="change->discount-target#toggle"
+                         <%= 'checked' if @discount.category? %>>
+                  <label class="form-check-label" for="target_category"><%= t('bo.pricing.product_discounts.category_target') %></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12" data-discount-target-target="productWrapper">
               <label class="form-label"><%= t('bo.pricing.form.product') %> <span class="text-danger">*</span></label>
-              <%= f.collection_select :product_id, @products, :id, :name, { prompt: t('bo.pricing.form.select_product') }, { class: "form-select", required: true } %>
+              <select name="customer_product_discount[product_id]" id="customer_product_discount_product_id" class="form-select"
+                      data-controller="tom-select"
+                      data-discount-target-target="productSelect"
+                      data-action="change->variant-overrides#change">
+                <option value=""><%= t('bo.pricing.form.select_product') %></option>
+                <% @products.each do |product| %>
+                  <option value="<%= product.id %>" data-sku="<%= product.sku %>" <%= 'selected' if @discount.product_id == product.id %>><%= product.name %></option>
+                <% end %>
+              </select>
+            </div>
+
+            <div class="col-md-12 d-none" data-discount-target-target="categoryWrapper">
+              <label class="form-label"><%= t('bo.pricing.product_discounts.category_target') %> <span class="text-danger">*</span></label>
+              <select name="customer_product_discount[category_id]" id="customer_product_discount_category_id" class="form-select"
+                      data-controller="tom-select"
+                      data-discount-target-target="categorySelect"
+                      data-action="change->discount-target#categoryChanged">
+                <option value=""><%= t('bo.pricing.product_discounts.select_category') %></option>
+                <% @categories_for_select.each do |name, id| %>
+                  <option value="<%= id %>" <%= 'selected' if @discount.category_id == id %>><%= name %></option>
+                <% end %>
+              </select>
             </div>
           </div>
 
@@ -112,6 +173,10 @@
       </div>
     </div>
   </div>
+
+  <%= render partial: "bo/product_discounts/variant_overrides_frame", locals: { variants_grouped: @variants_grouped || {}, currency_symbol: @current_organisation.currency_symbol } %>
 <% end %>
+
+</div>
 
 <% end %>

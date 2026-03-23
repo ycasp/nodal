@@ -10,21 +10,33 @@
   <%= f.full_error :reset_password_token %>
 
   <div class="auth-field">
-    <%= f.input :password,
-                label: t('auth.reset_password.new_password'),
-                required: true,
-                autofocus: true,
-                placeholder: t('auth.reset_password.new_password_placeholder'),
-                hint: (@minimum_password_length ? t('auth.reset_password.password_hint', count: @minimum_password_length) : nil),
-                input_html: { autocomplete: "new-password" } %>
+    <label class="auth-label"><%= t('auth.reset_password.new_password') %></label>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.input :password,
+                  label: false,
+                  required: true,
+                  autofocus: true,
+                  placeholder: t('auth.reset_password.new_password_placeholder'),
+                  hint: (@minimum_password_length ? t('auth.reset_password.password_hint', count: @minimum_password_length) : nil),
+                  input_html: { autocomplete: "new-password", data: { password_visibility_target: "input" } } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
   </div>
 
   <div class="auth-field">
-    <%= f.input :password_confirmation,
-                label: t('auth.reset_password.confirm_password'),
-                required: true,
-                placeholder: t('auth.reset_password.confirm_password_placeholder'),
-                input_html: { autocomplete: "new-password" } %>
+    <label class="auth-label"><%= t('auth.reset_password.confirm_password') %></label>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.input :password_confirmation,
+                  label: false,
+                  required: true,
+                  placeholder: t('auth.reset_password.confirm_password_placeholder'),
+                  input_html: { autocomplete: "new-password", data: { password_visibility_target: "input" } } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
   </div>
 
   <div class="auth-actions">

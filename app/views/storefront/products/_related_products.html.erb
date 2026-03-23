@@ -1,0 +1,46 @@
+<div class="mt-5 pt-4 border-top">
+  <h4 class="mb-4"><%= t('storefront.products.show.related_products') %></h4>
+  <div class="row row-cols-2 row-cols-md-2 row-cols-lg-4 product-grid">
+    <% @related_products.each do |product| %>
+      <div class="col">
+        <%= link_to product_path(org_slug: params[:org_slug], id: product), class: "text-decoration-none" do %>
+          <div class="card h-100 product-card">
+            <% discount_info = @related_product_discounts[product.id] %>
+            <div class="product-card-image">
+              <% if product.photo_attached? %>
+                <%= image_tag product.photo, alt: product.name %>
+              <% else %>
+                <i class="fa-solid fa-image placeholder-icon"></i>
+              <% end %>
+            </div>
+            <div class="card-body">
+              <% if product.primary_category&.name.present? %>
+                <span class="product-card-category"><%= product.primary_category.name %></span>
+              <% end %>
+              <h6 class="product-card-title"><%= product.name %></h6>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-between align-items-center">
+                <% if discount_info && discount_info[:has_discount] %>
+                  <div>
+                    <span class="product-card-price-original">
+                      <%= humanized_money_with_symbol(discount_info[:base_price]) %>
+                    </span>
+                    <span class="product-card-price-discounted">
+                      <%= humanized_money_with_symbol(discount_info[:final_price]) %>
+                    </span>
+                  </div>
+                <% elsif product.variable? %>
+                  <span class="product-card-price"><%= product.display_price %></span>
+                <% else %>
+                  <span class="product-card-price"><%= humanized_money_with_symbol(product.price) %></span>
+                <% end %>
+                <span class="product-card-unit"><%= product.unit_description %></span>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

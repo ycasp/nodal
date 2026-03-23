@@ -21,21 +21,216 @@
   </head>
 
   <body class="auth-page">
-    <!-- Video Background - Crossfading videos -->
-    <div class="auth-video-background" data-controller="hero-video">
-      <video class="auth-video" data-hero-video-target="video" autoplay muted loop playsinline>
-        <source src="/videos/8540430-hd_1920_1080_30fps.mp4" type="video/mp4">
-      </video>
-      <video class="auth-video" data-hero-video-target="video" autoplay muted loop playsinline>
-        <source src="/videos/7287516-uhd_3840_2160_25fps.mp4" type="video/mp4">
-      </video>
-      <video class="auth-video" data-hero-video-target="video" autoplay muted loop playsinline>
-        <source src="/videos/6169116-uhd_3840_2160_25fps.mp4" type="video/mp4">
-      </video>
-      <video class="auth-video" data-hero-video-target="video" autoplay muted loop playsinline>
-        <source src="/videos/8725959-uhd_3840_2160_25fps.mp4" type="video/mp4">
-      </video>
-      <div class="auth-video-overlay"></div>
+    <!-- Network Animation Background -->
+    <div class="auth-background">
+      <svg class="auth-network-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00d4aa"/>
+            <stop offset="50%" stop-color="#008060"/>
+            <stop offset="100%" stop-color="#004c3f"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Connection lines -->
+        <g class="connections" stroke="#3ee8c8" stroke-opacity="0.2" stroke-width="1.5" fill="none">
+          <path id="authPath1" d="M80,100 Q300,200 600,300"/>
+          <path id="authPath2" d="M80,300 Q300,250 600,300"/>
+          <path id="authPath3" d="M80,500 Q300,400 600,300"/>
+          <path id="authPath4" d="M1120,100 Q900,200 600,300"/>
+          <path id="authPath5" d="M1120,300 Q900,250 600,300"/>
+          <path id="authPath6" d="M1120,500 Q900,400 600,300"/>
+          <path id="authPath7" d="M300,50 Q450,150 600,300"/>
+          <path id="authPath8" d="M900,50 Q750,150 600,300"/>
+          <path id="authPath9" d="M300,550 Q450,450 600,300"/>
+          <path id="authPath10" d="M900,550 Q750,450 600,300"/>
+          <line x1="80" y1="100" x2="300" y2="50" stroke-opacity="0.3"/>
+          <line x1="1120" y1="100" x2="900" y2="50" stroke-opacity="0.3"/>
+          <line x1="80" y1="500" x2="300" y2="550" stroke-opacity="0.3"/>
+          <line x1="1120" y1="500" x2="900" y2="550" stroke-opacity="0.3"/>
+          <line x1="80" y1="100" x2="80" y2="300" stroke-opacity="0.25"/>
+          <line x1="80" y1="300" x2="80" y2="500" stroke-opacity="0.25"/>
+          <line x1="1120" y1="100" x2="1120" y2="300" stroke-opacity="0.25"/>
+          <line x1="1120" y1="300" x2="1120" y2="500" stroke-opacity="0.25"/>
+          <line x1="300" y1="50" x2="900" y2="50" stroke-opacity="0.2"/>
+          <line x1="300" y1="550" x2="900" y2="550" stroke-opacity="0.2"/>
+        </g>
+
+        <!-- Animated pulses -->
+        <g class="pulses" filter="url(#glow)">
+          <circle r="5" fill="#3ee8c8">
+            <animateMotion dur="4s" repeatCount="indefinite">
+              <mpath href="#authPath1"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#14b8a6">
+            <animateMotion dur="3.5s" repeatCount="indefinite" begin="0.5s">
+              <mpath href="#authPath2"/>
+            </animateMotion>
+          </circle>
+          <circle r="5" fill="#3ee8c8">
+            <animateMotion dur="4.2s" repeatCount="indefinite" begin="1s">
+              <mpath href="#authPath3"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#14b8a6">
+            <animateMotion dur="3.8s" repeatCount="indefinite" begin="1.5s">
+              <mpath href="#authPath4"/>
+            </animateMotion>
+          </circle>
+          <circle r="5" fill="#3ee8c8">
+            <animateMotion dur="3.5s" repeatCount="indefinite" begin="2s">
+              <mpath href="#authPath5"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#14b8a6">
+            <animateMotion dur="4s" repeatCount="indefinite" begin="2.5s">
+              <mpath href="#authPath6"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#3ee8c8">
+            <animateMotion dur="4.5s" repeatCount="indefinite" begin="0.3s">
+              <mpath href="#authPath7"/>
+            </animateMotion>
+          </circle>
+          <circle r="4" fill="#14b8a6">
+            <animateMotion dur="4.3s" repeatCount="indefinite" begin="1.8s">
+              <mpath href="#authPath8"/>
+            </animateMotion>
+          </circle>
+        </g>
+
+        <!-- Business nodes -->
+        <g class="nodes">
+          <!-- Left side nodes -->
+          <g class="node">
+            <circle cx="80" cy="100" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.7"/>
+            <g transform="translate(80, 100)">
+              <rect x="-8" y="-10" width="16" height="18" fill="none" stroke="#3ee8c8" stroke-width="1.2" rx="2"/>
+              <line x1="-5" y1="-6" x2="5" y2="-6" stroke="#3ee8c8" stroke-width="1"/>
+              <line x1="-5" y1="-2" x2="5" y2="-2" stroke="#3ee8c8" stroke-width="1"/>
+              <line x1="-5" y1="2" x2="2" y2="2" stroke="#3ee8c8" stroke-width="1"/>
+            </g>
+          </g>
+          <g class="node">
+            <circle cx="80" cy="300" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.7"/>
+            <g transform="translate(80, 300)">
+              <polyline points="-8,6 -8,-8 10,-8" fill="none" stroke="#3ee8c8" stroke-width="1.2"/>
+              <polyline points="-5,4 -1,-2 3,1 7,-5" fill="none" stroke="#3ee8c8" stroke-width="1.5"/>
+              <circle cx="7" cy="-5" r="2" fill="#3ee8c8"/>
+            </g>
+          </g>
+          <g class="node">
+            <circle cx="80" cy="500" r="30" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.7"/>
+            <g transform="translate(80, 500)">
+              <rect x="-10" y="-5" width="12" height="8" fill="none" stroke="#3ee8c8" stroke-width="1.2" rx="1"/>
+              <path d="M2,-5 L2,3 L8,3 L8,-1 L5,-5 Z" fill="none" stroke="#3ee8c8" stroke-width="1.2"/>
+            </g>
+          </g>
+
+          <!-- Right side nodes -->
+          <g class="node">
+            <circle cx="1120" cy="100" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.7"/>
+            <g transform="translate(1120, 100)">
+              <path d="M-10,-6 L-10,6 L10,6 L10,-6 L-10,-6 M-10,-6 L-7,-11 L7,-11 L10,-6" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+            </g>
+          </g>
+          <g class="node">
+            <circle cx="1120" cy="300" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.7"/>
+            <g transform="translate(1120, 300)">
+              <circle cx="0" cy="-4" r="5" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+              <path d="M-8,8 Q-8,0 0,0 Q8,0 8,8" fill="none" stroke="#14b8a6" stroke-width="1.2"/>
+            </g>
+          </g>
+          <g class="node">
+            <circle cx="1120" cy="500" r="30" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.7"/>
+            <g transform="translate(1120, 500)">
+              <path d="M-8,-2 L-4,2 L0,-1 L4,2 L8,-2" fill="none" stroke="#14b8a6" stroke-width="1.5"/>
+              <circle cx="-8" cy="-2" r="2" fill="#14b8a6"/>
+              <circle cx="8" cy="-2" r="2" fill="#14b8a6"/>
+            </g>
+          </g>
+
+          <!-- Corner nodes -->
+          <g class="node">
+            <circle cx="300" cy="50" r="24" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.6"/>
+          </g>
+          <g class="node">
+            <circle cx="900" cy="50" r="24" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.6"/>
+          </g>
+          <g class="node">
+            <circle cx="300" cy="550" r="24" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5" opacity="0.6"/>
+          </g>
+          <g class="node">
+            <circle cx="900" cy="550" r="24" fill="#1e293b" stroke="#3ee8c8" stroke-width="1.5" opacity="0.6"/>
+          </g>
+
+          <!-- Center hub with pulsing rings -->
+          <g class="node node-center">
+            <defs>
+              <filter id="ringGlow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Pulsing glow rings -->
+            <g class="glow-rings" filter="url(#ringGlow)">
+              <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
+                <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="stroke-width" values="3;1" dur="3s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
+                <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite" begin="1s"/>
+                <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite" begin="1s"/>
+                <animate attributeName="stroke-width" values="3;1" dur="3s" repeatCount="indefinite" begin="1s"/>
+              </circle>
+              <circle cx="600" cy="300" r="50" fill="none" stroke="url(#ringGradient)" stroke-width="3" opacity="0">
+                <animate attributeName="r" values="50;120" dur="3s" repeatCount="indefinite" begin="2s"/>
+                <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite" begin="2s"/>
+                <animate attributeName="stroke-width" values="3;1" dur="3s" repeatCount="indefinite" begin="2s"/>
+              </circle>
+            </g>
+
+            <circle cx="600" cy="300" r="52" fill="none" stroke="#008060" stroke-width="2" opacity="0.3"/>
+            <circle cx="600" cy="300" r="46" fill="#1e293b" stroke="#008060" stroke-width="2.5"/>
+            <circle cx="600" cy="300" r="38" fill="none" stroke="#008060" stroke-width="1" opacity="0.3"/>
+            <text x="600" y="306" text-anchor="middle" fill="#3ee8c8" font-weight="800" font-size="18" letter-spacing="3" class="nodal-text">NODAL</text>
+
+            <g class="hub-dots">
+              <circle cx="600" cy="243" r="5" fill="#008060" opacity="0.7">
+                <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="600" cy="357" r="5" fill="#008060" opacity="0.7">
+                <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+              </circle>
+              <circle cx="543" cy="300" r="5" fill="#008060" opacity="0.7">
+                <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" begin="1s"/>
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" begin="1s"/>
+              </circle>
+              <circle cx="657" cy="300" r="5" fill="#008060" opacity="0.7">
+                <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+              </circle>
+            </g>
+          </g>
+        </g>
+      </svg>
+      <div class="auth-overlay"></div>
     </div>
 
     <!-- Auth Content -->

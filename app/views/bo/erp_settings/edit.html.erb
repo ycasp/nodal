@@ -1,28 +1,29 @@
 <% content_for :bo_main_content do %>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
       <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
-        <i class="fa-solid fa-plug"></i>
+        <i class="fa-solid fa-building"></i>
       </div>
 
       <div>
-        <h4 class="mb-0">ERP Integration</h4>
+        <h1><%= t('bo.settings.edit.title') %></h1>
         <span class="text-muted"><%= current_organisation.name %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
-      <%= link_to edit_bo_settings_path, class: "btn btn-outline-secondary" do %>
-        <i class="fa-solid fa-arrow-left"></i> Back to Settings
-      <% end %>
+    <div class="bo-page-actions">
       <button type="submit" form="erp-settings-form" class="btn btn-primary">
         <i class="fa-solid fa-check"></i> Save Changes
       </button>
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
+
+<%= render "bo/shared/settings_tabs" %>
 
 <%= form_with model: @erp_configuration, url: bo_erp_settings_path, method: :patch, id: "erp-settings-form", data: { controller: "erp-settings" } do |f| %>
   <div class="row g-3">
@@ -71,6 +72,17 @@
                     <i class="fa-solid fa-box me-1"></i> Sync Products
                   </label>
                 </div>
+                <div class="mt-2 ms-4">
+                  <label class="form-label small text-muted mb-1">Product sync mode</label>
+                  <%= f.select :product_sync_mode,
+                               options_for_select([
+                                 ['Update only (recommended)', 'update_only'],
+                                 ['Full sync — creates new products', 'full_sync']
+                               ], @erp_configuration.product_sync_mode),
+                               {},
+                               class: "form-select form-select-sm",
+                               data: { erp_settings_target: "productSyncMode", action: "change->erp-settings#confirmSyncMode" } %>
+                </div>
               </div>
               <div class="col-md-4">
                 <div class="form-check">
@@ -82,10 +94,10 @@
               </div>
               <div class="col-md-4">
                 <div class="form-check">
-                  <%= f.check_box :sync_orders, class: "form-check-input", id: "sync_orders", disabled: true %>
-                  <label class="form-check-label text-muted" for="sync_orders">
+                  <%= f.check_box :sync_orders, class: "form-check-input", id: "sync_orders" %>
+                  <label class="form-check-label" for="sync_orders">
                     <i class="fa-solid fa-shopping-cart me-1"></i> Sync Orders
-                    <small class="d-block text-muted">(Coming soon)</small>
+                    <small class="d-block text-muted">(Push to ERP)</small>
                   </label>
                 </div>
               </div>
@@ -166,13 +178,59 @@
             </div>
           </div>
 
+          <!-- Orders Mapping -->
+          <div data-erp-settings-target="ordersMappingSection" class="d-none mt-4">
+            <h6 class="border-bottom pb-2 mb-3">
+              <i class="fa-solid fa-shopping-cart me-2"></i>Order Field Mapping
+              <small class="text-muted ms-2">(Push to ERP)</small>
+            </h6>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Nodal Field</th>
+                    <th>Required</th>
+                    <th>ERP Column</th>
+                    <th>Sample Value</th>
+                  </tr>
+                </thead>
+                <tbody data-erp-settings-target="ordersMappingBody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Order Items Mapping -->
+          <div data-erp-settings-target="orderItemsMappingSection" class="d-none mt-4">
+            <h6 class="border-bottom pb-2 mb-3">
+              <i class="fa-solid fa-list me-2"></i>Order Item Field Mapping
+              <small class="text-muted ms-2">(Push to ERP)</small>
+            </h6>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Nodal Field</th>
+                    <th>Required</th>
+                    <th>ERP Column</th>
+                    <th>Sample Value</th>
+                  </tr>
+                </thead>
+                <tbody data-erp-settings-target="orderItemsMappingBody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <!-- Hidden fields to store the mappings -->
           <div data-erp-settings-target="fieldMappingInputs">
             <% field_mappings = @erp_configuration.credentials.dig('field_mappings') || {} %>
             <% products_mappings = field_mappings['products'] || {} %>
             <% customers_mappings = field_mappings['customers'] || {} %>
+            <% orders_mappings = field_mappings['orders'] || {} %>
+            <% order_items_mappings = field_mappings['order_items'] || {} %>
 
-            <% %w[external_id name sku description unit_price available].each do |field| %>
+            <% %w[external_id name sku description unit_price available stock_quantity].each do |field| %>
               <%= hidden_field_tag "erp_configuration[credentials][field_mappings][products][#{field}]",
                                     products_mappings[field],
                                     data: { erp_settings_target: "productMapping", field: field } %>
@@ -182,6 +240,18 @@
               <%= hidden_field_tag "erp_configuration[credentials][field_mappings][customers][#{field}]",
                                     customers_mappings[field],
                                     data: { erp_settings_target: "customerMapping", field: field } %>
+            <% end %>
+
+            <% %w[order_number customer_external_id placed_at status payment_status delivery_method total_amount tax_amount shipping_amount grand_total notes].each do |field| %>
+              <%= hidden_field_tag "erp_configuration[credentials][field_mappings][orders][#{field}]",
+                                    orders_mappings[field],
+                                    data: { erp_settings_target: "orderMapping", field: field } %>
+            <% end %>
+
+            <% %w[product_external_id product_sku product_name variant_external_id variant_sku quantity unit_price discount_percentage total_price].each do |field| %>
+              <%= hidden_field_tag "erp_configuration[credentials][field_mappings][order_items][#{field}]",
+                                    order_items_mappings[field],
+                                    data: { erp_settings_target: "orderItemMapping", field: field } %>
             <% end %>
           </div>
         </div>
@@ -278,7 +348,7 @@
             <% end %>
 
             <div>
-              <%= button_to "Sync Now", sync_now_bo_erp_settings_path, method: :post, class: "btn btn-primary w-100", disabled: !@erp_configuration.can_sync? %>
+              <%= link_to "Sync Now", sync_now_bo_erp_settings_path, data: { turbo_method: :post }, class: "btn btn-primary w-100 #{'disabled' unless @erp_configuration.can_sync?}" %>
             </div>
           <% else %>
             <p class="text-muted mb-0">Enable integration and configure credentials to start syncing.</p>
@@ -292,11 +362,15 @@
           <ul class="list-unstyled mb-0">
             <li class="mb-2">
               <i class="fa-solid fa-arrow-right text-primary me-2"></i>
-              Data flows from ERP to Nodal
+              Products & customers flow from ERP to Nodal
+            </li>
+            <li class="mb-2">
+              <i class="fa-solid fa-arrow-left text-success me-2"></i>
+              Orders are pushed from Nodal to ERP
             </li>
             <li class="mb-2">
               <i class="fa-solid fa-database text-primary me-2"></i>
-              ERP is the source of truth
+              ERP is the source of truth for catalog data
             </li>
             <li class="mb-2">
               <i class="fa-solid fa-sync text-primary me-2"></i>
@@ -312,5 +386,7 @@
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>

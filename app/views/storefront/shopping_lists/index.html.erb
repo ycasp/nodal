@@ -1,0 +1,66 @@
+<% actions = capture do %>
+  <%= link_to new_shopping_list_path(org_slug: params[:org_slug]), class: "btn btn-primary btn-sm" do %>
+    <i class="fa-solid fa-plus me-1"></i> <%= t('storefront.shopping_lists.index.new_list') %>
+  <% end %>
+<% end %>
+<%= render "storefront/shared/page_header",
+  title: t('storefront.shopping_lists.index.title'),
+  actions: actions %>
+
+<% if @shopping_lists.any? %>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <% @shopping_lists.each do |list| %>
+      <div class="col">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title mb-0"><%= list.name %></h5>
+              <%= button_to shopping_list_path(org_slug: params[:org_slug], id: list), method: :delete, class: "btn btn-sm btn-outline-danger border-0", data: { turbo_confirm: t('storefront.shopping_lists.show.confirm_delete') } do %>
+                <i class="fa-solid fa-trash-can"></i>
+              <% end %>
+            </div>
+            <p class="text-muted small mb-3">
+              <i class="fa-solid fa-box me-1"></i>
+              <%= t('storefront.common.items', count: list.item_count) %>
+              <span class="mx-1">&middot;</span>
+              <%= t('storefront.shopping_lists.index.lines', count: list.line_item_count) %>
+            </p>
+            <p class="text-muted small mb-3">
+              <i class="fa-regular fa-clock me-1"></i>
+              <%= l(list.updated_at, format: :short) %>
+            </p>
+            <% if list.notes.present? %>
+              <p class="text-muted small mb-3" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <i class="fa-solid fa-sticky-note me-1"></i>
+                <%= list.notes %>
+              </p>
+            <% end %>
+          </div>
+          <div class="card-footer bg-transparent border-top-0 d-flex gap-2 pb-3 px-3">
+            <%= link_to shopping_list_path(org_slug: params[:org_slug], id: list), class: "btn btn-outline-primary btn-sm flex-fill" do %>
+              <i class="fa-solid fa-eye me-1"></i> <%= t('storefront.shopping_lists.index.view') %>
+            <% end %>
+            <% if list.shopping_list_items.any? %>
+              <%= button_to add_to_cart_shopping_list_path(org_slug: params[:org_slug], id: list), method: :post, class: "btn btn-primary btn-sm flex-fill" do %>
+                <i class="fa-solid fa-cart-plus me-1"></i> <%= t('storefront.shopping_lists.index.add_to_cart') %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body text-center py-5">
+      <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+        <i class="fa-solid fa-clipboard-list fa-2x"></i>
+      </div>
+      <h5 class="fw-medium mb-2"><%= t('storefront.shopping_lists.index.empty') %></h5>
+      <p class="text-muted mb-3"><%= t('storefront.shopping_lists.index.empty_hint') %></p>
+      <%= link_to new_shopping_list_path(org_slug: params[:org_slug]), class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus me-1"></i> <%= t('storefront.shopping_lists.index.create_first') %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

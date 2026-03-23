@@ -16,7 +16,7 @@
   </tr>
 </table>
 
-<p style="margin: 0 0 8px 0; font-size: 16px;"><%= t('mailers.customer_mailer.customer_product_discount.greeting', name: @customer.contact_name) %></p>
+<p style="margin: 0 0 8px 0; font-size: 16px;"><%= @customer.contact_name.present? ? t('mailers.customer_mailer.customer_product_discount.greeting', name: @customer.contact_name) : t('mailers.customer_mailer.customer_product_discount.greeting_generic') %></p>
 
 <p style="margin: 0 0 24px 0; color: #4b5563;">
   <%= t('mailers.customer_mailer.customer_product_discount.intro') %>
@@ -26,9 +26,15 @@
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
   <tr>
     <td align="center">
-      <a href="<%= product_url(@product, org_slug: @organisation.slug) %>" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); background-color: #7c3aed; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: 8px;">
-        <%= t('mailers.common.view_product') %>
-      </a>
+      <% if @product %>
+        <a href="<%= product_url(@product, org_slug: @organisation.slug) %>" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); background-color: #7c3aed; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: 8px;">
+          <%= t('mailers.common.view_product') %>
+        </a>
+      <% else %>
+        <a href="<%= root_url(org_slug: @organisation.slug) %>" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); background-color: #7c3aed; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: 8px;">
+          <%= t('mailers.common.view_product') %>
+        </a>
+      <% end %>
     </td>
   </tr>
 </table>
@@ -47,19 +53,17 @@
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td style="vertical-align: top;">
-            <h2 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 600; color: #1a1a1a;"><%= @product.name %></h2>
-            <p style="margin: 0 0 16px 0; font-size: 14px; color: #6b7177; line-height: 1.5;"><%= @product.description %></p>
+            <h2 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 600; color: #1a1a1a;"><%= @product&.name || @category&.full_path %></h2>
+            <% if @product&.description.present? %>
+              <p style="margin: 0 0 16px 0; font-size: 14px; color: #6b7177; line-height: 1.5;"><%= @product.description %></p>
+            <% end %>
 
             <!-- Discount badge - full width -->
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 16px 0;">
               <tr>
                 <td style="background-color: #fef3c7; padding: 16px 24px; border-radius: 12px; text-align: center;">
                   <span style="font-size: 28px; font-weight: 700; color: #92400e;">
-                    <% if @discount.percentage? %>
-                      <%= @discount.value_display %> <%= t('mailers.common.off') %>
-                    <% else %>
-                      <%= @discount.discount_percentage.format %> <%= t('mailers.common.off') %>
-                    <% end %>
+                    <%= @discount.value_display %> <%= t('mailers.common.off') %>
                   </span>
                   <p style="margin: 4px 0 0 0; font-size: 14px; color: #92400e;"><%= t('mailers.customer_mailer.customer_product_discount.exclusive_to_you') %></p>
                 </td>
@@ -69,10 +73,12 @@
             <!-- Discount details -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0">
               <tr>
-                <td style="padding-right: 24px;">
-                  <span style="font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;"><%= t('mailers.common.original_price') %></span>
-                  <p style="margin: 4px 0 0 0; font-size: 16px; color: #6b7177; text-decoration: line-through;"><%= @product.price.format %></p>
-                </td>
+                <% if @product %>
+                  <td style="padding-right: 24px;">
+                    <span style="font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;"><%= t('mailers.common.original_price') %></span>
+                    <p style="margin: 4px 0 0 0; font-size: 16px; color: #6b7177; text-decoration: line-through;"><%= @product.price.format %></p>
+                  </td>
+                <% end %>
                 <td>
                   <span style="font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;"><%= t('mailers.common.valid') %></span>
                   <p style="margin: 4px 0 0 0; font-size: 16px; font-weight: 600; color: #1a1a1a;"><%= @discount.valid_period_display %></p>

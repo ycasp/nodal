@@ -388,7 +388,7 @@ $bo-sidebar-border: #334155;
 // Sticky page header
 .bo-page-header {
   position: sticky;
-  top: 0;
+  top: $navbar-height;
   background: #ffffff;
   z-index: 99;
   padding: 20px 24px;

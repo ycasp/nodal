@@ -44,7 +44,7 @@
           </div>
 
           <div data-nested-fields-target="container">
-            <%= f.fields_for :product_attribute_values do |value_form| %>
+            <%= f.fields_for :product_attribute_values, product_attribute.product_attribute_values.order(created_at: :desc) do |value_form| %>
               <%= render 'value_fields', f: value_form %>
             <% end %>
           </div>

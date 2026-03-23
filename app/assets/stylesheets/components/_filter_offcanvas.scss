@@ -1,0 +1,49 @@
+// Filter Offcanvas Styles
+// Mobile-optimized category filter drawer
+
+#categoryFilterOffcanvas {
+  // Set max-width for larger phones/tablets in portrait
+  max-width: 320px;
+
+  .offcanvas-header {
+    background-color: #f8f9fa;
+  }
+
+  .offcanvas-body {
+    padding-top: 1.5rem;
+  }
+
+  // Ensure category tree items have proper touch targets
+  .category-sidebar {
+    .category-link {
+      padding: 0.625rem 0.5rem; // Increase padding for touch
+      min-height: 44px; // Minimum touch target
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-btn {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  // Active filter badge styling
+  .badge {
+    font-size: 0.75rem;
+  }
+}
+
+// Mobile filter button in header
+.btn[data-bs-target="#categoryFilterOffcanvas"] {
+  white-space: nowrap;
+
+  .badge {
+    font-size: 0.65rem;
+    padding: 0.25em 0.5em;
+  }
+}

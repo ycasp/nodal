@@ -9,6 +9,7 @@ class Bo::ProductVariantsController < Bo::BaseController
   def new
     @variant = @product.product_variants.build
     @variant.organisation = current_organisation
+    @available_values_by_attribute = @product.available_values_by_attribute
     authorize @variant
   end
 
@@ -18,8 +19,10 @@ class Bo::ProductVariantsController < Bo::BaseController
     authorize @variant
 
     if @variant.save
+      assign_attribute_values
       redirect_to bo_product_variants_path(params[:org_slug], @product), notice: t('bo.flash.variant_created')
     else
+      @available_values_by_attribute = @product.available_values_by_attribute
       render :new, status: :unprocessable_entity
     end
   end
@@ -28,6 +31,8 @@ class Bo::ProductVariantsController < Bo::BaseController
   end
 
   def update
+    @variant.photo.purge if params[:product_variant][:remove_photo] == '1'
+
     if @variant.update(variant_params)
       redirect_to bo_product_variants_path(params[:org_slug], @product), notice: t('bo.flash.variant_updated')
     else
@@ -76,7 +81,18 @@ class Bo::ProductVariantsController < Bo::BaseController
 
   def variant_params
     params.require(:product_variant).permit(
-      :name, :sku, :price, :stock_quantity, :track_stock, :available, :is_default, :photo
+      :name, :sku, :price, :stock_quantity, :track_stock, :available, :is_default, :photo, :hide_when_unavailable
     )
+  end
+
+  def assign_attribute_values
+    ids = params.dig(:product_variant, :attribute_value_ids)&.reject(&:blank?)
+    return if ids.blank?
+
+    allowed_value_ids = @product.available_attribute_values.pluck(:id)
+    ids.each do |value_id|
+      next unless allowed_value_ids.include?(value_id.to_i)
+      @variant.variant_attribute_values.create!(product_attribute_value_id: value_id)
+    end
   end
 end

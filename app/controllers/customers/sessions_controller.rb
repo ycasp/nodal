@@ -41,6 +41,6 @@ class Customers::SessionsController < Devise::SessionsController
   end
 
   def after_sign_in_path_for(resource)
-      products_path(org_slug: current_organisation.slug)  # or whatever storefront path you want
+    home_path(org_slug: current_organisation.slug)
   end
 end

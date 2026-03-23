@@ -6,7 +6,7 @@ class Bo::CategoriesController < Bo::BaseController
   end
 
   def show
-    @products = @category.products.includes(:photo_attachment)
+    @products = @category.products.includes(photos_attachments: :blob)
     @subcategories = @category.children.kept.by_position
   end
 

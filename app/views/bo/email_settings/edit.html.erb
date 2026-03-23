@@ -1,0 +1,191 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1><%= t('bo.email_settings.edit.title') %></h1>
+      <p class="text-muted mb-0"><%= t('bo.email_settings.edit.subtitle') %></p>
+    </div>
+    <div class="bo-page-actions">
+      <button type="submit" form="email-settings-form" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> <%= t('bo.common.actions.save_changes') %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <%= render "bo/shared/settings_tabs" %>
+
+  <%= form_with url: bo_email_settings_path(org_slug: @organisation.slug), method: :patch, id: "email-settings-form",
+                data: { controller: "unsaved-changes", turbo: false } do |f| %>
+
+    <%# ── Sender Settings ── %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-4"><i class="fa-solid fa-at me-2"></i><%= t('bo.email_settings.edit.sender_settings') %></h5>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.email_settings.edit.sender_name') %></label>
+            <%= f.text_field "organisation[email_sender_name]", value: @organisation.email_sender_name,
+                class: "form-control", placeholder: @organisation.name %>
+            <small class="text-muted"><%= t('bo.email_settings.edit.sender_name_hint') %></small>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.email_settings.edit.reply_to') %></label>
+            <%= f.email_field "organisation[email_reply_to]", value: @organisation.email_reply_to,
+                class: "form-control", placeholder: "orders@example.com" %>
+            <small class="text-muted"><%= t('bo.email_settings.edit.reply_to_hint') %></small>
+          </div>
+        </div>
+
+        <div class="mt-3 p-3 bg-light rounded">
+          <small class="text-muted d-block mb-1"><%= t('bo.email_settings.edit.preview_from') %></small>
+          <code><%= @organisation.email_from_address %></code>
+          <% if @organisation.email_reply_to_address.present? %>
+            <br>
+            <small class="text-muted d-block mt-2 mb-1"><%= t('bo.email_settings.edit.preview_reply_to') %></small>
+            <code><%= @organisation.email_reply_to_address %></code>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Email Toggles ── %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-4"><i class="fa-solid fa-toggle-on me-2"></i><%= t('bo.email_settings.edit.notification_preferences') %></h5>
+        <p class="text-muted mb-4"><%= t('bo.email_settings.edit.notification_preferences_hint') %></p>
+
+        <div class="list-group">
+          <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+            <div>
+              <strong><%= t('bo.email_settings.edit.order_confirmation') %></strong>
+              <br><small class="text-muted"><%= t('bo.email_settings.edit.order_confirmation_hint') %></small>
+            </div>
+            <div class="form-check form-switch">
+              <input type="hidden" name="organisation[email_order_confirmation_enabled]" value="0">
+              <input type="checkbox" name="organisation[email_order_confirmation_enabled]" value="1"
+                     class="form-check-input" role="switch"
+                     <%= 'checked' if @organisation.email_order_confirmation_enabled? %>>
+            </div>
+          </div>
+
+          <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+            <div>
+              <strong><%= t('bo.email_settings.edit.discount_notification') %></strong>
+              <br><small class="text-muted"><%= t('bo.email_settings.edit.discount_notification_hint') %></small>
+            </div>
+            <div class="form-check form-switch">
+              <input type="hidden" name="organisation[email_discount_notification_enabled]" value="0">
+              <input type="checkbox" name="organisation[email_discount_notification_enabled]" value="1"
+                     class="form-check-input" role="switch"
+                     <%= 'checked' if @organisation.email_discount_notification_enabled? %>>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-3 mb-0">
+          <i class="fa-solid fa-circle-info me-1"></i>
+          <%= t('bo.email_settings.edit.auth_emails_note') %>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Order Notification Recipients ── %>
+    <%= hidden_field_tag "order_notification_member_ids[]", "" %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-4"><i class="fa-solid fa-users me-2"></i><%= t('bo.email_settings.edit.order_notification_recipients') %></h5>
+        <p class="text-muted mb-4"><%= t('bo.email_settings.edit.order_notification_recipients_hint') %></p>
+
+        <% @org_members.each do |om| %>
+          <div class="form-check mb-2">
+            <%= check_box_tag "order_notification_member_ids[]", om.id, om.receive_order_notifications,
+                id: "om_#{om.id}", class: "form-check-input" %>
+            <label class="form-check-label" for="om_<%= om.id %>">
+              <strong><%= om.display_name %></strong>
+              <span class="text-muted">(<%= om.display_email %>)</span>
+              <span class="badge bg-secondary ms-1"><%= om.role %></span>
+            </label>
+          </div>
+        <% end %>
+
+        <% if @org_members.empty? %>
+          <p class="text-muted"><%= t('bo.email_settings.edit.no_team_members') %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ── Customer Email Opt-Out ── %>
+    <%= hidden_field_tag "customer_email_opt_out[]", "" %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-2"><i class="fa-solid fa-user-slash me-2"></i><%= t('bo.email_settings.edit.customer_opt_out') %></h5>
+        <p class="text-muted mb-4"><%= t('bo.email_settings.edit.customer_opt_out_hint') %></p>
+
+        <div class="mb-0">
+          <label class="form-label"><%= t('bo.email_settings.edit.customer_opt_out_search') %></label>
+          <select name="customer_email_opt_out[]" multiple class="form-select"
+                  data-controller="tom-select" style="min-height: 50px;">
+            <% @customers.each do |customer| %>
+              <option value="<%= customer.id %>"
+                      <%= 'selected' unless customer.email_notifications_enabled? %>>
+                <%= "#{customer.company_name} — #{customer.email}" %>
+              </option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  <% end %>
+
+  <%# ── Email Logs ── %>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title mb-4"><i class="fa-solid fa-clock-rotate-left me-2"></i><%= t('bo.email_settings.edit.email_logs') %></h5>
+
+      <% if @recent_email_logs.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover">
+            <thead>
+              <tr>
+                <th><%= t('bo.email_settings.edit.log_date') %></th>
+                <th><%= t('bo.email_settings.edit.log_type') %></th>
+                <th><%= t('bo.email_settings.edit.log_recipient') %></th>
+                <th><%= t('bo.email_settings.edit.log_subject') %></th>
+                <th><%= t('bo.common.tables.status') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @recent_email_logs.each do |log| %>
+                <tr>
+                  <td><%= log.sent_at&.strftime("%d/%m/%Y %H:%M") %></td>
+                  <td><%= log.email_type.humanize %></td>
+                  <td><%= log.recipient_email %></td>
+                  <td class="text-truncate" style="max-width: 250px;"><%= log.subject %></td>
+                  <td>
+                    <% case log.status %>
+                    <% when "sent" %>
+                      <span class="badge bg-success"><%= t('bo.email_settings.edit.status_sent') %></span>
+                    <% when "skipped" %>
+                      <span class="badge bg-warning text-dark"><%= t('bo.email_settings.edit.status_skipped') %></span>
+                    <% when "failed" %>
+                      <span class="badge bg-danger"><%= t('bo.email_settings.edit.status_failed') %></span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted text-center py-4"><%= t('bo.email_settings.edit.no_logs') %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% end %>

@@ -82,13 +82,13 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.smtp_settings = {
-    address: 'smtp.sendgrid.net',
-    port: 587,
+    address: 'smtp.resend.com',
+    port: 465,
     domain: ENV['APP_HOST'],
-    user_name: 'apikey',
-    password: ENV['SENDGRID_API_KEY'],
+    user_name: 'resend',
+    password: ENV['RESEND_API_KEY'],
     authentication: :plain,
-    enable_starttls_auto: true
+    tls: true
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.

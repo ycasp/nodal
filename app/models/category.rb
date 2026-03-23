@@ -8,6 +8,8 @@ class Category < ApplicationRecord
   belongs_to :organisation
   has_many :category_products, dependent: :destroy
   has_many :products, through: :category_products
+  has_many :product_discounts, dependent: :destroy
+  has_many :customer_product_discounts, dependent: :destroy
 
   # Keep legacy direct association for backward compatibility
   has_many :direct_products, class_name: 'Product', foreign_key: 'category_id'

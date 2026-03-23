@@ -38,11 +38,34 @@ class DiscountCalculator
     base_price - final_price
   end
 
+  # Returns only the discounts that actually contribute to the final price
+  def applied_discounts
+    @applied_discounts ||= begin
+      return [] if all_discounts.empty?
+
+      stackable = all_discounts.select { |d| d[:stackable] }
+      exclusive = all_discounts.reject { |d| d[:stackable] }
+
+      applied = []
+
+      # Best exclusive discount wins among non-stackable
+      if exclusive.any?
+        best = find_best_exclusive(exclusive)
+        applied << best[:discount] if best[:discount]
+      end
+
+      # All stackable discounts are applied
+      applied += stackable
+      applied
+    end
+  end
+
   # Returns display-friendly breakdown
   def discount_breakdown
     {
       base_price: base_price,
       all_discounts: all_discounts,
+      applied_discounts: applied_discounts,
       effective_discount: effective_discount,
       final_price: final_price,
       savings: savings,
@@ -57,27 +80,63 @@ class DiscountCalculator
     discounts = []
 
     # 1. Product-level discounts (global, for all customers)
-    # for_display: true - show all available discounts (ignore min_quantity)
-    # for_display: false - only applicable discounts (respect min_quantity)
-    product_discounts = if for_display
-      product.product_discounts.active
-    else
-      product.product_discounts.active.where("min_quantity <= ?", quantity)
-    end
-
-    product_discounts.each do |pd|
-      meets_min_quantity = quantity >= pd.min_quantity
+    # Variant-level overrides: custom discount replaces product discounts,
+    # exclude_from_discounts skips them entirely
+    if variant&.has_custom_discount?
       discounts << {
-        type: :product,
-        discount_type: pd.discount_type,
-        value: pd.discount_value,
-        stackable: pd.stackable,
-        label: "Product Sale",
-        valid_until: pd.valid_until,
-        source: pd,
-        meets_min_quantity: meets_min_quantity,
-        min_quantity_required: pd.min_quantity
+        type: :variant,
+        discount_type: variant.custom_discount_type,
+        value: variant.custom_discount_value,
+        stackable: false,
+        label: "Variant Discount",
+        valid_until: nil,
+        source: variant
       }
+    elsif variant&.exclude_from_discounts?
+      # Skip product discounts entirely
+    else
+      # for_display: true - show all available discounts (ignore min_quantity)
+      # for_display: false - only applicable discounts (respect min_quantity)
+      product_discounts = if for_display
+        product.product_discounts.active
+      else
+        product.product_discounts.active.where("min_quantity <= ?", quantity)
+      end
+
+      product_discounts.each do |pd|
+        meets_min_quantity = quantity >= pd.min_quantity
+        discounts << {
+          type: :product,
+          discount_type: pd.discount_type,
+          value: pd.discount_value,
+          stackable: pd.stackable,
+          label: "Product Sale",
+          valid_until: pd.valid_until,
+          source: pd,
+          meets_min_quantity: meets_min_quantity,
+          min_quantity_required: pd.min_quantity
+        }
+      end
+
+      # Category-level discounts: find active discounts for any category
+      # the product belongs to, including ancestor categories
+      category_discount_records = find_category_discounts
+      category_discount_records.each do |cd|
+        meets_min_quantity = quantity >= cd.min_quantity
+        next if !for_display && !meets_min_quantity
+
+        discounts << {
+          type: :category,
+          discount_type: cd.discount_type,
+          value: cd.discount_value,
+          stackable: cd.stackable,
+          label: "Category Sale",
+          valid_until: cd.valid_until,
+          source: cd,
+          meets_min_quantity: meets_min_quantity,
+          min_quantity_required: cd.min_quantity
+        }
+      end
     end
 
     return discounts unless customer
@@ -93,6 +152,19 @@ class DiscountCalculator
         label: "Your Special Price",
         valid_until: cpd.valid_until,
         source: cpd
+      }
+    end
+
+    # 2b. Customer-category specific discounts
+    find_customer_category_discounts.each do |ccpd|
+      discounts << {
+        type: :customer_product,
+        discount_type: ccpd.discount_type,
+        value: ccpd.discount_percentage,
+        stackable: ccpd.stackable,
+        label: "Your Special Price",
+        valid_until: ccpd.valid_until,
+        source: ccpd
       }
     end
 
@@ -214,6 +286,8 @@ class DiscountCalculator
       end
     end
 
+    return { percentage: 0, savings: Money.new(0, currency), source: :none, label: nil } if best.nil?
+
     effective_pct = (best_savings.to_f / base_price.to_f).round(4) rescue 0
 
     {
@@ -230,6 +304,44 @@ class DiscountCalculator
 
     result = price - discount_info[:savings]
     [result, Money.new(0, currency)].max
+  end
+
+  def find_category_discounts
+    # Collect all category IDs the product belongs to, plus their ancestors
+    category_ids = product.categories.flat_map { |cat| cat.path_ids }.uniq
+    return [] if category_ids.empty?
+
+    ProductDiscount.active
+      .for_category
+      .where(organisation: product.organisation, category_id: category_ids)
+  end
+
+  def find_customer_category_discounts
+    return [] unless customer
+
+    category_ids = product.categories.flat_map { |cat| cat.path_ids }.uniq
+    return [] if category_ids.empty?
+
+    # Direct customer match
+    direct = CustomerProductDiscount.active
+      .for_category
+      .where(customer: customer, organisation: product.organisation, category_id: category_ids)
+
+    # Also include customer_category-based matches
+    if customer.customer_category_id.present?
+      category_based = CustomerProductDiscount.active
+        .for_category
+        .where(customer_category_id: customer.customer_category_id, organisation: product.organisation, category_id: category_ids)
+        .where(customer_id: nil)
+
+      # Direct customer discounts take precedence — only include category-based for categories not already covered
+      covered_category_ids = direct.pluck(:category_id)
+      category_based = category_based.where.not(category_id: covered_category_ids) if covered_category_ids.any?
+
+      return direct.to_a + category_based.to_a
+    end
+
+    direct.to_a
   end
 
   def currency

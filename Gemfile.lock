@@ -167,6 +167,7 @@ GEM
       net-http (~> 0.5)
     faraday-retry (2.3.2)
       faraday (~> 2.0)
+    fb (0.10.0)
     ffi (1.17.2-aarch64-linux-gnu)
     ffi (1.17.2-aarch64-linux-musl)
     ffi (1.17.2-arm-linux-gnu)
@@ -281,6 +282,7 @@ GEM
       uri
     orm_adapter (0.5.0)
     ostruct (0.6.3)
+    pagy (9.4.0)
     pg (1.6.2)
     pg (1.6.2-aarch64-linux)
     pg (1.6.2-aarch64-linux-musl)
@@ -370,7 +372,6 @@ GEM
     ruby-vips (2.2.5)
       ffi (~> 1.12)
       logger
-    ruby_http_client (3.5.5)
     ruby_llm (1.9.1)
       base64
       event_stream_parser (~> 1)
@@ -400,8 +401,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    sendgrid-ruby (6.7.0)
-      ruby_http_client (~> 3.4)
     sidekiq (7.3.10)
       base64
       connection_pool (>= 2.3.0, < 3)
@@ -477,6 +476,7 @@ DEPENDENCIES
   discard
   dotenv-rails
   faraday (~> 2.0)
+  fb (~> 0.9)
   font-awesome-sass (~> 6.1)
   httplog
   image_processing (~> 1.2)
@@ -487,6 +487,7 @@ DEPENDENCIES
   letter_opener_web
   money-rails (~> 1.12)
   open-uri
+  pagy (~> 9.0)
   pg (~> 1.1)
   pry-byebug
   pry-rails
@@ -498,7 +499,6 @@ DEPENDENCIES
   ruby_llm
   sassc-rails
   selenium-webdriver
-  sendgrid-ruby
   sidekiq (~> 7.0)
   sidekiq-scheduler (~> 5.0)
   simple_form!

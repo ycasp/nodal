@@ -12,6 +12,7 @@ class OrgMember < ApplicationRecord
 
   scope :accepted, -> { where.not(member_id: nil) }
   scope :pending, -> { where(member_id: nil).where.not(invitation_token: nil) }
+  scope :order_notification_recipients, -> { accepted.where(active: true, receive_order_notifications: true) }
 
   # Check if this is a pending invitation
   def pending_invitation?

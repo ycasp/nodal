@@ -1,0 +1,76 @@
+<%= turbo_frame_tag "variant-overrides" do %>
+  <% if variants_grouped.present? && variants_grouped.values.flatten.any? %>
+    <div class="card mt-3" data-controller="discount-preview" data-discount-preview-symbol-value="<%= currency_symbol %>">
+      <div class="card-body">
+        <h5 class="card-title mb-4"><%= t('bo.pricing.product_discounts.variant_overrides.title') %></h5>
+        <p class="text-muted small mb-3"><%= t('bo.pricing.product_discounts.variant_overrides.description') %></p>
+
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead>
+              <tr>
+                <th><%= t('bo.pricing.product_discounts.variant_overrides.variant') %></th>
+                <th>SKU</th>
+                <th class="text-end"><%= t('bo.pricing.product_discounts.variant_overrides.base_price') %></th>
+                <th class="text-end"><%= t('bo.pricing.product_discounts.variant_overrides.final_price') %></th>
+                <th class="text-center"><%= t('bo.pricing.product_discounts.variant_overrides.exclude') %></th>
+                <th colspan="2"><%= t('bo.pricing.product_discounts.variant_overrides.custom_discount') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% show_product_headers = variants_grouped.size > 1 %>
+              <% variants_grouped.each do |product, variants| %>
+                <% if show_product_headers %>
+                  <tr class="table-light">
+                    <td colspan="7" class="fw-semibold py-2">
+                      <i class="fa-solid fa-box me-1 text-muted"></i> <%= product.name %>
+                      <small class="text-muted">(<%= product.sku %>)</small>
+                    </td>
+                  </tr>
+                <% end %>
+                <% variants.each do |variant| %>
+                  <tr data-discount-preview-target="row" data-price-cents="<%= variant.unit_price_cents || 0 %>">
+                    <td><strong><%= variant.name %></strong></td>
+                    <td><small class="text-muted"><%= variant.sku %></small></td>
+                    <td class="text-end text-nowrap">
+                      <%= humanized_money_with_symbol(variant.price || Money.new(0, variant.unit_price_currency)) %>
+                    </td>
+                    <td class="text-end text-nowrap" data-discount-preview-target="finalPrice">
+                      —
+                    </td>
+                    <td class="text-center">
+                      <input type="hidden" name="variant_overrides[<%= variant.id %>][exclude_from_discounts]" value="0">
+                      <input type="checkbox" class="form-check-input"
+                             name="variant_overrides[<%= variant.id %>][exclude_from_discounts]"
+                             value="1"
+                             data-discount-preview-target="exclude"
+                             data-action="change->discount-preview#recalculate"
+                             <%= 'checked' if variant.exclude_from_discounts? %>>
+                    </td>
+                    <td style="width: 140px;">
+                      <select name="variant_overrides[<%= variant.id %>][custom_discount_type]" class="form-select form-select-sm"
+                              data-discount-preview-target="customType"
+                              data-action="change->discount-preview#recalculate">
+                        <option value=""></option>
+                        <option value="percentage" <%= 'selected' if variant.custom_discount_type == 'percentage' %>><%= t('bo.pricing.form.percentage') %></option>
+                        <option value="fixed" <%= 'selected' if variant.custom_discount_type == 'fixed' %>><%= t('bo.pricing.form.fixed_amount') %></option>
+                      </select>
+                    </td>
+                    <td style="width: 120px;">
+                      <input type="number" class="form-control form-control-sm"
+                             name="variant_overrides[<%= variant.id %>][custom_discount_value]"
+                             value="<%= variant.custom_discount_value %>"
+                             step="0.01" min="0" placeholder="0.00"
+                             data-discount-preview-target="customValue"
+                             data-action="input->discount-preview#recalculate">
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

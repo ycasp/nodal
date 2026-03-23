@@ -271,7 +271,7 @@
           <div class="hero-trust-badges">
             <span class="trust-badge"><i class="fas fa-check-circle"></i> <%= t("hero.trust_badges.live_minutes") %></span>
             <span class="trust-badge"><i class="fas fa-check-circle"></i> <%= t("hero.trust_badges.no_technical") %></span>
-            <span class="trust-badge"><i class="fas fa-check-circle"></i> <%= t("hero.trust_badges.free_beta") %></span>
+            <span class="trust-badge"><i class="fas fa-check-circle"></i> <%= t("hero.trust_badges.multi_currency") %></span>
           </div>
         </div>
       </div>
@@ -394,7 +394,59 @@
   </section>
 
   <!-- ========================================
-       SECTION 5: HOW IT WORKS
+       SECTION 5: BENEFITS
+       Purpose: Outcome-focused value propositions
+       ======================================== -->
+  <section class="benefits-section" aria-labelledby="benefits-heading">
+    <div class="container">
+      <header class="section-header">
+        <span class="section-label"><%= t("benefits.label") %></span>
+        <h2 id="benefits-heading" class="section-title"><%= t("benefits.title") %></h2>
+        <p class="section-subtitle"><%= t("benefits.subtitle") %></p>
+      </header>
+
+      <div class="benefits-grid">
+        <article class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-moon"></i></div>
+          <h3><%= t("benefits.always_open.title") %></h3>
+          <p><%= t("benefits.always_open.description") %></p>
+        </article>
+
+        <article class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-bullseye"></i></div>
+          <h3><%= t("benefits.upsell.title") %></h3>
+          <p><%= t("benefits.upsell.description") %></p>
+        </article>
+
+        <article class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-sync-alt"></i></div>
+          <h3><%= t("benefits.update_once.title") %></h3>
+          <p><%= t("benefits.update_once.description") %></p>
+        </article>
+
+        <article class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-shipping-fast"></i></div>
+          <h3><%= t("benefits.direct_fulfillment.title") %></h3>
+          <p><%= t("benefits.direct_fulfillment.description") %></p>
+        </article>
+
+        <article class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-eye"></i></div>
+          <h3><%= t("benefits.transparency.title") %></h3>
+          <p><%= t("benefits.transparency.description") %></p>
+        </article>
+
+        <article class="benefit-card">
+          <div class="benefit-icon"><i class="fas fa-envelope-open-text"></i></div>
+          <h3><%= t("benefits.no_emails.title") %></h3>
+          <p><%= t("benefits.no_emails.description") %></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 6: HOW IT WORKS
        Purpose: Feature cards with benefits
        ======================================== -->
   <section id="how-it-works" class="how-it-works-section" aria-labelledby="how-heading">
@@ -593,7 +645,7 @@
 
   <!-- ========================================
        SECTION 8: PRICING
-       Purpose: 3 clear pricing tiers
+       Purpose: Custom pricing CTA
        ======================================== -->
   <section id="pricing" class="pricing-section" aria-labelledby="pricing-heading">
     <div class="container">
@@ -603,76 +655,10 @@
         <p class="section-subtitle"><%= t("pricing.subtitle") %></p>
       </header>
 
-      <div class="pricing-grid pricing-grid--3col">
-        <!-- Free Tier -->
-        <div class="pricing-card">
-          <div class="pricing-badge pricing-badge--dark"><%= t("pricing.tiers.free.badge") %></div>
-          <div class="pricing-header">
-            <h3 class="pricing-name"><%= t("pricing.tiers.free.name") %></h3>
-            <div class="pricing-price">
-              <span class="price-currency">€</span>
-              <span class="price-amount">0</span>
-              <span class="price-period"><%= t("pricing.per_month") %></span>
-            </div>
-            <p class="pricing-description"><%= t("pricing.tiers.free.description") %></p>
-          </div>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.free.feature_1") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.free.feature_2") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.free.feature_3") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.free.feature_4") %></li>
-          </ul>
-          <%= link_to t("pricing.tiers.free.cta"), "#contact", class: "btn btn-outline-dark btn-pricing" %>
-        </div>
-
-        <!-- Pro Tier (Recommended) -->
-        <div class="pricing-card pricing-card--featured">
-          <div class="pricing-badge pricing-badge--green"><%= t("pricing.tiers.pro.badge") %></div>
-          <div class="pricing-header">
-            <h3 class="pricing-name"><%= t("pricing.tiers.pro.name") %></h3>
-            <div class="pricing-price">
-              <span class="price-currency">€</span>
-              <span class="price-amount price-amount--featured">149</span>
-              <span class="price-period"><%= t("pricing.per_month") %></span>
-            </div>
-            <p class="pricing-description"><%= t("pricing.tiers.pro.description") %></p>
-          </div>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_1") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_2") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_3") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_4") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_5") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.pro.feature_6") %></li>
-          </ul>
-          <%= link_to t("pricing.tiers.pro.cta"), "#contact", class: "btn btn-primary btn-pricing" %>
-        </div>
-
-        <!-- Business Tier -->
-        <div class="pricing-card">
-          <div class="pricing-header">
-            <h3 class="pricing-name"><%= t("pricing.tiers.business.name") %></h3>
-            <div class="pricing-price">
-              <span class="price-amount price-amount--custom"><%= t("pricing.tiers.business.price") %></span>
-            </div>
-            <p class="pricing-description"><%= t("pricing.tiers.business.description") %></p>
-          </div>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_1") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_2") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_3") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_4") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_5") %></li>
-            <li><i class="fas fa-check"></i> <%= t("pricing.tiers.business.feature_6") %></li>
-          </ul>
-          <%= link_to t("pricing.tiers.business.cta"), "#contact", class: "btn btn-outline-dark btn-pricing" %>
-        </div>
+      <div class="pricing-simple text-center py-4">
+        <p class="pricing-note text-muted mb-4"><%= t("pricing.note") %></p>
+        <%= link_to t("pricing.cta"), "#contact", class: "btn btn-primary btn-lg px-5" %>
       </div>
-
-      <p class="pricing-disclaimer"><%= t("pricing.disclaimer") %></p>
     </div>
   </section>
 

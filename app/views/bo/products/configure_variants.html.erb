@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_product_path(params[:org_slug], @product), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_product_path(params[:org_slug], @product), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded bg-primary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
@@ -12,20 +12,25 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.products.configure_variants.title') %></h4>
+        <h1><%= t('bo.products.configure_variants.title') %></h1>
         <span class="text-muted"><%= @product.name %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_product_variants_path(params[:org_slug], @product), class: "btn btn-outline-secondary" do %>
         <i class="fa-solid fa-cubes"></i> <%= t('bo.products.configure_variants.view_variants') %>
       <% end %>
+      <button type="submit" form="variant-configuration-form" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> <%= t('bo.products.configure_variants.save_configuration') %>
+      </button>
     </div>
   </div>
 </div>
 
-<%= form_with url: update_variant_configuration_bo_product_path(params[:org_slug], @product), method: :patch, data: { controller: "variant-configuration" } do |f| %>
+<div class="bo-page-body">
+
+<%= form_with url: update_variant_configuration_bo_product_path(params[:org_slug], @product), method: :patch, id: "variant-configuration-form", data: { controller: "variant-configuration" } do |f| %>
   <div class="row g-3">
     <div class="col-md-8">
       <div class="card mb-3">
@@ -73,6 +78,10 @@
 
                   <div class="values-section <%= 'd-none' unless @product.product_attributes.include?(attribute) %>" data-variant-configuration-target="valuesSection">
                     <p class="small text-muted mb-2"><%= t('bo.products.configure_variants.select_values') %></p>
+                    <input type="text"
+                           class="form-control form-control-sm mb-2"
+                           placeholder="<%= t('bo.products.configure_variants.filter_values') %>"
+                           data-action="input->variant-configuration#filterValues">
                     <div class="d-flex flex-wrap gap-2">
                       <% attribute.product_attribute_values.active.by_position.each do |value| %>
                         <div class="form-check">
@@ -94,6 +103,9 @@
                         </div>
                       <% end %>
                     </div>
+                    <button type="button" class="create-value-btn btn btn-sm btn-outline-success mt-2" style="display: none;" data-action="click->variant-configuration#createValue">
+                      <i class="fa-solid fa-plus me-1"></i> <%= t('bo.products.configure_variants.create_value', default: 'Criar') %> "<span class="create-value-name"></span>"
+                    </button>
                   </div>
                 </div>
               <% end %>
@@ -101,35 +113,31 @@
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title mb-4"><%= t('bo.products.configure_variants.generate_variants') %></h5>
-            <p class="text-muted"><%= t('bo.products.configure_variants.generate_hint') %></p>
-
-            <% if @product.product_attributes.any? && @product.available_attribute_values.any? %>
-              <%= link_to generate_bo_product_variants_path(params[:org_slug], @product),
-                  class: "btn btn-success",
-                  data: { turbo_method: :post, turbo_confirm: t('bo.products.configure_variants.confirm_generate') } do %>
-                <i class="fa-solid fa-wand-magic-sparkles"></i> <%= t('bo.products.configure_variants.generate_button') %>
-              <% end %>
-            <% else %>
-              <button type="button" class="btn btn-outline-secondary" disabled>
-                <i class="fa-solid fa-wand-magic-sparkles"></i> <%= t('bo.products.configure_variants.generate_button') %>
-              </button>
-              <small class="text-muted d-block mt-2"><%= t('bo.products.configure_variants.save_first_hint', default: 'Save your attribute and value selection first, then generate variants.') %></small>
-            <% end %>
-          </div>
-        </div>
       </div>
 
-      <div class="mt-3">
-        <button type="submit" class="btn btn-primary">
-          <i class="fa-solid fa-check"></i> <%= t('bo.products.configure_variants.save_configuration') %>
-        </button>
-      </div>
     </div>
 
     <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-4"><%= t('bo.products.configure_variants.generate_variants') %></h5>
+          <p class="text-muted"><%= t('bo.products.configure_variants.generate_hint') %></p>
+
+          <% if @product.product_attributes.any? && @product.available_attribute_values.any? %>
+            <%= link_to generate_bo_product_variants_path(params[:org_slug], @product),
+                class: "btn btn-success w-100",
+                data: { turbo_method: :post, turbo_confirm: t('bo.products.configure_variants.confirm_generate') } do %>
+              <i class="fa-solid fa-wand-magic-sparkles"></i> <%= t('bo.products.configure_variants.generate_button') %>
+            <% end %>
+          <% else %>
+            <button type="button" class="btn btn-outline-secondary w-100" disabled>
+              <i class="fa-solid fa-wand-magic-sparkles"></i> <%= t('bo.products.configure_variants.generate_button') %>
+            </button>
+            <small class="text-muted d-block mt-2"><%= t('bo.products.configure_variants.save_first_hint', default: 'Save your attribute and value selection first, then generate variants.') %></small>
+          <% end %>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-body">
           <h5 class="card-title mb-3"><%= t('bo.products.configure_variants.current_status') %></h5>
@@ -154,5 +162,7 @@
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>
