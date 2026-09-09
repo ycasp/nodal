@@ -1,0 +1,93 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <h1><%= t('bo.automations.index.title') %></h1>
+      <p><%= t('bo.automations.index.subtitle') %></p>
+    </div>
+    <div class="bo-page-actions">
+      <%= link_to new_bo_automation_path(current_organisation.slug), class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus"></i> <%= t('bo.automations.index.new') %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <%= render "bo/shared/settings_tabs" %>
+
+  <% if @automations.empty? %>
+    <div class="card">
+      <div class="card-body text-center py-5 text-muted">
+        <i class="fa-solid fa-robot fa-2x mb-3 d-block opacity-50"></i>
+        <p class="mb-1"><%= t('bo.automations.index.empty') %></p>
+        <p class="small mb-0"><%= t('bo.automations.index.empty_hint') %></p>
+      </div>
+    </div>
+  <% else %>
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th><%= t('bo.automations.index.name') %></th>
+              <th><%= t('bo.automations.index.schedule') %></th>
+              <th><%= t('bo.automations.index.recipients') %></th>
+              <th><%= t('bo.automations.index.last_run') %></th>
+              <th class="text-end"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @automations.each do |automation| %>
+              <% last_run = @last_runs[automation.id] %>
+              <tr class="<%= 'opacity-50' unless automation.active? %>">
+                <td>
+                  <%= link_to automation.name, bo_automation_path(current_organisation.slug, automation),
+                              class: "fw-semibold text-decoration-none" %>
+                  <div class="small text-muted"><%= automation.report&.label %></div>
+                  <% unless automation.active? %>
+                    <span class="badge bg-secondary"><%= t('bo.automations.index.inactive') %></span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= automation_schedule_summary(automation) %>
+                  <% if automation.next_run_at && automation.active? %>
+                    <div class="small text-muted">
+                      <%= t('bo.automations.index.next_run',
+                            when: l(automation.next_run_at.in_time_zone(automation.time_zone), format: :short)) %>
+                    </div>
+                  <% end %>
+                </td>
+                <td>
+                  <%= render "bo/automations/recipients_summary", automation: automation %>
+                </td>
+                <td>
+                  <% if last_run %>
+                    <%= render "bo/automations/run_status", run: last_run %>
+                  <% else %>
+                    <span class="text-muted small"><%= t('bo.automations.index.never_run') %></span>
+                  <% end %>
+                </td>
+                <td class="text-end text-nowrap">
+                  <%= button_to toggle_bo_automation_path(current_organisation.slug, automation),
+                                method: :patch, class: "btn btn-sm btn-outline-secondary d-inline-block",
+                                form: { class: "d-inline" },
+                                title: t(automation.active? ? 'bo.automations.index.deactivate' : 'bo.automations.index.activate') do %>
+                    <i class="fa-solid <%= automation.active? ? 'fa-pause' : 'fa-play' %>"></i>
+                  <% end %>
+                  <%= link_to edit_bo_automation_path(current_organisation.slug, automation),
+                              class: "btn btn-sm btn-outline-secondary" do %>
+                    <i class="fa-solid fa-pen"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% end %>

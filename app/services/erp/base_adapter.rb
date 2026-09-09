@@ -22,8 +22,29 @@ module Erp
       raise NotImplementedError, "#{self.class} must implement #fetch_customers"
     end
 
+    # Streaming variants — adapters that can yield rows incrementally should override
+    # these to avoid materializing the full result set in memory. Default falls back
+    # to the bulk fetch for backward compatibility.
+    def each_product(&block)
+      return enum_for(:each_product) unless block_given?
+      fetch_products.each(&block)
+    end
+
+    def each_customer(&block)
+      return enum_for(:each_customer) unless block_given?
+      fetch_customers.each(&block)
+    end
+
     def adapter_name
       self.class.name.demodulize.underscore.gsub('_adapter', '')
+    end
+
+    def supports_push?
+      false
+    end
+
+    def push_order(_data)
+      raise NotImplementedError, "#{self.class} does not support pushing orders"
     end
 
     protected

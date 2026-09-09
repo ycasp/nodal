@@ -1,0 +1,87 @@
+// Mobile Filter Bottom Sheet
+// Slides up from bottom with refinement filters only
+
+.mobile-filter-sheet {
+  border-radius: 16px 16px 0 0 !important;
+  // Grow upward with content; cap the height and scroll the body internally so
+  // the action footer stays pinned to the bottom (no scrolling to reach it).
+  height: auto !important;
+  max-height: 85vh !important;
+  display: flex;
+  flex-direction: column;
+
+  .offcanvas-header {
+    flex: 0 0 auto;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  // The form is the flex column between header and footer when attributes exist.
+  .mobile-filter-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-bottom: 0;
+  }
+
+  // Scrollable region (the accordion of values).
+  .offcanvas-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 1.25rem;
+  }
+
+  // Pinned action footer — always visible at the bottom of the sheet.
+  .mobile-filter-footer {
+    flex: 0 0 auto;
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid #eee;
+    background: var(--bs-body-bg, #fff);
+  }
+
+  .filter-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.75rem;
+  }
+
+  // Touch-friendly value rows in attribute filters
+  .accordion-button {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .accordion-body .attribute-filter-option {
+    min-height: 40px;
+  }
+}
+
+// Legacy offcanvas ID support (for any remaining references)
+#categoryFilterOffcanvas {
+  max-width: 320px;
+
+  .offcanvas-header {
+    background-color: #f8f9fa;
+  }
+
+  .offcanvas-body {
+    padding-top: 1.5rem;
+  }
+
+  .category-sidebar {
+    .category-link {
+      min-height: 44px;
+    }
+  }
+
+  .badge {
+    font-size: 0.75rem;
+  }
+}

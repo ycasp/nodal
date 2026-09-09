@@ -1,0 +1,26 @@
+<%# Per-line cart note: a discreet toggle that opens an inline textarea and
+    auto-saves on blur. Shared by the desktop table and the mobile card. %>
+<div class="cart-note mt-1" data-controller="cart-note">
+  <button type="button"
+          class="btn btn-link btn-sm p-0 text-muted text-decoration-none cart-note__toggle"
+          data-cart-note-target="toggle"
+          data-action="cart-note#open">
+    <% if item.note.present? %>
+      <i class="fa-solid fa-pen-to-square me-1"></i><span class="fst-italic"><%= truncate(item.note, length: 45) %></span>
+    <% else %>
+      <i class="fa-solid fa-plus me-1"></i><%= t('storefront.carts.show.add_note') %>
+    <% end %>
+  </button>
+
+  <%= form_with model: item,
+                url: order_item_path(org_slug: params[:org_slug], id: item),
+                method: :patch, local: true,
+                class: "d-none cart-note__editor",
+                data: { cart_note_target: "editor" } do |f| %>
+    <%= f.text_area :note,
+        rows: 2, maxlength: 500,
+        class: "form-control form-control-sm",
+        placeholder: t('storefront.carts.show.note_placeholder'),
+        data: { cart_note_target: "field", original: item.note.to_s, action: "blur->cart-note#save" } %>
+  <% end %>
+</div>

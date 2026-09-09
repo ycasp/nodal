@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_customers_path(params[:org_slug]), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_customers_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -12,12 +12,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.customers.new.title') %></h4>
+        <h1><%= t('bo.customers.new.title') %></h1>
         <span class="text-muted"><%= t('bo.customers.new.subtitle') %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_customers_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -27,6 +27,19 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
+
+<% if @customer.errors.any? %>
+  <div class="alert alert-danger mb-3">
+    <strong>Não foi possível guardar o cliente:</strong>
+    <ul class="mb-0 mt-2">
+      <% @customer.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
 <%= form_with model: @customer, url: bo_customers_path(params[:org_slug]), method: :post, id: "customer-form" do |f| %>
   <div class="row g-3">
@@ -38,18 +51,22 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.contact_name') %> <span class="text-danger">*</span></label>
-              <%= f.text_field :contact_name, class: "form-control", placeholder: t('bo.customers.form.placeholders.contact_name'), required: true %>
+              <%= f.text_field :contact_name, class: "form-control", placeholder: t('bo.customers.form.contact_name_placeholder'), required: true %>
             </div>
             <div class="col-md-6">
-              <label class="form-label"><%= t('bo.customers.form.email') %> <span class="text-danger">*</span></label>
-              <%= f.email_field :email, class: "form-control", placeholder: t('bo.customers.form.placeholders.email'), required: true %>
+              <%# Optional: a rep meeting a client on the road often has no address
+                  to give yet, and the ERP imports plenty of empresas without one.
+                  Nothing below this form requires it — the model validates format
+                  only, and blank emails are exempt from the unique index. %>
+              <label class="form-label"><%= t('bo.customers.form.email') %></label>
+              <%= f.email_field :email, class: "form-control", placeholder: t('bo.customers.form.email_placeholder') %>
             </div>
           </div>
 
           <div class="row g-3 mt-1">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.phone') %></label>
-              <%= f.text_field :contact_phone, class: "form-control", placeholder: t('bo.customers.form.placeholders.phone') %>
+              <%= f.text_field :contact_phone, class: "form-control", placeholder: t('bo.customers.form.phone_placeholder') %>
             </div>
           </div>
         </div>
@@ -62,7 +79,7 @@
           <div class="row g-3">
             <div class="col-md-12">
               <label class="form-label"><%= t('bo.customers.form.company_name') %> <span class="text-danger">*</span></label>
-              <%= f.text_field :company_name, class: "form-control", placeholder: t('bo.customers.form.placeholders.company_name'), required: true %>
+              <%= f.text_field :company_name, class: "form-control", placeholder: t('bo.customers.form.company_name_placeholder'), required: true %>
             </div>
           </div>
 
@@ -72,43 +89,118 @@
               <%= f.text_field :taxpayer_id, class: "form-control", placeholder: t('bo.customers.form.taxpayer_id_placeholder') %>
               <small class="text-muted"><%= t('bo.customers.form.taxpayer_id_hint') %></small>
             </div>
+
+            <hr class="my-4">
+
+            <h6 class="mb-3"><%= t('bo.customers.form.billing_address') %></h6>
+
+            <%= f.fields_for :billing_address_with_archived do |ba| %>
+              <%= ba.hidden_field :address_type, value: "billing" %>
+
+              <div class="row g-3">
+                <div class="col-md-8">
+                  <label class="form-label"><%= t('bo.customers.form.address.street') %></label>
+                  <%= ba.text_field :street_name, class: "form-control" %>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label"><%= t('bo.customers.form.address.number') %></label>
+                  <%= ba.text_field :street_nr, class: "form-control" %>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label"><%= t('bo.customers.form.address.postal_code') %></label>
+                  <%= ba.text_field :postal_code, class: "form-control" %>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label"><%= t('bo.customers.form.address.city') %></label>
+                  <%= ba.text_field :city, class: "form-control" %>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label"><%= t('bo.customers.form.address.country') %></label>
+                  <%= ba.text_field :country, class: "form-control" %>
+                </div>
+              </div>
+            <% end %>
+
+            <hr class="my-4">
+
+            <h6 class="mb-3"><%= t('bo.customers.form.shipping_addresses') %></h6>
+
+            <div data-controller="nested-addresses">
+              <div data-nested-addresses-target="container">
+                <%= f.fields_for :shipping_addresses_with_archived do |sa| %>
+                  <%= render "shipping_address_fields", f: sa %>
+                <% end %>
+              </div>
+
+              <template data-nested-addresses-target="template">
+                <%= f.fields_for(
+                  :shipping_addresses_with_archived,
+                  Address.new(address_type: "shipping", active: true),
+                  child_index: "NEW_RECORD"
+                ) do |sa| %>
+                  <%= render "shipping_address_fields", f: sa %>
+                <% end %>
+              </template>
+
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary mt-2"
+                data-action="nested-addresses#add"
+              >
+                <i class="fa-solid fa-plus"></i> <%= t('bo.customers.form.add_shipping_address') %>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-4"><%= t('bo.customers.form.login_credentials') %></h5>
-
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label"><%= t('bo.customers.form.password') %> <span class="text-danger">*</span></label>
-              <%= f.password_field :password, class: "form-control", placeholder: t('bo.customers.form.placeholders.password'), required: true, autocomplete: "new-password" %>
-              <small class="text-muted"><%= t('bo.customers.form.password_hint') %></small>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label"><%= t('bo.customers.form.confirm_password') %> <span class="text-danger">*</span></label>
-              <%= f.password_field :password_confirmation, class: "form-control", placeholder: t('bo.customers.form.placeholders.confirm_password'), required: true, autocomplete: "new-password" %>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="col-md-4">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-4"><%= t('bo.customers.form.account_status') %></h5>
+      <% unless pure_sales_rep? %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.customers.form.account_status') %></h5>
 
-          <div class="form-check form-switch">
-            <%= f.check_box :active, class: "form-check-input", role: "switch", id: "activeSwitch", checked: true %>
-            <label class="form-check-label" for="activeSwitch"><%= t('bo.customers.form.active_customer') %></label>
+            <div class="form-check form-switch">
+              <%= f.check_box :active, class: "form-check-input", role: "switch", id: "activeSwitch", checked: true %>
+              <label class="form-check-label" for="activeSwitch"><%= t('bo.customers.form.active_customer') %></label>
+            </div>
+            <small class="text-muted"><%= t('bo.customers.form.inactive_hint') %></small>
           </div>
-          <small class="text-muted"><%= t('bo.customers.form.inactive_hint') %></small>
         </div>
-      </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-4"><%= t('bo.customers.form.category') %></h5>
+            <%= f.select :customer_category_id,
+                options_from_collection_for_select(@customer_categories, :id, :name),
+                { include_blank: t('bo.customers.form.no_category') },
+                class: "form-select" %>
+          </div>
+        </div>
+      <% else %>
+        <div class="card mb-3 border-info">
+          <div class="card-body">
+            <h5 class="card-title mb-3"><i class="fa-solid fa-info-circle text-info me-2"></i>Cliente novo</h5>
+            <p class="small text-muted mb-2">
+              Este cliente será automaticamente atribuído à tua carteira e ficará pendente de sincronização com o ERP.
+              Um admin precisa de criá-lo no sistema central antes da primeira fatura ser emitida.
+            </p>
+            <p class="small text-muted mb-0">
+              A categoria/tier de preço será definida pelo admin após a sincronização.
+            </p>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>

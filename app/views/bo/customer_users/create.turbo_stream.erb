@@ -1,0 +1,9 @@
+<%# Replaces the Turbo Frame inside the open manage-logins modal so the
+   new login appears in the list without closing the modal. The frame is
+   identified per-customer to avoid collisions if multiple modals exist. %>
+<%= turbo_stream.update "customer-logins-frame-#{@customer.id}" do %>
+  <%= render "bo/customers/logins_modal_frame",
+             customer: @customer,
+             customer_users: @customer_users,
+             new_customer_user: @new_customer_user %>
+<% end %>

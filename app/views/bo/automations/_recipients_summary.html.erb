@@ -1,0 +1,16 @@
+<% internal = automation.org_member_ids.size %>
+<% external = automation.external_emails %>
+
+<% if internal.positive? %>
+  <span class="badge bg-light text-dark border">
+    <i class="fa-solid fa-user me-1"></i><%= t('bo.automations.recipients.internal', count: internal) %>
+  </span>
+<% end %>
+
+<%# Externals get their own visible badge on purpose: business data leaving the
+    company should never be a detail buried inside an edit form. %>
+<% if external.any? %>
+  <span class="badge bg-warning text-dark" title="<%= external.join(', ') %>">
+    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i><%= t('bo.automations.recipients.external', count: external.size) %>
+  </span>
+<% end %>

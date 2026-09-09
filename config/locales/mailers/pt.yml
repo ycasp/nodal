@@ -1,5 +1,14 @@
 pt:
   mailers:
+    automation_mailer:
+      digest:
+        subject: "%{name} · %{period} · %{organisation}"
+        week: "Semana %{number}"
+        csv_note: "Segue em anexo um CSV com a mesma tabela, para abrires em Excel."
+        period: "Período: %{from} a %{to}"
+        empty: "Nada a assinalar neste período."
+        count: "%{count} referência(s) neste período."
+        footer: "Email automático enviado por %{organisation}."
     common:
       hello: "Olá"
       greeting: "Olá %{name},"
@@ -7,6 +16,10 @@ pt:
       subtotal: "Subtotal"
       tax: "IVA"
       shipping: "Envio"
+      shipping_pending: "A calcular"
+      total_without_shipping: "Total (sem portes)"
+      shipping_pending_notice: "Os portes ainda não estão incluídos neste total. São calculados quando a encomenda for preparada e confirmados antes do envio."
+      shipping_pending_action: "Portes por calcular — lançar o valor no back-office quando a encomenda estiver preparada."
       pickup: "Levantamento"
       total: "Total"
       order_number: "Número da Encomenda"
@@ -27,18 +40,22 @@ pt:
       pickup_icon: "🏪 Levantamento"
       order_tier_discount: "Desconto por Escalão"
       discount: "Desconto"
+      promo_code: "Código Promocional"
       valid: "Válido"
       original_price: "Preço Original"
       min_quantity: "Qtd. Mínima"
       min_order: "Encomenda Mínima"
       product_details: "Detalhes do Produto"
+      category_details: "Detalhes da Categoria"
       discount_details: "Detalhes do Desconto"
       off: "DESC"
       shop_now: "Comprar Agora →"
       view_product: "Ver Produto →"
+      view_category: "Ver Categoria →"
       dont_miss_out: "Não perca!"
 
     customer_mailer:
+      generic_greeting: "Cliente"
       confirm_order:
         subject: "Confirmação da encomenda %{order_number}"
         banner_title: "Encomenda Confirmada!"
@@ -71,6 +88,7 @@ pt:
         subject: "Novo Desconto pessoal para SI!"
         banner_title: "Desconto Exclusivo Só Para Si!"
         greeting: "Olá %{name},"
+        greeting_generic: "Olá,"
         intro: "Boas notícias! Criámos um desconto pessoal especial só para si como cliente valioso."
         your_personal_discount: "O Seu Desconto Pessoal"
         on_all_orders: "em todas as suas encomendas"
@@ -81,6 +99,7 @@ pt:
         subject: "Novo Desconto em %{product_name}"
         banner_title: "Desconto Especial em Produto Para Si!"
         greeting: "Olá %{name},"
+        greeting_generic: "Olá,"
         intro: "Boas notícias! Criámos um desconto especial num produto só para si."
         exclusive_to_you: "exclusivo para si"
         exclusive_awaits_title: "O seu desconto exclusivo espera-o!"
@@ -88,10 +107,22 @@ pt:
 
       product_discount:
         subject: "Novo Desconto em Produto: %{product_name}"
+        category_subject: "Novo Desconto em Categoria: %{category_name}"
         banner_title: "Desconto Especial Disponível!"
         greeting: "Olá,"
         intro: "Boas notícias! Temos um desconto especial num dos nossos produtos que pensámos que gostaria de saber."
+        category_intro: "Boas notícias! Temos um desconto especial numa categoria inteira que pensámos que gostaria de saber."
         order_now: "Encomende agora para aproveitar este desconto especial."
+
+      promo_code:
+        subject: "Novo Código Promocional: %{code}"
+        banner_title: "Tem um Código Promocional!"
+        greeting: "Olá,"
+        intro: "Boas notícias! Temos um código promocional especial para si."
+        promo_details: "Detalhes da Promoção"
+        your_code: "O Seu Código"
+        on_your_order: "na sua encomenda"
+        use_code_cta: "Use o código %{code} no checkout para obter o seu desconto!"
 
       order_discount:
         subject: "Novo Desconto em Encomenda"
@@ -111,6 +142,7 @@ pt:
         contact_name: "Nome de Contacto"
         company: "Empresa"
         email: "Email"
+        placed_by: "Colocada por"
         customer_notes: "Notas do Cliente"
         view_order_button: "Ver Encomenda no Painel"
         action_required_title: "Ação Necessária"

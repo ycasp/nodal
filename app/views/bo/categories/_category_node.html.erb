@@ -22,7 +22,15 @@
 
     <!-- Category Name -->
     <div class="flex-grow-1">
-      <span class="fw-semibold"><%= category.name %></span>
+      <%# Rendered with its own nav style so this tree doubles as a preview of
+          how the category reads in the storefront sidebar. %>
+      <span class="fw-semibold" style="<%= category.nav_style %>"><%= category.name %></span>
+      <% unless category.published? %>
+        <span class="badge bg-secondary-subtle text-secondary-emphasis ms-2"
+              title="<%= t('bo.categories.hidden_hint') %>">
+          <i class="fa-solid fa-eye-slash me-1"></i><%= t('bo.categories.hidden') %>
+        </span>
+      <% end %>
       <% if category.depth_warning? %>
         <span class="badge bg-warning text-dark ms-2" title="<%= t('bo.categories.depth_warning') %>">
           <i class="fa-solid fa-triangle-exclamation"></i>

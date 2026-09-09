@@ -1,0 +1,7 @@
+<% if params[:attrs].present? %>
+  <% params[:attrs].each do |attr_slug, value_slugs| %>
+    <% Array(value_slugs).each do |slug| %>
+      <%= hidden_field_tag "attrs[#{attr_slug}][]", slug %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -3,20 +3,20 @@
     <div class="alert alert-success alert-dismissible fade show" role="alert" data-controller="alert">
       <div class="alert-header">
         <i class="fa-solid fa-circle-check alert-icon"></i>
-        <span class="alert-title">Success</span>
+        <span class="alert-title"><%= t('flash.success') %></span>
       </div>
       <div class="alert-message"><%= notice %></div>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<%= t('flash.close') %>"></button>
     </div>
   <% end %>
   <% if alert %>
     <div class="alert alert-danger alert-dismissible fade show" role="alert" data-controller="alert">
       <div class="alert-header">
         <i class="fa-solid fa-circle-exclamation alert-icon"></i>
-        <span class="alert-title">Error</span>
+        <span class="alert-title"><%= t('flash.error') %></span>
       </div>
       <div class="alert-message"><%= alert %></div>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<%= t('flash.close') %>"></button>
     </div>
   <% end %>
 </div>

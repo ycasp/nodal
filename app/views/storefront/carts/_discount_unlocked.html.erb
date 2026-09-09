@@ -1,0 +1,11 @@
+<%# Celebrates a conditional discount the customer has just reached.
+    Local: unlocked (CartDiscountNudges::Unlocked). %>
+<div class="rounded p-2 mb-3" style="background: var(--bs-success-bg-subtle, #d1e7dd);">
+  <div class="d-flex justify-content-between align-items-center mb-1" style="gap: .5rem;">
+    <span class="small fw-semibold text-success text-truncate">
+      <i class="fa-solid fa-circle-check me-1"></i><%= t('storefront.carts.show.nudge.unlocked', discount: unlocked.discount_label) %>
+    </span>
+    <span class="badge bg-success text-nowrap"><%= t('storefront.carts.show.nudge.saved', amount: unlocked.reward.format) %></span>
+  </div>
+  <div class="text-muted" style="font-size: 0.75rem;"><%= unlocked.label %></div>
+</div>

@@ -1,0 +1,20 @@
+<%# Free-shipping progress / applied state. Shared by the desktop summary and
+    the mobile incentives block. Relies on @order + @current_organisation. %>
+<% if @current_organisation.free_shipping_enabled? %>
+  <% if @order.qualifies_for_free_shipping? %>
+    <div class="bg-light rounded p-2 mb-3 text-center">
+      <i class="fa-solid fa-truck text-success me-1"></i>
+      <span class="text-success small"><%= t('storefront.carts.show.free_shipping_applied') %></span>
+    </div>
+  <% else %>
+    <div class="bg-light rounded p-2 mb-3">
+      <div class="d-flex justify-content-between small text-muted mb-1">
+        <span><%= t('storefront.carts.show.free_shipping_progress', amount: money_amount(@order.free_shipping_amount_remaining)) %></span>
+      </div>
+      <% progress = (@order.total_with_auto_discount.cents.to_f / @current_organisation.free_shipping_threshold.cents * 100).clamp(0, 100) %>
+      <div class="progress" style="height: 6px;">
+        <div class="progress-bar bg-secondary" role="progressbar" style="width: <%= progress %>%"></div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

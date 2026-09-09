@@ -1,0 +1,73 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_products_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+
+      <div class="rounded bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
+        <i class="fa-solid fa-plus-circle fa-lg"></i>
+      </div>
+
+      <div>
+        <h1><%= t('bo.products.add_products.title') %></h1>
+        <span class="text-muted"><%= t('bo.products.add_products.subtitle') %></span>
+      </div>
+    </div>
+    <div class="bo-page-actions">
+      <%= link_to bo_products_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
+        <%= t('bo.common.actions.cancel') %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <div class="row justify-content-center">
+    <div class="col-md-4 mb-3">
+      <%= link_to import_bo_products_path(params[:org_slug]), class: "text-decoration-none" do %>
+        <div class="card h-100 border-2 hover-shadow" style="cursor: pointer; transition: box-shadow 0.2s;">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-primary-subtle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+              <i class="fa-solid fa-file-import fa-2x text-primary"></i>
+            </div>
+            <h4 class="card-title mb-3"><%= t('bo.products.add_products.import_file') %></h4>
+            <p class="text-muted mb-0"><%= t('bo.products.add_products.import_file_desc') %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= link_to bulk_create_bo_products_path(params[:org_slug]), class: "text-decoration-none" do %>
+        <div class="card h-100 border-2 hover-shadow" style="cursor: pointer; transition: box-shadow 0.2s;">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-success-subtle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+              <i class="fa-solid fa-table-cells fa-2x text-success"></i>
+            </div>
+            <h4 class="card-title mb-3"><%= t('bo.products.add_products.create_with_grid') %></h4>
+            <p class="text-muted mb-0"><%= t('bo.products.add_products.create_with_grid_desc') %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= link_to bulk_photos_bo_products_path(params[:org_slug]), class: "text-decoration-none" do %>
+        <div class="card h-100 border-2 hover-shadow" style="cursor: pointer; transition: box-shadow 0.2s;">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-info-subtle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+              <i class="fa-solid fa-images fa-2x text-info"></i>
+            </div>
+            <h4 class="card-title mb-3"><%= t('bo.products.add_products.bulk_photos') %></h4>
+            <p class="text-muted mb-0"><%= t('bo.products.add_products.bulk_photos_desc') %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% end %>

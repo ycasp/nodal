@@ -9,8 +9,8 @@ class LocalesController < ApplicationController
       # Update user preference in database
       if current_member
         current_member.update(locale: new_locale)
-      elsif current_customer
-        current_customer.update(locale: new_locale)
+      elsif current_customer_user
+        current_customer_user.update(locale: new_locale)
       end
 
       # Update session

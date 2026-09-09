@@ -1,0 +1,57 @@
+// Attribute filter dropdowns (horizontal, above product grid)
+.attribute-filters {
+  .dropdown-toggle {
+    font-size: 0.85rem;
+  }
+}
+
+.attribute-filter-dropdown {
+  min-width: 200px;
+  max-height: 280px;
+  overflow-y: auto;
+
+  .dropdown-item {
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+}
+
+// Color swatch circles
+.attribute-color-swatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #dee2e6;
+  flex-shrink: 0;
+
+  &.selected {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 2px var(--bs-primary);
+  }
+}
+
+// Apply-on-close checkbox option: the value's checkbox is visually hidden (but
+// still focusable/announced); the swatch or icon pair reflects :checked live so
+// the menu can stay open while several values are ticked before applying.
+.attribute-filter-option {
+  cursor: pointer;
+  margin-bottom: 0;
+
+  .attr-filter-check {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .attr-icon-checked { display: none; }
+  .attr-filter-check:checked ~ .attr-icon-unchecked { display: none; }
+  .attr-filter-check:checked ~ .attr-icon-checked { display: inline-block; }
+
+  .attr-filter-check:checked ~ .attribute-color-swatch {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 2px var(--bs-primary);
+  }
+}

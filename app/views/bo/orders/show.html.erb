@@ -1,21 +1,20 @@
 <% content_for :bo_main_content do%>
 
-<div class="container-fluid py-4">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-start mb-4">
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_orders_path(org_slug: @current_organisation.slug), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
       <div>
-        <h1 class="h3 mb-0"><%= t('bo.orders.show.title') %></h1>
-        <div class="text-muted">
+        <h1><%= t('bo.orders.show.title') %></h1>
+        <p>
           <span class="fw-bold text-dark"><%= @order.order_number %></span>
           <span class="ms-2"><%= @order.placed_at&.strftime("%B %d, %Y") || @order.created_at.strftime("%B %d, %Y") %></span>
-        </div>
+        </p>
       </div>
     </div>
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <% status_bg_class = case @order.status
          when 'completed' then 'bg-success'
          when 'in_process', 'processed' then 'bg-primary'
@@ -33,7 +32,10 @@
       <span class="badge <%= payment_bg_class %> rounded-pill px-3 py-2">
         <%= t('bo.orders.show.payment') %>: <%= t("bo.common.payment_statuses.#{@order.payment_status}") %>
       </span>
-      <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "btn btn-outline-primary" do %>
+      <%= link_to download_pdf_bo_order_path(org_slug: @current_organisation.slug, id: @order.id), class: "btn btn-outline-secondary", data: { turbo: false } do %>
+        <i class="fa-solid fa-file-pdf me-1"></i> PDF
+      <% end %>
+      <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: @order.id, **filter_params_hash), class: "btn btn-outline-primary" do %>
         <i class="fa-solid fa-pen-to-square me-1"></i> <%= t('bo.common.actions.edit') %>
       <% end %>
       <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: @order.id), method: :delete, form: { class: "d-inline" }, class: "btn btn-outline-danger", data: { turbo_confirm: t('bo.common.confirm.delete_order', number: @order.order_number) } do %>
@@ -41,7 +43,9 @@
       <% end %>
     </div>
   </div>
+</div>
 
+<div class="bo-page-body">
   <div class="row">
     <!-- Left Column -->
     <div class="col-lg-8">
@@ -70,6 +74,9 @@
                       <div><%= item.product.name %></div>
                       <% if item.product_variant.present? && item.product.variable? %>
                         <small class="text-primary"><%= item.product_variant.option_values_string %></small>
+                      <% end %>
+                      <% if item.note.present? %>
+                        <small class="d-block text-muted fst-italic"><i class="fa-solid fa-pen-to-square me-1"></i><%= item.note %></small>
                       <% end %>
                     </td>
                     <td class="text-muted">
@@ -136,6 +143,18 @@
               </div>
             <% end %>
 
+            <% if @order.promo_code_discount_amount_cents.present? && @order.promo_code_discount_amount_cents > 0 %>
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>
+                  <i class="fa-solid fa-ticket me-1"></i> <%= t('bo.orders.show.promo_code_discount') %>
+                  <% if @order.promo_code.present? %>
+                    <span class="font-monospace">(<%= @order.promo_code.code %>)</span>
+                  <% end %>
+                </span>
+                <span>-<%= humanized_money_with_symbol(@order.promo_code_discount) %></span>
+              </div>
+            <% end %>
+
             <div class="d-flex justify-content-between mb-2">
               <span class="text-muted"><%= t('bo.common.tax') %> (<%= (@current_organisation.tax_rate * 100).round(1) %>%)</span>
               <span><%= humanized_money_with_symbol(@order.tax_amount || @order.calculated_tax) %></span>
@@ -147,12 +166,33 @@
                   <span class="badge bg-secondary ms-1"><%= t('bo.orders.form.pickup') %></span>
                 <% end %>
               </span>
-              <span><%= humanized_money_with_symbol(@order.shipping_amount || @order.calculated_shipping) %></span>
+              <span>
+                <% if @order.shipping_pending? %>
+                  <span class="badge bg-warning-subtle text-warning-emphasis"><%= t('bo.orders.shipping.pending') %></span>
+                <% else %>
+                  <%= humanized_money_with_symbol(@order.effective_shipping) %>
+                <% end %>
+              </span>
             </div>
             <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-2">
-              <span><%= t('bo.common.total') %></span>
+              <span><%= @order.shipping_pending? ? t('bo.orders.shipping.total_without_shipping') : t('bo.common.total') %></span>
               <span><%= humanized_money_with_symbol(@order.grand_total) %></span>
             </div>
+
+            <%# The moment the parcel is packed is the moment the operator knows
+                the real cost, so the field lives here on the order rather than
+                behind the full edit form. %>
+            <% if policy(@order).set_shipping? && (@order.shipping_pending? || @current_organisation.shipping_calculated_on_dispatch?) %>
+              <%= form_with model: @order, url: set_shipping_bo_order_path(org_slug: @current_organisation.slug, id: @order.id), method: :patch, class: "mt-3 pt-3 border-top" do |f| %>
+                <label class="form-label small text-muted mb-1"><%= t('bo.orders.shipping.set_label') %></label>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text"><%= @current_organisation.currency_symbol %></span>
+                  <%= f.number_field :shipping_amount, value: @order.shipping_amount&.to_f, step: 0.01, min: 0, class: "form-control", placeholder: "0.00" %>
+                  <%= f.submit t('bo.common.actions.save'), class: "btn btn-outline-primary" %>
+                </div>
+                <div class="form-text small"><%= t('bo.orders.shipping.set_hint') %></div>
+              <% end %>
+            <% end %>
           </div>
         </div>
       </div>
@@ -237,6 +277,43 @@
             <div class="mb-2">
               <i class="fa-solid fa-phone text-muted me-2"></i>
               <span><%= @order.customer.contact_phone %></span>
+            </div>
+          <% end %>
+
+          <% placed_by = @order.placed_by %>
+          <% if placed_by.is_a?(Member) %>
+            <hr class="my-3">
+            <div class="mb-1">
+              <small class="text-muted"><%= t('bo.orders.show.placed_by') %></small>
+              <div>
+                <%= "#{placed_by.first_name} #{placed_by.last_name}".strip.presence || placed_by.email %>
+                <span class="badge bg-info ms-1" title="Encomenda colocada por um membro da equipa em nome do cliente">
+                  <i class="fa-solid fa-user-tie"></i> Vendedor
+                </span>
+              </div>
+              <small class="text-muted"><%= placed_by.email %></small>
+              <% if @order.sales_rep && @order.sales_rep.member_id != placed_by.id %>
+                <small class="text-muted d-block mt-1">Vendedor atribuído: <%= @order.sales_rep.display_name %></small>
+              <% end %>
+            </div>
+          <% elsif placed_by.is_a?(CustomerUser) %>
+            <hr class="my-3">
+            <div class="mb-1">
+              <small class="text-muted"><%= t('bo.orders.show.placed_by') %></small>
+              <div><%= placed_by.contact_name.presence || placed_by.email %></div>
+              <% if placed_by.contact_name.present? %>
+                <small class="text-muted"><%= placed_by.email %></small>
+              <% end %>
+            </div>
+          <% elsif @order.customer_user %>
+            <%# Fallback for legacy orders without placed_by set %>
+            <hr class="my-3">
+            <div class="mb-1">
+              <small class="text-muted"><%= t('bo.orders.show.placed_by') %></small>
+              <div><%= @order.customer_user.contact_name.presence || @order.customer_user.email %></div>
+              <% if @order.customer_user.contact_name.present? %>
+                <small class="text-muted"><%= @order.customer_user.email %></small>
+              <% end %>
             </div>
           <% end %>
 
@@ -346,3 +423,4 @@
 </div>
 
 <% end %>
+

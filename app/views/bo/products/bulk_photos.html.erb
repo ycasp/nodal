@@ -1,0 +1,110 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to add_products_bo_products_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+
+      <div class="rounded bg-info d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
+        <i class="fa-solid fa-images fa-lg"></i>
+      </div>
+
+      <div>
+        <h1><%= t('bo.products.bulk_photos.title') %></h1>
+        <span class="text-muted"><%= t('bo.products.bulk_photos.subtitle') %></span>
+      </div>
+    </div>
+    <div class="bo-page-actions">
+      <%= link_to add_products_bo_products_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
+        <%= t('bo.common.actions.cancel') %>
+      <% end %>
+      <button type="submit" form="bulk-photos-form" class="btn btn-primary">
+        <i class="fa-solid fa-upload"></i> <%= t('bo.products.bulk_photos.submit') %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+
+<%= form_with url: bulk_photos_process_bo_products_path(params[:org_slug]), method: :post, multipart: true, id: "bulk-photos-form", data: { controller: "import-form", turbo: false, import_form_all_skus_value: @all_skus.to_json } do %>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title mb-4"><%= t('bo.products.bulk_photos.upload_title') %></h5>
+
+        <div class="border border-2 border-dashed rounded p-5 text-center"
+             data-import-form-target="zipDropZone"
+             data-action="dragover->import-form#zipDragover dragenter->import-form#zipDragenter dragleave->import-form#zipDragleave drop->import-form#zipDrop">
+          <i class="fa-solid fa-images fa-3x text-muted mb-3"></i>
+          <p class="mb-2"><%= t('bo.products.bulk_photos.drag_drop') %></p>
+          <p class="text-muted mb-3"><%= t('bo.products.import.or') %></p>
+          <div class="d-flex justify-content-center gap-2">
+            <label class="btn btn-outline-primary">
+              <i class="fa-solid fa-file-zipper me-1"></i> ZIP
+              <input type="file" name="zip_file" accept=".zip" class="d-none"
+                     data-import-form-target="zipInput"
+                     data-action="change->import-form#zipSelected">
+            </label>
+            <label class="btn btn-outline-primary">
+              <i class="fa-solid fa-images me-1"></i> <%= t('bo.products.bulk_photos.select_images') %>
+              <input type="file" name="image_files[]" accept="image/jpeg,image/png,image/gif,image/webp" multiple class="d-none"
+                     data-import-form-target="imageInput"
+                     data-action="change->import-form#imagesSelected">
+            </label>
+          </div>
+          <p class="text-muted mt-3 mb-0" data-import-form-target="zipFileName"><%= t('bo.products.bulk_photos.hint') %></p>
+        </div>
+
+        <!-- Photo mode -->
+        <div class="d-none mt-3" data-import-form-target="photoModeSection">
+          <label class="form-label fw-semibold"><%= t('bo.products.bulk_photos.photo_mode_label') %></label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="photo_mode" value="append" id="photo_mode_append" checked>
+            <label class="form-check-label" for="photo_mode_append">
+              <i class="fa-solid fa-plus me-1"></i> <%= t('bo.products.bulk_photos.photo_mode_append') %>
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="photo_mode" value="replace" id="photo_mode_replace">
+            <label class="form-check-label" for="photo_mode_replace">
+              <i class="fa-solid fa-rotate me-1"></i> <%= t('bo.products.bulk_photos.photo_mode_replace') %>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3"><%= t('bo.products.bulk_photos.instructions_title') %></h5>
+        <p class="text-muted small"><%= t('bo.products.bulk_photos.instructions_desc') %></p>
+
+        <h6 class="mt-3"><%= t('bo.products.bulk_photos.naming_title') %></h6>
+        <ul class="small text-muted mb-0">
+          <li><code>SKU.jpg</code> — <%= t('bo.products.bulk_photos.naming_single') %></li>
+          <li><code>SKU-1.jpg</code>, <code>SKU-2.jpg</code> — <%= t('bo.products.bulk_photos.naming_multiple') %></li>
+        </ul>
+
+        <div class="alert alert-info small mt-3 mb-0">
+          <i class="fa-solid fa-info-circle me-1"></i>
+          <%= t('bo.products.bulk_photos.naming_hint') %>
+        </div>
+      </div>
+    </div>
+    <div data-import-form-target="photoWarnings"></div>
+  </div>
+</div>
+
+<% end %>
+
+</div>
+
+<% end %>

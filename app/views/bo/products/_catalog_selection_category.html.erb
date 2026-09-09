@@ -1,0 +1,50 @@
+<%# Recursive category node for the catalog content selection tree.
+    Renders the category's checkbox, its subcategories (recursively, unlimited depth),
+    and its direct products. Markup mirrors the flat two-level version it replaced so the
+    `catalog` Stimulus controller (toggleExpand/toggleCategory/toggleProduct) keeps working. %>
+<% category_products = category.products.where(organisation: current_organisation).order(:name) %>
+<% child_categories = category.children.kept.order(:name) %>
+<% has_children = child_categories.any? || category_products.any? %>
+<div class="border-bottom" data-catalog-role="category-row">
+  <div class="d-flex align-items-center px-3 py-2">
+    <% if has_children %>
+      <a href="#" class="text-muted me-2" data-action="click->catalog#toggleExpand" style="width: 16px;">
+        <i class="fa-solid fa-chevron-right small"></i>
+      </a>
+    <% else %>
+      <span style="width: 16px;" class="me-2"></span>
+    <% end %>
+    <input type="checkbox" class="form-check-input me-2 category-checkbox"
+           value="<%= category.id %>"
+           data-action="change->catalog#toggleCategory">
+    <i class="fa-solid fa-folder text-warning me-2"></i>
+    <span class="fw-medium"><%= category.name %></span>
+    <span class="badge bg-light text-muted ms-2"><%= category_products.count %></span>
+  </div>
+
+  <% if has_children %>
+    <div class="category-children d-none ps-4">
+      <%# Subcategories (recursive) %>
+      <% child_categories.each do |child| %>
+        <%= render 'bo/products/catalog_selection_category', category: child %>
+      <% end %>
+
+      <%# Direct products %>
+      <% category_products.each do |product| %>
+        <div class="border-top" data-catalog-role="product-row">
+          <div class="d-flex align-items-center px-3 py-1">
+            <span style="width: 16px;" class="me-2"></span>
+            <input type="checkbox" class="form-check-input me-2 product-checkbox"
+                   value="<%= product.id %>"
+                   data-action="change->catalog#toggleProduct">
+            <i class="fa-solid fa-cube text-muted me-2 small"></i>
+            <span class="small"><%= product.name %></span>
+            <% if product.sku.present? %>
+              <span class="ms-2 small text-muted font-monospace"><%= product.sku %></span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

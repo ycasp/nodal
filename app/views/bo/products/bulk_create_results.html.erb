@@ -1,0 +1,127 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <div class="rounded bg-success d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
+        <i class="fa-solid fa-check fa-lg"></i>
+      </div>
+
+      <div>
+        <h1><%= t('bo.products.bulk_create.results_title') %></h1>
+        <span class="text-muted"><%= t('bo.products.bulk_create.results_subtitle') %></span>
+      </div>
+    </div>
+
+    <%= link_to bo_products_path(params[:org_slug]), class: "btn btn-primary" do %>
+      <i class="fa-solid fa-arrow-left fa-lg"></i> <%= t('bo.products.bulk_create.back_to_products') %>
+    <% end %>
+  </div>
+</div>
+
+<div class="bo-page-body">
+
+<div class="row">
+  <div class="col mb-3">
+    <div class="card text-center h-100">
+      <div class="card-body">
+        <div class="display-4 text-success mb-2"><%= @result.products_created %></div>
+        <h5 class="card-title text-muted"><%= t('bo.products.bulk_create.products_created') %></h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col mb-3">
+    <div class="card text-center h-100">
+      <div class="card-body">
+        <div class="display-4 text-info mb-2"><%= @result.products_updated %></div>
+        <h5 class="card-title text-muted"><%= t('bo.products.bulk_create.products_updated') %></h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col mb-3">
+    <div class="card text-center h-100">
+      <div class="card-body">
+        <div class="display-4 text-primary mb-2"><%= @result.variants_created %></div>
+        <h5 class="card-title text-muted"><%= t('bo.products.bulk_create.variants_created') %></h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col mb-3">
+    <div class="card text-center h-100">
+      <div class="card-body">
+        <div class="display-4 text-secondary mb-2"><%= @result.attributes_created %></div>
+        <h5 class="card-title text-muted"><%= t('bo.products.bulk_create.attributes_created') %></h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col mb-3">
+    <div class="card text-center h-100">
+      <div class="card-body">
+        <div class="display-4 text-info mb-2"><%= @result.photos_attached %></div>
+        <h5 class="card-title text-muted"><%= t('bo.products.bulk_create.photos_attached') %></h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col mb-3">
+    <div class="card text-center h-100">
+      <div class="card-body">
+        <div class="display-4 <%= @result.errors.any? ? 'text-danger' : 'text-muted' %> mb-2"><%= @result.errors.size %></div>
+        <h5 class="card-title text-muted"><%= t('bo.products.bulk_create.errors_count') %></h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @result.errors.any? %>
+  <div class="card mt-3">
+    <div class="card-header bg-danger text-white">
+      <i class="fa-solid fa-exclamation-triangle me-2"></i>
+      <%= t('bo.products.bulk_create.errors_title') %>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 15%"><%= t('bo.products.bulk_create.row') %></th>
+              <th style="width: 20%"><%= t('bo.products.bulk_create.field') %></th>
+              <th style="width: 65%"><%= t('bo.products.bulk_create.error_message') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @result.errors.each do |error| %>
+              <tr>
+                <td><span class="badge bg-secondary"><%= t('bo.products.bulk_create.row') %> <%= error[:row] %></span></td>
+                <td><code><%= error[:field] || "-" %></code></td>
+                <td class="text-danger"><%= error[:message] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if @result.total > 0 %>
+  <div class="alert alert-success mt-4">
+    <i class="fa-solid fa-check-circle me-2"></i>
+    <%= t('bo.products.bulk_create.success_message', count: @result.total) %>
+  </div>
+<% end %>
+
+<% if @result.total == 0 && @result.errors.empty? %>
+  <div class="alert alert-warning mt-4">
+    <i class="fa-solid fa-exclamation-circle me-2"></i>
+    <%= t('bo.products.bulk_create.no_items_created') %>
+  </div>
+<% end %>
+
+</div>
+
+<% end %>

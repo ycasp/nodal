@@ -1,0 +1,21 @@
+<%# When the banner is on the page, push the storefront navbar down by the
+    banner's height so both stay visible during scroll instead of stacking
+    on top of each other at viewport top. %>
+<style>
+  .impersonation-banner { min-height: 48px; }
+  .impersonation-banner ~ header[style*="sticky"] { top: 48px !important; }
+</style>
+
+<div class="impersonation-banner py-2 px-3 d-flex align-items-center gap-3 sticky-top"
+     style="background: #b91c1c; color: white; z-index: 1100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-size: 0.9rem; top: 0;">
+  <i class="fa-solid fa-user-secret fa-lg"></i>
+  <div class="flex-grow-1">
+    <strong>A operar como: <%= impersonated_customer.company_name %></strong>
+  </div>
+  <%= button_to bo_impersonation_path(org_slug: current_organisation.slug),
+                method: :delete,
+                form: { class: "d-inline" },
+                class: "btn btn-sm btn-light" do %>
+    <i class="fa-solid fa-xmark me-1"></i> Sair
+  <% end %>
+</div>

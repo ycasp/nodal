@@ -217,7 +217,7 @@ namespace :import do
             sku: var_sku.presence,
             unit_price_cents: var_price,
             unit_price_currency: organisation.currency,
-            available: true,
+            published: true,
             is_default: false,
             organisation: organisation
           )
@@ -236,6 +236,30 @@ namespace :import do
         end
       end
     end
+
+    # Backfill product_available_values from actual variant data
+    puts "\nBackfilling product available values from variants..."
+    backfilled = 0
+    organisation.products.where(has_variants: true)
+       .includes(:product_attributes, :product_available_values, product_variants: :attribute_values)
+       .find_each do |product|
+      variant_value_ids = product.product_variants.select { |v| !v.is_default? && v.published? }
+                                 .flat_map { |v| v.attribute_values.map(&:id) }.uniq
+      existing_ids = product.product_available_values.pluck(:product_attribute_value_id)
+      missing_ids = variant_value_ids - existing_ids
+      next if missing_ids.empty?
+
+      ProductAttributeValue.where(id: missing_ids).includes(:product_attribute).each do |val|
+        attr = val.product_attribute
+        unless product.product_attributes.include?(attr)
+          product.product_product_attributes.create!(product_attribute: attr)
+          product.reload
+        end
+        product.product_available_values.create!(product_attribute_value: val)
+      end
+      backfilled += 1
+    end
+    puts "  Backfilled available values for #{backfilled} products"
 
     # Summary
     puts "\n" + "-" * 60

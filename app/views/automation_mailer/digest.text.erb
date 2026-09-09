@@ -1,0 +1,21 @@
+<%= @automation.name %>
+<%= @organisation.name %>
+<%= t("mailers.automation_mailer.digest.period",
+      from: l(@period.first.in_time_zone(@automation.time_zone), format: :short),
+      to:   l(@period.last.in_time_zone(@automation.time_zone), format: :short)) %>
+
+<% if @rows.empty? -%>
+<%= t("mailers.automation_mailer.digest.empty") %>
+<% else -%>
+<%= t("mailers.automation_mailer.digest.count", count: @rows.size) %>
+
+<% @rows.each do |row| -%>
+- <%= @columns.map { |c|
+        value = row[c[:key]]
+        value = l(value.in_time_zone(@automation.time_zone), format: :short) if value.is_a?(Time) || value.is_a?(ActiveSupport::TimeWithZone)
+        "#{c[:label]}: #{value.presence || '—'}"
+      }.join(" | ") %>
+<% end -%>
+<% end -%>
+
+<%= t("mailers.automation_mailer.digest.footer", organisation: @organisation.name) %>

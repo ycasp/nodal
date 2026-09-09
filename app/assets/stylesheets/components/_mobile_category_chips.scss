@@ -1,0 +1,150 @@
+// Mobile Category Chips
+// Horizontal scrollable pill navigation for categories on mobile
+
+.mobile-category-chips {
+  margin: 0 -0.75rem;
+  padding: 0.5rem 0;
+  overflow: hidden;
+  position: relative;
+
+  // Fade hint on right edge
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    background: linear-gradient(to right, transparent, #fff);
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.mobile-category-chips-track {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.25rem 0.75rem;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.mobile-category-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #444;
+  background: #f3f3f3;
+  border: 1.5px solid #c4bcbc;
+  transition: all 0.2s ease;
+  min-height: 38px;
+
+  &:hover,
+  &:active {
+    text-decoration: none;
+    color: #111;
+    background: #eaeaea;
+  }
+
+  &.active {
+    background: var(--org-primary, #008060);
+    color: #fff;
+    font-weight: 600;
+    border-color: var(--org-primary, #008060);
+  }
+
+  // Back button chip
+  &.back-chip {
+    background: transparent;
+    border-color: #ccc;
+    color: #666;
+
+    &:hover {
+      background: #f5f5f5;
+      color: #333;
+    }
+  }
+
+  // Campaign ("Campanhas") chip — distinct accent, owner-configurable later
+  // via the --campaign-color CSS variable (defaults to red).
+  &--campaign {
+    color: var(--campaign-color, #dc3545);
+    border-color: var(--campaign-color, #dc3545);
+    background: #fff;
+
+    &.active {
+      background: var(--campaign-color, #dc3545);
+      border-color: var(--campaign-color, #dc3545);
+      color: #fff;
+    }
+  }
+
+  // Non-clickable current-category label (context, not a button).
+  &--current {
+    background: transparent;
+    border-color: transparent;
+    color: #111;
+    font-weight: 700;
+    cursor: default;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+
+    &:hover {
+      background: transparent;
+      color: #111;
+    }
+  }
+
+}
+
+// Mobile campaign context bar — marks the "Campanhas" section (distinct from
+// the category chips) and offers a one-tap exit. Accent is owner-configurable
+// via --campaign-color.
+.campaign-context-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 0.25rem;
+  font-size: 0.82rem;
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    color: var(--campaign-color, #dc3545);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  &__crumb {
+    margin-left: 0.35rem;
+    color: #555;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__exit {
+    flex-shrink: 0;
+    color: #6c757d;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover { color: #333; }
+  }
+}

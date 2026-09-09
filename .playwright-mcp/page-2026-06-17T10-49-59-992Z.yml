@@ -1,0 +1,56 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "ActiveRecord::RecordNotFound in CustomerUsers::SessionsController#new" [level=1] [ref=e3]
+  - main [ref=e4]:
+    - generic [ref=e6]: ActiveRecord::RecordNotFound
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - text: Extracted source (around line
+        - strong [ref=e9]: "#36"
+        - text: "):"
+      - table [ref=e11]:
+        - rowgroup [ref=e12]:
+          - 'row "34 35 36 37 38 39 # whichever shape the form was submitted from. def set_organisation @organisation = current_organisation || raise (ActiveRecord::RecordNotFound) end # Inject organisation_id so Devise authenticates on [email, organisation_id]" [ref=e13]':
+            - cell "34 35 36 37 38 39" [ref=e14]:
+              - generic [ref=e15]: 34 35 36 37 38 39
+            - 'cell "# whichever shape the form was submitted from. def set_organisation @organisation = current_organisation || raise (ActiveRecord::RecordNotFound) end # Inject organisation_id so Devise authenticates on [email, organisation_id]" [ref=e16]':
+              - generic [ref=e17]:
+                - generic [ref=e18]: "# whichever shape the form was submitted from."
+                - generic [ref=e19]: def set_organisation
+                - generic [ref=e20]:
+                  - text: "@organisation = current_organisation ||"
+                  - generic [ref=e21]: raise
+                  - text: (ActiveRecord::RecordNotFound)
+                - generic [ref=e22]: end
+                - generic [ref=e24]: "# Inject organisation_id so Devise authenticates on [email, organisation_id]"
+    - paragraph [ref=e25]:
+      - code [ref=e26]: "Rails.root: /Users/pedrolopescunha/code/PedroLopesCunha/nodal"
+    - generic [ref=e27]:
+      - link "Application Trace" [ref=e28] [cursor=pointer]:
+        - /url: "#"
+      - text: "|"
+      - link "Framework Trace" [ref=e29] [cursor=pointer]:
+        - /url: "#"
+      - text: "|"
+      - link "Full Trace" [ref=e30] [cursor=pointer]:
+        - /url: "#"
+      - code [ref=e32]:
+        - 'link "app/controllers/customer_users/sessions_controller.rb:36:in `set_organisation''" [ref=e33] [cursor=pointer]':
+          - /url: "#"
+        - 'link "app/middleware/block_bot_user_agents.rb:22:in `call''" [ref=e34] [cursor=pointer]':
+          - /url: "#"
+    - heading "Request" [level=2] [ref=e35]
+    - paragraph [ref=e36]: "Parameters:"
+    - generic [ref=e37]: "{\"org_slug\"=>\"perestrelo-cunha\"}"
+    - link "Toggle session dump" [ref=e40] [cursor=pointer]:
+      - /url: "#"
+    - link "Toggle env dump" [ref=e43] [cursor=pointer]:
+      - /url: "#"
+    - heading "Response" [level=2] [ref=e44]
+    - paragraph [ref=e45]: "Headers:"
+    - generic [ref=e46]: None
+  - generic [ref=e47]:
+    - generic [ref=e49]:
+      - generic "close" [ref=e51] [cursor=pointer]: x
+      - generic [ref=e53]: ">>"
+    - textbox [ref=e55]

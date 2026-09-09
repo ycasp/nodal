@@ -62,12 +62,20 @@
             <td><%= discount.product.name %></td>
             <td><%= humanized_money_with_symbol(discount.product.price) %></td>
             <td>
-              <% custom_price = discount.product.price * (1 - discount.discount_percentage) %>
+              <% if discount.percentage? %>
+                <% custom_price = discount.product.price * (1 - discount.discount_value) %>
+              <% else %>
+                <% custom_price = [discount.product.price - Money.new((discount.discount_value * 100).to_i, discount.product.price.currency), Money.new(0, discount.product.price.currency)].max %>
+              <% end %>
               <%= humanized_money_with_symbol(custom_price) %>
             </td>
             <td>
               <span class="badge rounded-pill bg-success-subtle text-success">
-                -<%= number_to_percentage(discount.discount_percentage * 100, precision: 1) %>
+                <% if discount.percentage? %>
+                  -<%= number_to_percentage(discount.discount_value * 100, precision: 1) %>
+                <% else %>
+                  -<%= humanized_money_with_symbol(Money.new((discount.discount_value * 100).to_i, discount.product.price.currency)) %>
+                <% end %>
               </span>
             </td>
             <td><%= discount.valid_from.strftime("%Y-%m-%d") %></td>

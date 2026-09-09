@@ -1,27 +1,76 @@
 <nav class="bo-navbar">
-  <!-- Hamburger menu - only visible when sidebar is collapsed -->
-  <div class="bo-collapsed-menu dropdown">
+  <!-- Hamburger menu - visible when sidebar is collapsed / on mobile -->
+  <div class="bo-collapsed-menu dropdown d-md-none d-flex align-items-center">
     <button class="bo-collapsed-menu-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
       <i class="fa-solid fa-bars"></i>
     </button>
-    <ul class="dropdown-menu dropdown-menu-dark">
-      <li><%= link_to bo_path, class: "dropdown-item" do %><i class="fa-solid fa-chart-line me-2"></i><%= t('bo.sidebar.dashboard') %><% end %></li>
-      <li><%= link_to bo_customers_path, class: "dropdown-item" do %><i class="fa-solid fa-users me-2"></i><%= t('bo.sidebar.customers') %><% end %></li>
-      <li><%= link_to bo_products_path, class: "dropdown-item" do %><i class="fa-solid fa-box me-2"></i><%= t('bo.sidebar.products') %><% end %></li>
+    <span class="d-md-none ms-2 fw-semibold small" style="white-space: nowrap;"><%= @current_organisation.name %></span>
+    <ul class="dropdown-menu dropdown-menu-dark" style="max-height: 80vh; overflow-y: auto;">
+      <% unless pure_sales_rep? %>
+        <li><%= link_to bo_path, class: "dropdown-item" do %><i class="fa-solid fa-chart-line me-2"></i><%= t('bo.sidebar.dashboard') %><% end %></li>
+        <li><%= link_to bo_customers_path, class: "dropdown-item" do %><i class="fa-solid fa-users me-2"></i><%= t('bo.sidebar.customers') %><% end %></li>
+      <% end %>
+      <% if sales_rep_capability? %>
+        <li><%= link_to bo_sales_rep_carteira_path, class: "dropdown-item" do %><i class="fa-solid fa-briefcase me-2"></i>A minha carteira<% end %></li>
+        <li><%= link_to bo_sales_rep_catalog_path, class: "dropdown-item" do %><i class="fa-solid fa-file-pdf me-2"></i>Gerar catálogo<% end %></li>
+      <% end %>
+      <% unless pure_sales_rep? %>
+        <li><%= link_to bo_products_path, class: "dropdown-item" do %><i class="fa-solid fa-box me-2"></i><%= t('bo.sidebar.products') %><% end %></li>
+        <li><%= link_to bo_categories_path, class: "dropdown-item" do %><i class="fa-solid fa-folder-tree me-2"></i><%= t('bo.sidebar.categories') %><% end %></li>
+        <li><%= link_to bo_product_attributes_path, class: "dropdown-item" do %><i class="fa-solid fa-tags me-2"></i><%= t('bo.sidebar.attributes') %><% end %></li>
+      <% end %>
       <li><%= link_to bo_orders_path, class: "dropdown-item" do %><i class="fa-solid fa-clipboard-list me-2"></i><%= t('bo.sidebar.orders') %><% end %></li>
-      <li><%= link_to bo_customer_product_discounts_path, class: "dropdown-item" do %><i class="fa-solid fa-percent me-2"></i><%= t('bo.sidebar.pricing') %><% end %></li>
+      <% unless pure_sales_rep? %>
+        <li>
+          <%= link_to bo_unmet_demands_path, class: "dropdown-item" do %>
+            <i class="fa-solid fa-cart-flatbed-suitcase me-2"></i><%= t('bo.sidebar.unmet_demands') %>
+            <% if @open_unmet_demands_count && @open_unmet_demands_count > 0 %>
+              <span class="badge rounded-pill bg-warning text-dark ms-2" title="<%= t('bo.unmet_demands.badge_title') %>"><%= @open_unmet_demands_count %></span>
+            <% end %>
+          <% end %>
+        </li>
+        <li><%= link_to bo_pricing_path, class: "dropdown-item" do %><i class="fa-solid fa-tag me-2"></i><%= t('bo.sidebar.pricing') %><% end %></li>
+      <% end %>
       <li><hr class="dropdown-divider"></li>
-      <li><%= link_to edit_bo_profile_path, class: "dropdown-item" do %><i class="fa-solid fa-circle-user me-2"></i><%= t('bo.sidebar.profile') %><% end %></li>
-      <li><%= link_to bo_team_members_path, class: "dropdown-item" do %><i class="fa-solid fa-users-gear me-2"></i><%= t('bo.sidebar.team') %><% end %></li>
+      <li>
+        <%= link_to home_path(org_slug: params[:org_slug]), class: "dropdown-item", target: "_blank" do %>
+          <i class="fa-solid fa-store me-2"></i><%= t('bo.sidebar.view_store') %>
+          <i class="fa-solid fa-arrow-up-right-from-square ms-1 small text-muted"></i>
+        <% end %>
+      </li>
+      <% unless pure_sales_rep? %>
+        <li><%= link_to bo_team_members_path, class: "dropdown-item" do %><i class="fa-solid fa-users-gear me-2"></i><%= t('bo.sidebar.team') %><% end %></li>
+      <% end %>
       <% if admin_or_owner? %>
         <li><%= link_to edit_bo_settings_path, class: "dropdown-item" do %><i class="fa-solid fa-gear me-2"></i><%= t('bo.sidebar.settings') %><% end %></li>
       <% end %>
+      <% if pure_sales_rep? %>
+        <li><%= link_to edit_bo_team_member_path(id: current_org_member.id), class: "dropdown-item" do %><i class="fa-solid fa-user me-2"></i>Meu perfil<% end %></li>
+      <% end %>
+      <%# Mobile-only: language links %>
+      <li class="d-md-none"><hr class="dropdown-divider"></li>
+      <li class="d-md-none">
+        <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'en'), data: { turbo_method: :patch }, class: "dropdown-item #{'active' if I18n.locale == :en}" do %>
+          <i class="fa-solid fa-globe me-2"></i>English
+        <% end %>
+      </li>
+      <li class="d-md-none">
+        <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'pt'), data: { turbo_method: :patch }, class: "dropdown-item #{'active' if I18n.locale == :pt}" do %>
+          <i class="fa-solid fa-globe me-2"></i>Português
+        <% end %>
+      </li>
+      <li class="d-md-none">
+        <%= link_to update_locale_path(org_slug: params[:org_slug], locale: 'es'), data: { turbo_method: :patch }, class: "dropdown-item #{'active' if I18n.locale == :es}" do %>
+          <i class="fa-solid fa-globe me-2"></i>Español
+        <% end %>
+      </li>
+      <li><hr class="dropdown-divider"></li>
       <li><%= link_to destroy_member_session_path, data: { turbo_method: :delete }, class: "dropdown-item" do %><i class="fa-solid fa-right-from-bracket me-2"></i><%= t('bo.sidebar.log_out') %><% end %></li>
     </ul>
   </div>
 
   <div class="bo-navbar-content justify-content-end">
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-none d-md-flex align-items-center gap-3">
       <span class="text-muted">
         <i class="fa-regular fa-building"></i>
         <%= @current_organisation.name %>

@@ -109,6 +109,12 @@ export default class extends Controller {
     const valueEl = card.querySelector('.kpi__value')
     if (valueEl) valueEl.textContent = openCarts.value
 
+    const deltaEl = card.querySelector('.kpi__delta')
+    if (deltaEl && openCarts.total_value !== undefined) {
+      deltaEl.textContent = this.formatValue(openCarts.total_value, 'currency')
+      deltaEl.className = 'kpi__delta'
+    }
+
     const listEl = card.querySelector('.kpi__carts-list')
     if (listEl && openCarts.top_carts) {
       listEl.innerHTML = openCarts.top_carts.slice(0, 3).map(cart => `

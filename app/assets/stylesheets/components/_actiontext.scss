@@ -1,0 +1,58 @@
+// ActionText / Trix editor styles
+trix-editor {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  min-height: 200px;
+
+  &:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+}
+
+// Trix toolbar styling to match Bootstrap
+trix-toolbar {
+  .trix-button-row {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  .trix-button-group {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    margin-bottom: 4px;
+
+    .trix-button {
+      border: none;
+      border-bottom: none;
+      padding: 0.3rem 0.5rem;
+
+      &:not(:first-child) {
+        border-left: 1px solid #dee2e6;
+      }
+
+      &.trix-active {
+        background-color: #e9ecef;
+      }
+    }
+  }
+}
+
+// Content display styles
+.trix-content {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+
+  ul, ol {
+    padding-left: 1.5rem;
+  }
+
+  blockquote {
+    border-left: 3px solid #dee2e6;
+    padding-left: 1rem;
+    color: #6c757d;
+  }
+}

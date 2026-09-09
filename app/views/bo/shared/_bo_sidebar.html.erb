@@ -1,55 +1,91 @@
 <aside class="bo-sidebar" data-controller="sidebar-toggle">
   <!-- Logo Header - Integrated with navbar -->
   <div class="bo-sidebar-header">
-    <%= link_to bo_path, class: "bo-logo-link" do %>
+    <%# Pure reps land on carteira instead of the org dashboard. %>
+    <%= link_to (pure_sales_rep? ? bo_sales_rep_carteira_path : bo_path), class: "bo-logo-link" do %>
       <div class="bo-logo-icon">N</div>
       <span class="bo-logo-text">odal</span>
     <% end %>
   </div>
 
   <ul class="bo-sidebar-nav">
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'dashboard' %>">
-      <%= link_to bo_path do %>
-        <i class="fa-solid fa-chart-line"></i>
-        <span><%= t('bo.sidebar.dashboard') %></span>
-      <% end %>
-    </li>
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'customers' %>">
-      <%= link_to bo_customers_path do %>
-        <i class="fa-solid fa-users"></i>
-        <span><%= t('bo.sidebar.customers') %></span>
-      <% end %>
-    </li>
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'products' %>">
-      <%= link_to bo_products_path do %>
-        <i class="fa-solid fa-box"></i>
-        <span><%= t('bo.sidebar.products') %></span>
-      <% end %>
-    </li>
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'categories' %>">
-      <%= link_to bo_categories_path do %>
-        <i class="fa-solid fa-folder-tree"></i>
-        <span><%= t('bo.sidebar.categories') %></span>
-      <% end %>
-    </li>
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'product_attributes' %>">
-      <%= link_to bo_product_attributes_path do %>
-        <i class="fa-solid fa-tags"></i>
-        <span><%= t('bo.sidebar.attributes') %></span>
-      <% end %>
-    </li>
+    <% unless pure_sales_rep? %>
+      <li class="bo-sidebar-item <%= 'active' if controller_name.in?(%w[dashboards analytics]) %>">
+        <%= link_to bo_path do %>
+          <i class="fa-solid fa-chart-line"></i>
+          <span><%= t('bo.sidebar.dashboard') %></span>
+        <% end %>
+      </li>
+      <li class="bo-sidebar-item <%= 'active' if controller_name.in?(%w[customers customer_categories]) %>">
+        <%= link_to bo_customers_path do %>
+          <i class="fa-solid fa-users"></i>
+          <span><%= t('bo.sidebar.customers') %></span>
+          <% if @pending_erp_sync_count && @pending_erp_sync_count > 0 %>
+            <span class="badge rounded-pill bg-danger ms-auto" title="Clientes por sincronizar com ERP"><%= @pending_erp_sync_count %></span>
+          <% end %>
+        <% end %>
+      </li>
+    <% end %>
+    <% if sales_rep_capability? %>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'carteira' %>">
+        <%= link_to bo_sales_rep_carteira_path do %>
+          <i class="fa-solid fa-briefcase"></i>
+          <span>A minha carteira</span>
+        <% end %>
+      </li>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'catalog' %>">
+        <%= link_to bo_sales_rep_catalog_path do %>
+          <i class="fa-solid fa-file-pdf"></i>
+          <span>Gerar catálogo</span>
+        <% end %>
+      </li>
+    <% end %>
+    <% unless pure_sales_rep? %>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'products' %>">
+        <%= link_to bo_products_path do %>
+          <i class="fa-solid fa-box"></i>
+          <span><%= t('bo.sidebar.products') %></span>
+        <% end %>
+      </li>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'categories' %>">
+        <%= link_to bo_categories_path do %>
+          <i class="fa-solid fa-folder-tree"></i>
+          <span><%= t('bo.sidebar.categories') %></span>
+        <% end %>
+      </li>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'product_attributes' %>">
+        <%= link_to bo_product_attributes_path do %>
+          <i class="fa-solid fa-tags"></i>
+          <span><%= t('bo.sidebar.attributes') %></span>
+        <% end %>
+      </li>
+    <% end %>
     <li class="bo-sidebar-item <%= 'active' if controller_name == 'orders' %>">
       <%= link_to bo_orders_path do %>
         <i class="fa-solid fa-clipboard-list"></i>
         <span><%= t('bo.sidebar.orders') %></span>
+        <% if @unreviewed_orders_count && @unreviewed_orders_count > 0 %>
+          <span class="badge rounded-pill bg-danger ms-auto"><%= @unreviewed_orders_count %></span>
+        <% end %>
       <% end %>
     </li>
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'pricing' || controller_name == 'customer_product_discounts' || controller_name == 'product_discounts' || controller_name == 'customer_discounts' %>">
-      <%= link_to bo_pricing_path do %>
-        <i class="fa-solid fa-tag"></i>
-        <span><%= t('bo.sidebar.pricing') %></span>
-      <% end %>
-    </li>
+    <% unless pure_sales_rep? %>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'unmet_demands' %>">
+        <%= link_to bo_unmet_demands_path do %>
+          <i class="fa-solid fa-cart-flatbed-suitcase"></i>
+          <span><%= t('bo.sidebar.unmet_demands') %></span>
+          <% if @open_unmet_demands_count && @open_unmet_demands_count > 0 %>
+            <span class="badge rounded-pill bg-warning text-dark ms-auto" title="<%= t('bo.unmet_demands.badge_title') %>"><%= @open_unmet_demands_count %></span>
+          <% end %>
+        <% end %>
+      </li>
+      <li class="bo-sidebar-item <%= 'active' if controller_name.in?(%w[pricing customer_product_discounts product_discounts customer_discounts order_discounts promo_codes]) %>">
+        <%= link_to bo_pricing_path do %>
+          <i class="fa-solid fa-tag"></i>
+          <span><%= t('bo.sidebar.pricing') %></span>
+        <% end %>
+      </li>
+    <% end %>
   </ul>
 
   <!-- Bottom Navigation -->
@@ -57,33 +93,35 @@
     <li class="bo-sidebar-item bo-sidebar-storefront">
       <%= link_to products_path(org_slug: current_organisation.slug), target: "_blank" do %>
         <i class="fa-solid fa-store"></i>
-        <span><%= t('bo.sidebar.view_storefront', default: 'View Storefront') %></span>
-        <i class="fa-solid fa-external-link-alt ms-auto" style="font-size: 0.7rem; opacity: 0.6;"></i>
+        <span><%= t('bo.sidebar.view_storefront', default: 'View Storefront') %> <i class="fa-solid fa-external-link-alt ms-1" style="font-size: 0.7rem; opacity: 0.6;"></i></span>
       <% end %>
     </li>
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'profiles' %>">
-      <%= link_to edit_bo_profile_path do %>
-        <i class="fa-solid fa-circle-user"></i>
-        <span><%= t('bo.sidebar.profile') %></span>
-      <% end %>
-    </li>
-    <li class="bo-sidebar-item <%= 'active' if controller_name == 'team_members' %>">
-      <%= link_to bo_team_members_path do %>
-        <i class="fa-solid fa-users-gear"></i>
-        <span><%= t('bo.sidebar.team') %></span>
-      <% end %>
-    </li>
+    <% unless pure_sales_rep? %>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'team_members' %>">
+        <%= link_to bo_team_members_path do %>
+          <i class="fa-solid fa-users-gear"></i>
+          <span><%= t('bo.sidebar.team') %></span>
+        <% end %>
+      </li>
+    <% end %>
     <% if admin_or_owner? %>
-      <li class="bo-sidebar-item <%= 'active' if controller_name == 'settings' %>">
+      <li class="bo-sidebar-item <%= 'active' if controller_name.in?(%w[settings erp_settings homepage_settings email_settings background_tasks]) %>">
         <%= link_to edit_bo_settings_path do %>
           <i class="fa-solid fa-gear"></i>
           <span><%= t('bo.sidebar.settings') %></span>
+          <% if @unseen_tasks_count && @unseen_tasks_count > 0 %>
+            <span class="badge rounded-pill bg-primary ms-auto"><%= @unseen_tasks_count %></span>
+          <% end %>
         <% end %>
       </li>
-      <li class="bo-sidebar-item <%= 'active' if controller_name == 'erp_settings' %>">
-        <%= link_to edit_bo_erp_settings_path do %>
-          <i class="fa-solid fa-plug"></i>
-          <span><%= t('bo.sidebar.erp_integration', default: 'ERP Integration') %></span>
+    <% end %>
+    <% if pure_sales_rep? %>
+      <%# Pure reps still need to access their own profile to update name/password
+          and toggle is_sales_rep — wire the existing self-edit page. %>
+      <li class="bo-sidebar-item <%= 'active' if controller_name == 'team_members' %>">
+        <%= link_to edit_bo_team_member_path(id: current_org_member.id) do %>
+          <i class="fa-solid fa-user"></i>
+          <span>Meu perfil</span>
         <% end %>
       </li>
     <% end %>

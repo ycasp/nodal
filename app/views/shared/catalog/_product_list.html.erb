@@ -1,0 +1,89 @@
+<% show_barcode = local_assigns.fetch(:show_barcode, false) %>
+<div class="product-list-item">
+  <% if image_map[product.id] %>
+    <img src="<%= image_map[product.id] %>" class="product-list-img" />
+  <% elsif product.photo_attached? && !defined?(@image_map) %>
+    <%= image_tag polymorphic_url(product.photo.variant(resize_to_fill: [120, 120]), host: @catalog_host), class: "product-list-img" %>
+  <% else %>
+    <div class="product-list-placeholder">&#128247;</div>
+  <% end %>
+  <div class="product-list-info">
+    <div class="product-list-name"><%= product.name %></div>
+    <% if show_sku && product.sku.present? %>
+      <div class="product-list-sku">SKU: <%= product.sku %></div>
+    <% end %>
+    <% if show_description && product.description.present? %>
+      <div class="product-list-description"><%= product.description %></div>
+    <% end %>
+    <% if !product.has_variants? && defined?(card_attributes) && card_attributes.present? %>
+      <% attr_data = card_attribute_data&.fetch(product.id, nil) %>
+      <% if attr_data.present? %>
+        <div class="product-list-attributes">
+          <% card_attributes.each do |attr| %>
+            <% values = attr_data[attr] %>
+            <% next if values.blank? %>
+            <div class="product-list-attribute">
+              <span class="attr-name"><%= attr.name %>:</span>
+              <span class="attr-value"><%= values.map(&:value).uniq.join(', ') %></span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+    <% if show_variants && product.has_variants? %>
+      <% variants = product.product_variants.reject(&:is_default?).select(&:published?).sort_by(&:natural_sort_key) %>
+      <% variants = variants.select(&:available?) if only_available_variants %>
+      <% if variants.any? %>
+        <table class="variant-table">
+          <thead>
+            <tr>
+              <% if show_variant_photo %><th></th><% end %>
+              <th><%= t('bo.catalog.pdf.variant') %></th>
+              <% if show_variant_sku %><th>SKU</th><% end %>
+              <% if show_variant_price %><th class="text-end"><%= t('bo.catalog.pdf.price_label') %></th><% end %>
+              <% if show_barcode %><th class="barcode-cell"><%= t('bo.catalog.pdf.barcode_label') %></th><% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% variants.each do |variant| %>
+              <tr>
+                <% if show_variant_photo %>
+                  <td style="width: 24px;">
+                    <% variant_img = image_map["variant_#{variant.id}"] rescue nil %>
+                    <% if variant_img %>
+                      <img src="<%= variant_img %>" class="variant-thumb" />
+                    <% elsif variant.photo.attached? && !defined?(@image_map) %>
+                      <%= image_tag polymorphic_url(variant.photo.variant(resize_to_fill: [20, 20]), host: @catalog_host), class: "variant-thumb" %>
+                    <% end %>
+                  </td>
+                <% end %>
+                <td><%= variant.option_values_string.presence || variant.name %></td>
+                <% if show_variant_sku %><td class="sku-code"><%= variant.sku %></td><% end %>
+                <% if show_variant_price %><td class="text-end fw-bold"><%= variant.price&.format %></td><% end %>
+                <% if show_barcode %>
+                  <td class="barcode-cell">
+                    <% if variant.sku.present? && (svg = catalog_barcode_svg(variant.sku)) %>
+                      <span class="barcode"><%= svg %></span>
+                    <% end %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    <% end %>
+    <% if show_barcode && !product.has_variants? && product.sku.present? && (svg = catalog_barcode_svg(product.sku)) %>
+      <div class="product-barcode"><span class="barcode"><%= svg %></span></div>
+    <% end %>
+  </div>
+  <% if show_prices && !product.has_variants? %>
+    <div class="product-list-price">
+      <% if product.price_on_request? %>
+        <span class="product-card-price-request"><%= t('bo.catalog.pdf.price_on_request') %></span>
+      <% else %>
+        <%= product.display_price %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

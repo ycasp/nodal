@@ -1,0 +1,182 @@
+label: "Equipamento de Proteção Individual"
+emoji: "🦺"
+
+categories:
+  - name: "Proteção da Cabeça"
+    slug: "protecao-cabeca"
+    description: "Capacetes, óculos e protetores auriculares de segurança"
+    color: "#F57F17"
+
+  - name: "Proteção das Mãos"
+    slug: "protecao-maos"
+    description: "Luvas de proteção mecânica, química e térmica"
+    color: "#1565C0"
+
+  - name: "Proteção Corporal"
+    slug: "protecao-corporal"
+    description: "Fatos, coletes e vestuário de alta visibilidade"
+    color: "#E65100"
+
+  - name: "Proteção dos Pés"
+    slug: "protecao-pes"
+    description: "Botas e sapatos de segurança com biqueira de aço"
+    color: "#4E342E"
+
+products:
+  - name: "Capacete de Segurança ABS"
+    category: "Proteção da Cabeça"
+    sku: "EP-CAP-ABS"
+    price: 890
+    unit: "un"
+    min_qty: 10
+    stock: 500
+    description: "Capacete de segurança em ABS. Ajustável com roda. Norma EN 397."
+
+  - name: "Óculos de Proteção Transparentes"
+    category: "Proteção da Cabeça"
+    sku: "EP-OCU-TRA"
+    price: 290
+    unit: "un"
+    min_qty: 20
+    stock: 800
+    description: "Óculos de proteção com lente transparente anti-risco. EN 166."
+
+  - name: "Protetor Auricular de Inserção"
+    category: "Proteção da Cabeça"
+    sku: "EP-PRO-AUR"
+    price: 45
+    unit: "par"
+    min_qty: 100
+    stock: 5000
+    description: "Tampões auriculares descartáveis SNR 37dB. Embalagem individual."
+
+  - name: "Luva de Nitrilo Descartável"
+    category: "Proteção das Mãos"
+    sku: "EP-LUV-NIT"
+    price: 690
+    unit: "caixa 100un"
+    min_qty: 10
+    stock: 1000
+    description: "Luvas de nitrilo sem pó. Caixa de 100 unidades. Azul."
+
+  - name: "Luva Anti-Corte Nível 5"
+    category: "Proteção das Mãos"
+    sku: "EP-LUV-COR"
+    price: 590
+    unit: "par"
+    min_qty: 20
+    stock: 600
+    description: "Luva com fibra HPPE, resistência corte nível 5. EN 388."
+
+  - name: "Luva Térmica até 250°C"
+    category: "Proteção das Mãos"
+    sku: "EP-LUV-TER"
+    price: 1290
+    unit: "par"
+    min_qty: 10
+    stock: 300
+    description: "Luva de proteção térmica para contacto até 250°C. EN 407."
+
+  - name: "Colete Alta Visibilidade"
+    category: "Proteção Corporal"
+    sku: "EP-COL-AVI"
+    price: 390
+    unit: "un"
+    min_qty: 20
+    stock: 800
+    description: "Colete refletor classe 2. Amarelo fluorescente. EN ISO 20471."
+
+  - name: "Fato de Macaco Descartável"
+    category: "Proteção Corporal"
+    sku: "EP-FAT-DES"
+    price: 290
+    unit: "un"
+    min_qty: 50
+    stock: 2000
+    description: "Fato descartável tipo 5/6, branco, com capuz. Proteção contra partículas."
+
+  - name: "Arnês Anti-Queda"
+    category: "Proteção Corporal"
+    sku: "EP-ARN-QUE"
+    price: 4590
+    unit: "un"
+    min_qty: 5
+    stock: 100
+    description: "Arnês de corpo inteiro com 2 pontos de ancoragem. EN 361."
+
+  - name: "Máscara FFP2 NR"
+    category: "Proteção da Cabeça"
+    sku: "EP-MAS-FF2"
+    price: 65
+    unit: "un"
+    min_qty: 100
+    stock: 10000
+    description: "Máscara FFP2 não reutilizável com válvula. Proteção contra partículas finas."
+
+variant_products:
+  - name: "Bota de Segurança S3"
+    category: "Proteção dos Pés"
+    sku: "EP-BOT-S3"
+    unit: "par"
+    min_qty: 5
+    attribute: "Tamanho"
+    description: "Bota de segurança S3 em pele. Biqueira e palmilha de aço. Sola antiderrapante."
+    variants:
+      - name: "38-40"
+        sku_suffix: "P"
+        price: 3490
+        stock: 150
+      - name: "41-43"
+        sku_suffix: "M"
+        price: 3490
+        stock: 250
+      - name: "44-46"
+        sku_suffix: "G"
+        price: 3690
+        stock: 150
+
+  - name: "Sapato de Segurança S1P"
+    category: "Proteção dos Pés"
+    sku: "EP-SAP-S1P"
+    unit: "par"
+    min_qty: 5
+    attribute: "Tamanho"
+    description: "Sapato leve S1P com biqueira compósita. Ideal para indústria ligeira e armazéns."
+    variants:
+      - name: "38-40"
+        sku_suffix: "P"
+        price: 2490
+        stock: 200
+      - name: "41-43"
+        sku_suffix: "M"
+        price: 2490
+        stock: 300
+      - name: "44-46"
+        sku_suffix: "G"
+        price: 2690
+        stock: 150
+
+  - name: "Luva de Trabalho Mecânica"
+    category: "Proteção das Mãos"
+    sku: "EP-LUV-MEC"
+    unit: "par"
+    min_qty: 20
+    attribute: "Tamanho"
+    description: "Luva de trabalho com palma em nitrilo e dorso ventilado. EN 388."
+    variants:
+      - name: "S (7)"
+        sku_suffix: "S"
+        price: 390
+        stock: 400
+      - name: "M (8)"
+        sku_suffix: "M"
+        price: 390
+        stock: 500
+      - name: "L (9)"
+        sku_suffix: "L"
+        price: 390
+        stock: 500
+      - name: "XL (10)"
+        sku_suffix: "XL"
+        price: 420
+        stock: 300

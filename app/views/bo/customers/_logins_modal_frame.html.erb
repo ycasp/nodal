@@ -1,0 +1,162 @@
+<%# locals: customer, customer_users, new_customer_user
+   Inner content for the manage-logins modal. Mirrors the layout of the
+   Logins section on the customer show page (same columns + actions) but
+   keeps Nome / Email / Telemóvel editable inline via the inline-edit
+   Stimulus controller. Rendered standalone after a Turbo Stream update
+   when a new login is created. %>
+<%
+  org_slug = current_organisation.slug
+%>
+<% if customer_users.any? %>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th><%= t("bo.customer_users.table.name") %></th>
+          <th><%= t("bo.customer_users.table.email") %></th>
+          <th><%= t("bo.customer_users.form.contact_phone") %></th>
+          <th><%= t("bo.customer_users.table.status") %></th>
+          <th><%= t("bo.customer_users.table.last_sign_in") %></th>
+          <th class="text-end" style="min-width: 160px;"><%= t("bo.customer_users.table.actions") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% customer_users.each do |cu| %>
+          <%
+            badge_class = case cu.invitation_status
+                          when :active   then "bg-success-subtle text-success"
+                          when :pending  then "bg-info-subtle text-info"
+                          when :inactive then "bg-secondary-subtle text-secondary"
+                          else "bg-secondary-subtle text-secondary"
+                          end
+            update_url     = bo_customer_customer_user_path(org_slug: org_slug, customer_id: customer.id, id: cu.id)
+            email_editable = cu.invitation_status == :not_invited
+            qa_state = quick_access_state(cu)
+            qa_class = { active_token: "text-success", revoked_or_expired: "text-warning", no_token: "text-muted", unavailable: "text-muted opacity-25" }[qa_state]
+            qa_title = t("bo.customer_users.actions.quick_access_#{qa_state}")
+          %>
+          <tr data-controller="inline-edit"
+              data-inline-edit-url-value="<%= update_url %>"
+              data-inline-edit-saved-text-value="<%= t("bo.customer_users.manage_modal.saved") %>"
+              data-inline-edit-error-text-value="<%= t("bo.customer_users.manage_modal.save_error") %>">
+            <td style="min-width: 130px;">
+              <input type="text"
+                     class="form-control form-control-sm"
+                     value="<%= cu.contact_name %>"
+                     data-inline-edit-target="field"
+                     data-field="contact_name"
+                     data-action="blur->inline-edit#save">
+            </td>
+            <td style="min-width: 200px;">
+              <input type="email"
+                     class="form-control form-control-sm <%= 'bg-light' unless email_editable %>"
+                     value="<%= cu.email %>"
+                     <% if email_editable %>
+                       data-inline-edit-target="field"
+                       data-field="email"
+                       data-action="blur->inline-edit#save"
+                     <% else %>
+                       readonly
+                       title="<%= t("bo.customer_users.manage_modal.email_readonly_hint") %>"
+                     <% end %>>
+            </td>
+            <td style="min-width: 130px;">
+              <input type="tel"
+                     class="form-control form-control-sm"
+                     value="<%= cu.contact_phone %>"
+                     data-inline-edit-target="field"
+                     data-field="contact_phone"
+                     data-action="blur->inline-edit#save">
+            </td>
+            <td>
+              <span class="badge rounded-pill <%= badge_class %>">
+                <%= t("bo.common.statuses.#{cu.invitation_status}", default: cu.invitation_status.to_s.humanize) %>
+              </span>
+              <% if cu.invitation_status == :pending && cu.invitation_sent_at %>
+                <div class="mt-1"><small class="text-muted"><%= t("bo.customer_users.table.invited_at", date: l(cu.invitation_sent_at, format: :short)) %></small></div>
+              <% elsif cu.invitation_status == :active && cu.invitation_accepted_at %>
+                <div class="mt-1"><small class="text-muted"><%= t("bo.customer_users.table.accepted_at", date: l(cu.invitation_accepted_at, format: :short)) %></small></div>
+              <% end %>
+              <div><small data-inline-edit-target="status"></small></div>
+            </td>
+            <td class="text-muted">
+              <div><%= cu.last_sign_in_at ? l(cu.last_sign_in_at, format: :short) : t("bo.customer_users.table.never") %></div>
+              <% if cu.sign_in_count.to_i > 0 %>
+                <small class="text-muted d-block"><%= t("bo.customer_users.table.sign_in_count", count: cu.sign_in_count) %></small>
+              <% end %>
+              <% if cu.last_seen_at && cu.last_seen_at >= 5.minutes.ago %>
+                <small class="text-success d-block"><i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> <%= t("bo.customer_users.table.online_now") %></small>
+              <% elsif cu.last_seen_at %>
+                <small class="text-muted d-block"><%= t("bo.customer_users.table.last_seen", time: time_ago_in_words(cu.last_seen_at)) %></small>
+              <% end %>
+            </td>
+            <td class="text-end text-nowrap">
+              <% if cu.invitation_status == :pending || cu.invitation_status == :not_invited %>
+                <% invite_label = cu.invitation_status == :pending ? t("bo.customer_users.actions.send_invite_options_pending") : t("bo.customer_users.actions.send_invite_options_first") %>
+                <%= button_to share_invitation_bo_customer_customer_user_path(org_slug: org_slug, customer_id: customer.id, id: cu.id),
+                              method: :post,
+                              form: { class: "d-inline", data: { turbo_stream: true, turbo_frame: "_top" } },
+                              class: "btn btn-sm btn-link text-muted",
+                              title: invite_label do %>
+                  <i class="fa-solid fa-paper-plane"></i>
+                <% end %>
+              <% end %>
+              <%= button_to toggle_active_bo_customer_customer_user_path(org_slug: org_slug, customer_id: customer.id, id: cu.id),
+                            method: :patch,
+                            form: { class: "d-inline", data: { turbo_frame: "_top" } },
+                            class: "btn btn-sm btn-link #{cu.active? ? 'text-muted' : 'text-success'}",
+                            title: cu.active? ? t("bo.customer_users.actions.deactivate") : t("bo.customer_users.actions.activate") do %>
+                <i class="fa-solid <%= cu.active? ? 'fa-pause' : 'fa-play' %>"></i>
+              <% end %>
+              <% if qa_state == :unavailable %>
+                <span class="btn btn-sm btn-link <%= qa_class %>" title="<%= qa_title %>" style="cursor: not-allowed;">
+                  <i class="fa-solid fa-qrcode"></i>
+                </span>
+              <% else %>
+                <%= link_to bo_customer_customer_user_quick_access_token_path(org_slug: org_slug, customer_id: customer.id, customer_user_id: cu.id),
+                            class: "btn btn-sm btn-link #{qa_class}",
+                            data: { turbo_frame: "_top" },
+                            title: qa_title do %>
+                  <i class="fa-solid fa-qrcode"></i>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="text-center text-muted py-3 mb-3">
+    <i class="fa-solid fa-user-slash mb-2" style="font-size: 1.5rem;"></i>
+    <div><%= t("bo.customer_users.manage_modal.empty") %></div>
+  </div>
+<% end %>
+
+<hr class="my-4">
+
+<h6 class="mb-3">
+  <i class="fa-solid fa-plus me-1"></i>
+  <%= t("bo.customer_users.manage_modal.add_title") %>
+</h6>
+
+<%= form_with model: new_customer_user,
+              url: bo_customer_customer_users_path(org_slug: org_slug, customer_id: customer.id) do |f| %>
+  <div class="row g-2">
+    <div class="col-md-4">
+      <%= f.label :contact_name, t("bo.customer_users.form.contact_name"), class: "form-label small text-muted mb-1" %>
+      <%= f.text_field :contact_name, class: "form-control form-control-sm" %>
+    </div>
+    <div class="col-md-5">
+      <%= f.label :email, t("bo.customer_users.form.email"), class: "form-label small text-muted mb-1" %>
+      <%= f.email_field :email, class: "form-control form-control-sm", required: true %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :contact_phone, t("bo.customer_users.form.contact_phone"), class: "form-label small text-muted mb-1" %>
+      <%= f.telephone_field :contact_phone, class: "form-control form-control-sm" %>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end mt-3">
+    <%= f.submit t("bo.customer_users.manage_modal.save"), class: "btn btn-sm btn-primary" %>
+  </div>
+<% end %>

@@ -1,0 +1,54 @@
+development:
+  # Only the automation dispatcher runs locally, and every minute rather than
+  # every 15, so a schedule can be tested without waiting a quarter of an hour.
+  # The ERP jobs stay production-only on purpose — nobody wants a dev machine
+  # syncing against the real ERP.
+  automation_dispatch:
+    class: AutomationDispatchJob
+    queue: default
+    schedule: "* * * * *"
+    description: "Fire back-office automations whose next_run_at has come due"
+
+production:
+  erp_scheduled_sync_hourly:
+    class: ErpScheduledSyncJob
+    queue: erp_sync
+    args: [ "hourly" ]
+    schedule: "0 * * * *"
+    description: "Run hourly ERP sync for organisations with hourly frequency"
+
+  erp_scheduled_sync_daily:
+    class: ErpScheduledSyncJob
+    queue: erp_sync
+    args: [ "daily" ]
+    schedule: "0 2 * * *"
+    description: "Run daily ERP sync for organisations with daily frequency (2 AM)"
+
+  erp_scheduled_sync_weekly:
+    class: ErpScheduledSyncJob
+    queue: erp_sync
+    args: [ "weekly" ]
+    schedule: "0 3 * * 0"
+    description: "Run weekly ERP sync for organisations with weekly frequency (Sunday 3 AM)"
+
+  erp_order_push_retry:
+    class: OrderPushRetryJob
+    queue: erp_sync
+    schedule: "*/15 * * * *"
+    description: "Safety-net: retry pending/failed ERP order pushes every 15 minutes"
+
+  automation_dispatch:
+    class: AutomationDispatchJob
+    queue: default
+    schedule: "*/15 * * * *"
+    description: "Fire back-office automations whose next_run_at has come due"
+
+  reap_stalled_background_tasks:
+    class: ReapStalledBackgroundTasksJob
+    queue: default
+    schedule: "20 * * * *"
+    description: "Close background tasks whose job was killed without ever finishing"
+
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: "12 * * * *"

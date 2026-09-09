@@ -3,6 +3,9 @@ class OrgMember < ApplicationRecord
   belongs_to :member, optional: true  # optional for pending invitations
   belongs_to :invited_by, class_name: 'Member', optional: true
 
+  has_many :customer_assignments, dependent: :destroy
+  has_many :assigned_customers, through: :customer_assignments, source: :customer
+
   validates :role, presence: true, inclusion: { in: %w[owner admin member] }
   validates :member_id, uniqueness: { scope: :organisation_id, message: "is already a member of this organisation" }, allow_nil: true
   validates :active, inclusion: { in: [true, false] }
@@ -12,6 +15,8 @@ class OrgMember < ApplicationRecord
 
   scope :accepted, -> { where.not(member_id: nil) }
   scope :pending, -> { where(member_id: nil).where.not(invitation_token: nil) }
+  scope :order_notification_recipients, -> { accepted.where(active: true, receive_order_notifications: true) }
+  scope :sales_reps, -> { where(is_sales_rep: true) }
 
   # Check if this is a pending invitation
   def pending_invitation?

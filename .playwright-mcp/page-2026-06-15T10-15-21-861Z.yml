@@ -1,0 +1,234 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "aviminho" [ref=e5] [cursor=pointer]:
+          - /url: /aviminho/home
+          - img "aviminho" [ref=e6]
+        - text: 
+        - generic [ref=e7]:
+          - list [ref=e8]:
+            - listitem [ref=e9]:
+              - link "Início" [ref=e10] [cursor=pointer]:
+                - /url: /aviminho/home
+            - listitem [ref=e11]:
+              - link "Produtos" [ref=e12] [cursor=pointer]:
+                - /url: /aviminho/products
+            - listitem [ref=e13]:
+              - link "Encomendas" [ref=e14] [cursor=pointer]:
+                - /url: /aviminho/orders
+            - listitem [ref=e15]:
+              - link "Contacto" [ref=e16] [cursor=pointer]:
+                - /url: /aviminho/contact
+          - generic [ref=e17]:
+            - link " %" [ref=e18] [cursor=pointer]:
+              - /url: /aviminho/cart
+              - generic [ref=e19]: 
+              - generic "Descontos de encomenda disponíveis!" [ref=e20]:
+                - generic [ref=e21]: "%"
+            - generic [ref=e22]:
+              - generic [ref=e23]: 
+              - text: Pizzaria Bella Napoli
+            - generic [ref=e24]:
+              - button " João Silva" [ref=e25] [cursor=pointer]:
+                - generic [ref=e26]: 
+                - text: João Silva
+              - text:   
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - navigation "breadcrumb" [ref=e29]:
+        - list [ref=e30]:
+          - listitem [ref=e31]:
+            - link "" [ref=e32] [cursor=pointer]:
+              - /url: /aviminho/products
+              - generic [ref=e33]: 
+          - listitem [ref=e34]: / Frango Corte Horeca
+      - text:    
+      - generic [ref=e35]:
+        - generic [ref=e38]:
+          - textbox "Pesquisar produtos..." [ref=e39]
+          - generic: 
+          - button "Search" [ref=e40] [cursor=pointer]:
+            - generic [ref=e41]: 
+        - generic [ref=e43]:
+          - generic [ref=e46]:
+            - button "Formato" [ref=e47] [cursor=pointer]
+            - text:  
+          - button "Ordenar por" [ref=e50] [cursor=pointer]
+      - generic [ref=e51]:
+        - generic [ref=e53]:
+          - link " Limpar filtros" [ref=e55] [cursor=pointer]:
+            - /url: /aviminho/products
+            - generic [ref=e56]: 
+            - text: Limpar filtros
+          - heading "Categorias" [level=6] [ref=e57]
+          - list [ref=e58]:
+            - listitem [ref=e59]:
+              - link "Todos os Produtos" [ref=e60] [cursor=pointer]:
+                - /url: /aviminho/products
+            - listitem [ref=e61]:
+              - link "Frango Corte Horeca 3" [ref=e62] [cursor=pointer]:
+                - /url: /aviminho/products
+                - generic [ref=e63]: Frango Corte Horeca
+                - generic [ref=e65]: "3"
+            - listitem [ref=e66]:
+              - link "Categoria A 7 " [ref=e67] [cursor=pointer]:
+                - /url: /aviminho/products?category=562
+                - generic [ref=e68]: Categoria A
+                - generic [ref=e69]:
+                  - generic [ref=e70]: "7"
+                  - generic [ref=e71]: 
+            - listitem [ref=e72]:
+              - link "Categoria B 4 " [ref=e73] [cursor=pointer]:
+                - /url: /aviminho/products?category=565
+                - generic [ref=e74]: Categoria B
+                - generic [ref=e75]:
+                  - generic [ref=e76]: "4"
+                  - generic [ref=e77]: 
+            - listitem [ref=e78]:
+              - link "Conservas 4" [ref=e79] [cursor=pointer]:
+                - /url: /aviminho/products?category=566
+                - generic [ref=e80]: Conservas
+                - generic [ref=e82]: "4"
+            - listitem [ref=e83]:
+              - link "Tomate 4 " [ref=e84] [cursor=pointer]:
+                - /url: /aviminho/products?category=564
+                - generic [ref=e85]: Tomate
+                - generic [ref=e86]:
+                  - generic [ref=e87]: "4"
+                  - generic [ref=e88]: 
+            - listitem [ref=e89]:
+              - link "Farinhas E Derivados 6" [ref=e90] [cursor=pointer]:
+                - /url: /aviminho/products?category=563
+                - generic [ref=e91]: Farinhas E Derivados
+                - generic [ref=e93]: "6"
+            - listitem [ref=e94]:
+              - link "Massas 4 " [ref=e95] [cursor=pointer]:
+                - /url: /aviminho/products?category=567
+                - generic [ref=e96]: Massas
+                - generic [ref=e97]:
+                  - generic [ref=e98]: "4"
+                  - generic [ref=e99]: 
+            - listitem [ref=e100]:
+              - link "Congelados 2" [ref=e101] [cursor=pointer]:
+                - /url: /aviminho/products?category=568
+                - generic [ref=e102]: Congelados
+                - generic [ref=e104]: "2"
+            - listitem [ref=e105]:
+              - link "Arroz 2" [ref=e106] [cursor=pointer]:
+                - /url: /aviminho/products?category=569
+                - generic [ref=e107]: Arroz
+                - generic [ref=e109]: "2"
+            - listitem [ref=e110]:
+              - link "Trufas 3" [ref=e111] [cursor=pointer]:
+                - /url: /aviminho/products?category=570
+                - generic [ref=e112]: Trufas
+                - generic [ref=e114]: "3"
+            - listitem [ref=e115]:
+              - link "Categoria Demo 4 2" [ref=e116] [cursor=pointer]:
+                - /url: /aviminho/products?category=571
+                - generic [ref=e117]: Categoria Demo 4
+                - generic [ref=e119]: "2"
+            - listitem [ref=e120]:
+              - link "Categoria Demo 3 3" [ref=e121] [cursor=pointer]:
+                - /url: /aviminho/products?category=572
+                - generic [ref=e122]: Categoria Demo 3
+                - generic [ref=e124]: "3"
+            - listitem [ref=e125]:
+              - link "Frutos Secos E Sementes 3" [ref=e126] [cursor=pointer]:
+                - /url: /aviminho/products?category=573
+                - generic [ref=e127]: Frutos Secos E Sementes
+                - generic [ref=e129]: "3"
+            - listitem [ref=e130]:
+              - link "Bebidas 2 " [ref=e131] [cursor=pointer]:
+                - /url: /aviminho/products?category=574
+                - generic [ref=e132]: Bebidas
+                - generic [ref=e133]:
+                  - generic [ref=e134]: "2"
+                  - generic [ref=e135]: 
+            - listitem [ref=e136]:
+              - link "Não Alimentar 4 " [ref=e137] [cursor=pointer]:
+                - /url: /aviminho/products?category=575
+                - generic [ref=e138]: Não Alimentar
+                - generic [ref=e139]:
+                  - generic [ref=e140]: "4"
+                  - generic [ref=e141]: 
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - link "Coxa s/Osso e c/Pele Frango Corte Horeca Coxa s/Osso e c/Pele €6.49 kg" [ref=e145] [cursor=pointer]:
+              - /url: /aviminho/products/2986?category=595
+              - generic [ref=e146]:
+                - img "Coxa s/Osso e c/Pele" [ref=e148]
+                - generic [ref=e149]:
+                  - text: Frango Corte Horeca
+                  - heading "Coxa s/Osso e c/Pele" [level=5] [ref=e150]
+                - generic [ref=e152]:
+                  - generic [ref=e153]: €6.49
+                  - generic [ref=e154]: kg
+            - link "Traseiro s/Osso Frango Corte Horeca Traseiro s/Osso €5.49 - €5.99 cuvete" [ref=e156] [cursor=pointer]:
+              - /url: /aviminho/products/2984?category=595
+              - generic [ref=e157]:
+                - img "Traseiro s/Osso" [ref=e159]
+                - generic [ref=e160]:
+                  - text: Frango Corte Horeca
+                  - heading "Traseiro s/Osso" [level=5] [ref=e161]
+                - generic [ref=e163]:
+                  - generic [ref=e164]: €5.49 - €5.99
+                  - generic [ref=e165]: cuvete
+            - link "Carne Picada de Frango Frango Corte Horeca Carne Picada de Frango €4.49 bandeja" [ref=e167] [cursor=pointer]:
+              - /url: /aviminho/products/2983?category=595
+              - generic [ref=e168]:
+                - img "Carne Picada de Frango" [ref=e170]
+                - generic [ref=e171]:
+                  - text: Frango Corte Horeca
+                  - heading "Carne Picada de Frango" [level=5] [ref=e172]
+                - generic [ref=e174]:
+                  - generic [ref=e175]: €4.49
+                  - generic [ref=e176]: bandeja
+          - generic [ref=e178]: A mostrar 1-3 de 3 produtos
+  - contentinfo [ref=e179]:
+    - generic [ref=e181]:
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - generic [ref=e185]: 
+          - link "demo@demo.pt" [ref=e186] [cursor=pointer]:
+            - /url: mailto:demo@demo.pt
+        - generic [ref=e187]:
+          - generic [ref=e188]: 
+          - link "+351234567890" [ref=e189] [cursor=pointer]:
+            - /url: tel:+351234567890
+        - generic [ref=e190]:
+          - generic [ref=e191]: 
+          - link "+351234567890" [ref=e192] [cursor=pointer]:
+            - /url: https://wa.me/351234567890
+      - generic [ref=e193]:
+        - link "" [ref=e194] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e195]: 
+        - link "" [ref=e196] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e197]: 
+        - link "" [ref=e198] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e199]: 
+        - link " Contacte-nos" [ref=e200] [cursor=pointer]:
+          - /url: /aviminho/contact
+          - generic [ref=e201]: 
+          - text: Contacte-nos
+    - text:    
+    - generic [ref=e203]:
+      - link "Termos de Serviço" [ref=e204] [cursor=pointer]:
+        - /url: /aviminho/terms
+      - link "Política de Privacidade" [ref=e205] [cursor=pointer]:
+        - /url: /aviminho/privacy
+    - contentinfo [ref=e206]:
+      - link "aviminho powered by N odal" [ref=e207] [cursor=pointer]:
+        - /url: https://www.nodal-seiri.dev
+        - generic [ref=e208]: aviminho
+        - generic [ref=e209]: powered by
+        - generic [ref=e210]:
+          - generic [ref=e211]: "N"
+          - generic [ref=e212]: odal
+  - link "Fale connosco no WhatsApp" [ref=e213] [cursor=pointer]:
+    - /url: https://wa.me/351234567890
+    - generic [ref=e214]: 

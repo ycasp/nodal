@@ -1,0 +1,473 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "aviminho" [ref=e5] [cursor=pointer]:
+          - /url: /aviminho/home
+          - img "aviminho" [ref=e6]
+        - text: 
+        - generic [ref=e7]:
+          - list [ref=e8]:
+            - listitem [ref=e9]:
+              - link "Início" [ref=e10] [cursor=pointer]:
+                - /url: /aviminho/home
+            - listitem [ref=e11]:
+              - link "Produtos" [ref=e12] [cursor=pointer]:
+                - /url: /aviminho/products
+            - listitem [ref=e13]:
+              - link "Encomendas" [ref=e14] [cursor=pointer]:
+                - /url: /aviminho/orders
+            - listitem [ref=e15]:
+              - link "Contacto" [ref=e16] [cursor=pointer]:
+                - /url: /aviminho/contact
+          - generic [ref=e17]:
+            - link " %" [ref=e18] [cursor=pointer]:
+              - /url: /aviminho/cart
+              - generic [ref=e19]: 
+              - generic "Descontos de encomenda disponíveis!" [ref=e20]:
+                - generic [ref=e21]: "%"
+            - generic [ref=e22]:
+              - generic [ref=e23]: 
+              - text: Pizzaria Bella Napoli
+            - generic [ref=e24]:
+              - button " João Silva" [ref=e25] [cursor=pointer]:
+                - generic [ref=e26]: 
+                - text: João Silva
+              - text:   
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - navigation "breadcrumb" [ref=e29]:
+        - list [ref=e30]
+      - text:   
+      - generic [ref=e31]:
+        - generic [ref=e34]:
+          - textbox "Pesquisar produtos..." [ref=e35]
+          - generic: 
+          - button "Search" [ref=e36] [cursor=pointer]:
+            - generic [ref=e37]: 
+        - button "Ordenar por" [ref=e42] [cursor=pointer]
+      - generic [ref=e43]:
+        - generic [ref=e45]:
+          - heading "Categorias" [level=6] [ref=e46]
+          - list [ref=e47]:
+            - listitem [ref=e48]:
+              - link "Todos os Produtos" [ref=e49] [cursor=pointer]:
+                - /url: /aviminho/products
+            - listitem [ref=e50]:
+              - link "Frango Corte Horeca 3" [ref=e51] [cursor=pointer]:
+                - /url: /aviminho/products?category=595
+                - generic [ref=e52]: Frango Corte Horeca
+                - generic [ref=e54]: "3"
+            - listitem [ref=e55]:
+              - link "Categoria A 7 " [ref=e56] [cursor=pointer]:
+                - /url: /aviminho/products?category=562
+                - generic [ref=e57]: Categoria A
+                - generic [ref=e58]:
+                  - generic [ref=e59]: "7"
+                  - generic [ref=e60]: 
+            - listitem [ref=e61]:
+              - link "Categoria B 4 " [ref=e62] [cursor=pointer]:
+                - /url: /aviminho/products?category=565
+                - generic [ref=e63]: Categoria B
+                - generic [ref=e64]:
+                  - generic [ref=e65]: "4"
+                  - generic [ref=e66]: 
+            - listitem [ref=e67]:
+              - link "Conservas 4" [ref=e68] [cursor=pointer]:
+                - /url: /aviminho/products?category=566
+                - generic [ref=e69]: Conservas
+                - generic [ref=e71]: "4"
+            - listitem [ref=e72]:
+              - link "Tomate 4 " [ref=e73] [cursor=pointer]:
+                - /url: /aviminho/products?category=564
+                - generic [ref=e74]: Tomate
+                - generic [ref=e75]:
+                  - generic [ref=e76]: "4"
+                  - generic [ref=e77]: 
+            - listitem [ref=e78]:
+              - link "Farinhas E Derivados 6" [ref=e79] [cursor=pointer]:
+                - /url: /aviminho/products?category=563
+                - generic [ref=e80]: Farinhas E Derivados
+                - generic [ref=e82]: "6"
+            - listitem [ref=e83]:
+              - link "Massas 4 " [ref=e84] [cursor=pointer]:
+                - /url: /aviminho/products?category=567
+                - generic [ref=e85]: Massas
+                - generic [ref=e86]:
+                  - generic [ref=e87]: "4"
+                  - generic [ref=e88]: 
+            - listitem [ref=e89]:
+              - link "Congelados 2" [ref=e90] [cursor=pointer]:
+                - /url: /aviminho/products?category=568
+                - generic [ref=e91]: Congelados
+                - generic [ref=e93]: "2"
+            - listitem [ref=e94]:
+              - link "Arroz 2" [ref=e95] [cursor=pointer]:
+                - /url: /aviminho/products?category=569
+                - generic [ref=e96]: Arroz
+                - generic [ref=e98]: "2"
+            - listitem [ref=e99]:
+              - link "Trufas 3" [ref=e100] [cursor=pointer]:
+                - /url: /aviminho/products?category=570
+                - generic [ref=e101]: Trufas
+                - generic [ref=e103]: "3"
+            - listitem [ref=e104]:
+              - link "Categoria Demo 4 2" [ref=e105] [cursor=pointer]:
+                - /url: /aviminho/products?category=571
+                - generic [ref=e106]: Categoria Demo 4
+                - generic [ref=e108]: "2"
+            - listitem [ref=e109]:
+              - link "Categoria Demo 3 3" [ref=e110] [cursor=pointer]:
+                - /url: /aviminho/products?category=572
+                - generic [ref=e111]: Categoria Demo 3
+                - generic [ref=e113]: "3"
+            - listitem [ref=e114]:
+              - link "Frutos Secos E Sementes 3" [ref=e115] [cursor=pointer]:
+                - /url: /aviminho/products?category=573
+                - generic [ref=e116]: Frutos Secos E Sementes
+                - generic [ref=e118]: "3"
+            - listitem [ref=e119]:
+              - link "Bebidas 2 " [ref=e120] [cursor=pointer]:
+                - /url: /aviminho/products?category=574
+                - generic [ref=e121]: Bebidas
+                - generic [ref=e122]:
+                  - generic [ref=e123]: "2"
+                  - generic [ref=e124]: 
+            - listitem [ref=e125]:
+              - link "Não Alimentar 4 " [ref=e126] [cursor=pointer]:
+                - /url: /aviminho/products?category=575
+                - generic [ref=e127]: Não Alimentar
+                - generic [ref=e128]:
+                  - generic [ref=e129]: "4"
+                  - generic [ref=e130]: 
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - link "Coxa s/Osso e c/Pele Frango Corte Horeca Coxa s/Osso e c/Pele €6.49 kg" [ref=e134] [cursor=pointer]:
+              - /url: /aviminho/products/2986
+              - generic [ref=e135]:
+                - generic [ref=e136]:
+                  - img "Coxa s/Osso e c/Pele"
+                - generic [ref=e137]:
+                  - text: Frango Corte Horeca
+                  - heading "Coxa s/Osso e c/Pele" [level=5] [ref=e138]
+                - generic [ref=e140]:
+                  - generic [ref=e141]: €6.49
+                  - generic [ref=e142]: kg
+            - link "Traseiro s/Osso Frango Corte Horeca Traseiro s/Osso €5.49 - €5.99 cuvete" [ref=e144] [cursor=pointer]:
+              - /url: /aviminho/products/2984
+              - generic [ref=e145]:
+                - generic [ref=e146]:
+                  - img "Traseiro s/Osso"
+                - generic [ref=e147]:
+                  - text: Frango Corte Horeca
+                  - heading "Traseiro s/Osso" [level=5] [ref=e148]
+                - generic [ref=e150]:
+                  - generic [ref=e151]: €5.49 - €5.99
+                  - generic [ref=e152]: cuvete
+            - link "Carne Picada de Frango Frango Corte Horeca Carne Picada de Frango €4.49 bandeja" [ref=e154] [cursor=pointer]:
+              - /url: /aviminho/products/2983
+              - generic [ref=e155]:
+                - generic [ref=e156]:
+                  - img "Carne Picada de Frango"
+                - generic [ref=e157]:
+                  - text: Frango Corte Horeca
+                  - heading "Carne Picada de Frango" [level=5] [ref=e158]
+                - generic [ref=e160]:
+                  - generic [ref=e161]: €4.49
+                  - generic [ref=e162]: bandeja
+            - link "PROMOÇÃO -18% Produto 1 Categoria Demo 1 Produto 1 €4.20 - €6.00 €3.44 - €4.91 pack" [ref=e164] [cursor=pointer]:
+              - /url: /aviminho/products/2773
+              - generic [ref=e165]:
+                - generic [ref=e166]:
+                  - generic:
+                    - generic: PROMOÇÃO
+                    - generic: "-18%"
+                  - img "Produto 1"
+                - generic [ref=e167]:
+                  - text: Categoria Demo 1
+                  - heading "Produto 1" [level=5] [ref=e168]
+                - generic [ref=e170]:
+                  - generic [ref=e171]: €4.20 - €6.00 €3.44 - €4.91
+                  - generic [ref=e172]: pack
+            - link "Produto 2 Categoria Demo 2 Produto 2 €11.00 - €13.00 caixa" [ref=e174] [cursor=pointer]:
+              - /url: /aviminho/products/2772
+              - generic [ref=e175]:
+                - generic [ref=e176]:
+                  - img "Produto 2"
+                - generic [ref=e177]:
+                  - text: Categoria Demo 2
+                  - heading "Produto 2" [level=5] [ref=e178]
+                - generic [ref=e180]:
+                  - generic [ref=e181]: €11.00 - €13.00
+                  - generic [ref=e182]: caixa
+            - link "Produto 3 Categoria Demo 3 Produto 3 €3.80 - €18.00 unidade demo" [ref=e184] [cursor=pointer]:
+              - /url: /aviminho/products/2771
+              - generic [ref=e185]:
+                - generic [ref=e186]:
+                  - img "Produto 3"
+                - generic [ref=e187]:
+                  - text: Categoria Demo 3
+                  - heading "Produto 3" [level=5] [ref=e188]
+                - generic [ref=e190]:
+                  - generic [ref=e191]: €3.80 - €18.00
+                  - generic [ref=e192]: unidade demo
+            - link "Produto 4 Categoria Demo 4 Produto 4 €8.50 - €48.00 unidade demo" [ref=e194] [cursor=pointer]:
+              - /url: /aviminho/products/2770
+              - generic [ref=e195]:
+                - generic [ref=e196]:
+                  - img "Produto 4"
+                - generic [ref=e197]:
+                  - text: Categoria Demo 4
+                  - heading "Produto 4" [level=5] [ref=e198]
+                - generic [ref=e200]:
+                  - generic [ref=e201]: €8.50 - €48.00
+                  - generic [ref=e202]: unidade demo
+            - link "Carnaroli Arroz Carnaroli €4.20 - €19.00 pacote" [ref=e204] [cursor=pointer]:
+              - /url: /aviminho/products/2769
+              - generic [ref=e205]:
+                - generic [ref=e206]:
+                  - img "Carnaroli"
+                - generic [ref=e207]:
+                  - text: Arroz
+                  - heading "Carnaroli" [level=5] [ref=e208]
+                - generic [ref=e210]:
+                  - generic [ref=e211]: €4.20 - €19.00
+                  - generic [ref=e212]: pacote
+            - link "Arborio Arroz Arborio €3.50 - €16.00 pacote" [ref=e214] [cursor=pointer]:
+              - /url: /aviminho/products/2768
+              - generic [ref=e215]:
+                - generic [ref=e216]:
+                  - img "Arborio"
+                - generic [ref=e217]:
+                  - text: Arroz
+                  - heading "Arborio" [level=5] [ref=e218]
+                - generic [ref=e220]:
+                  - generic [ref=e221]: €3.50 - €16.00
+                  - generic [ref=e222]: pacote
+            - link "Gnocchi Massa Fresca Gnocchi €2.20 - €25.00 pacote" [ref=e224] [cursor=pointer]:
+              - /url: /aviminho/products/2767
+              - generic [ref=e225]:
+                - generic [ref=e226]:
+                  - img "Gnocchi"
+                - generic [ref=e227]:
+                  - text: Massa Fresca
+                  - heading "Gnocchi" [level=5] [ref=e228]
+                - generic [ref=e230]:
+                  - generic [ref=e231]: €2.20 - €25.00
+                  - generic [ref=e232]: pacote
+            - link "Penne Rigate Massa Seca Penne Rigate €1.20 - €27.00 pacote" [ref=e234] [cursor=pointer]:
+              - /url: /aviminho/products/2766
+              - generic [ref=e235]:
+                - generic [ref=e236]:
+                  - img "Penne Rigate"
+                - generic [ref=e237]:
+                  - text: Massa Seca
+                  - heading "Penne Rigate" [level=5] [ref=e238]
+                - generic [ref=e240]:
+                  - generic [ref=e241]: €1.20 - €27.00
+                  - generic [ref=e242]: pacote
+            - link "Spaghetti Massa Seca Spaghetti €1.20 - €27.00 pacote" [ref=e244] [cursor=pointer]:
+              - /url: /aviminho/products/2765
+              - generic [ref=e245]:
+                - generic [ref=e246]:
+                  - img "Spaghetti"
+                - generic [ref=e247]:
+                  - text: Massa Seca
+                  - heading "Spaghetti" [level=5] [ref=e248]
+                - generic [ref=e250]:
+                  - generic [ref=e251]: €1.20 - €27.00
+                  - generic [ref=e252]: pacote
+            - link "Anchovas em azeite Conservas Anchovas em azeite €4.80 - €35.00 frasco" [ref=e254] [cursor=pointer]:
+              - /url: /aviminho/products/2764
+              - generic [ref=e255]:
+                - generic [ref=e256]:
+                  - img "Anchovas em azeite"
+                - generic [ref=e257]:
+                  - text: Conservas
+                  - heading "Anchovas em azeite" [level=5] [ref=e258]
+                - generic [ref=e260]:
+                  - generic [ref=e261]: €4.80 - €35.00
+                  - generic [ref=e262]: frasco
+            - link "Salame Milano Curados Salame Milano €16.00 - €23.00 kg" [ref=e264] [cursor=pointer]:
+              - /url: /aviminho/products/2763
+              - generic [ref=e265]:
+                - generic [ref=e266]:
+                  - img "Salame Milano"
+                - generic [ref=e267]:
+                  - text: Curados
+                  - heading "Salame Milano" [level=5] [ref=e268]
+                - generic [ref=e270]:
+                  - generic [ref=e271]: €16.00 - €23.00
+                  - generic [ref=e272]: kg
+            - link "Passata Mutti Polpa & Passata Passata Mutti €2.20 - €25.00 garrafa" [ref=e274] [cursor=pointer]:
+              - /url: /aviminho/products/2762
+              - generic [ref=e275]:
+                - generic [ref=e276]:
+                  - img "Passata Mutti"
+                - generic [ref=e277]:
+                  - text: Polpa & Passata
+                  - heading "Passata Mutti" [level=5] [ref=e278]
+                - generic [ref=e280]:
+                  - generic [ref=e281]: €2.20 - €25.00
+                  - generic [ref=e282]: garrafa
+            - link "San Marzano DOP Tomate Inteiro San Marzano DOP €6.50 - €37.00 lata" [ref=e284] [cursor=pointer]:
+              - /url: /aviminho/products/2761
+              - generic [ref=e285]:
+                - generic [ref=e286]:
+                  - img "San Marzano DOP"
+                - generic [ref=e287]:
+                  - text: Tomate Inteiro
+                  - heading "San Marzano DOP" [level=5] [ref=e288]
+                - generic [ref=e290]:
+                  - generic [ref=e291]: €6.50 - €37.00
+                  - generic [ref=e292]: lata
+            - link "Polpa Mutti Polpa & Passata Polpa Mutti €4.80 - €27.00 lata" [ref=e294] [cursor=pointer]:
+              - /url: /aviminho/products/2760
+              - generic [ref=e295]:
+                - generic [ref=e296]:
+                  - img "Polpa Mutti"
+                - generic [ref=e297]:
+                  - text: Polpa & Passata
+                  - heading "Polpa Mutti" [level=5] [ref=e298]
+                - generic [ref=e300]:
+                  - generic [ref=e301]: €4.80 - €27.00
+                  - generic [ref=e302]: lata
+            - link "Caputo Cuoco \"00\" Farinhas E Derivados Caputo Cuoco \"00\" €9.50 - €38.00 saco" [ref=e304] [cursor=pointer]:
+              - /url: /aviminho/products/2759
+              - generic [ref=e305]:
+                - img "Caputo Cuoco \"00\"" [ref=e307]
+                - generic [ref=e308]:
+                  - text: Farinhas E Derivados
+                  - heading "Caputo Cuoco \"00\"" [level=5] [ref=e309]
+                - generic [ref=e311]:
+                  - generic [ref=e312]: €9.50 - €38.00
+                  - generic [ref=e313]: saco
+            - link "Parmigiano Reggiano 24m Queijos Parmigiano Reggiano 24m €24.00 - €190.00 kg" [ref=e315] [cursor=pointer]:
+              - /url: /aviminho/products/2758
+              - generic [ref=e316]:
+                - generic [ref=e317]:
+                  - img "Parmigiano Reggiano 24m"
+                - generic [ref=e318]:
+                  - text: Queijos
+                  - heading "Parmigiano Reggiano 24m" [level=5] [ref=e319]
+                - generic [ref=e321]:
+                  - generic [ref=e322]: €24.00 - €190.00
+                  - generic [ref=e323]: kg
+            - link "Grana Padano DOP Queijos Grana Padano DOP €18.50 - €145.00 kg" [ref=e325] [cursor=pointer]:
+              - /url: /aviminho/products/2757
+              - generic [ref=e326]:
+                - img "Grana Padano DOP" [ref=e328]
+                - generic [ref=e329]:
+                  - text: Queijos
+                  - heading "Grana Padano DOP" [level=5] [ref=e330]
+                - generic [ref=e332]:
+                  - generic [ref=e333]: €18.50 - €145.00
+                  - generic [ref=e334]: kg
+            - link "Mozzarella ralada p/ pizza Outros Lacticínios Mozzarella ralada p/ pizza €18.00 - €68.00 kg" [ref=e336] [cursor=pointer]:
+              - /url: /aviminho/products/2756
+              - generic [ref=e337]:
+                - generic [ref=e338]:
+                  - img "Mozzarella ralada p/ pizza"
+                - generic [ref=e339]:
+                  - text: Outros Lacticínios
+                  - heading "Mozzarella ralada p/ pizza" [level=5] [ref=e340]
+                - generic [ref=e342]:
+                  - generic [ref=e343]: €18.00 - €68.00
+                  - generic [ref=e344]: kg
+            - link "Mozzarella Fior di Latte Outros Lacticínios Mozzarella Fior di Latte €5.80 - €33.00 kg" [ref=e346] [cursor=pointer]:
+              - /url: /aviminho/products/2755
+              - generic [ref=e347]:
+                - generic [ref=e348]:
+                  - img "Mozzarella Fior di Latte"
+                - generic [ref=e349]:
+                  - text: Outros Lacticínios
+                  - heading "Mozzarella Fior di Latte" [level=5] [ref=e350]
+                - generic [ref=e352]:
+                  - generic [ref=e353]: €5.80 - €33.00
+                  - generic [ref=e354]: kg
+            - link "Luvas descartáveis caixa 100 Higiene Luvas descartáveis caixa 100 €5.80 caixa" [ref=e356] [cursor=pointer]:
+              - /url: /aviminho/products/2754
+              - generic [ref=e357]:
+                - generic [ref=e358]:
+                  - img "Luvas descartáveis caixa 100"
+                - generic [ref=e359]:
+                  - text: Higiene
+                  - heading "Luvas descartáveis caixa 100" [level=5] [ref=e360]
+                - generic [ref=e362]:
+                  - generic [ref=e363]: €5.80
+                  - generic [ref=e364]: caixa
+            - link "Guardanapos pack 100 Categoria Demo 1 Guardanapos pack 100 €3.50 pack" [ref=e366] [cursor=pointer]:
+              - /url: /aviminho/products/2753
+              - generic [ref=e367]:
+                - generic [ref=e368]:
+                  - img "Guardanapos pack 100"
+                - generic [ref=e369]:
+                  - text: Categoria Demo 1
+                  - heading "Guardanapos pack 100" [level=5] [ref=e370]
+                - generic [ref=e372]:
+                  - generic [ref=e373]: €3.50
+                  - generic [ref=e374]: pack
+          - generic [ref=e375]:
+            - generic [ref=e376]: A mostrar 1-24 de 53 produtos
+            - navigation "Pages" [ref=e377]:
+              - list [ref=e378]:
+                - listitem [ref=e379]:
+                  - link "Previous" [disabled]: <
+                - listitem [ref=e380]:
+                  - link "1" [disabled] [ref=e381]
+                - listitem [ref=e382]:
+                  - link "2" [ref=e383] [cursor=pointer]:
+                    - /url: /aviminho/products?page=2
+                - listitem [ref=e384]:
+                  - link "3" [ref=e385] [cursor=pointer]:
+                    - /url: /aviminho/products?page=3
+                - listitem [ref=e386]:
+                  - link "Next" [ref=e387] [cursor=pointer]:
+                    - /url: /aviminho/products?page=2
+                    - text: ">"
+  - contentinfo [ref=e388]:
+    - generic [ref=e390]:
+      - generic [ref=e392]:
+        - generic [ref=e393]:
+          - generic [ref=e394]: 
+          - link "demo@demo.pt" [ref=e395] [cursor=pointer]:
+            - /url: mailto:demo@demo.pt
+        - generic [ref=e396]:
+          - generic [ref=e397]: 
+          - link "+351234567890" [ref=e398] [cursor=pointer]:
+            - /url: tel:+351234567890
+        - generic [ref=e399]:
+          - generic [ref=e400]: 
+          - link "+351234567890" [ref=e401] [cursor=pointer]:
+            - /url: https://wa.me/351234567890
+      - generic [ref=e402]:
+        - link "" [ref=e403] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e404]: 
+        - link "" [ref=e405] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e406]: 
+        - link "" [ref=e407] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e408]: 
+        - link " Contacte-nos" [ref=e409] [cursor=pointer]:
+          - /url: /aviminho/contact
+          - generic [ref=e410]: 
+          - text: Contacte-nos
+    - text:    
+    - generic [ref=e412]:
+      - link "Termos de Serviço" [ref=e413] [cursor=pointer]:
+        - /url: /aviminho/terms
+      - link "Política de Privacidade" [ref=e414] [cursor=pointer]:
+        - /url: /aviminho/privacy
+    - contentinfo [ref=e415]:
+      - link "aviminho powered by N odal" [ref=e416] [cursor=pointer]:
+        - /url: https://www.nodal-seiri.dev
+        - generic [ref=e417]: aviminho
+        - generic [ref=e418]: powered by
+        - generic [ref=e419]:
+          - generic [ref=e420]: "N"
+          - generic [ref=e421]: odal
+  - link "Fale connosco no WhatsApp" [ref=e422] [cursor=pointer]:
+    - /url: https://wa.me/351234567890
+    - generic [ref=e423]: 

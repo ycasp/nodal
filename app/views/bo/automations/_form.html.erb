@@ -1,0 +1,136 @@
+<%= form_with model: automation, url: url, method: method, id: "automation-form", data: { turbo: false } do |f| %>
+  <% if automation.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% automation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-4"><i class="fa-solid fa-robot me-2"></i><%= t('bo.automations.form.what') %></h5>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label"><%= t('bo.automations.form.name') %></label>
+          <%= f.text_field :name, class: "form-control", placeholder: t('bo.automations.form.name_placeholder') %>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label"><%= t('bo.automations.form.kind') %></label>
+          <%= f.select :kind,
+                       @report_options.map { |o| [ o[:label], o[:key] ] },
+                       {}, class: "form-select" %>
+          <div class="form-text"><%= @report_options.first[:description] %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-4"><i class="fa-solid fa-clock me-2"></i><%= t('bo.automations.form.when') %></h5>
+
+      <div class="row g-3 align-items-end" data-controller="automation-schedule">
+        <div class="col-md-3">
+          <label class="form-label"><%= t('bo.automations.form.frequency') %></label>
+          <%= f.select :schedule_kind,
+                       Automation::SCHEDULE_KINDS.map { |k| [ t("bo.automations.schedule_kinds.#{k}"), k ] },
+                       {}, class: "form-select",
+                       data: { automation_schedule_target: "kind", action: "change->automation-schedule#update" } %>
+        </div>
+        <div class="col-md-3" data-automation-schedule-target="dayWrapper">
+          <label class="form-label"><%= t('bo.automations.form.day') %></label>
+          <div data-automation-schedule-target="weekday">
+            <%= f.select :schedule_day,
+                         (0..6).map { |d| [ t("date.day_names")[d], d ] },
+                         {}, class: "form-select" %>
+          </div>
+          <div data-automation-schedule-target="monthday">
+            <%= f.select :schedule_day,
+                         (1..28).map { |d| [ t('bo.automations.form.day_of_month', day: d), d ] },
+                         {}, class: "form-select" %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label"><%= t('bo.automations.form.hour') %></label>
+          <%= f.time_field :schedule_time, value: automation.schedule_time, class: "form-control" %>
+          <div class="form-text"><%= t('bo.automations.form.timezone_hint', zone: current_organisation.timezone) %></div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-check">
+            <%= f.check_box :skip_if_empty, class: "form-check-input" %>
+            <label class="form-check-label"><%= t('bo.automations.form.skip_if_empty') %></label>
+          </div>
+          <div class="form-text"><%= t('bo.automations.form.skip_if_empty_hint') %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-4"><i class="fa-solid fa-filter me-2"></i><%= t('bo.automations.form.filters') %></h5>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label"><%= t('bo.automations.form.suppliers') %></label>
+          <%= select_tag "automation[filters][suppliers][]",
+                         options_for_select(@suppliers, Array(automation.filters["suppliers"])),
+                         multiple: true, class: "form-select",
+                         data: { controller: "tom-select" },
+                         placeholder: t('bo.automations.form.all_suppliers') %>
+          <div class="form-text"><%= t('bo.automations.form.suppliers_hint') %></div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label"><%= t('bo.automations.form.categories') %></label>
+          <%= select_tag "automation[filters][category_ids][]",
+                         options_for_select(@categories.map { |c| [ c.name, c.id ] },
+                                            Array(automation.filters["category_ids"]).map(&:to_i)),
+                         multiple: true, class: "form-select",
+                         data: { controller: "tom-select" },
+                         placeholder: t('bo.automations.form.all_categories') %>
+          <div class="form-text"><%= t('bo.automations.form.categories_hint') %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-4"><i class="fa-solid fa-paper-plane me-2"></i><%= t('bo.automations.form.who') %></h5>
+
+      <label class="form-label"><%= t('bo.automations.form.team') %></label>
+      <div class="row g-2 mb-4">
+        <% @org_members.each do |org_member| %>
+          <div class="col-md-4">
+            <div class="form-check">
+              <%= check_box_tag "automation[recipients][org_member_ids][]", org_member.id,
+                                automation.org_member_ids.include?(org_member.id),
+                                id: "org_member_#{org_member.id}", class: "form-check-input" %>
+              <label class="form-check-label" for="org_member_<%= org_member.id %>">
+                <%= org_member.display_name %>
+                <span class="text-muted small d-block"><%= org_member.display_email %></span>
+              </label>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <label class="form-label"><%= t('bo.automations.form.external') %></label>
+      <%= text_area_tag "automation[external_emails_text]",
+                        automation.external_emails.join(", "),
+                        class: "form-control", rows: 2,
+                        placeholder: "fornecedor@exemplo.pt, comercial@exemplo.pt" %>
+      <div class="form-text"><%= t('bo.automations.form.external_hint') %></div>
+
+      <div class="alert alert-warning mt-3 mb-0 small">
+        <i class="fa-solid fa-triangle-exclamation me-1"></i>
+        <%= t('bo.automations.form.external_warning') %>
+      </div>
+    </div>
+  </div>
+
+<% end %>

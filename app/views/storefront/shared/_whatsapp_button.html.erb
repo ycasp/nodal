@@ -1,0 +1,9 @@
+<% if current_organisation.show_whatsapp_button? && current_organisation.whatsapp.present? %>
+  <%= link_to "https://wa.me/#{current_organisation.whatsapp.gsub(/\D/, '')}",
+      target: "_blank",
+      class: "whatsapp-float",
+      title: t('storefront.whatsapp_button.tooltip'),
+      aria: { label: t('storefront.whatsapp_button.tooltip') } do %>
+    <i class="fa-brands fa-whatsapp"></i>
+  <% end %>
+<% end %>

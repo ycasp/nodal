@@ -1,7 +1,8 @@
 class ErpConfiguration < ApplicationRecord
-  ADAPTER_TYPES = %w[custom_api].freeze
+  ADAPTER_TYPES = %w[custom_api firebird].freeze
   SYNC_FREQUENCIES = %w[hourly daily weekly manual].freeze
   SYNC_STATUSES = %w[success partial failed].freeze
+  PRODUCT_SYNC_MODES = %w[update_only full_sync].freeze
 
   belongs_to :organisation
   has_many :erp_sync_logs, dependent: :destroy
@@ -11,6 +12,7 @@ class ErpConfiguration < ApplicationRecord
   validates :adapter_type, inclusion: { in: ADAPTER_TYPES }, allow_blank: true
   validates :sync_frequency, inclusion: { in: SYNC_FREQUENCIES }
   validates :last_sync_status, inclusion: { in: SYNC_STATUSES }, allow_blank: true
+  validates :product_sync_mode, inclusion: { in: PRODUCT_SYNC_MODES }
   validate :validate_credentials_format, if: :enabled?
 
   def credentials
@@ -29,6 +31,10 @@ class ErpConfiguration < ApplicationRecord
     return nil unless adapter_type.present?
 
     Erp::AdapterRegistry.build(adapter_type, credentials)
+  end
+
+  def full_product_sync?
+    product_sync_mode == 'full_sync'
   end
 
   def can_sync?

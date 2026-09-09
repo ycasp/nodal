@@ -1,0 +1,529 @@
+<%# ==================== GREETING ==================== %>
+<section class="home-section fade-in-up" style="margin-bottom: 1.5rem; margin-top: 1.5rem;">
+  <h2 style="font-size: 1.5rem; font-weight: 700;" class="mb-0">
+    <% name = if browsing_as_member? || impersonating?
+                current_member.first_name
+              else
+                current_customer_user.contact_name.presence || current_customer_user.email
+              end %>
+    <% greeting_key = case Time.current.hour
+       when 5..11 then 'good_morning'
+       when 12..17 then 'good_afternoon'
+       else 'good_evening'
+       end %>
+    <%= t("storefront.home.#{greeting_key}", name: name) %>
+  </h2>
+</section>
+
+<%# ==================== BANNER CAROUSEL ==================== %>
+<% if @banners.any? %>
+  <section class="home-section fade-in-up"
+           data-controller="banner-carousel" data-banner-carousel-interval-value="5000">
+    <div class="home-banner">
+      <% @banners.each_with_index do |banner, i| %>
+        <div class="home-banner__slide" data-banner-carousel-target="slide"
+             style="<%= 'opacity: 1;' if i == 0 %>">
+          <% if banner.image.attached? %>
+            <%= image_tag banner.image, alt: banner.title || "" %>
+          <% end %>
+          <% if banner.title.present? || banner.subtitle.present? %>
+            <% dark_text = banner.text_theme == 'dark' %>
+            <div class="home-banner__overlay" style="<%= 'background: linear-gradient(transparent 0%, rgba(255,255,255,0.85) 100%);' if dark_text %>">
+              <% if banner.title.present? %>
+                <h2 class="home-banner__title" style="<%= 'color: #1e293b; text-shadow: none;' if dark_text %>"><%= banner.title %></h2>
+              <% end %>
+              <% if banner.subtitle.present? %>
+                <p class="home-banner__subtitle" style="<%= 'color: #475569;' if dark_text %>"><%= banner.subtitle %></p>
+              <% end %>
+              <% if banner.link_url.present? %>
+                <div>
+                  <%= link_to banner.link_text.presence || t('storefront.home.hero.see_more'),
+                              banner.link_url,
+                              class: "btn btn-sm fw-semibold #{dark_text ? 'btn-dark' : 'btn-light'}" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @banners.size > 1 %>
+        <button class="home-banner__arrow home-banner__arrow--left"
+                data-action="click->banner-carousel#prev">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="home-banner__arrow home-banner__arrow--right"
+                data-action="click->banner-carousel#next">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <div class="home-banner__indicators">
+          <% @banners.each_with_index do |_, i| %>
+            <button data-banner-carousel-target="indicator" data-index="<%= i %>"
+                    data-action="click->banner-carousel#goToSlide"
+                    class="home-banner__dot <%= 'home-banner__dot--active' if i == 0 %>">
+            </button>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<%# ==================== ACTION BUTTONS ==================== %>
+<div class="d-flex justify-content-center gap-3 mb-4 fade-in-up">
+  <% unless browsing_as_member? %>
+    <%= link_to "#portal-cliente", class: "btn btn-outline-secondary px-4 py-2" do %>
+      <i class="fa-solid fa-user me-2"></i><%= t('storefront.home.buttons.customer_portal') %>
+    <% end %>
+  <% end %>
+  <%= link_to products_path(org_slug: params[:org_slug]), class: "btn px-4 py-2", style: "background: var(--org-primary); color: var(--org-primary-contrast);" do %>
+    <i class="fa-solid fa-store me-2"></i><%= t('storefront.home.browse_catalog') %>
+  <% end %>
+</div>
+
+<%# ==================== FEATURED CATEGORIES ==================== %>
+<% if @featured_categories.any? %>
+  <section class="home-section fade-in-up" data-controller="horizontal-scroll">
+    <div class="home-section__header">
+      <h2 class="home-section__title"><%= t('storefront.home.categories.title') %></h2>
+    </div>
+    <div class="home-carousel-wrapper">
+      <div data-horizontal-scroll-target="container" class="home-carousel">
+        <% @featured_categories.each do |category| %>
+          <div class="home-carousel__item">
+            <%= render "storefront/home/visual_card",
+                        link_path: products_path(org_slug: params[:org_slug], category: category.slug),
+                        image: category.photo.attached? ? category.photo : nil,
+                        name: category.name,
+                        fallback_color: category.color.presence || '#6c757d' %>
+          </div>
+        <% end %>
+      </div>
+      <button data-horizontal-scroll-target="leftBtn" data-action="click->horizontal-scroll#scrollLeft"
+              class="home-carousel__arrow home-carousel__arrow--left" style="display: none;">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button data-horizontal-scroll-target="rightBtn" data-action="click->horizontal-scroll#scrollRight"
+              class="home-carousel__arrow home-carousel__arrow--right">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+<% end %>
+
+<%# ==================== SPECIAL PRICE PRODUCTS ==================== %>
+<% if @special_price_products.any? %>
+  <section class="home-section fade-in-up" data-controller="horizontal-scroll">
+    <div class="home-section__header">
+      <h2 class="home-section__title"><%= t('storefront.home.special_price_products.title') %></h2>
+    </div>
+    <div class="home-carousel-wrapper">
+      <div data-horizontal-scroll-target="container" class="home-carousel">
+        <% @special_price_products.each do |product| %>
+          <div class="home-carousel__item">
+            <%= render "storefront/home/visual_card",
+                        link_path: product_path(org_slug: params[:org_slug], id: product),
+                        image: product.display_photo,
+                        name: product.name,
+                        product: product,
+                        discount_info: @product_discounts[product.id],
+                        show_price: show_prices? && current_organisation.special_prices_show_price,
+                        show_discount_badge: current_organisation.special_prices_show_discount_badge,
+                        show_sale_badge: current_organisation.special_prices_show_sale_badge %>
+          </div>
+        <% end %>
+      </div>
+      <button data-horizontal-scroll-target="leftBtn" data-action="click->horizontal-scroll#scrollLeft"
+              class="home-carousel__arrow home-carousel__arrow--left" style="display: none;">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button data-horizontal-scroll-target="rightBtn" data-action="click->horizontal-scroll#scrollRight"
+              class="home-carousel__arrow home-carousel__arrow--right">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+<% end %>
+
+<%# ==================== FEATURED PRODUCTS ==================== %>
+<% if @featured_products.any? %>
+  <section class="home-section fade-in-up" data-controller="horizontal-scroll">
+    <div class="home-section__header">
+      <h2 class="home-section__title"><%= t('storefront.home.featured_products.title') %></h2>
+    </div>
+    <div class="home-carousel-wrapper">
+      <div data-horizontal-scroll-target="container" class="home-carousel">
+        <% @featured_products.each do |product| %>
+          <div class="home-carousel__item">
+            <%= render "storefront/home/visual_card",
+                        link_path: product_path(org_slug: params[:org_slug], id: product),
+                        image: product.display_photo,
+                        name: product.name %>
+          </div>
+        <% end %>
+      </div>
+      <button data-horizontal-scroll-target="leftBtn" data-action="click->horizontal-scroll#scrollLeft"
+              class="home-carousel__arrow home-carousel__arrow--left" style="display: none;">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button data-horizontal-scroll-target="rightBtn" data-action="click->horizontal-scroll#scrollRight"
+              class="home-carousel__arrow home-carousel__arrow--right">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+<% end %>
+
+<%# ==================== PORTAL DO CLIENTE ==================== %>
+<div id="portal-cliente" class="home-divider">
+  <span class="home-divider__label"><%= t('storefront.home.portal.title') %></span>
+</div>
+
+<%# Discount banner — shown when customer has any active discounts or free shipping %>
+<% if show_prices? && !browsing_as_member? && (@tier_discount || @special_prices_count > 0 || active_order_discounts.any? || @active_promo_codes&.any? || current_organisation.free_shipping_enabled?) %>
+  <section class="home-section fade-in-up">
+    <div class="card border-0 shadow-sm" style="border-radius: 12px; background: var(--org-secondary); color: #fff;">
+      <div class="card-body py-3">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="fw-semibold"><%= current_customer.company_name %></span>
+          <span class="badge bg-success" style="font-size: 0.65rem;"><%= t('storefront.home.tier_discount.active_badge') %></span>
+        </div>
+        <div class="row g-2">
+          <% if @tier_discount %>
+            <div class="col-6 col-md">
+              <div class="text-center rounded-2 py-2" style="background: rgba(255,255,255,0.1);">
+                <div class="fw-bold fs-5">
+                  <% if @tier_discount.discount_type == 'percentage' %>
+                    <%= (@tier_discount.discount_value * 100).round(0) %>%
+                  <% else %>
+                    <%= money_amount(Money.new((@tier_discount.discount_value * 100).to_i, current_organisation.currency)) %>
+                  <% end %>
+                </div>
+                <div class="small" style="opacity: 0.7;"><%= t('storefront.home.tier_discount.off_every_product') %></div>
+              </div>
+            </div>
+          <% end %>
+          <% if @special_prices_count > 0 %>
+            <div class="col-6 col-md">
+              <div class="text-center rounded-2 py-2" style="background: rgba(255,255,255,0.1);">
+                <div class="fw-bold fs-5"><i class="fa-solid fa-tag me-1" style="opacity: 0.7;"></i><%= @special_prices_count %></div>
+                <div class="small" style="opacity: 0.7;"><%= t('storefront.home.tier_discount.exclusive_prices') %></div>
+              </div>
+            </div>
+          <% end %>
+          <% active_order_discounts.each do |od| %>
+            <div class="col-6 col-md">
+              <div class="text-center rounded-2 py-2" style="background: rgba(255,255,255,0.1);">
+                <div class="fw-bold fs-5">
+                  <% if od.percentage? %>
+                    <%= (od.discount_value * 100).round(0) %>%
+                  <% else %>
+                    <%= money_amount(Money.new((od.discount_value * 100).to_i, current_organisation.currency)) %>
+                  <% end %>
+                </div>
+                <div class="small" style="opacity: 0.7;"><%= t('storefront.home.tier_discount.off_orders_over', amount: money_amount(od.min_order_amount)) %></div>
+              </div>
+            </div>
+          <% end %>
+          <% @active_promo_codes&.each do |pc| %>
+            <div class="col-6 col-md">
+              <div class="text-center rounded-2 py-2" style="background: rgba(255,255,255,0.1);">
+                <div class="fw-bold fs-5">
+                  <i class="fa-solid fa-ticket me-1" style="opacity: 0.7;"></i>
+                  <% if pc.percentage? %>
+                    <%= (pc.discount_value * 100).round(0) %>%
+                  <% else %>
+                    <%= money_amount(Money.new((pc.discount_value * 100).to_i, current_organisation.currency)) %>
+                  <% end %>
+                </div>
+                <div class="small" style="opacity: 0.7;"><%= t('storefront.home.tier_discount.promo_code', code: pc.code) %></div>
+              </div>
+            </div>
+          <% end %>
+          <% if current_organisation.free_shipping_enabled? %>
+            <div class="col-6 col-md">
+              <div class="text-center rounded-2 py-2" style="background: rgba(255,255,255,0.1);">
+                <div class="fw-bold fs-5"><i class="fa-solid fa-truck me-1" style="opacity: 0.7;"></i><%= t('storefront.home.tier_discount.free_label') %></div>
+                <div class="small" style="opacity: 0.7;"><%= t('storefront.home.tier_discount.free_shipping_over', amount: money_amount(current_organisation.free_shipping_threshold)) %></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<%# ==================== TWO-COLUMN PORTAL LAYOUT ==================== %>
+<div class="row g-4">
+  <%# Left column: Products %>
+  <div class="col-lg-8">
+    <%# Frequent Products (customer only) %>
+    <% if !browsing_as_member? %>
+      <section class="home-section fade-in-up" data-controller="horizontal-scroll">
+        <div class="home-section__header">
+          <h2 class="home-section__title"><%= t('storefront.home.frequent_products.title') %></h2>
+        </div>
+        <p class="text-muted small" style="margin-top: -0.75rem;"><%= t('storefront.home.frequent_products.subtitle', count: @frequent_products.size) %></p>
+        <% if @frequent_products.any? %>
+          <div class="home-carousel-wrapper">
+            <div data-horizontal-scroll-target="container" class="home-carousel">
+              <% @frequent_products.each do |product| %>
+                <div class="home-carousel__item home-carousel__item--portal">
+                  <%= render "storefront/home/visual_card",
+                              link_path: product_path(org_slug: params[:org_slug], id: product),
+                              image: product.display_photo,
+                              name: product.name %>
+                </div>
+              <% end %>
+            </div>
+            <button data-horizontal-scroll-target="leftBtn" data-action="click->horizontal-scroll#scrollLeft"
+                    class="home-carousel__arrow home-carousel__arrow--left" style="display: none;">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button data-horizontal-scroll-target="rightBtn" data-action="click->horizontal-scroll#scrollRight"
+                    class="home-carousel__arrow home-carousel__arrow--right">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        <% else %>
+          <div class="text-center py-4">
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+              <i class="fa-solid fa-basket-shopping"></i>
+            </div>
+            <p class="fw-medium mb-1"><%= t('storefront.home.frequent_products.empty') %></p>
+            <p class="text-muted small mb-3"><%= t('storefront.home.frequent_products.empty_hint') %></p>
+            <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-sm", style: "background: var(--org-primary); color: var(--org-primary-contrast);" do %>
+              <%= t('storefront.home.browse_catalog') %>
+            <% end %>
+          </div>
+        <% end %>
+      </section>
+    <% end %>
+
+    <%# New Arrivals %>
+    <% if @new_products.any? %>
+      <section class="home-section fade-in-up" data-controller="horizontal-scroll">
+        <div class="home-section__header">
+          <h2 class="home-section__title"><%= t('storefront.home.new_products.title') %></h2>
+        </div>
+        <p class="text-muted small" style="margin-top: -0.75rem;"><%= t('storefront.home.new_products.subtitle') %></p>
+        <div class="home-carousel-wrapper">
+          <div data-horizontal-scroll-target="container" class="home-carousel">
+            <% @new_products.each do |product| %>
+              <div class="home-carousel__item home-carousel__item--portal">
+                <%= render "storefront/home/visual_card",
+                            link_path: product_path(org_slug: params[:org_slug], id: product),
+                            image: product.display_photo,
+                            name: product.name,
+                            badge: t('storefront.home.new_products.new_badge', default: 'Novo') %>
+              </div>
+            <% end %>
+          </div>
+          <button data-horizontal-scroll-target="leftBtn" data-action="click->horizontal-scroll#scrollLeft"
+                  class="home-carousel__arrow home-carousel__arrow--left" style="display: none;">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button data-horizontal-scroll-target="rightBtn" data-action="click->horizontal-scroll#scrollRight"
+                  class="home-carousel__arrow home-carousel__arrow--right">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </section>
+    <% end %>
+  </div>
+
+  <%# Right column: Sidebar %>
+  <div class="col-lg-4">
+    <%# Last Order %>
+    <% unless browsing_as_member? %>
+      <div class="card border-0 shadow-sm mb-4 fade-in-up" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-clock-rotate-left me-2" style="color: var(--org-secondary);"></i><%= t('storefront.home.last_order.title') %>
+          </h5>
+          <% if @last_order %>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold" style="color: var(--org-primary);"><%= @last_order.order_number %></span>
+              <% status_class = case @last_order.status
+                 when 'completed' then 'bg-success'
+                 when 'processed' then 'bg-info'
+                 when 'in_process' then 'bg-warning text-dark'
+                 else 'bg-secondary'
+                 end %>
+              <span class="badge <%= status_class %>"><%= @last_order.status.titleize %></span>
+            </div>
+            <p class="text-muted small mb-3"><%= @last_order.placed_at&.strftime("%d %b %Y") %></p>
+
+            <%# Progress stepper %>
+            <% steps = ['in_process', 'processed', 'completed']
+               current_step = steps.index(@last_order.status) || 0 %>
+            <div class="d-flex align-items-center justify-content-between mb-3 px-1">
+              <% steps.each_with_index do |step, i| %>
+                <div class="text-center" style="flex: 0 0 auto;">
+                  <% if i <= current_step %>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 28px; height: 28px; background: var(--org-primary); color: var(--org-primary-contrast); font-size: 0.7rem;">
+                      <% if i < current_step %>
+                        <i class="fa-solid fa-check"></i>
+                      <% else %>
+                        <i class="fa-solid fa-circle" style="font-size: 0.4rem;"></i>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 28px; height: 28px; background: #e2e8f0; color: #94a3b8; font-size: 0.7rem;">
+                      <i class="fa-solid fa-circle" style="font-size: 0.4rem;"></i>
+                    </div>
+                  <% end %>
+                  <div class="small mt-1" style="font-size: 0.7rem; color: <%= i <= current_step ? 'var(--org-primary)' : '#94a3b8' %>;">
+                    <%= t("storefront.home.last_order.steps.#{step}") %>
+                  </div>
+                </div>
+                <% if i < steps.length - 1 %>
+                  <div class="flex-grow-1 mx-1" style="height: 2px; background: <%= i < current_step ? 'var(--org-primary)' : '#e2e8f0' %>; margin-top: -12px;"></div>
+                <% end %>
+              <% end %>
+            </div>
+
+            <%# Order summary %>
+            <div class="d-flex justify-content-between align-items-center py-2 mb-3" style="border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
+              <div class="text-center">
+                <div class="fw-bold"><%= @last_order.order_items.count %></div>
+                <div class="text-muted small"><%= t('storefront.home.last_order.items_label') %></div>
+              </div>
+<% if show_prices? %>
+              <div class="text-center">
+                <div class="fw-bold"><%= money_amount(@last_order.grand_total) %></div>
+                <div class="text-muted small"><%= t('storefront.home.last_order.total_label') %></div>
+              </div>
+              <% end %>
+              <% if @last_order.delivery_method.present? %>
+                <div class="text-center">
+                  <div><i class="fa-solid fa-<%= @last_order.delivery_method == 'delivery' ? 'truck' : 'store' %>"></i></div>
+                  <div class="text-muted small"><%= @last_order.delivery_method == 'delivery' ? t('storefront.orders.show.delivery') : t('storefront.orders.show.pickup') %></div>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="d-flex gap-2">
+              <%= link_to order_path(org_slug: params[:org_slug], id: @last_order), class: "btn btn-outline-secondary btn-sm flex-fill" do %>
+                <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> <%= t('storefront.home.last_order.view_order') %>
+              <% end %>
+              <%= button_to reorder_order_path(org_slug: params[:org_slug], id: @last_order), method: :post, class: "btn btn-sm flex-fill", style: "background: var(--org-primary); color: var(--org-primary-contrast);" do %>
+                <i class="fa-solid fa-rotate-right me-1"></i> <%= t('storefront.orders.index.reorder') %>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-3">
+              <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+                <i class="fa-solid fa-receipt"></i>
+              </div>
+              <p class="fw-medium mb-1"><%= t('storefront.home.last_order.no_orders') %></p>
+              <p class="text-muted small mb-3"><%= t('storefront.home.last_order.no_orders_hint') %></p>
+              <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-sm", style: "background: var(--org-primary); color: var(--org-primary-contrast);" do %>
+                <%= t('storefront.home.frequent_products.start_shopping') %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Delivery Info %>
+    <div class="card border-0 shadow-sm mb-4 fade-in-up" style="border-radius: 12px;">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fa-solid fa-truck me-2" style="color: var(--org-secondary);"></i><%= t('storefront.home.delivery_info.title') %>
+        </h5>
+        <div class="d-flex flex-column gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-calendar-days text-muted" style="width: 18px; text-align: center;"></i>
+            <span class="small"><%= current_organisation.delivery_wdays.map { |d| t("date.day_names")[d].capitalize }.join(", ") %></span>
+          </div>
+          <% if current_organisation.order_cutoff_time.present? %>
+            <div class="d-flex align-items-center gap-2">
+              <i class="fa-solid fa-clock text-muted" style="width: 18px; text-align: center;"></i>
+              <span class="small"><%= t('storefront.home.delivery_info.cutoff', time: current_organisation.order_cutoff_time) %></span>
+            </div>
+          <% end %>
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-box text-muted" style="width: 18px; text-align: center;"></i>
+            <span class="small"><%= t('storefront.home.delivery_info.next_delivery', date: l(current_organisation.earliest_delivery_date, format: :long)) %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Shopping Lists (customer only) %>
+    <% if !browsing_as_member? && @shopping_lists.present? %>
+      <div class="card border-0 shadow-sm mb-4 fade-in-up" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-clipboard-list me-2" style="color: var(--org-secondary);"></i><%= t('storefront.home.shopping_lists.title') %>
+          </h5>
+          <% @shopping_lists.each_with_index do |list, i| %>
+            <%= link_to shopping_list_path(org_slug: params[:org_slug], id: list), class: "d-flex align-items-center justify-content-between py-2 text-decoration-none text-body #{'border-bottom' unless i == @shopping_lists.size - 1}" do %>
+              <div>
+                <div class="fw-medium small"><%= list.name %></div>
+                <div class="text-muted" style="font-size: 0.75rem;"><%= t('storefront.common.items', count: list.item_count) %></div>
+              </div>
+              <i class="fa-solid fa-chevron-right text-muted" style="font-size: 0.7rem;"></i>
+            <% end %>
+          <% end %>
+          <div class="mt-3">
+            <%= link_to shopping_lists_path(org_slug: params[:org_slug]), class: "btn btn-outline-primary btn-sm w-100" do %>
+              <%= t('storefront.home.shopping_lists.view_all') %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Quick Links %>
+    <% unless browsing_as_member? %>
+      <div class="card border-0 shadow-sm mb-4 fade-in-up" style="border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-link me-2" style="color: var(--org-secondary);"></i><%= t('storefront.home.quick_links.title') %>
+          </h5>
+          <%= link_to orders_path(org_slug: params[:org_slug]), class: "d-flex align-items-center justify-content-between py-2 text-decoration-none text-body" do %>
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+                <i class="fa-solid fa-list-check" style="font-size: 0.8rem;"></i>
+              </div>
+              <div>
+                <div class="fw-medium small"><%= t('storefront.home.quick_links.all_orders') %></div>
+                <div class="text-muted" style="font-size: 0.75rem;"><%= t('storefront.home.quick_links.orders_placed', count: @total_orders_count) %></div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-muted" style="font-size: 0.7rem;"></i>
+          <% end %>
+          <%= link_to account_path(org_slug: params[:org_slug]), class: "d-flex align-items-center justify-content-between py-2 text-decoration-none text-body border-top" do %>
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+                <i class="fa-solid fa-user-gear" style="font-size: 0.8rem;"></i>
+              </div>
+              <div>
+                <div class="fw-medium small"><%= t('storefront.home.quick_links.my_account') %></div>
+                <div class="text-muted" style="font-size: 0.75rem;"><%= t('storefront.home.quick_links.manage_profile') %></div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-muted" style="font-size: 0.7rem;"></i>
+          <% end %>
+          <% if current_organisation.has_contact_info? %>
+            <%= link_to contact_path(org_slug: params[:org_slug]), class: "d-flex align-items-center justify-content-between py-2 text-decoration-none text-body border-top" do %>
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; background: rgba(var(--org-secondary-rgb), 0.1); color: var(--org-secondary);">
+                  <i class="fa-solid fa-headset" style="font-size: 0.8rem;"></i>
+                </div>
+                <div>
+                  <div class="fw-medium small"><%= t('storefront.home.quick_links.contact_support') %></div>
+                </div>
+              </div>
+              <i class="fa-solid fa-chevron-right text-muted" style="font-size: 0.7rem;"></i>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

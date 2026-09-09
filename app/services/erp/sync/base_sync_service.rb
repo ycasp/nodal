@@ -17,10 +17,19 @@ module Erp
         return failure('ERP integration not enabled') unless erp_configuration.enabled?
         return failure('Invalid adapter configuration') unless adapter
 
+        # Clear zombie "running" logs from previously killed processes before
+        # checking for concurrency, so the guard doesn't trip on stale state.
+        cleanup_stale_logs
+
+        if sync_already_running?
+          return failure("A #{entity_type} sync is already running for this organisation")
+        end
+
         @sync_log = create_sync_log
 
         begin
           perform_sync
+          sync_log.save_change_details!
           sync_log.mark_completed!
           success
         rescue Erp::ApiError, Erp::ConnectionError => e
@@ -64,6 +73,30 @@ module Erp
 
       def failure(error_message)
         Result.new(success?: false, sync_log: sync_log, error: error_message)
+      end
+
+      # Mark zombie "running" logs (from killed processes) as completed.
+      # Scoped to the same entity_type so a kill on one sync doesn't taint
+      # logs of the others.
+      def cleanup_stale_logs
+        ErpSyncLog.where(
+          organisation: organisation,
+          entity_type: entity_type,
+          status: 'running'
+        ).where(started_at: ..10.minutes.ago)
+         .find_each do |stale_log|
+          stale_log.update(status: 'completed', completed_at: stale_log.updated_at)
+        end
+      rescue StandardError
+        # Don't let cleanup errors break anything
+      end
+
+      def sync_already_running?
+        ErpSyncLog.where(
+          organisation: organisation,
+          entity_type: entity_type,
+          status: 'running'
+        ).exists?
       end
     end
   end

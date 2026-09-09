@@ -1,0 +1,114 @@
+<!-- Promo Codes Tab -->
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h5 class="card-title mb-1"><%= t('bo.pricing.tabs.promo_codes') %></h5>
+        <p class="text-muted small mb-0"><%= t('bo.pricing.promo_codes.description') %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Promo Codes Table -->
+<div class="card">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th><%= t('bo.pricing.promo_codes.table.code') %></th>
+        <th><%= t('bo.pricing.form.discount_type') %></th>
+        <th><%= t('bo.pricing.form.value') %></th>
+        <th><%= t('bo.pricing.promo_codes.table.eligibility') %></th>
+        <th><%= t('bo.pricing.promo_codes.table.usage') %></th>
+        <th><%= t('bo.pricing.form.valid_period') %></th>
+        <th><%= t('bo.common.tables.status') %></th>
+        <th><%= t('bo.common.actions_column') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @promo_codes.any? %>
+        <% @promo_codes.each do |promo| %>
+          <tr>
+            <td>
+              <span class="fw-semibold font-monospace"><%= promo.code %></span>
+              <% if promo.description.present? %>
+                <br><small class="text-muted"><%= truncate(promo.description, length: 40) %></small>
+              <% end %>
+            </td>
+            <td>
+              <span class="badge bg-secondary-subtle text-secondary">
+                <%= promo.discount_type.titleize %>
+              </span>
+            </td>
+            <td>
+              <% if promo.percentage? %>
+                <span class="text-success fw-semibold"><%= promo.value_display %></span>
+              <% else %>
+                <span class="text-success fw-semibold"><%= humanized_money_with_symbol(Money.new((promo.discount_value * 100).to_i, @current_organisation.currency)) %></span>
+              <% end %>
+            </td>
+            <td>
+              <% if promo.eligibility == 'all_customers' %>
+                <span class="badge bg-info-subtle text-info"><%= t('bo.pricing.promo_codes.table.all_customers') %></span>
+              <% else %>
+                <span class="badge bg-warning-subtle text-warning"><%= t('bo.pricing.promo_codes.table.specific_customers_count', count: promo.promo_code_customers.size) %></span>
+                <% if promo.promo_code_customer_categories.any? %>
+                  <span class="badge bg-info-subtle text-info"><%= t('bo.pricing.promo_codes.table.categories_count', count: promo.promo_code_customer_categories.size) %></span>
+                <% end %>
+              <% end %>
+            </td>
+            <td>
+              <span class="fw-medium"><%= promo.usage_count %></span>
+              <span class="text-muted">/ <%= promo.usage_limit || '∞' %></span>
+            </td>
+            <td><%= promo.valid_period_display %></td>
+            <td>
+              <%= form_with url: toggle_active_bo_promo_code_path(params[:org_slug], promo),
+                            method: :patch,
+                            local: true,
+                            class: "d-inline" do %>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox"
+                         <%= 'checked' if promo.active? %>
+                         onchange="this.form.submit()">
+                </div>
+              <% end %>
+            </td>
+            <td>
+              <div class="d-flex gap-2">
+                <% if promo.email_pending? %>
+                  <a href="#" class="text-warning" title="<%= t('bo.pricing.email_notifications.pending') %>"
+                     data-action="click->email-notification#open"
+                     data-send-url="<%= send_email_bo_discount_email_notification_path(params[:org_slug], promo.email_notification) %>"
+                     data-recipients-url="<%= recipients_bo_discount_email_notification_path(params[:org_slug], promo.email_notification) %>"
+                     data-recipient-count="<%= promo.email_notification.recipient_count %>"
+                     data-discount-type="<%= promo.discount_type.titleize %>">
+                    <i class="fa-solid fa-envelope"></i>
+                  </a>
+                <% elsif promo.email_sent? %>
+                  <span class="text-success" title="<%= t('bo.pricing.email_notifications.sent') %>">
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+                  </span>
+                <% end %>
+                <%= link_to edit_bo_promo_code_path(params[:org_slug], promo), class: "text-muted", title: t('bo.common.actions.edit') do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+                <%= link_to bo_promo_code_path(params[:org_slug], promo), class: "text-danger", title: t('bo.common.actions.delete'), data: { turbo_method: :delete, turbo_confirm: t('bo.common.confirm.delete_discount') } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="8" class="text-center text-muted py-4">
+            <i class="fa-solid fa-ticket fa-2x mb-2 d-block"></i>
+            <%= t('bo.pricing.promo_codes.no_codes') %>
+            <%= link_to t('bo.pricing.promo_codes.create_first'), new_bo_promo_code_path(params[:org_slug]) %>.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; color: #333; line-height: 1.4; }
+    .contact-page { padding-top: 40px; }
+    .contact-title { font-size: 24px; font-weight: 700; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #333; }
+    .contact-grid { display: flex; gap: 40px; }
+    .contact-block { flex: 1; }
+    .contact-block h3 { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #222; }
+    .contact-item { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+    .contact-icon { width: 32px; height: 32px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .contact-label { font-size: 11px; color: #888; }
+    .contact-value { font-size: 13px; font-weight: 500; color: #222; }
+    .observations { margin-bottom: 40px; }
+    .observations-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333; color: #222; }
+    .observations-text { font-size: 13px; color: #444; line-height: 1.6; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <% if @observations %>
+    <div class="observations">
+      <h2 class="observations-title"><%= t('bo.catalog.pdf.observations') %></h2>
+      <div class="observations-text"><%= @observations %></div>
+    </div>
+  <% end %>
+
+  <% if @organisation.has_contact_info? %>
+  <div class="contact-page">
+    <h2 class="contact-title"><%= t('bo.catalog.pdf.contact_us') %></h2>
+    <div class="contact-grid">
+      <div class="contact-block">
+        <h3><%= t('bo.catalog.pdf.get_in_touch') %></h3>
+        <% if @organisation.contact_email.present? %>
+          <div class="contact-item">
+            <div class="contact-icon">&#9993;</div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value"><%= @organisation.contact_email %></div>
+            </div>
+          </div>
+        <% end %>
+        <% if @organisation.phone.present? %>
+          <div class="contact-item">
+            <div class="contact-icon">&#9742;</div>
+            <div>
+              <div class="contact-label"><%= t('bo.catalog.pdf.phone') %></div>
+              <div class="contact-value"><%= @organisation.phone %></div>
+            </div>
+          </div>
+        <% end %>
+        <% if @organisation.whatsapp.present? %>
+          <div class="contact-item">
+            <div class="contact-icon">&#128172;</div>
+            <div>
+              <div class="contact-label">WhatsApp</div>
+              <div class="contact-value"><%= @organisation.whatsapp %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="contact-block">
+        <h3><%= t('bo.catalog.pdf.location_hours') %></h3>
+        <% address = @organisation.display_contact_address %>
+        <% if address.present? %>
+          <div class="contact-item">
+            <div class="contact-icon">&#128205;</div>
+            <div>
+              <div class="contact-value">
+                <%= address.street_name %><% if address.street_nr.present? %> <%= address.street_nr %><% end %><br>
+                <%= address.postal_code %> <%= address.city %><br>
+                <%= address.country %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        <% if @organisation.business_hours.present? %>
+          <div class="contact-item">
+            <div class="contact-icon">&#128336;</div>
+            <div>
+              <div class="contact-value"><%= @organisation.business_hours %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</body>
+</html>

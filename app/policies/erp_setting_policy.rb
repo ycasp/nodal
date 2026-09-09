@@ -15,6 +15,10 @@ class ErpSettingPolicy < ApplicationPolicy
     admin_or_owner?
   end
 
+  def test_filter?
+    admin_or_owner?
+  end
+
   def sync_now?
     admin_or_owner?
   end

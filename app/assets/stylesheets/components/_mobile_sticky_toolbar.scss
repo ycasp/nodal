@@ -1,0 +1,61 @@
+// Mobile Sticky Toolbar
+// Compact bar below navbar with product count, sort, and filter button
+
+.mobile-sticky-toolbar {
+  position: sticky;
+  // Offset by the sticky header's real height (set by the sticky-offset
+  // controller); 64px is a sane fallback before JS runs.
+  top: var(--storefront-header-height, 64px);
+  z-index: 1010;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 0.5rem 0;
+  margin: 0 -0.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  transition: box-shadow 0.2s ease;
+}
+
+// Expandable search bar inside toolbar
+.mobile-toolbar-search {
+  max-height: 60px;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+  opacity: 1;
+
+  &.collapsed {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+}
+
+// Sort chips inside bottom sheet
+.mobile-sort-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #555;
+  background: #f3f3f3;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  transition: all 0.15s ease;
+  min-height: 38px;
+
+  &:hover {
+    text-decoration: none;
+    color: #333;
+    background: #eee;
+  }
+
+  &.active {
+    background: rgba(var(--org-primary-rgb, 0, 128, 96), 0.1);
+    color: var(--org-primary, #008060);
+    border-color: var(--org-primary, #008060);
+    font-weight: 600;
+  }
+}

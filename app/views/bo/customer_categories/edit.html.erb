@@ -1,0 +1,148 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_customers_path(params[:org_slug], tab: 'categories'), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+      <div>
+        <h1><%= t('bo.customer_categories.edit.title') %></h1>
+        <span class="text-muted"><%= @customer_category.name %></span>
+      </div>
+    </div>
+    <div class="bo-page-actions">
+      <%= link_to bo_customers_path(params[:org_slug], tab: 'categories'), class: "btn btn-outline-secondary" do %>
+        <%= t('bo.common.actions.cancel') %>
+      <% end %>
+      <button type="submit" form="category-form" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> <%= t('bo.common.actions.save_changes') %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <%= form_with model: @customer_category, url: bo_customer_category_path(params[:org_slug], @customer_category), method: :patch, id: "category-form" do |f| %>
+    <div class="row g-3">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label"><%= t('bo.customer_categories.form.name') %> <span class="text-danger">*</span></label>
+              <%= f.text_field :name, class: "form-control", placeholder: t('bo.customer_categories.form.name_placeholder'), required: true %>
+            </div>
+            <div class="mb-0">
+              <label class="form-label"><%= t('bo.customer_categories.form.description') %></label>
+              <%= f.text_area :description, class: "form-control", rows: 3, placeholder: t('bo.customer_categories.form.description_placeholder') %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── Assigned Customers ── %>
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="card-title mb-0">
+          <i class="fa-solid fa-users me-2"></i><%= t('bo.customer_categories.customers.title') %>
+          <span class="badge bg-light text-dark border ms-2"><%= @assigned_customers.count %></span>
+        </h5>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCustomersModal">
+          <i class="fa-solid fa-plus me-1"></i> <%= t('bo.customer_categories.customers.add') %>
+        </button>
+      </div>
+
+      <% if @assigned_customers.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th><%= t('bo.customers.index.table.customer') %></th>
+                <th><%= t('bo.customers.index.table.company') %></th>
+                <th><%= t('bo.customers.index.table.contact') %></th>
+                <th class="text-end"><%= t('bo.common.actions_column') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @assigned_customers.each do |customer| %>
+                <tr>
+                  <td class="fw-semibold"><%= customer.contact_name %></td>
+                  <td><%= customer.company_name %></td>
+                  <td>
+                    <div><%= customer.email %></div>
+                    <small class="text-muted"><%= customer.contact_phone %></small>
+                  </td>
+                  <td class="text-end" style="white-space: nowrap;">
+                    <%= button_to remove_customer_bo_customer_category_path(params[:org_slug], @customer_category, customer_id: customer.id),
+                        method: :delete, form: { class: "d-inline" },
+                        class: "btn btn-sm btn-link text-danger",
+                        data: { turbo_confirm: t('bo.customer_categories.customers.confirm_remove') } do %>
+                      <i class="fa-solid fa-xmark"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted text-center py-3 mb-0"><%= t('bo.customer_categories.customers.empty') %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Add Customers Modal -->
+<div class="modal fade" id="addCustomersModal" tabindex="-1" aria-labelledby="addCustomersModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <%= form_with url: add_customers_bo_customer_category_path(params[:org_slug], @customer_category), method: :post, local: true do %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCustomersModalLabel"><%= t('bo.customer_categories.customers.modal_title') %></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-3"><%= t('bo.customer_categories.customers.modal_hint') %></p>
+
+          <% if @available_customers.any? %>
+            <div class="mb-3">
+              <div class="input-group">
+                <input type="text" id="customerSearchInput" class="form-control"
+                       placeholder="<%= t('bo.customer_categories.customers.search_placeholder') %>"
+                       oninput="var q=this.value.toLowerCase(); this.closest('.modal-body').querySelectorAll('.customer-item').forEach(function(el){ var n=el.getAttribute('data-name')||''; var show=(q===''||n.indexOf(q)>=0); el.style.setProperty('display', show?'flex':'none', 'important'); })">
+              </div>
+            </div>
+            <div class="list-group" style="max-height: 400px; overflow-y: auto;">
+              <% @available_customers.each do |customer| %>
+                <label class="list-group-item list-group-item-action d-flex align-items-center customer-item"
+                       data-name="<%= "#{customer.company_name} #{customer.contact_name} #{customer.email}".downcase %>">
+                  <input type="checkbox" name="customer_ids[]" value="<%= customer.id %>" class="form-check-input me-3">
+                  <div class="flex-grow-1">
+                    <div class="fw-semibold"><%= customer.company_name %></div>
+                    <small class="text-muted"><%= customer.contact_name %> &middot; <%= customer.email %></small>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <i class="fa-solid fa-check-circle fa-2x text-success mb-2"></i>
+              <p class="text-muted mb-0"><%= t('bo.customer_categories.customers.all_assigned') %></p>
+            </div>
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('bo.common.actions.cancel') %></button>
+          <% if @available_customers.any? %>
+            <button type="submit" class="btn btn-primary"><%= t('bo.customer_categories.customers.add_selected') %></button>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% end %>

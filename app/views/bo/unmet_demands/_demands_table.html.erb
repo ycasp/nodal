@@ -1,0 +1,119 @@
+<%# locals: demands (open UnmetDemand collection for one customer) %>
+<div class="table-responsive">
+  <table class="table table-sm align-middle mb-0 unmet-demands-table">
+    <thead>
+      <tr class="text-muted small">
+        <th><%= t('bo.unmet_demands.table.product') %></th>
+        <th><%= t('bo.unmet_demands.table.login') %></th>
+        <th class="text-center"><%= t('bo.unmet_demands.table.stock') %></th>
+        <th class="text-center"><%= t('bo.unmet_demands.table.wanted') %></th>
+        <th class="text-center"><%= t('bo.unmet_demands.table.in_cart') %></th>
+        <th class="text-center"><%= t('bo.unmet_demands.table.taken') %></th>
+        <th class="text-center"><%= t('bo.unmet_demands.table.shortfall') %></th>
+        <th class="text-end"><%= t('bo.unmet_demands.table.actions') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% demands.each do |demand| %>
+        <% stock = demand.current_stock %>
+        <% in_cart = demand.quantity_in_cart %>
+        <tr>
+          <td>
+            <div class="fw-semibold"><%= demand.product.name %></div>
+            <div class="text-muted small">
+              <% if demand.sku.present? %><span class="badge bg-light text-dark border me-1">SKU <%= demand.sku %></span><% end %>
+              <% if demand.product_variant&.option_values_string.present? %><%= demand.product_variant.option_values_string %><% end %>
+            </div>
+          </td>
+          <td class="small">
+            <div><%= demand.customer_user.contact_name.presence || demand.customer_user.email %></div>
+            <div class="text-muted"><%= demand.customer_user.email %></div>
+          </td>
+          <td class="text-center">
+            <% if stock.nil? %>
+              <span class="text-muted">—</span>
+            <% elsif stock == Float::INFINITY %>
+              <span title="<%= t('bo.unmet_demands.stock_unlimited') %>">∞</span>
+            <% else %>
+              <span class="<%= 'text-success fw-semibold' if demand.satisfiable_from_stock? %>"><%= stock %></span>
+            <% end %>
+          </td>
+          <td class="text-center"><%= demand.requested_quantity %></td>
+          <td class="text-center">
+            <% if in_cart > 0 %>
+              <span class="badge bg-info-subtle text-info-emphasis" title="<%= t('bo.unmet_demands.in_cart_title') %>"><%= in_cart %></span>
+            <% else %>
+              <span class="text-muted">—</span>
+            <% end %>
+          </td>
+          <td class="text-center">
+            <%= demand.fulfilled_quantity.to_i > 0 ? demand.fulfilled_quantity : content_tag(:span, "—", class: "text-muted") %>
+          </td>
+          <td class="text-center">
+            <span class="badge bg-warning text-dark rounded-pill"><%= demand.shortfall %></span>
+          </td>
+          <td class="text-end text-nowrap">
+            <% if demand.satisfiable_from_stock? %>
+              <%= button_to satisfy_bo_unmet_demand_path(org_slug: current_organisation.slug, id: demand.id),
+                            method: :post, class: "btn btn-sm btn-success",
+                            form: { class: "d-inline" },
+                            data: { turbo_confirm: t('bo.unmet_demands.confirm.satisfy', product: demand.product.name, qty: demand.shortfall) } do %>
+                <i class="fa-solid fa-cart-plus me-1"></i><%= t('bo.unmet_demands.actions.satisfy') %>
+              <% end %>
+            <% else %>
+              <%= button_to satisfy_bo_unmet_demand_path(org_slug: current_organisation.slug, id: demand.id),
+                            method: :post, class: "btn btn-sm btn-outline-success",
+                            form: { class: "d-inline" },
+                            title: t('bo.unmet_demands.satisfy_backorder_title'),
+                            data: { turbo_confirm: t('bo.unmet_demands.confirm.satisfy_backorder', product: demand.product.name, qty: demand.shortfall) } do %>
+                <i class="fa-solid fa-cart-plus me-1"></i><%= t('bo.unmet_demands.actions.satisfy') %>
+              <% end %>
+            <% end %>
+            <button type="button" class="btn btn-sm btn-outline-primary js-trocar-btn"
+                    data-bs-toggle="modal" data-bs-target="#trocarModal"
+                    data-action-url="<%= substitute_bo_unmet_demand_path(org_slug: current_organisation.slug, id: demand.id) %>"
+                    data-product="<%= demand.product.name %>"
+                    data-shortfall="<%= demand.shortfall %>">
+              <i class="fa-solid fa-right-left me-1"></i><%= t('bo.unmet_demands.actions.substitute') %>
+            </button>
+            <%= button_to dismiss_bo_unmet_demand_path(org_slug: current_organisation.slug, id: demand.id),
+                          method: :post, class: "btn btn-sm btn-outline-secondary",
+                          form: { class: "d-inline" },
+                          data: { turbo_confirm: t('bo.unmet_demands.confirm.dismiss', product: demand.product.name) } do %>
+              <i class="fa-solid fa-xmark"></i>
+            <% end %>
+            <button type="button" class="btn btn-sm btn-link text-muted text-decoration-none"
+                    data-bs-toggle="collapse" data-bs-target="#history-<%= demand.id %>">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </button>
+          </td>
+        </tr>
+        <tr class="collapse" id="history-<%= demand.id %>">
+          <td colspan="8" class="bg-light">
+            <div class="small">
+              <div class="fw-semibold text-muted mb-1"><%= t('bo.unmet_demands.history.title') %></div>
+              <% history = demand.occurrence_history %>
+              <% if history.any? %>
+                <ul class="list-unstyled mb-0">
+                  <% history.each do |occ| %>
+                    <li class="mb-1">
+                      <span class="text-muted"><%= l(occ.occurred_at, format: "%d/%m/%Y %H:%M") %></span> ·
+                      <%= t('bo.unmet_demands.history.line', wanted: occ.requested_quantity, kept: occ.kept_quantity) %> ·
+                      <% if occ.reason == "removed" %>
+                        <span class="text-danger"><%= t('bo.unmet_demands.reasons.removed') %></span>
+                      <% else %>
+                        <span class="text-warning-emphasis"><%= t('bo.unmet_demands.reasons.capped') %></span>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <span class="text-muted"><%= t('bo.unmet_demands.history.empty') %></span>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

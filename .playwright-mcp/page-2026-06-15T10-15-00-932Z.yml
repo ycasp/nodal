@@ -1,0 +1,383 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "aviminho" [ref=e5] [cursor=pointer]:
+          - /url: /aviminho/home
+          - img "aviminho" [ref=e6]
+        - text: 
+        - generic [ref=e7]:
+          - list [ref=e8]:
+            - listitem [ref=e9]:
+              - link "Início" [ref=e10] [cursor=pointer]:
+                - /url: /aviminho/home
+            - listitem [ref=e11]:
+              - link "Produtos" [ref=e12] [cursor=pointer]:
+                - /url: /aviminho/products
+            - listitem [ref=e13]:
+              - link "Encomendas" [ref=e14] [cursor=pointer]:
+                - /url: /aviminho/orders
+            - listitem [ref=e15]:
+              - link "Contacto" [ref=e16] [cursor=pointer]:
+                - /url: /aviminho/contact
+          - generic [ref=e17]:
+            - link " %" [ref=e18] [cursor=pointer]:
+              - /url: /aviminho/cart
+              - generic [ref=e19]: 
+              - generic "Descontos de encomenda disponíveis!" [ref=e20]:
+                - generic [ref=e21]: "%"
+            - generic [ref=e22]:
+              - generic [ref=e23]: 
+              - text: Pizzaria Bella Napoli
+            - generic [ref=e24]:
+              - button " João Silva" [ref=e25] [cursor=pointer]:
+                - generic [ref=e26]: 
+                - text: João Silva
+              - text:   
+    - generic [ref=e27]:
+      - generic [ref=e28]: 
+      - text: Envio grátis em encomendas acima de €250
+  - main [ref=e29]:
+    - heading "Bom dia, João Silva" [level=2] [ref=e31]
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - img "Explore a nossa oferta de bebidas" [ref=e35]
+        - generic [ref=e36]:
+          - heading "Explore a nossa oferta de bebidas" [level=2] [ref=e37]
+          - link "Explorar" [ref=e39] [cursor=pointer]:
+            - /url: https://www.nodal-seiri.dev/nodal-demo/products?category=574
+      - generic [ref=e40]:
+        - img "Sobremesas para a época de Verão" [ref=e41]
+        - generic [ref=e42]:
+          - heading "Sobremesas para a época de Verão" [level=2] [ref=e43]
+          - paragraph [ref=e44]: Explore a nossa oferta de sobremesas
+          - link "Delicie-se" [ref=e46] [cursor=pointer]:
+            - /url: https://www.nodal-seiri.dev/nodal-demo/products?category=568
+      - button "" [ref=e47] [cursor=pointer]:
+        - generic [ref=e48]: 
+      - button "" [ref=e49] [cursor=pointer]:
+        - generic [ref=e50]: 
+      - generic [ref=e51]:
+        - button [ref=e52] [cursor=pointer]
+        - button [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - link " Portal de Cliente" [ref=e55] [cursor=pointer]:
+        - /url: "#portal-cliente"
+        - generic [ref=e56]: 
+        - text: Portal de Cliente
+      - link " Ver Catálogo" [ref=e57] [cursor=pointer]:
+        - /url: /aviminho/products
+        - generic [ref=e58]: 
+        - text: Ver Catálogo
+    - generic [ref=e59]:
+      - heading "Categorias em Destaque" [level=2] [ref=e61]
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - link "Tomate Tomate" [ref=e65] [cursor=pointer]:
+            - /url: /aviminho/products?category=nodal-demo-tomate
+            - generic [ref=e66]:
+              - img "Tomate" [ref=e68]
+              - generic [ref=e70]: Tomate
+          - link "Categoria A Categoria A" [ref=e72] [cursor=pointer]:
+            - /url: /aviminho/products?category=nodal-demo-lacticinios
+            - generic [ref=e73]:
+              - img "Categoria A" [ref=e75]
+              - generic [ref=e77]: Categoria A
+          - link "Conservas Conservas" [ref=e79] [cursor=pointer]:
+            - /url: /aviminho/products?category=nodal-demo-conservas
+            - generic [ref=e80]:
+              - img "Conservas" [ref=e82]
+              - generic [ref=e84]: Conservas
+          - link "Não Alimentar Não Alimentar" [ref=e86] [cursor=pointer]:
+            - /url: /aviminho/products?category=nodal-demo-nao-alimentar
+            - generic [ref=e87]:
+              - img "Não Alimentar" [ref=e89]
+              - generic [ref=e91]: Não Alimentar
+          - link "Categoria B Categoria B" [ref=e93] [cursor=pointer]:
+            - /url: /aviminho/products?category=nodal-demo-charcutaria
+            - generic [ref=e94]:
+              - img "Categoria B" [ref=e96]
+              - generic [ref=e98]: Categoria B
+          - link "Farinhas E Derivados Farinhas E Derivados" [ref=e100] [cursor=pointer]:
+            - /url: /aviminho/products?category=nodal-demo-farinhas
+            - generic [ref=e101]:
+              - img "Farinhas E Derivados" [ref=e103]
+              - generic [ref=e105]: Farinhas E Derivados
+        - text: 
+        - button "" [ref=e106] [cursor=pointer]:
+          - generic [ref=e107]: 
+    - generic [ref=e108]:
+      - heading "Produtos com Preços Especiais" [level=2] [ref=e110]
+      - generic [ref=e111]:
+        - link "PROMOÇÃO -15% Trufa preta em conserva 80g Trufa preta em conserva 80g €38 €32.30" [ref=e114] [cursor=pointer]:
+          - /url: /aviminho/products/2742
+          - generic [ref=e115]:
+            - generic:
+              - generic: PROMOÇÃO
+              - generic: "-15%"
+            - img "Trufa preta em conserva 80g" [ref=e117]
+            - generic [ref=e118]:
+              - generic [ref=e119]: Trufa preta em conserva 80g
+              - generic [ref=e121]: €38 €32.30
+        - text:  
+    - generic [ref=e122]:
+      - heading "Produtos em Destaque" [level=2] [ref=e124]
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - link "Burrata 125g Burrata 125g" [ref=e128] [cursor=pointer]:
+            - /url: /aviminho/products/2726
+            - generic [ref=e129]:
+              - img "Burrata 125g" [ref=e131]
+              - generic [ref=e133]: Burrata 125g
+          - link "Grissini caixa Grissini caixa" [ref=e135] [cursor=pointer]:
+            - /url: /aviminho/products/2729
+            - generic [ref=e136]:
+              - img "Grissini caixa" [ref=e138]
+              - generic [ref=e140]: Grissini caixa
+          - link "Mortadella Bologna IGP Mortadella Bologna IGP" [ref=e142] [cursor=pointer]:
+            - /url: /aviminho/products/2734
+            - generic [ref=e143]:
+              - img "Mortadella Bologna IGP" [ref=e145]
+              - generic [ref=e147]: Mortadella Bologna IGP
+          - link "Grana Padano DOP Grana Padano DOP" [ref=e149] [cursor=pointer]:
+            - /url: /aviminho/products/2757
+            - generic [ref=e150]:
+              - img "Grana Padano DOP" [ref=e152]
+              - generic [ref=e154]: Grana Padano DOP
+          - link "Caputo Cuoco \"00\" Caputo Cuoco \"00\"" [ref=e156] [cursor=pointer]:
+            - /url: /aviminho/products/2759
+            - generic [ref=e157]:
+              - img "Caputo Cuoco \"00\"" [ref=e159]
+              - generic [ref=e161]: Caputo Cuoco "00"
+          - link "Azeitonas Taggiasche 950g Azeitonas Taggiasche 950g" [ref=e163] [cursor=pointer]:
+            - /url: /aviminho/products/2736
+            - generic [ref=e164]:
+              - img "Azeitonas Taggiasche 950g" [ref=e166]
+              - generic [ref=e168]: Azeitonas Taggiasche 950g
+        - text: 
+        - button "" [ref=e169] [cursor=pointer]:
+          - generic [ref=e170]: 
+    - generic [ref=e172]: A Sua Conta
+    - generic [ref=e175]:
+      - generic [ref=e176]:
+        - generic [ref=e177]: Pizzaria Bella Napoli
+        - generic [ref=e178]: ATIVO
+      - generic [ref=e179]:
+        - generic [ref=e181]:
+          - generic [ref=e182]: 5%
+          - generic [ref=e183]: em encomendas acima de €500
+        - generic [ref=e185]:
+          - generic [ref=e186]:
+            - generic [ref=e187]: 
+            - text: Grátis
+          - generic [ref=e188]: em encomendas acima de €250
+    - generic [ref=e189]:
+      - generic [ref=e191]:
+        - heading "Os Seus Produtos Preferidos" [level=2] [ref=e193]
+        - paragraph [ref=e194]: 12 itens mais encomendados
+        - generic [ref=e195]:
+          - generic [ref=e196]:
+            - link "Parmigiano Reggiano 24m Parmigiano Reggiano 24m" [ref=e198] [cursor=pointer]:
+              - /url: /aviminho/products/2758
+              - generic [ref=e199]:
+                - img "Parmigiano Reggiano 24m" [ref=e201]
+                - generic [ref=e203]: Parmigiano Reggiano 24m
+            - link "Produto 4 Produto 4" [ref=e205] [cursor=pointer]:
+              - /url: /aviminho/products/2770
+              - generic [ref=e206]:
+                - img "Produto 4" [ref=e208]
+                - generic [ref=e210]: Produto 4
+            - link "Polpa Mutti Polpa Mutti" [ref=e212] [cursor=pointer]:
+              - /url: /aviminho/products/2760
+              - generic [ref=e213]:
+                - img "Polpa Mutti" [ref=e215]
+                - generic [ref=e217]: Polpa Mutti
+            - link "Caputo Cuoco \"00\" Caputo Cuoco \"00\"" [ref=e219] [cursor=pointer]:
+              - /url: /aviminho/products/2759
+              - generic [ref=e220]:
+                - img "Caputo Cuoco \"00\"" [ref=e222]
+                - generic [ref=e224]: Caputo Cuoco "00"
+            - link "Mozzarella Fior di Latte Mozzarella Fior di Latte" [ref=e226] [cursor=pointer]:
+              - /url: /aviminho/products/2755
+              - generic [ref=e227]:
+                - img "Mozzarella Fior di Latte" [ref=e229]
+                - generic [ref=e231]: Mozzarella Fior di Latte
+            - link "Traseiro s/Osso Traseiro s/Osso" [ref=e233] [cursor=pointer]:
+              - /url: /aviminho/products/2984
+              - generic [ref=e234]:
+                - img "Traseiro s/Osso" [ref=e236]
+                - generic [ref=e238]: Traseiro s/Osso
+            - link "Trufa preta em conserva 80g Trufa preta em conserva 80g" [ref=e240] [cursor=pointer]:
+              - /url: /aviminho/products/2742
+              - generic [ref=e241]:
+                - img "Trufa preta em conserva 80g" [ref=e243]
+                - generic [ref=e245]: Trufa preta em conserva 80g
+            - link "Produto 1 Produto 1" [ref=e247] [cursor=pointer]:
+              - /url: /aviminho/products/2773
+              - generic [ref=e248]:
+                - img "Produto 1" [ref=e250]
+                - generic [ref=e252]: Produto 1
+            - link "Carne Picada de Frango Carne Picada de Frango" [ref=e254] [cursor=pointer]:
+              - /url: /aviminho/products/2983
+              - generic [ref=e255]:
+                - img "Carne Picada de Frango" [ref=e257]
+                - generic [ref=e259]: Carne Picada de Frango
+            - link "Passata Mutti Passata Mutti" [ref=e261] [cursor=pointer]:
+              - /url: /aviminho/products/2762
+              - generic [ref=e262]:
+                - img "Passata Mutti" [ref=e264]
+                - generic [ref=e266]: Passata Mutti
+            - link "Guardanapos pack 100 Guardanapos pack 100" [ref=e268] [cursor=pointer]:
+              - /url: /aviminho/products/2753
+              - generic [ref=e269]:
+                - img "Guardanapos pack 100" [ref=e271]
+                - generic [ref=e273]: Guardanapos pack 100
+            - link "Burrata 125g Burrata 125g" [ref=e275] [cursor=pointer]:
+              - /url: /aviminho/products/2726
+              - generic [ref=e276]:
+                - img "Burrata 125g" [ref=e278]
+                - generic [ref=e280]: Burrata 125g
+          - text: 
+          - button "" [ref=e281] [cursor=pointer]:
+            - generic [ref=e282]: 
+      - generic [ref=e283]:
+        - generic [ref=e285]:
+          - heading " Última Encomenda" [level=5] [ref=e286]:
+            - generic [ref=e287]: 
+            - text: Última Encomenda
+          - generic [ref=e288]:
+            - generic [ref=e289]: AVIMINHO-20260615095400-0013
+            - generic [ref=e290]: In Process
+          - paragraph [ref=e291]: 15 Jun 2026
+          - generic [ref=e292]:
+            - generic [ref=e293]:
+              - generic [ref=e295]: 
+              - generic [ref=e296]: Efetuada
+            - generic [ref=e298]:
+              - generic [ref=e300]: 
+              - generic [ref=e301]: Em Processamento
+            - generic [ref=e303]:
+              - generic [ref=e305]: 
+              - generic [ref=e306]: Concluída
+          - generic [ref=e307]:
+            - generic [ref=e308]:
+              - generic [ref=e309]: "3"
+              - generic [ref=e310]: itens
+            - generic [ref=e311]:
+              - generic [ref=e312]: €380.56
+              - generic [ref=e313]: total
+            - generic [ref=e314]:
+              - generic [ref=e316]: 
+              - generic [ref=e317]: Entrega
+          - generic [ref=e318]:
+            - link " Ver Encomenda" [ref=e319] [cursor=pointer]:
+              - /url: /aviminho/orders/833
+              - generic [ref=e320]: 
+              - text: Ver Encomenda
+            - button " Repetir" [ref=e322] [cursor=pointer]:
+              - generic [ref=e323]: 
+              - text: Repetir
+        - generic [ref=e325]:
+          - heading " Info de Entrega" [level=5] [ref=e326]:
+            - generic [ref=e327]: 
+            - text: Info de Entrega
+          - generic [ref=e328]:
+            - generic [ref=e329]:
+              - generic [ref=e330]: 
+              - generic [ref=e331]: Segunda-feira, Terça-feira, Quarta-feira, Quinta-feira, Sexta-feira
+            - generic [ref=e332]:
+              - generic [ref=e333]: 
+              - generic [ref=e334]: Encomende até às 14:00 para processamento no próprio dia
+            - generic [ref=e335]:
+              - generic [ref=e336]: 
+              - generic [ref=e337]: "Próxima entrega: 18 de Junho de 2026"
+        - generic [ref=e339]:
+          - heading " As Suas Listas" [level=5] [ref=e340]:
+            - generic [ref=e341]: 
+            - text: As Suas Listas
+          - link "Encomenda Semanal 13 itens " [ref=e342] [cursor=pointer]:
+            - /url: /aviminho/shopping_lists/67
+            - generic [ref=e343]:
+              - generic [ref=e344]: Encomenda Semanal
+              - generic [ref=e345]: 13 itens
+            - generic [ref=e346]: 
+          - link "Ver Todas as Listas" [ref=e348] [cursor=pointer]:
+            - /url: /aviminho/shopping_lists
+        - generic [ref=e350]:
+          - heading " Acesso Rápido" [level=5] [ref=e351]:
+            - generic [ref=e352]: 
+            - text: Acesso Rápido
+          - link " Todas as Encomendas 7 encomendas efetuadas " [ref=e353] [cursor=pointer]:
+            - /url: /aviminho/orders
+            - generic [ref=e354]:
+              - generic [ref=e356]: 
+              - generic [ref=e357]:
+                - generic [ref=e358]: Todas as Encomendas
+                - generic [ref=e359]: 7 encomendas efetuadas
+            - generic [ref=e360]: 
+          - link " A Minha Conta Gerir o seu perfil " [ref=e361] [cursor=pointer]:
+            - /url: /aviminho/account
+            - generic [ref=e362]:
+              - generic [ref=e364]: 
+              - generic [ref=e365]:
+                - generic [ref=e366]: A Minha Conta
+                - generic [ref=e367]: Gerir o seu perfil
+            - generic [ref=e368]: 
+          - link " Contactar Suporte " [ref=e369] [cursor=pointer]:
+            - /url: /aviminho/contact
+            - generic [ref=e370]:
+              - generic [ref=e372]: 
+              - generic [ref=e374]: Contactar Suporte
+            - generic [ref=e375]: 
+  - alert [ref=e377]:
+    - generic [ref=e378]:
+      - generic [ref=e379]: 
+      - generic [ref=e380]: Success
+    - generic [ref=e381]: Sessão iniciada com sucesso.
+    - button "Close" [ref=e382] [cursor=pointer]
+  - contentinfo [ref=e383]:
+    - generic [ref=e385]:
+      - generic [ref=e387]:
+        - generic [ref=e388]:
+          - generic [ref=e389]: 
+          - link "demo@demo.pt" [ref=e390] [cursor=pointer]:
+            - /url: mailto:demo@demo.pt
+        - generic [ref=e391]:
+          - generic [ref=e392]: 
+          - link "+351234567890" [ref=e393] [cursor=pointer]:
+            - /url: tel:+351234567890
+        - generic [ref=e394]:
+          - generic [ref=e395]: 
+          - link "+351234567890" [ref=e396] [cursor=pointer]:
+            - /url: https://wa.me/351234567890
+      - generic [ref=e397]:
+        - link "" [ref=e398] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e399]: 
+        - link "" [ref=e400] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e401]: 
+        - link "" [ref=e402] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e403]: 
+        - link " Contacte-nos" [ref=e404] [cursor=pointer]:
+          - /url: /aviminho/contact
+          - generic [ref=e405]: 
+          - text: Contacte-nos
+    - text:    
+    - generic [ref=e407]:
+      - link "Termos de Serviço" [ref=e408] [cursor=pointer]:
+        - /url: /aviminho/terms
+      - link "Política de Privacidade" [ref=e409] [cursor=pointer]:
+        - /url: /aviminho/privacy
+    - contentinfo [ref=e410]:
+      - link "aviminho powered by N odal" [ref=e411] [cursor=pointer]:
+        - /url: https://www.nodal-seiri.dev
+        - generic [ref=e412]: aviminho
+        - generic [ref=e413]: powered by
+        - generic [ref=e414]:
+          - generic [ref=e415]: "N"
+          - generic [ref=e416]: odal
+  - link "Fale connosco no WhatsApp" [ref=e417] [cursor=pointer]:
+    - /url: https://wa.me/351234567890
+    - generic [ref=e418]: 

@@ -1,0 +1,9 @@
+<%# Inline cart-line warning when a combined-minimum product hasn't reached its
+    total yet. Expects `shortfall` (a hash from Order#combined_min_quantity_shortfalls)
+    or nil. %>
+<% if shortfall %>
+  <% ref = shortfall[:product].sku.presence || shortfall[:product].name %>
+  <div class="text-warning small mt-1">
+    <i class="fa-solid fa-triangle-exclamation me-1"></i><%= t('storefront.carts.show.minimum_shortfall', minimum: shortfall[:label], product: ref, shortfall: shortfall[:shortfall]) %>
+  </div>
+<% end %>

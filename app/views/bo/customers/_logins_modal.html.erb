@@ -1,0 +1,33 @@
+<%# locals: customer, customer_users, new_customer_user
+   Bootstrap modal shell. The mutable content (login list + add form)
+   lives in a Turbo Frame so creating a login can rebuild it without
+   tearing down the modal element itself. %>
+<div class="modal fade"
+     id="customer-logins-modal-<%= customer.id %>"
+     tabindex="-1"
+     aria-hidden="true"
+     data-controller="auto-modal">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title">
+            <i class="fa-solid fa-users me-2"></i>
+            <%= t("bo.customer_users.manage_modal.title", company: customer.company_name) %>
+          </h5>
+          <small class="text-muted"><%= t("bo.customer_users.manage_modal.subtitle") %></small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t("bo.customer_users.manage_modal.close") %>"></button>
+      </div>
+
+      <div class="modal-body">
+        <turbo-frame id="customer-logins-frame-<%= customer.id %>">
+          <%= render "bo/customers/logins_modal_frame",
+                     customer: customer,
+                     customer_users: customer_users,
+                     new_customer_user: new_customer_user %>
+        </turbo-frame>
+      </div>
+    </div>
+  </div>
+</div>

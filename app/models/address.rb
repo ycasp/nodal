@@ -13,6 +13,8 @@ class Address < ApplicationRecord
   scope :shipping, -> { where(address_type: "shipping") }
   scope :contact, -> { where(address_type: "contact") }
   scope :active,   -> { where(active: true) }
+  scope :manual,   -> { where(external_source: nil) }
+  scope :from_erp, -> { where.not(external_source: nil) }
 
   def billing?
     address_type == "billing"
@@ -38,4 +40,22 @@ class Address < ApplicationRecord
     !active
   end
 
+  # Stable fingerprint used by sync to detect whether an incoming ERP
+  # address matches one we already have. Normalized so small formatting
+  # differences (extra spaces, casing) don't create duplicates.
+  def fingerprint
+    self.class.fingerprint_for(
+      street_name: street_name,
+      street_nr: street_nr,
+      postal_code: postal_code,
+      city: city,
+      country: country
+    )
+  end
+
+  def self.fingerprint_for(street_name:, street_nr:, postal_code:, city:, country:)
+    [street_name, street_nr, postal_code, city, country]
+      .map { |v| v.to_s.strip.downcase.squeeze(" ") }
+      .join("|")
+  end
 end

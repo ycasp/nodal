@@ -1,0 +1,69 @@
+<% content_for :bo_main_content do %>
+  <div class="bo-page-header">
+    <div>
+      <h1><%= t('bo.analytics.title') %></h1>
+      <p><%= t('bo.analytics.subtitle') %></p>
+    </div>
+  </div>
+
+  <div class="bo-page-body">
+    <%= render "bo/dashboards/tabs" %>
+
+    <%= form_with url: bo_analytics_path(org_slug: current_organisation.slug),
+                  method: :get, local: true, class: "card mb-4" do |f| %>
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-2">
+            <label class="form-label small text-muted"><%= t('bo.analytics.filters.from') %></label>
+            <%= date_field_tag :from, @from, class: "form-control" %>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small text-muted"><%= t('bo.analytics.filters.to') %></label>
+            <%= date_field_tag :to, @to, class: "form-control" %>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small text-muted"><%= t('bo.analytics.filters.granularity') %></label>
+            <%= select_tag :granularity,
+                  options_for_select([
+                    [t('bo.analytics.granularity.day'),   "day"],
+                    [t('bo.analytics.granularity.week'),  "week"],
+                    [t('bo.analytics.granularity.month'), "month"]
+                  ], @granularity.to_s),
+                  class: "form-select" %>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small text-muted"><%= t('bo.analytics.filters.client') %></label>
+            <%= select_tag :client_id,
+                  options_for_select(
+                    [[t('bo.analytics.filters.all_clients'), ""]] +
+                    current_organisation.customers.where(active: true).order(:company_name).pluck(:company_name, :id),
+                    @client_id),
+                  class: "form-select" %>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fa-solid fa-filter me-2"></i><%= t('bo.analytics.filters.apply') %>
+            </button>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="row g-3">
+      <% Bo::AnalyticsController::CHART_METRICS.each do |key| %>
+        <div class="col-12 col-lg-6">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <h6 class="card-title mb-3"><%= t("bo.analytics.charts.#{key}") %></h6>
+              <div data-controller="analytics-chart"
+                   data-analytics-chart-config-value="<%= analytics_chart_config(key, @charts[key]).to_json %>"
+                   style="position: relative; height: 240px;">
+                <canvas></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

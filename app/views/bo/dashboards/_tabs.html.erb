@@ -1,0 +1,18 @@
+<div class="card mb-4">
+  <div class="card-body p-0">
+    <ul class="nav nav-pills nav-fill border-bottom" role="tablist">
+      <li class="nav-item" role="presentation">
+        <%= link_to bo_path(org_slug: current_organisation.slug),
+              class: "nav-link rounded-0 py-3 #{'active' if controller_name == 'dashboards'}" do %>
+          <i class="fa-solid fa-gauge me-2"></i><%= t('bo.dashboards.tabs.overview') %>
+        <% end %>
+      </li>
+      <li class="nav-item" role="presentation">
+        <%= link_to bo_analytics_path(org_slug: current_organisation.slug),
+              class: "nav-link rounded-0 py-3 #{'active' if controller_name == 'analytics'}" do %>
+          <i class="fa-solid fa-chart-column me-2"></i><%= t('bo.dashboards.tabs.analytics') %>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+</div>

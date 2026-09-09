@@ -1,0 +1,28 @@
+<%# Scan-to-cart bar. Only shown while a sales rep is impersonating a customer.
+    A focused input receives a scanned barcode (variant SKU) — from a Bluetooth
+    scanner (types code + Enter) or typed by hand — and posts to order_items#scan,
+    which adds/increments the line and redirects back here. The barcode-scan
+    Stimulus controller re-focuses the input after each scan for a hands-free flow. %>
+<div class="card border-0 shadow-sm mb-3" style="border-radius: 12px;" data-controller="barcode-scan">
+  <div class="card-body">
+    <%= form_with url: scan_order_items_path(org_slug: params[:org_slug]), method: :post,
+                  data: { action: "submit->barcode-scan#submit" } do %>
+      <label class="form-label fw-semibold small mb-1">
+        <i class="fa-solid fa-barcode me-1"></i><%= t('storefront.carts.show.scan.title') %>
+      </label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="fa-solid fa-barcode"></i></span>
+        <%= text_field_tag :code, nil,
+              autocomplete: "off",
+              autofocus: true,
+              class: "form-control",
+              placeholder: t('storefront.carts.show.scan.placeholder'),
+              "aria-label": t('storefront.carts.show.scan.title'),
+              data: { "barcode-scan-target": "input" } %>
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-plus me-1"></i><%= t('storefront.carts.show.scan.add') %>
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>

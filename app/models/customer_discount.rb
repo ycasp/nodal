@@ -1,7 +1,10 @@
 class CustomerDiscount < ApplicationRecord
+  include HasEmailNotification
+
   DISCOUNT_TYPES = %w[percentage fixed].freeze
 
-  belongs_to :customer
+  belongs_to :customer, optional: true
+  belongs_to :customer_category, optional: true
   belongs_to :organisation
 
   validates :discount_type, presence: true, inclusion: { in: DISCOUNT_TYPES }
@@ -10,6 +13,7 @@ class CustomerDiscount < ApplicationRecord
   validate :discount_value_valid_for_type
   validate :valid_until_after_valid_from
   validate :no_overlapping_discounts
+  validate :must_have_customer_or_category
 
   scope :active, -> {
     where(active: true)
@@ -27,6 +31,18 @@ class CustomerDiscount < ApplicationRecord
 
   def perpetual?
     valid_from.nil? && valid_until.nil?
+  end
+
+  def category_based?
+    customer_category_id.present?
+  end
+
+  def target_name
+    if category_based?
+      customer_category&.name
+    else
+      customer&.company_name
+    end
   end
 
   def value_display
@@ -68,11 +84,15 @@ class CustomerDiscount < ApplicationRecord
   end
 
   def no_overlapping_discounts
-    return if customer_id.blank?
+    return if customer_id.blank? && customer_category_id.blank?
 
-    overlapping = CustomerDiscount
-      .where(customer_id: customer_id)
-      .where.not(id: id)
+    overlapping = CustomerDiscount.where.not(id: id)
+
+    if customer_id.present?
+      overlapping = overlapping.where(customer_id: customer_id)
+    else
+      overlapping = overlapping.where(customer_category_id: customer_category_id)
+    end
 
     if valid_from.present? && valid_until.present?
       overlapping = overlapping.where(
@@ -80,10 +100,8 @@ class CustomerDiscount < ApplicationRecord
         valid_until, valid_from
       )
     elsif perpetual?
-      # Perpetual discount - check if any other discount exists
       overlapping = overlapping.all
     else
-      # One date is nil
       if valid_from.nil?
         overlapping = overlapping.where("valid_until IS NULL OR valid_until >= ?", Date.current)
       else
@@ -91,6 +109,15 @@ class CustomerDiscount < ApplicationRecord
       end
     end
 
-    errors.add(:base, "overlaps with an existing discount for this customer") if overlapping.exists?
+    target = customer_id.present? ? "customer" : "customer category"
+    errors.add(:base, "overlaps with an existing discount for this #{target}") if overlapping.exists?
+  end
+
+  def must_have_customer_or_category
+    if customer_id.blank? && customer_category_id.blank?
+      errors.add(:base, "must target either a customer or a customer category")
+    elsif customer_id.present? && customer_category_id.present?
+      errors.add(:base, "cannot target both a customer and a customer category")
+    end
   end
 end

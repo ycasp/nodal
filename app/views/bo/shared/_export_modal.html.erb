@@ -1,0 +1,79 @@
+<% modal_id ||= "exportModal" %>
+<% title ||= t('bo.export.title') %>
+<% prefix = modal_id %>
+<div class="modal fade" id="<%= modal_id %>" tabindex="-1" aria-labelledby="<%= modal_id %>Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <%= form_with url: export_path, method: :get, data: { turbo: false } do %>
+        <%# Pass through current filter params %>
+        <% filter_params.each do |key, value| %>
+          <% if value.is_a?(Array) %>
+            <% value.each do |v| %>
+              <%= hidden_field_tag "#{key}[]", v %>
+            <% end %>
+          <% else %>
+            <%= hidden_field_tag key, value %>
+          <% end %>
+        <% end %>
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="<%= modal_id %>Label">
+            <i class="fa-solid fa-download me-2"></i><%= title %>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body" data-controller="export">
+          <div class="mb-3">
+            <label class="form-label fw-semibold"><%= t('bo.export.select_columns') %></label>
+            <div class="mb-2">
+              <a href="#" class="small text-decoration-none"
+                 data-action="click->export#toggleAll"
+                 data-export-target="toggleLink"
+                 data-select-text="<%= t('bo.export.select_all') %>"
+                 data-deselect-text="<%= t('bo.export.deselect_all') %>">
+                <%= t('bo.export.deselect_all') %>
+              </a>
+            </div>
+            <div class="row">
+              <% columns.each do |column| %>
+                <div class="col-6">
+                  <div class="form-check mb-2">
+                    <%= check_box_tag "columns[]", column[:key], column[:default],
+                        id: "#{prefix}_col_#{column[:key]}",
+                        class: "form-check-input",
+                        data: { export_target: "checkbox", action: "change->export#checkboxChanged" } %>
+                    <%= label_tag "#{prefix}_col_#{column[:key]}", column[:label], class: "form-check-label" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold"><%= t('bo.export.format') %></label>
+            <div class="d-flex gap-3">
+              <div class="form-check">
+                <%= radio_button_tag :format_type, "csv", true, id: "#{prefix}_format_csv", class: "form-check-input" %>
+                <%= label_tag "#{prefix}_format_csv", "CSV", class: "form-check-label" %>
+              </div>
+              <div class="form-check">
+                <%= radio_button_tag :format_type, "xlsx", false, id: "#{prefix}_format_xlsx", class: "form-check-input" %>
+                <%= label_tag "#{prefix}_format_xlsx", "Excel (.xlsx)", class: "form-check-label" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <%= t('bo.common.actions.cancel') %>
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-download me-1"></i> <%= t('bo.export.download') %>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -13,13 +13,13 @@ class OrgMemberPolicy < ApplicationPolicy
     admin_or_owner?
   end
 
-  # Only owner can edit roles
+  # Anyone can edit their own profile; owner can edit others' roles
   def edit?
-    owner? && !editing_self?
+    editing_self? || owner?
   end
 
   def update?
-    owner? && !editing_self?
+    editing_self? || owner?
   end
 
   # Owner can remove anyone except themselves
@@ -41,6 +41,15 @@ class OrgMemberPolicy < ApplicationPolicy
 
   def resend_invitation?
     admin_or_owner? && record.pending_invitation?
+  end
+
+  # Admin/owner-only: manage the rep's customer carteira (bulk add/remove).
+  def carteira?
+    admin_or_owner?
+  end
+
+  def update_carteira?
+    admin_or_owner?
   end
 
   class Scope < ApplicationPolicy::Scope

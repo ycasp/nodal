@@ -7,12 +7,42 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%
+      canonical_storefront_url = current_organisation&.canonical_url_for_request(request)
+      og_title = current_organisation&.effective_storefront_title || "Nodal"
+      meta_locale = current_organisation&.default_locale.presence || I18n.default_locale
+      og_description = I18n.with_locale(meta_locale) do
+        current_organisation&.storefront_description.presence ||
+          I18n.t("meta.og_description_fallback", company: og_title)
+      end
+      og_image_url = current_organisation&.logo&.attached? ? url_for(current_organisation.logo) : nil
+    %>
+
+    <% if canonical_storefront_url %>
+      <link rel="canonical" href="<%= canonical_storefront_url %>">
+      <meta property="og:url" content="<%= canonical_storefront_url %>">
+    <% end %>
+    <meta name="description" content="<%= og_description %>">
+    <meta property="og:title" content="<%= og_title %>">
+    <meta property="og:description" content="<%= og_description %>">
+    <meta property="og:type" content="website">
+    <% if og_image_url %>
+      <meta property="og:image" content="<%= og_image_url %>">
+      <meta name="twitter:image" content="<%= og_image_url %>">
+    <% end %>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= og_title %>">
+    <meta name="twitter:description" content="<%= og_description %>">
+
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <%= organisation_branding_styles(current_organisation) %>
   </head>
 
   <body class="storefront-layout d-flex flex-column min-vh-100">
+    <% if impersonating? %>
+      <%= render "storefront/shared/impersonation_banner" %>
+    <% end %>
     <%= render "storefront/shared/customer_navbar" %>
 
     <main class="container pt-2 pb-4 flex-grow-1">
@@ -21,5 +51,7 @@
 
     <%= render "shared/flashes" %>
     <%= render "storefront/shared/footer" %>
+    <%= render "storefront/shared/whatsapp_button" %>
+    <%= render "storefront/shared/scroll_to_top" %>
   </body>
 </html>

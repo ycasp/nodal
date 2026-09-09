@@ -1,0 +1,158 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_team_members_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+      <div>
+        <h1>Carteira de <%= @org_member.display_name %></h1>
+        <span class="text-muted small">
+          <%= @assigned_customers.size %> cliente(s) atribuído(s).
+          Atribui ou remove clientes em massa abaixo.
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <div class="row g-3">
+
+    <%# === Painel esquerdo: carteira atual === %>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-briefcase me-2"></i>Carteira atual
+            <span class="badge bg-secondary ms-1"><%= @assigned_customers.size %></span>
+          </h5>
+
+          <% if @assigned_customers.empty? %>
+            <div class="text-center text-muted py-4 small">
+              Sem clientes atribuídos. Adiciona à direita.
+            </div>
+          <% else %>
+            <%= form_with url: update_carteira_bo_team_member_path(params[:org_slug], @org_member), method: :post, local: true, data: { controller: "select-all", "select-all-checkbox-class-value": "assigned-checkbox" } do %>
+              <input type="hidden" name="action_type" value="remove">
+
+              <div class="d-flex justify-content-between align-items-center mb-2 py-2 border-bottom">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="select-all-assigned" data-action="select-all#toggle">
+                  <label class="form-check-label small text-muted" for="select-all-assigned">Selecionar todos</label>
+                </div>
+                <button type="submit" class="btn btn-sm btn-outline-danger"
+                        data-turbo-confirm="Remover os clientes selecionados da carteira?">
+                  <i class="fa-solid fa-minus me-1"></i> Remover selecionados
+                </button>
+              </div>
+
+              <div style="max-height: 480px; overflow-y: auto;">
+                <% @assigned_customers.each do |customer| %>
+                  <div class="form-check py-2 border-bottom">
+                    <input type="checkbox" name="customer_ids[]" value="<%= customer.id %>"
+                           id="assigned-<%= customer.id %>"
+                           class="form-check-input assigned-checkbox">
+                    <label class="form-check-label" for="assigned-<%= customer.id %>">
+                      <strong><%= customer.company_name %></strong>
+                      <% if customer.taxpayer_id.present? %>
+                        <small class="text-muted ms-2">NIF <%= customer.taxpayer_id %></small>
+                      <% end %>
+                      <div class="text-muted small"><%= customer.contact_name %> &middot; <%= customer.email %></div>
+                    </label>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# === Painel direito: adicionar à carteira === %>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="fa-solid fa-plus me-2"></i>Adicionar à carteira
+          </h5>
+
+          <%# Search form (GET to refresh available list) %>
+          <%= form_with url: carteira_bo_team_member_path(params[:org_slug], @org_member), method: :get, local: true, class: "mb-3" do %>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="fa-solid fa-magnifying-glass text-muted"></i>
+              </span>
+              <%= text_field_tag :available_query, @available_query, class: "form-control border-start-0", placeholder: "Pesquisar empresa, contacto, email ou NIF…" %>
+              <button type="submit" class="btn btn-outline-secondary">Procurar</button>
+              <% if @available_query.present? %>
+                <%= link_to carteira_bo_team_member_path(params[:org_slug], @org_member), class: "btn btn-outline-danger" do %>
+                  <i class="fa-solid fa-xmark"></i>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if @available_customers.empty? %>
+            <div class="text-center text-muted py-4 small">
+              <% if @available_query.present? %>
+                Nenhum cliente encontrado para "<%= @available_query %>".
+              <% else %>
+                Todos os clientes da organização já estão atribuídos a alguém.
+              <% end %>
+            </div>
+          <% else %>
+            <%= form_with url: update_carteira_bo_team_member_path(params[:org_slug], @org_member), method: :post, local: true, data: { controller: "select-all", "select-all-checkbox-class-value": "available-checkbox" } do %>
+              <input type="hidden" name="action_type" value="add">
+
+              <div class="d-flex justify-content-between align-items-center mb-2 py-2 border-bottom">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="select-all-available" data-action="select-all#toggle">
+                  <label class="form-check-label small text-muted" for="select-all-available">Selecionar todos</label>
+                </div>
+                <button type="submit" class="btn btn-sm btn-success">
+                  <i class="fa-solid fa-plus me-1"></i> Adicionar selecionados
+                </button>
+              </div>
+
+              <div style="max-height: 420px; overflow-y: auto;">
+                <% @available_customers.each do |customer| %>
+                  <% assigned_to = customer.customer_assignment&.org_member %>
+                  <div class="form-check py-2 border-bottom">
+                    <input type="checkbox" name="customer_ids[]" value="<%= customer.id %>"
+                           id="available-<%= customer.id %>"
+                           class="form-check-input available-checkbox">
+                    <label class="form-check-label" for="available-<%= customer.id %>">
+                      <strong><%= customer.company_name %></strong>
+                      <% if customer.taxpayer_id.present? %>
+                        <small class="text-muted ms-2">NIF <%= customer.taxpayer_id %></small>
+                      <% end %>
+                      <div class="text-muted small">
+                        <%= customer.contact_name %> &middot; <%= customer.email %>
+                        <% if assigned_to %>
+                          <span class="badge bg-warning text-dark ms-1" title="Atribuído a outro vendedor">
+                            <i class="fa-solid fa-user-tie"></i> <%= assigned_to.display_name %>
+                          </span>
+                        <% end %>
+                      </div>
+                    </label>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+
+            <% if @pagy_available.pages > 1 %>
+              <div class="d-flex justify-content-center mt-3">
+                <%== pagy_bootstrap_nav(@pagy_available) %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<% end %>

@@ -1,0 +1,50 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_pricing_path(params[:org_slug], tab: 'promo_codes'), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+
+      <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
+        <i class="fa-solid fa-ticket"></i>
+      </div>
+
+      <div>
+        <h1><%= t('bo.pricing.promo_codes.new.title') %></h1>
+        <span class="text-muted"><%= t('bo.pricing.promo_codes.new.subtitle') %></span>
+      </div>
+    </div>
+
+    <div class="bo-page-actions">
+      <%= link_to bo_pricing_path(params[:org_slug], tab: 'promo_codes'), class: "btn btn-outline-secondary" do %>
+        <%= t('bo.common.actions.cancel') %>
+      <% end %>
+      <button type="submit" form="promo-code-form" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> <%= t('bo.pricing.promo_codes.new.submit') %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+
+<% if @promo_code.errors.any? %>
+  <div class="alert alert-danger mb-4">
+    <h6 class="alert-heading"><%= t('bo.pricing.errors.title') %></h6>
+    <ul class="mb-0">
+      <% @promo_code.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @promo_code, url: bo_promo_codes_path(params[:org_slug]), method: :post, id: "promo-code-form" do |f| %>
+  <%= render 'form', f: f %>
+<% end %>
+
+</div>
+
+<% end %>

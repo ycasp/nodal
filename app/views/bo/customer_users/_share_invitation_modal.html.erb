@@ -1,0 +1,104 @@
+<%
+  share_phone = customer_user.contact_phone.presence || customer_user.customer&.contact_phone
+  share_email = customer_user.email
+  share_first_name = customer_user.contact_name.to_s.strip.split(/\s+/).first
+  share_msg   = if share_first_name.present?
+    t("bo.customer_users.invitation_share.message_body_with_name",
+      name: share_first_name,
+      company: customer_user.organisation.name,
+      url: invitation_url)
+  else
+    t("bo.customer_users.invitation_share.message_body",
+      company: customer_user.organisation.name,
+      url: invitation_url)
+  end
+%>
+
+<div class="modal fade"
+     id="invite-share-modal-<%= customer_user.id %>"
+     tabindex="-1"
+     aria-hidden="true"
+     data-controller="auto-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fa-solid fa-paper-plane me-2"></i>
+          <%= t("bo.customer_users.invitation_share.title") %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <p class="text-muted small mb-3">
+          <%= t("bo.customer_users.invitation_share.intro", email: customer_user.email) %>
+        </p>
+
+        <div class="d-grid gap-2">
+          <% if (wa_url = whatsapp_share_url(share_phone, share_msg)) %>
+            <%= link_to wa_url, target: "_blank", rel: "noopener", class: "btn btn-outline-success text-start" do %>
+              <i class="fa-brands fa-whatsapp me-2"></i>
+              <strong><%= t("bo.customer_users.invitation_share.whatsapp") %></strong>
+              <small class="text-muted d-block ms-4"><%= t("bo.customer_users.invitation_share.whatsapp_hint", phone: share_phone) %></small>
+            <% end %>
+          <% else %>
+            <button type="button" class="btn btn-outline-secondary text-start" disabled>
+              <i class="fa-brands fa-whatsapp me-2"></i>
+              <strong><%= t("bo.customer_users.invitation_share.whatsapp") %></strong>
+              <small class="text-muted d-block ms-4"><%= t("bo.customer_users.invitation_share.no_phone") %></small>
+            </button>
+          <% end %>
+
+          <% if (sms_url = sms_share_url(share_phone, share_msg)) %>
+            <%= link_to sms_url, class: "btn btn-outline-primary text-start" do %>
+              <i class="fa-solid fa-comment-sms me-2"></i>
+              <strong><%= t("bo.customer_users.invitation_share.sms") %></strong>
+              <small class="text-muted d-block ms-4"><%= t("bo.customer_users.invitation_share.sms_hint", phone: share_phone) %></small>
+            <% end %>
+          <% else %>
+            <button type="button" class="btn btn-outline-secondary text-start" disabled>
+              <i class="fa-solid fa-comment-sms me-2"></i>
+              <strong><%= t("bo.customer_users.invitation_share.sms") %></strong>
+              <small class="text-muted d-block ms-4"><%= t("bo.customer_users.invitation_share.no_phone") %></small>
+            </button>
+          <% end %>
+
+          <%= button_to resend_invitation_bo_customer_customer_user_path(
+                          org_slug: customer_user.organisation.slug,
+                          customer_id: customer_user.customer_id,
+                          id: customer_user.id
+                        ),
+                        method: :post,
+                        form: { class: "d-grid", style: "margin: 0;" },
+                        class: "btn btn-outline-primary text-start" do %>
+            <i class="fa-solid fa-envelope me-2"></i>
+            <strong><%= t("bo.customer_users.invitation_share.email") %></strong>
+            <small class="text-muted d-block ms-4"><%= t("bo.customer_users.invitation_share.email_hint", email: share_email) %></small>
+          <% end %>
+
+          <button type="button"
+                  class="btn btn-outline-secondary text-start"
+                  data-controller="copy-to-clipboard"
+                  data-copy-to-clipboard-text-value="<%= invitation_url %>"
+                  data-copy-to-clipboard-copied-label-value="<%= t('bo.customer_users.invitation_share.copied') %>"
+                  data-action="click->copy-to-clipboard#copy">
+            <i class="fa-solid fa-link me-2"></i>
+            <strong data-copy-to-clipboard-target="label"><%= t("bo.customer_users.invitation_share.copy") %></strong>
+            <small class="text-muted d-block ms-4 font-monospace text-break" style="word-break: break-all;"><%= invitation_url %></small>
+          </button>
+        </div>
+
+        <p class="text-muted small mt-3 mb-0">
+          <i class="fa-solid fa-circle-info me-1"></i>
+          <%= t("bo.customer_users.invitation_share.security_note") %>
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <%= t("bo.common.actions.close") %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -27,6 +27,7 @@ class ErpSyncJob < ApplicationJob
     types = []
     types << 'products' if erp_config.sync_products?
     types << 'customers' if erp_config.sync_customers?
+    types << 'orders' if erp_config.sync_orders?
     types
   end
 
@@ -36,6 +37,8 @@ class ErpSyncJob < ApplicationJob
       Erp::Sync::ProductSyncService
     when 'customers'
       Erp::Sync::CustomerSyncService
+    when 'orders'
+      Erp::Sync::OrderExportService
     else
       return nil
     end

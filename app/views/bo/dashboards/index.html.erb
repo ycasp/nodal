@@ -9,39 +9,47 @@
         <p><%= t('bo.dashboards.index.subtitle', organisation: @organisation.name) %></p>
       </div>
     </div>
-    <div class="filters-panel filters-panel--inline">
-      <div class="filters-panel__row">
-        <div class="filters-panel__field">
-          <label class="form-label" for="dashboard-from"><%= t('bo.dashboards.filters.from') %></label>
-          <input type="date" class="form-control form-control-sm" id="dashboard-from" data-dashboard-target="from">
-        </div>
-        <div class="filters-panel__field">
-          <label class="form-label" for="dashboard-to"><%= t('bo.dashboards.filters.to') %></label>
-          <input type="date" class="form-control form-control-sm" id="dashboard-to" data-dashboard-target="to">
-        </div>
-        <div class="filters-panel__field filters-panel__field--wide">
-          <label class="form-label" for="dashboard-client"><%= t('bo.dashboards.filters.client') %></label>
-          <select class="form-select form-select-sm" id="dashboard-client" data-dashboard-target="client">
-            <option value=""><%= t('bo.dashboards.filters.all_clients') %></option>
-            <% @organisation.customers.where(active: true).order(:company_name).each do |customer| %>
-              <option value="<%= customer.id %>"><%= customer.company_name %></option>
-            <% end %>
-          </select>
-        </div>
-        <div class="filters-panel__field">
-          <label class="form-label" for="dashboard-category"><%= t('bo.dashboards.filters.category') %></label>
-          <select class="form-select form-select-sm" id="dashboard-category" data-dashboard-target="category">
-            <option value=""><%= t('bo.dashboards.filters.all_categories') %></option>
-            <% @organisation.categories.order(:name).each do |category| %>
-              <option value="<%= category.id %>"><%= category.name %></option>
-            <% end %>
-          </select>
-        </div>
-        <div class="filters-panel__field filters-panel__field--action">
-          <label class="form-label">&nbsp;</label>
-          <button type="button" class="btn btn-primary btn-sm" data-action="click->dashboard#applyFilters">
-            <i class="fa-solid fa-check me-1"></i> <%= t('bo.common.actions.apply') %>
-          </button>
+    <%# Mobile: collapsible filter toggle %>
+    <button class="btn btn-outline-secondary btn-sm d-md-none w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#dashboardFilters">
+      <i class="fa-solid fa-filter me-1"></i> <%= t('bo.dashboards.filters.title', default: 'Filtros') %>
+    </button>
+
+    <%# Filters: always visible on desktop, collapsible on mobile %>
+    <div class="collapse d-md-block" id="dashboardFilters">
+      <div class="filters-panel filters-panel--inline">
+        <div class="filters-panel__row">
+          <div class="filters-panel__field">
+            <label class="form-label" for="dashboard-from"><%= t('bo.dashboards.filters.from') %></label>
+            <input type="date" class="form-control form-control-sm" id="dashboard-from" data-dashboard-target="from">
+          </div>
+          <div class="filters-panel__field">
+            <label class="form-label" for="dashboard-to"><%= t('bo.dashboards.filters.to') %></label>
+            <input type="date" class="form-control form-control-sm" id="dashboard-to" data-dashboard-target="to">
+          </div>
+          <div class="filters-panel__field filters-panel__field--wide">
+            <label class="form-label" for="dashboard-client"><%= t('bo.dashboards.filters.client') %></label>
+            <select class="form-select form-select-sm" id="dashboard-client" data-dashboard-target="client" data-controller="tom-select">
+              <option value=""><%= t('bo.dashboards.filters.all_clients') %></option>
+              <% @organisation.customers.where(active: true).order(:company_name).each do |customer| %>
+                <option value="<%= customer.id %>"><%= customer.company_name %></option>
+              <% end %>
+            </select>
+          </div>
+          <div class="filters-panel__field">
+            <label class="form-label" for="dashboard-category"><%= t('bo.dashboards.filters.category') %></label>
+            <select class="form-select form-select-sm" id="dashboard-category" data-dashboard-target="category" data-controller="tom-select">
+              <option value=""><%= t('bo.dashboards.filters.all_categories') %></option>
+              <% @organisation.categories.kept.sorted_by_full_path.each do |category| %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+              <% end %>
+            </select>
+          </div>
+          <div class="filters-panel__field filters-panel__field--action">
+            <label class="form-label d-none d-md-block">&nbsp;</label>
+            <button type="button" class="btn btn-primary btn-sm w-100" data-action="click->dashboard#applyFilters">
+              <i class="fa-solid fa-check me-1"></i> <%= t('bo.common.actions.apply') %>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -50,6 +58,8 @@
   <div class="dashboard">
     <!-- Page Body -->
     <div class="bo-page-body">
+      <%= render "bo/dashboards/tabs" %>
+
       <!-- Top Row: KPI Cards -->
       <div class="dashboard__grid dashboard__grid--kpis mb-4">
 
@@ -79,8 +89,13 @@
             title: t('bo.dashboards.kpi.open_carts'),
             icon: "fa-shopping-cart",
             format: "number",
-            drill_path: nil %>
+            drill_path: nil,
+            drill_modal_id: "openCartsModal" %>
       </div>
+
+      <%= render "bo/dashboards/open_carts_modal", carts: @open_carts %>
+
+      <%= render "bo/dashboards/customer_health", health: @customer_health, org_slug: @organisation.slug %>
 
       <!-- Middle Section -->
       <div class="dashboard__grid dashboard__grid--middle mb-4">

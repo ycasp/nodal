@@ -1,0 +1,31 @@
+- generic [ref=e1]:
+  - img [ref=e3]:
+    - generic [ref=e75]: NODAL
+  - generic [ref=e83]:
+    - img "aviminho" [ref=e85]
+    - heading "Bem-vindo de volta" [level=1] [ref=e86]
+    - paragraph [ref=e87]: Inicia sessão na tua conta para continuar
+    - generic [ref=e88]:
+      - generic [ref=e90]:
+        - generic [ref=e91]: Email
+        - textbox "Email" [active] [ref=e92]:
+          - /placeholder: Introduz o teu email
+      - generic [ref=e93]:
+        - generic [ref=e94]:
+          - generic [ref=e95]: Palavra-passe
+          - link "Esqueceste a palavra-passe?" [ref=e96] [cursor=pointer]:
+            - /url: /aviminho/customers/password/new
+        - generic [ref=e97]:
+          - textbox "Introduz a tua palavra-passe" [ref=e99]
+          - button "Toggle password visibility" [ref=e100] [cursor=pointer]:
+            - generic [ref=e101]: 
+      - generic [ref=e103]:
+        - checkbox "Lembrar-me durante 30 dias" [ref=e104]
+        - generic [ref=e105] [cursor=pointer]: Lembrar-me durante 30 dias
+      - button "Entrar" [ref=e107] [cursor=pointer]
+    - link "powered by N odal" [ref=e109] [cursor=pointer]:
+      - /url: https://www.nodal-seiri.dev
+      - text: powered by
+      - generic [ref=e110]:
+        - generic [ref=e111]: "N"
+        - text: odal

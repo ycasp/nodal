@@ -1,5 +1,7 @@
 <% content_for :bo_main_content do %>
 
+<div data-controller="email-notification">
+
 <!-- Sticky Header -->
 <div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-start">
@@ -24,6 +26,10 @@
       <% when 'order_tiers' %>
         <%= link_to new_bo_order_discount_path(params[:org_slug]), class: "btn btn-primary" do %>
           <i class="fa-solid fa-plus me-1"></i> <%= t('bo.pricing.add_discount') %>
+        <% end %>
+      <% when 'promo_codes' %>
+        <%= link_to new_bo_promo_code_path(params[:org_slug]), class: "btn btn-primary" do %>
+          <i class="fa-solid fa-plus me-1"></i> <%= t('bo.pricing.promo_codes.add') %>
         <% end %>
       <% end %>
     </div>
@@ -60,6 +66,12 @@
             <i class="fa-solid fa-cart-shopping me-2"></i><%= t('bo.pricing.tabs.order_tiers') %>
           <% end %>
         </li>
+        <li class="nav-item" role="presentation">
+          <%= link_to bo_pricing_path(params[:org_slug], tab: 'promo_codes'),
+              class: "nav-link rounded-0 py-3 #{'active' if @tab == 'promo_codes'}" do %>
+            <i class="fa-solid fa-ticket me-2"></i><%= t('bo.pricing.tabs.promo_codes') %>
+          <% end %>
+        </li>
       </ul>
     </div>
   </div>
@@ -74,7 +86,48 @@
     <%= render 'custom_pricing' %>
   <% when 'order_tiers' %>
     <%= render 'order_tiers' %>
+  <% when 'promo_codes' %>
+    <%= render 'promo_codes' %>
   <% end %>
+</div>
+
+<%= render 'bo/shared/email_notification_modal' %>
+
+<% if @pending_notification %>
+<script>
+  (function() {
+    function openModal() {
+      var modalEl = document.getElementById('emailNotificationModal');
+      if (!modalEl) return;
+      var form = document.getElementById('emailNotificationForm');
+      var countEl = document.getElementById('emailNotificationCount');
+      var typeEl = document.getElementById('emailNotificationType');
+
+      form.action = '<%= send_email_bo_discount_email_notification_path(params[:org_slug], @pending_notification) %>';
+      countEl.textContent = '<%= @pending_notification.recipient_count %>';
+      typeEl.textContent = '<%= @pending_notification.notifiable_type.underscore.humanize %>';
+
+      var recipientsEl = document.getElementById('emailNotificationRecipients');
+      recipientsEl.innerHTML = '<div class="text-center py-2"><div class="spinner-border spinner-border-sm text-muted" role="status"></div></div>';
+
+      var modal = new bootstrap.Modal(modalEl);
+      modal.show();
+
+      fetch('<%= recipients_bo_discount_email_notification_path(params[:org_slug], @pending_notification) %>', { headers: { 'Accept': 'text/html' } })
+        .then(function(r) { return r.text(); })
+        .then(function(html) { recipientsEl.innerHTML = html; })
+        .catch(function() { recipientsEl.innerHTML = ''; });
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(openModal, 100);
+    } else {
+      document.addEventListener('DOMContentLoaded', openModal);
+    }
+  })();
+</script>
+<% end %>
+
 </div>
 
 <% end %>

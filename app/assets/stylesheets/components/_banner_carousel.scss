@@ -1,0 +1,47 @@
+// Banner Carousel
+[data-controller="banner-carousel"] {
+  [data-banner-carousel-target="slide"] {
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  [data-banner-carousel-target="indicator"] {
+    opacity: 0.5;
+    transition: opacity 0.3s, background 0.3s;
+
+    &.active {
+      opacity: 1;
+      background: #fff !important;
+    }
+  }
+}
+
+// Horizontal scroll - hide scrollbar
+[data-horizontal-scroll-target="container"] {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Category cards - hover zoom
+.category-hover-img {
+  transition: transform 0.3s ease;
+}
+
+a:hover .category-hover-img {
+  transform: scale(1.05);
+}
+
+// Homepage section spacing
+#portal-cliente {
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  margin-top: 0.5rem;
+}

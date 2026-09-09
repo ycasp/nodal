@@ -1,0 +1,8 @@
+<%# Injects the share modal as a sibling of the page body so it overlays
+   correctly. Replaces any previous modal for the same CustomerUser (so
+   re-clicking the share button rebuilds with a fresh token). %>
+<%= turbo_stream.append "invite_share_modal_target" do %>
+  <%= render "bo/customer_users/share_invitation_modal",
+             customer_user: @customer_user,
+             invitation_url: @invitation_url %>
+<% end %>

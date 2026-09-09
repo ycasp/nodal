@@ -1,0 +1,81 @@
+<div class="row g-3">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-4"><%= t('bo.customer_users.form.email') %></h5>
+
+        <% if @customer_user.errors.any? %>
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              <% @customer_user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="row g-3">
+          <div class="col-md-12">
+            <label class="form-label"><%= t('bo.customer_users.form.email') %></label>
+            <% if @customer_user.persisted? %>
+              <input type="email" class="form-control" value="<%= @customer_user.email %>" readonly>
+              <small class="text-muted">Email não pode ser alterado depois de criado.</small>
+            <% else %>
+              <%= f.email_field :email, class: "form-control", required: true, autocomplete: "off" %>
+              <small class="text-muted"><%= t('bo.customer_users.new.email_hint') %></small>
+            <% end %>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.customer_users.form.contact_name') %></label>
+            <%= f.text_field :contact_name, class: "form-control" %>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.customer_users.form.contact_phone') %></label>
+            <%= f.text_field :contact_phone, class: "form-control" %>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.customer_users.form.locale') %></label>
+            <%= f.select :locale,
+                  I18n.available_locales.map { |loc| [loc.to_s, loc.to_s] },
+                  { include_blank: true },
+                  class: "form-select" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-4">Preferências</h5>
+
+        <div class="form-check form-switch mb-3">
+          <%= f.check_box :email_notifications_enabled, class: "form-check-input", id: "cu_email_notifications_enabled" %>
+          <label class="form-check-label" for="cu_email_notifications_enabled">
+            <%= t('bo.customer_users.form.email_notifications_enabled') %>
+          </label>
+        </div>
+
+        <div class="form-check form-switch mb-3">
+          <%= f.check_box :hide_prices, class: "form-check-input", id: "cu_hide_prices" %>
+          <label class="form-check-label" for="cu_hide_prices">
+            <%= t('bo.customer_users.form.hide_prices') %>
+          </label>
+        </div>
+
+        <% if @customer_user.persisted? %>
+          <div class="form-check form-switch">
+            <%= f.check_box :active, class: "form-check-input", id: "cu_active" %>
+            <label class="form-check-label" for="cu_active">
+              <%= t('bo.customer_users.form.active') %>
+            </label>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

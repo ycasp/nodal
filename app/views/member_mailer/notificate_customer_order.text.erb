@@ -13,12 +13,29 @@ CUSTOMER
 <%= @customer.contact_name %>
 <%= @customer.company_name %>
 <%= @order.customer.email %>
+<% if @placed_by.is_a?(Member) %>
+
+PLACED BY (SALES REP)
+---------------------
+<%= "#{@placed_by.first_name} #{@placed_by.last_name}".strip.presence || @placed_by.email %> (<%= @placed_by.email %>)
+<% elsif @placed_by.is_a?(CustomerUser) %>
+
+PLACED BY
+---------
+<%= @placed_by.contact_name.presence || @placed_by.email %><% if @placed_by.contact_name.present? %> (<%= @placed_by.email %>)<% end %>
+<% elsif @customer_user %>
+
+PLACED BY
+---------
+<%= @customer_user.contact_name.presence || @customer_user.email %><% if @customer_user.contact_name.present? %> (<%= @customer_user.email %>)<% end %>
+<% end %>
 
 ITEMS
 -----
 <% @order.order_items.each do |item| %>
 - <%= item.product.name %> x<%= item.quantity %> @ <%= humanized_money_with_symbol(item.price) %> = <%= humanized_money_with_symbol(item.total_price) %>
-<% end %>
+<% if item.note.present? %>  <%= t('orders.item_note_label') %>: <%= item.note %>
+<% end %><% end %>
 
 ORDER SUMMARY
 -------------
@@ -31,9 +48,19 @@ humanized_money_with_symbol(@order.auto_order_discount_amount) %>
 Manual Discount (<%= @order.order_discount_display %>): -<%=
 humanized_money_with_symbol(@order.order_discount_amount) %>
 <% end %>
+<% if @order.has_promo_code? && @order.promo_code_discount.positive? %>
+Promo Code (<%= @order.promo_code.code %>): -<%= humanized_money_with_symbol(@order.promo_code_discount) %>
+<% end %>
 Tax: <%= humanized_money_with_symbol(@order.tax_amount || @order.calculated_tax) %>
-Shipping: <%= humanized_money_with_symbol(@order.shipping_amount || @order.calculated_shipping) %>
-Grand Total: <%= humanized_money_with_symbol(@order.grand_total) %>
+<% if @order.shipping_pending? %>
+<%= t('mailers.common.shipping') %>: <%= t('mailers.common.shipping_pending') %>
+<%= t('mailers.common.total_without_shipping') %>: <%= humanized_money_with_symbol(@order.grand_total) %>
+
+<%= t('mailers.common.shipping_pending_action') %>
+<% else %>
+<%= t('mailers.common.shipping') %>: <%= humanized_money_with_symbol(@order.effective_shipping) %>
+<%= t('mailers.common.total') %>: <%= humanized_money_with_symbol(@order.grand_total) %>
+<% end %>
 
 NOTES
 -----

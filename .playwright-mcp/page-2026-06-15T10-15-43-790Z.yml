@@ -1,0 +1,170 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "aviminho" [ref=e5] [cursor=pointer]:
+          - /url: /aviminho/home
+          - img "aviminho" [ref=e6]
+        - text: 
+        - generic [ref=e7]:
+          - list [ref=e8]:
+            - listitem [ref=e9]:
+              - link "Início" [ref=e10] [cursor=pointer]:
+                - /url: /aviminho/home
+            - listitem [ref=e11]:
+              - link "Produtos" [ref=e12] [cursor=pointer]:
+                - /url: /aviminho/products
+            - listitem [ref=e13]:
+              - link "Encomendas" [ref=e14] [cursor=pointer]:
+                - /url: /aviminho/orders
+            - listitem [ref=e15]:
+              - link "Contacto" [ref=e16] [cursor=pointer]:
+                - /url: /aviminho/contact
+          - generic [ref=e17]:
+            - link " %" [ref=e18] [cursor=pointer]:
+              - /url: /aviminho/cart
+              - generic [ref=e19]: 
+              - generic "Descontos de encomenda disponíveis!" [ref=e20]:
+                - generic [ref=e21]: "%"
+            - generic [ref=e22]:
+              - generic [ref=e23]: 
+              - text: Pizzaria Bella Napoli
+            - generic [ref=e24]:
+              - button " João Silva" [ref=e25] [cursor=pointer]:
+                - generic [ref=e26]: 
+                - text: João Silva
+              - text:   
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e30]:
+        - link " Voltar aos produtos" [ref=e31] [cursor=pointer]:
+          - /url: /aviminho/products
+          - generic [ref=e32]: 
+          - text: Voltar aos produtos
+        - generic [ref=e33]:
+          - img [ref=e35]
+          - button " Ampliar" [ref=e36] [cursor=pointer]:
+            - generic [ref=e37]: 
+            - text: Ampliar
+        - generic [ref=e38]:
+          - img [ref=e40] [cursor=pointer]
+          - img [ref=e42] [cursor=pointer]
+      - generic [ref=e45]:
+        - heading "Traseiro s/Osso" [level=1] [ref=e46]
+        - generic [ref=e49]: "Frango fresco, embalado em bandeja. Validade: 5 dias. Peso por unidade aprox.: ± 3 Kg. Origem: variada. Código: 1053."
+        - generic [ref=e50]:
+          - generic [ref=e52]: €5.49 - €5.99
+          - text: / cuvete
+        - generic: 
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - generic [ref=e55]: Encomenda mín.
+            - generic [ref=e56]:
+              - generic [ref=e57]: 
+              - text: 3 cuvete
+          - generic [ref=e58]:
+            - generic [ref=e59]: Categoria
+            - generic [ref=e60]: Frango Corte Horeca
+          - generic [ref=e61]:
+            - generic [ref=e62]: Disponibilidade
+            - generic [ref=e63]:
+              - generic [ref=e64]: 
+              - text: Em Stock
+        - generic [ref=e66]:
+          - table [ref=e68]:
+            - rowgroup [ref=e69]:
+              - row "Variante Formato SKU Preço Quantidade" [ref=e70]:
+                - columnheader "Variante Formato" [ref=e71]:
+                  - text: Variante
+                  - generic [ref=e72]: Formato
+                - columnheader "SKU" [ref=e73]
+                - columnheader "Preço" [ref=e74]
+                - columnheader "Quantidade" [ref=e75]
+            - rowgroup [ref=e76]:
+              - row "Com pele 1058 €5.49 0" [ref=e77]:
+                - cell "Com pele" [ref=e78]:
+                  - generic [ref=e79]: Com pele
+                - cell "1058" [ref=e80]
+                - cell "€5.49" [ref=e81]
+                - cell "0" [ref=e82]:
+                  - spinbutton [ref=e83]: "0"
+              - row "Sem pele 1053 €5.99 0" [ref=e84]:
+                - cell "Sem pele" [ref=e85]:
+                  - generic [ref=e86]: Sem pele
+                - cell "1053" [ref=e87]
+                - cell "€5.99" [ref=e88]
+                - cell "0" [ref=e89]:
+                  - spinbutton [ref=e90]: "0"
+          - button " Adicionar ao carrinho" [ref=e91] [cursor=pointer]:
+            - generic [ref=e92]: 
+            - text: Adicionar ao carrinho
+    - generic [ref=e93]:
+      - heading "Também pode gostar" [level=4] [ref=e94]
+      - generic [ref=e95]:
+        - link "Coxa s/Osso e c/Pele Frango Corte Horeca Coxa s/Osso e c/Pele €6.49 kg" [ref=e97] [cursor=pointer]:
+          - /url: /aviminho/products/2986
+          - generic [ref=e98]:
+            - img "Coxa s/Osso e c/Pele" [ref=e100]
+            - generic [ref=e101]:
+              - text: Frango Corte Horeca
+              - heading "Coxa s/Osso e c/Pele" [level=6] [ref=e102]
+            - generic [ref=e104]:
+              - generic [ref=e105]: €6.49
+              - generic [ref=e106]: kg
+        - link "Carne Picada de Frango Frango Corte Horeca Carne Picada de Frango €4.49 bandeja" [ref=e108] [cursor=pointer]:
+          - /url: /aviminho/products/2983
+          - generic [ref=e109]:
+            - img "Carne Picada de Frango" [ref=e111]
+            - generic [ref=e112]:
+              - text: Frango Corte Horeca
+              - heading "Carne Picada de Frango" [level=6] [ref=e113]
+            - generic [ref=e115]:
+              - generic [ref=e116]: €4.49
+              - generic [ref=e117]: bandeja
+    - text:    
+  - contentinfo [ref=e118]:
+    - generic [ref=e120]:
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - generic [ref=e124]: 
+          - link "demo@demo.pt" [ref=e125] [cursor=pointer]:
+            - /url: mailto:demo@demo.pt
+        - generic [ref=e126]:
+          - generic [ref=e127]: 
+          - link "+351234567890" [ref=e128] [cursor=pointer]:
+            - /url: tel:+351234567890
+        - generic [ref=e129]:
+          - generic [ref=e130]: 
+          - link "+351234567890" [ref=e131] [cursor=pointer]:
+            - /url: https://wa.me/351234567890
+      - generic [ref=e132]:
+        - link "" [ref=e133] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e134]: 
+        - link "" [ref=e135] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e136]: 
+        - link "" [ref=e137] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e138]: 
+        - link " Contacte-nos" [ref=e139] [cursor=pointer]:
+          - /url: /aviminho/contact
+          - generic [ref=e140]: 
+          - text: Contacte-nos
+    - text:    
+    - generic [ref=e142]:
+      - link "Termos de Serviço" [ref=e143] [cursor=pointer]:
+        - /url: /aviminho/terms
+      - link "Política de Privacidade" [ref=e144] [cursor=pointer]:
+        - /url: /aviminho/privacy
+    - contentinfo [ref=e145]:
+      - link "aviminho powered by N odal" [ref=e146] [cursor=pointer]:
+        - /url: https://www.nodal-seiri.dev
+        - generic [ref=e147]: aviminho
+        - generic [ref=e148]: powered by
+        - generic [ref=e149]:
+          - generic [ref=e150]: "N"
+          - generic [ref=e151]: odal
+  - link "Fale connosco no WhatsApp" [ref=e152] [cursor=pointer]:
+    - /url: https://wa.me/351234567890
+    - generic [ref=e153]: 

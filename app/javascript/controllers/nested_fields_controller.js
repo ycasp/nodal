@@ -9,7 +9,7 @@ export default class extends Controller {
       new Date().getTime()
     )
 
-    this.containerTarget.insertAdjacentHTML("beforeend", content)
+    this.containerTarget.insertAdjacentHTML("afterbegin", content)
     this.updateEmptyState()
   }
 

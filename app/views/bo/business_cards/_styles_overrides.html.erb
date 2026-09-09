@@ -1,0 +1,29 @@
+<%# CSS overrides for the generic business card — emphasises the org
+   header (name + logo) and the website subtitle. Kept separate from the
+   per-customer quick_access pdf styles so they remain independent. %>
+.card .right .top .org-name {
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.card .right .top .org-logo {
+  height: 10mm;
+  max-width: 18mm;
+  flex-shrink: 0;
+}
+.card .right .who .name {
+  font-size: 10pt;
+  font-weight: 600;
+}
+.card .right .who .company {
+  font-size: 7pt;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}

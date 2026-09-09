@@ -53,7 +53,7 @@ export default class extends Controller {
   }
 
   isValidFile(file) {
-    const validExtensions = [".csv"]
+    const validExtensions = [".csv", ".xlsx", ".xls"]
     const fileName = file.name.toLowerCase()
     return validExtensions.some(ext => fileName.endsWith(ext))
   }

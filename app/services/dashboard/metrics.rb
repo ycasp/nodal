@@ -88,7 +88,9 @@ module Dashboard
 
     def calculate_delta(current, previous)
       return 0.0 if previous.nil? || previous.zero?
-      ((current - previous) / previous.to_f * 100).round(2)
+      # Cast to Float so the JSON serializer emits a number, not a string
+      # (BigDecimal serializes as a string, which breaks the JS .toFixed call).
+      ((current.to_f - previous.to_f) / previous.to_f * 100).round(2).to_f
     end
 
     # Total sales (sum of all placed order totals) in CHF/EUR
@@ -220,17 +222,231 @@ module Dashboard
         .distinct
         .includes(:customer, :order_items)
 
-      # Calculate totals and sort by amount descending
-      top_carts = carts_with_items.map do |cart|
+      # Calculate per-cart totals
+      carts = carts_with_items.map do |cart|
         total = cart.order_items.sum { |item| item.unit_price * item.quantity } / 100.0
         {
           cart_id: cart.id,
           client_name: cart.customer&.company_name || "Unknown",
           cart_total: total.round(2)
         }
-      end.sort_by { |c| -c[:cart_total] }.first(10)
+      end
 
-      { value: carts_with_items.count, top_carts: top_carts }
+      total_value = carts.sum { |c| c[:cart_total] }.round(2)
+      top_carts = carts.sort_by { |c| -c[:cart_total] }.first(10)
+
+      { value: carts.size, total_value: total_value, top_carts: top_carts }
+    end
+
+    # Snapshot counts powering the "Saúde dos Clientes" dashboard section.
+    # All counts are at the CUSTOMER (empresa) level — one empresa with three
+    # pending logins counts once, matching the drilldown in bo/customers#index.
+    # NOT date-filtered (current-state, unlike sales metrics).
+    # Thresholds: stale pending = 7d, dormant = 30d no login since accepting,
+    # abandoned cart = draft untouched for 3d, online = request in last 5min.
+    def self.customer_health(organisation:, customers_scope: nil)
+      customers = customers_scope || organisation.customers
+      accepted_customer_ids  = customers.joins(:customer_users)
+                                        .where.not(customer_users: { invitation_accepted_at: nil })
+                                        .select(:id)
+      invited_customer_ids   = customers.joins(:customer_users)
+                                        .where.not(customer_users: { invitation_sent_at: nil })
+                                        .select(:id)
+      placed_customer_ids    = organisation.orders.placed.distinct.select(:customer_id)
+      # "Returning" = at least one user with sign_in_count > 1, i.e. someone
+      # came back after the auto-signin that happens when accepting the invite.
+      returning_customer_ids = customers.joins(:customer_users)
+                                        .where("customer_users.sign_in_count > 1")
+                                        .select(:id)
+      # "Recently active" = at least one user with a login in the last 30 days.
+      recently_active_ids    = customers.joins(:customer_users)
+                                        .where("customer_users.current_sign_in_at >= ?", 30.days.ago)
+                                        .select(:id)
+
+      {
+        total_customers:     customers.where(active: true).count,
+        active_users:        customers.where(active: true).joins(:customer_users)
+                                      .where(customer_users: { active: true })
+                                      .where.not(customer_users: { invitation_accepted_at: nil })
+                                      .distinct.count,
+        pending_users:       customers.where(active: true).joins(:customer_users)
+                                      .where.not(customer_users: { invitation_sent_at: nil })
+                                      .where.not(id: accepted_customer_ids)
+                                      .distinct.count,
+        stale_pending_users: customers.where(active: true).joins(:customer_users)
+                                      .where("customer_users.invitation_sent_at <= ?", 7.days.ago)
+                                      .where.not(id: accepted_customer_ids)
+                                      .distinct.count,
+        uninvited_users:     customers.where(active: true).where.not(id: invited_customer_ids).count,
+        # Can't be invited at all until someone collects an address — the rep's
+        # call/visit list, not a subset of the invitation funnel above.
+        no_email_users:      customers.where(active: true).without_email.count,
+        online_now:          customers.joins(:customer_users)
+                                      .where("customer_users.last_seen_at >= ?", 5.minutes.ago)
+                                      .distinct.count,
+        active_week:         customers.joins(:customer_users)
+                                      .where("customer_users.current_sign_in_at >= ?", 7.days.ago)
+                                      .distinct.count,
+        # Aceitou o convite mas nunca voltou (sign_in_count <= 1 em todos os users).
+        accepted_no_return:  customers.where(id: accepted_customer_ids)
+                                      .where.not(id: returning_customer_ids)
+                                      .where.not(id: placed_customer_ids)
+                                      .count,
+        # Já voltou após aceitar (sign_in_count > 1) mas sem login recente.
+        dormant:             customers.where(id: returning_customer_ids)
+                                      .where.not(id: recently_active_ids)
+                                      .count,
+        # Já voltou + tem actividade recente + nunca encomendou.
+        engaged_no_orders:   customers.where(id: returning_customer_ids)
+                                      .where(id: recently_active_ids)
+                                      .where.not(id: placed_customer_ids)
+                                      .count
+      }
+    end
+
+    # Time series for the Analytics page. Returns a hash with `:labels`
+    # (array of Dates aligned with `granularity`) and `:series` (array of
+    # { label:, data: [Number, ...] } — usually one series, two for :carts).
+    # Zero-pads buckets with no data so the X axis is continuous.
+    #
+    # Metrics: :sales, :orders, :aov, :unique_customers, :logins, :carts,
+    # :avg_interval.
+    # Granularity: :day | :week | :month.
+    def self.time_series(organisation:, metric:, from:, to:, granularity: :day, client_id: nil)
+      granularity = granularity.to_sym
+      granularity = :day unless %i[day week month].include?(granularity)
+      from_date = from.to_date
+      to_date   = to.to_date
+      from_ts   = from_date.beginning_of_day
+      to_ts     = to_date.end_of_day
+      buckets   = ts_buckets(from_date, to_date, granularity)
+
+      case metric.to_sym
+      when :sales
+        scope = organisation.orders.placed.where(placed_at: from_ts..to_ts).joins(:order_items)
+        scope = scope.where(customer_id: client_id) if client_id.present?
+        data = scope.group(ts_trunc("orders.placed_at", granularity))
+                    .sum("order_items.unit_price * order_items.quantity * (1 - COALESCE(order_items.discount_percentage, 0)) / 100.0")
+                    .transform_keys(&:to_date)
+        { labels: buckets, series: [{ label: "sales", data: ts_pad(buckets, data) }] }
+
+      when :orders
+        scope = organisation.orders.placed.where(placed_at: from_ts..to_ts)
+        scope = scope.where(customer_id: client_id) if client_id.present?
+        data = scope.group(ts_trunc("orders.placed_at", granularity))
+                    .count.transform_keys(&:to_date)
+        { labels: buckets, series: [{ label: "orders", data: ts_pad(buckets, data) }] }
+
+      when :aov
+        sales  = time_series(organisation: organisation, metric: :sales,  from: from_ts, to: to_ts, granularity: granularity, client_id: client_id)[:series].first[:data]
+        orders = time_series(organisation: organisation, metric: :orders, from: from_ts, to: to_ts, granularity: granularity, client_id: client_id)[:series].first[:data]
+        aov_data = sales.zip(orders).map { |s, o| o.to_i.zero? ? 0 : (s.to_f / o).round(2) }
+        { labels: buckets, series: [{ label: "aov", data: aov_data }] }
+
+      when :unique_customers
+        scope = organisation.orders.placed.where(placed_at: from_ts..to_ts)
+        scope = scope.where(customer_id: client_id) if client_id.present?
+        data = scope.group(ts_trunc("orders.placed_at", granularity))
+                    .distinct.count(:customer_id)
+                    .transform_keys(&:to_date)
+        { labels: buckets, series: [{ label: "unique_customers", data: ts_pad(buckets, data) }] }
+
+      when :logins
+        scope = CustomerUserLoginEvent.where(organisation_id: organisation.id, success: true,
+                                              created_at: from_ts..to_ts)
+        if client_id.present?
+          cu_ids = organisation.customer_users.where(customer_id: client_id).select(:id)
+          scope = scope.where(customer_user_id: cu_ids)
+        end
+        data = scope.group(ts_trunc("customer_user_login_events.created_at", granularity))
+                    .count.transform_keys(&:to_date)
+        { labels: buckets, series: [{ label: "logins", data: ts_pad(buckets, data) }] }
+
+      when :carts
+        created_scope = organisation.orders.where(created_at: from_ts..to_ts).joins(:order_items).distinct
+        created_scope = created_scope.where(customer_id: client_id) if client_id.present?
+        created_data = created_scope.group(ts_trunc("orders.created_at", granularity))
+                                    .count(:id).transform_keys(&:to_date)
+
+        placed_scope = organisation.orders.placed.where(placed_at: from_ts..to_ts)
+        placed_scope = placed_scope.where(customer_id: client_id) if client_id.present?
+        placed_data = placed_scope.group(ts_trunc("orders.placed_at", granularity))
+                                  .count.transform_keys(&:to_date)
+
+        { labels: buckets, series: [
+          { label: "carts_created", data: ts_pad(buckets, created_data) },
+          { label: "carts_placed",  data: ts_pad(buckets, placed_data) }
+        ] }
+
+      when :avg_interval
+        unit = { day: "day", week: "week", month: "month" }.fetch(granularity)
+        base_sql = <<~SQL
+          WITH gaps AS (
+            SELECT
+              DATE_TRUNC('#{unit}', placed_at)::date AS bucket,
+              placed_at - LAG(placed_at) OVER (PARTITION BY customer_id ORDER BY placed_at) AS gap
+            FROM orders
+            WHERE organisation_id = ?
+              AND placed_at IS NOT NULL
+              AND placed_at BETWEEN ? AND ?
+              #{client_id.present? ? 'AND customer_id = ?' : ''}
+          )
+          SELECT bucket, AVG(EXTRACT(EPOCH FROM gap) / 86400.0) AS avg_days
+          FROM gaps
+          WHERE gap IS NOT NULL
+          GROUP BY bucket
+          ORDER BY bucket
+        SQL
+        binds = [organisation.id, from_ts, to_ts]
+        binds << client_id if client_id.present?
+        sql  = ActiveRecord::Base.sanitize_sql_array([base_sql, *binds])
+        rows = ActiveRecord::Base.connection.exec_query(sql, "TimeSeriesAvgInterval")
+        data = rows.rows.to_h { |row| [row[0].to_date, row[1].to_f.round(1)] }
+        { labels: buckets, series: [{ label: "avg_interval", data: ts_pad(buckets, data) }] }
+      end
+    end
+
+    def self.ts_trunc(column, granularity)
+      unit = { day: "day", week: "week", month: "month" }.fetch(granularity, "day")
+      "DATE_TRUNC('#{unit}', #{column})::date"
+    end
+
+    def self.ts_buckets(from_date, to_date, granularity)
+      case granularity
+      when :week
+        cursor = from_date.beginning_of_week
+        out = []
+        while cursor <= to_date
+          out << cursor
+          cursor = cursor.next_week
+        end
+        out
+      when :month
+        cursor = from_date.beginning_of_month
+        out = []
+        while cursor <= to_date
+          out << cursor
+          cursor = cursor.next_month
+        end
+        out
+      else
+        (from_date..to_date).to_a
+      end
+    end
+
+    def self.ts_pad(buckets, data, default: 0)
+      buckets.map { |b| data[b] || default }
+    end
+
+    # All open carts with full detail, ordered by value desc. Returns Order
+    # records eager-loaded with customer, items, products and variants so the
+    # view can render the list + per-cart expand without N+1.
+    def self.open_carts_detail(organisation)
+      organisation.orders.draft
+        .joins(:order_items)
+        .distinct
+        .includes(:customer, :customer_user, order_items: [:product, :product_variant])
+        .sort_by { |cart| -cart.total_amount.cents }
     end
 
     # Orders per product: count of orders containing each product

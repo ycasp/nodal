@@ -1,0 +1,24 @@
+<%# "Almost there" unlock nudge — one product/category close to a discount.
+    Local: opportunity (CartDiscountNudges::Opportunity).
+    The "add N units" action lives on the product's cart row (next to its SKU),
+    so here we only show the goal, progress and reward. %>
+<% remaining = opportunity.condition_type == :amount ? opportunity.remaining.format : t('storefront.carts.show.nudge.units', count: opportunity.remaining) %>
+<div class="rounded p-2 mb-3" style="background: var(--bs-warning-bg-subtle, #fff3cd);">
+  <div class="mb-1">
+    <span class="small fw-semibold d-block text-truncate">
+      <i class="fa-solid fa-bolt text-warning me-1"></i><%= opportunity.label %>
+    </span>
+    <% if opportunity.sku.present? %>
+      <span class="text-muted d-block" style="font-size: 0.7rem;">SKU: <%= opportunity.sku %></span>
+    <% end %>
+  </div>
+  <div class="d-flex justify-content-between align-items-center mb-1" style="gap: .5rem;">
+    <span class="text-muted text-truncate" style="font-size: 0.75rem;">
+      <%= t('storefront.carts.show.nudge.remaining', remaining: remaining, discount: opportunity.discount_label) %>
+    </span>
+    <span class="badge bg-warning text-dark text-nowrap"><%= t('storefront.carts.show.nudge.save', amount: opportunity.reward.format) %></span>
+  </div>
+  <div class="progress" style="height: 6px;">
+    <div class="progress-bar bg-warning" role="progressbar" style="width: <%= (opportunity.progress * 100).round %>%;"></div>
+  </div>
+</div>

@@ -1,0 +1,143 @@
+// ========================================
+// GLOBAL MOBILE UX FIXES
+// ========================================
+
+// --- Touch Targets: Minimum 44px on mobile ---
+@media (max-width: 767.98px) {
+  // BO action buttons in tables
+  .product-actions,
+  .order-actions {
+    .btn-sm {
+      min-width: 40px;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+    }
+  }
+
+  // All small buttons on mobile should be at least tappable
+  .btn-sm {
+    min-height: 38px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  // Form controls larger on mobile
+  .form-control-sm,
+  .form-select-sm {
+    min-height: 38px;
+    font-size: 0.9rem;
+  }
+}
+
+// --- Scroll shadows on table-responsive containers ---
+@media (max-width: 991.98px) {
+  .table-responsive {
+    background:
+      linear-gradient(to right, #fff 30%, transparent),
+      linear-gradient(to left, #fff 30%, transparent),
+      linear-gradient(to right, rgba(0,0,0,0.08), transparent),
+      linear-gradient(to left, rgba(0,0,0,0.08), transparent);
+    background-position: left center, right center, left center, right center;
+    background-repeat: no-repeat;
+    background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+}
+
+// --- BO Page Header: not sticky on mobile ---
+@media (max-width: 767.98px) {
+  .bo-page-header {
+    position: static !important;
+  }
+}
+
+// --- Product Detail Image Mobile ---
+@media (max-width: 767.98px) {
+  .product-detail-image-container {
+    min-height: 250px !important;
+    padding: 20px !important;
+  }
+}
+
+// --- Storefront Orders Mobile Cards ---
+.order-card-mobile {
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+// --- BO Page Actions: wrap on mobile ---
+@media (max-width: 767.98px) {
+  .bo-page-header {
+    .d-flex {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+
+  .bo-page-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+
+    .btn {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+  }
+}
+
+// --- Modal Mobile Sizing ---
+@media (max-width: 575.98px) {
+  .modal-lg,
+  .modal-xl {
+    max-width: calc(100% - 1rem);
+    margin: 0.5rem;
+  }
+
+  .modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
+
+// --- Applied Filters Horizontal Scroll ---
+.applied-filters-bar {
+  overflow: hidden;
+  position: relative;
+}
+
+.applied-filters-track {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+
+  @media (max-width: 991.98px) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+// --- Hide text on action buttons mobile, show only icons ---
+@media (max-width: 575.98px) {
+  .order-actions .btn span,
+  .product-actions .btn span {
+    display: none;
+  }
+}

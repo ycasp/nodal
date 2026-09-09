@@ -1,0 +1,16 @@
+<%# Inline "add N units to unlock -X%" button shown on a cart row, next to the
+    SKU, when the product is close to a conditional discount.
+    Locals: opportunity (CartDiscountNudges::Opportunity); variant_id (optional,
+    so the top-up lands on this exact cart line). %>
+<%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, class: "m-0 d-inline-block" do %>
+  <%= hidden_field_tag :product_id, opportunity.add_product_id %>
+  <% if local_assigns[:variant_id].present? %>
+    <%= hidden_field_tag :variant_id, variant_id %>
+  <% end %>
+  <%= hidden_field_tag :return_to, 'cart' %>
+  <%= hidden_field_tag 'order_item[quantity]', opportunity.units_to_add %>
+  <button type="submit" class="btn btn-warning btn-sm py-0 px-2 fw-semibold text-nowrap" style="font-size: 0.7rem;"
+          title="<%= t('storefront.carts.show.nudge.add_units', count: opportunity.units_to_add) %> (<%= opportunity.discount_label %>)">
+    <i class="fa-solid fa-cart-plus me-1"></i><%= t('storefront.carts.show.nudge.add_units_short', count: opportunity.units_to_add) %>
+  </button>
+<% end %>

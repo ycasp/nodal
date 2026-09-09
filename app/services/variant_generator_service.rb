@@ -64,7 +64,7 @@ class VariantGeneratorService
       name: variant_name,
       unit_price_cents: product.unit_price,
       unit_price_currency: product.organisation.currency,
-      available: true,
+      published: true,
       is_default: false,
       position: product.product_variants.count + 1
     )
@@ -73,6 +73,9 @@ class VariantGeneratorService
     attribute_values.each do |attr_value|
       variant.variant_attribute_values.create!(product_attribute_value: attr_value)
     end
+
+    # Apply stock rules for the new variant
+    StockRulesService.new(product.organisation).apply_to_variant(variant)
 
     @variants_created += 1
   rescue ActiveRecord::RecordInvalid => e

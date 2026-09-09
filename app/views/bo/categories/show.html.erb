@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_categories_path(params[:org_slug]), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_categories_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded d-flex align-items-center justify-content-center text-white"
@@ -13,12 +13,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= @category.name %></h4>
+        <h1><%= @category.name %></h1>
         <span class="text-muted"><%= @category.full_path %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to edit_bo_category_path(params[:org_slug], @category), class: "btn btn-outline-secondary" do %>
         <i class="fa-solid fa-pen-to-square"></i> <%= t('bo.common.actions.edit') %>
       <% end %>
@@ -28,6 +28,8 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
 
 <div class="row g-4">
   <!-- Category Details -->
@@ -203,5 +205,7 @@
   </div>
 </div>
 
+
+</div>
 
 <% end %>

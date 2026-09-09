@@ -1,0 +1,10 @@
+{
+  "name": "nodal",
+  "private": true,
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "puppeteer": "^24.40.0"
+  }
+}

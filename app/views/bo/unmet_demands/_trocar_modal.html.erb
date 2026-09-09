@@ -1,0 +1,51 @@
+<%# locals: variants (org published variants for the substitute picker).
+    Single shared modal; the row button fills its form action + title via JS.
+    Reuses the BO's Tom Select pattern (data-controller="tom-select") so the
+    picker searches by product name AND SKU (data-sku), like the order form. %>
+<div class="modal fade" id="trocarModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <%= form_with url: "#", method: :post, id: "trocarForm", local: true, class: "modal-content" do |f| %>
+      <div class="modal-header">
+        <h5 class="modal-title"><%= t('bo.unmet_demands.substitute_modal.title') %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small mb-3" id="trocarForProduct"></p>
+        <div class="mb-3">
+          <%= label_tag :substitute_variant_id, t('bo.unmet_demands.substitute_modal.product'), class: "form-label" %>
+          <%= select_tag :substitute_variant_id,
+                options_for_select(variants.map { |v| [v.display_name, v.id, { "data-sku": v.sku }] }),
+                include_blank: t('bo.unmet_demands.substitute_modal.product_prompt'),
+                class: "form-select", id: "trocarVariantSelect",
+                data: { controller: "tom-select" } %>
+        </div>
+        <div class="mb-3">
+          <%= label_tag :quantity, t('bo.unmet_demands.substitute_modal.quantity'), class: "form-label" %>
+          <%= number_field_tag :quantity, nil, min: 1, class: "form-control", id: "trocarQuantity", required: true %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('bo.common.actions.cancel') %></button>
+        <button type="submit" class="btn btn-primary"><%= t('bo.unmet_demands.actions.substitute') %></button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("turbo:load", function () {
+    var form = document.getElementById("trocarForm");
+    if (!form) return;
+    document.querySelectorAll(".js-trocar-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        form.action = btn.dataset.actionUrl;
+        document.getElementById("trocarForProduct").textContent =
+          "<%= j t('bo.unmet_demands.substitute_modal.replacing') %> " + btn.dataset.product +
+          " (" + btn.dataset.shortfall + ")";
+        document.getElementById("trocarQuantity").value = btn.dataset.shortfall;
+        var sel = document.getElementById("trocarVariantSelect");
+        if (sel && sel.tomselect) { sel.tomselect.clear(); }
+      });
+    });
+  });
+</script>

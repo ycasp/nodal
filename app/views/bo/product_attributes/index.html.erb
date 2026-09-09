@@ -1,5 +1,16 @@
 <% content_for :bo_main_content do %>
 
+<script>
+  document.addEventListener('turbo:load', function() {
+    document.querySelectorAll('.attribute-row').forEach(row => {
+      row.addEventListener('click', function(e) {
+        if (e.target.closest('.attribute-actions') || e.target.closest('.cursor-grab')) return;
+        window.location.href = this.dataset.href;
+      });
+    });
+  });
+</script>
+
 <!-- Sticky Header -->
 <div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-start">
@@ -43,7 +54,7 @@
             </thead>
             <tbody data-controller="sortable" data-sortable-url-value="<%= reorder_bo_product_attributes_path(params[:org_slug]) %>">
               <% @product_attributes.each do |attribute| %>
-                <tr data-sortable-id="<%= attribute.id %>">
+                <tr class="attribute-row" data-sortable-id="<%= attribute.id %>" data-href="<%= edit_bo_product_attribute_path(params[:org_slug], attribute) %>" style="cursor: pointer;">
                   <td class="text-muted cursor-grab">
                     <i class="fa-solid fa-grip-vertical"></i>
                   </td>
@@ -79,7 +90,7 @@
                       <span class="badge bg-secondary"><%= t('bo.common.status.inactive') %></span>
                     <% end %>
                   </td>
-                  <td class="text-end">
+                  <td class="text-end attribute-actions">
                     <%= link_to edit_bo_product_attribute_path(params[:org_slug], attribute), class: "btn btn-sm btn-link text-muted" do %>
                       <i class="fa-solid fa-pen-to-square"></i>
                     <% end %>

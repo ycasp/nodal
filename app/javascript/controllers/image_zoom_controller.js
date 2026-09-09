@@ -78,9 +78,13 @@ export default class extends Controller {
     this.updateTransform()
   }
 
-  // Touch support
+  // Touch support — only intercept when zoomed in
   touchstart(event) {
-    if (event.touches.length === 1 && this.scale > 1) {
+    if (event.touches.length === 2) {
+      // Pinch-to-zoom start
+      this.initialPinchDistance = this._getTouchDistance(event.touches)
+      this.initialScale = this.scale
+    } else if (event.touches.length === 1 && this.scale > 1) {
       this.panning = true
       this.startX = event.touches[0].clientX - this.pointX
       this.startY = event.touches[0].clientY - this.pointY
@@ -88,6 +92,20 @@ export default class extends Controller {
   }
 
   touchmove(event) {
+    if (event.touches.length === 2 && this.initialPinchDistance) {
+      // Pinch-to-zoom
+      event.preventDefault()
+      const currentDistance = this._getTouchDistance(event.touches)
+      const ratio = currentDistance / this.initialPinchDistance
+      this.scale = Math.min(Math.max(this.minScale, this.initialScale * ratio), this.maxScale)
+      if (this.scale === this.minScale) {
+        this.pointX = 0
+        this.pointY = 0
+      }
+      this.updateTransform()
+      return
+    }
+
     if (!this.panning || event.touches.length !== 1) return
     event.preventDefault()
 
@@ -98,6 +116,13 @@ export default class extends Controller {
 
   touchend() {
     this.panning = false
+    this.initialPinchDistance = null
+  }
+
+  _getTouchDistance(touches) {
+    const dx = touches[0].clientX - touches[1].clientX
+    const dy = touches[0].clientY - touches[1].clientY
+    return Math.sqrt(dx * dx + dy * dy)
   }
 
   reset() {

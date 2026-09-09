@@ -1,0 +1,77 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+.card {
+  background: #ffffff;
+  display: flex;
+  overflow: hidden;
+  color: #111;
+}
+
+.card .left {
+  width: 38%;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4mm 3mm;
+}
+
+.card .qr-wrap {
+  width: 28mm; height: 28mm;
+  background: #fff;
+  border-radius: 1.5mm;
+  padding: 1mm;
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+}
+.card .qr-wrap svg { width: 100% !important; height: 100% !important; display: block; }
+
+.card .cta {
+  margin-top: 3mm;
+  text-align: center;
+}
+.card .cta .label { font-size: 8pt; font-weight: 600; color: #111; line-height: 1.2; }
+.card .cta .sub { font-size: 6pt; color: #777; margin-top: 0.5mm; line-height: 1.2; }
+
+.card .right {
+  width: 62%;
+  padding: 4mm 4mm 3mm 4mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card .right .top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2mm;
+}
+.card .right .top .org-name {
+  font-size: 6pt; color: #999; letter-spacing: 0.4px; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card .right .top .org-logo { height: 7mm; max-width: 22mm; object-fit: contain; }
+
+.card .right .who { margin-top: 1mm; }
+.card .right .who .name { font-size: 11pt; font-weight: 600; color: #111; line-height: 1.15; }
+.card .right .who .company { font-size: 8pt; color: <%= primary_color %>; font-weight: 500; margin-top: 0.5mm; line-height: 1.15; }
+
+.card .right .contacts {
+  margin-top: 2mm;
+  font-size: 7pt; color: #444; line-height: 1.5;
+}
+.card .right .contacts .row { display: block; }
+
+.card .right .footer { font-size: 6pt; color: #aaa; line-height: 1.2; }
+
+/* Sticker variant — larger label, bigger QR + scaled type */
+.card.sticker .left { width: 40%; padding: 5mm 4mm; }
+.card.sticker .qr-wrap { width: 38mm; height: 38mm; }
+.card.sticker .cta .label { font-size: 10pt; }
+.card.sticker .cta .sub { font-size: 7pt; }
+.card.sticker .right { padding: 6mm 6mm 5mm 6mm; }
+.card.sticker .right .top .org-name { font-size: 7pt; }
+.card.sticker .right .top .org-logo { height: 9mm; max-width: 30mm; }
+.card.sticker .right .who .name { font-size: 14pt; }
+.card.sticker .right .who .company { font-size: 10pt; }
+.card.sticker .right .contacts { font-size: 9pt; }
+.card.sticker .right .footer { font-size: 7pt; }

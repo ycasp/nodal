@@ -21,11 +21,16 @@
       <label class="auth-label">Password</label>
       <%= link_to "Forgot password?", new_password_path(resource_name), class: "auth-forgot-link" %>
     </div>
-    <%= f.input :password,
-                required: false,
-                placeholder: "Enter your password",
-                label: false,
-                input_html: { autocomplete: "current-password" } %>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.input :password,
+                  required: false,
+                  placeholder: "Enter your password",
+                  label: false,
+                  input_html: { autocomplete: "current-password", data: { password_visibility_target: "input" } } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
   </div>
 
   <% if devise_mapping.rememberable? %>

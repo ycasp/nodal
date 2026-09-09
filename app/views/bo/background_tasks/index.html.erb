@@ -1,0 +1,84 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex align-items-center gap-3">
+    <div class="rounded bg-primary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
+      <i class="fa-solid fa-list-check fa-lg"></i>
+    </div>
+    <div>
+      <h1><%= t('bo.background_tasks.index.title') %></h1>
+      <span class="text-muted"><%= t('bo.background_tasks.index.subtitle') %></span>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <%= render "bo/shared/settings_tabs" %>
+  <% if @tasks.any? %>
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th><%= t('bo.background_tasks.index.type') %></th>
+              <th><%= t('bo.background_tasks.index.status') %></th>
+              <th><%= t('bo.background_tasks.index.date') %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @tasks.each do |task| %>
+              <% unseen = task.viewed_at.nil? && task.status.in?(%w[completed failed]) %>
+              <tr class="<%= 'table-light fw-semibold' if unseen %>" style="cursor: pointer;"
+                  onclick="window.location='<%= bo_background_task_path(params[:org_slug], task) %>'">
+                <td>
+                  <% icon = case task.task_type
+                    when "product_grid_import" then "fa-table-cells"
+                    when "product_csv_import" then "fa-file-csv"
+                    when "bulk_photo_import" then "fa-images"
+                    when "generate_catalog" then "fa-file-pdf"
+                    when /^export_/ then "fa-file-export"
+                    else "fa-gear"
+                  end %>
+                  <i class="fa-solid <%= icon %> me-2 <%= unseen ? 'text-primary' : 'text-muted' %>"></i>
+                  <%= t("bo.background_tasks.#{task.task_type}.title", default: task.task_type.humanize) %>
+                  <% if unseen %>
+                    <span class="badge bg-primary ms-2" style="font-size: 9px;">novo</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% badge_class = case task.status
+                    when "pending" then "bg-secondary"
+                    when "running" then "bg-primary"
+                    when "completed" then "bg-success"
+                    when "failed" then "bg-danger"
+                  end %>
+                  <span class="badge <%= badge_class %>">
+                    <%= t("bo.background_tasks.statuses.#{task.status}") %>
+                  </span>
+                </td>
+                <td class="text-muted small"><%= l(task.created_at, format: :short) %></td>
+                <td class="text-end" onclick="event.stopPropagation()">
+                  <% if task.file.attached? %>
+                    <%= link_to download_bo_background_task_path(params[:org_slug], task), class: "btn btn-sm btn-outline-success me-1" do %>
+                      <i class="fa-solid fa-download"></i>
+                    <% end %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% else %>
+    <div class="card">
+      <div class="card-body text-center text-muted py-5">
+        <i class="fa-solid fa-list-check fa-3x mb-3 d-block"></i>
+        <p class="mb-0"><%= t('bo.background_tasks.index.empty') %></p>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% end %>

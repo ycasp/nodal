@@ -1,9 +1,24 @@
+<%# A line is a variant, not a product: the SKU lives on the variant, and it is
+    the only thing that separates the 45 products called "Moldura Criança".
+    Only the variant already chosen is rendered as an option — the rest arrive
+    from the server as the user types (see tom_select_controller). %>
 <tr data-new-record="<%= f.object.new_record? %>">
   <td>
-    <%= f.select :product_id,
-        options_for_select(products.map { |p| [p.name, p.id, { 'data-price': p.price.to_f }] }, f.object.product_id),
+    <%= f.select :product_variant_id,
+        options_for_select(
+          [ f.object.product_variant ].compact.map { |v| [ v.picker_label, v.id, { "data-sku": v.sku } ] },
+          f.object.product_variant_id
+        ),
         { prompt: t('bo.orders.form.select_product') },
-        { class: "form-select form-select-sm", data: { action: "change->order-items#updatePrice" } } %>
+        { class: "form-select form-select-sm",
+          data: {
+            controller: "tom-select",
+            tom_select_url_value: variant_search_bo_orders_path(params[:org_slug]),
+            action: "change->order-items#variantChanged"
+          } } %>
+    <%= f.hidden_field :product_id %>
+    <%= f.text_area :note, rows: 1, maxlength: 500, class: "form-control form-control-sm mt-1",
+        placeholder: t('bo.orders.form.note_placeholder') %>
   </td>
   <td>
     <%= f.number_field :quantity, class: "form-control form-control-sm", min: 1, value: f.object.quantity || 1, data: { quantity_field: true, action: "input->order-items#calculate" } %>
@@ -12,6 +27,16 @@
     <div class="input-group input-group-sm">
       <span class="input-group-text"><%= @current_organisation.currency_symbol %></span>
       <%= f.number_field :price, class: "form-control form-control-sm", step: 0.01, min: 0, data: { price_field: true, action: "input->order-items#calculate" } %>
+    </div>
+  </td>
+  <td>
+    <%# Editable so the back office can correct a bad discount, or grant one.
+        Stored as a fraction, shown as a percentage. %>
+    <div class="input-group input-group-sm">
+      <%= number_field_tag "#{f.object_name}[discount_percent]", f.object.discount_percent,
+          class: "form-control form-control-sm", step: 0.01, min: 0, max: 100,
+          data: { discount_field: true, action: "input->order-items#calculate" } %>
+      <span class="input-group-text">%</span>
     </div>
   </td>
   <td>

@@ -3,9 +3,10 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="checkout"
 export default class extends Controller {
     static targets = [
-        "shippingAmount", "totalAmount", "shippingAddressSection",
-        "sameAsShippingOption", "dateLabel", "newShippingAddressForm",
-        "billingAddressFields", "deliveryShippingCost"
+        "shippingAmount", "totalAmount", "totalLabel", "totalRow",
+        "shippingNotice", "shippingAddressSection",
+        "shippingSelector", "sameAsBillingOption", "dateLabel",
+        "newShippingAddressForm", "deliveryShippingCost", "dateField"
     ]
     static values = {
         subtotal: Number,
@@ -13,12 +14,20 @@ export default class extends Controller {
         shippingCost: Number,
         currencySymbol: String,
         freeShippingThreshold: Number,
-        freeShippingEnabled: Boolean
+        freeShippingEnabled: Boolean,
+        deliveryLabel: String,
+        pickupLabel: String,
+        deliveryDays: Array,
+        earliestDate: String,
+        shippingDeferred: Boolean,
+        shippingPendingLabel: String,
+        totalLabel: String,
+        totalWithoutShippingLabel: String
     }
 
     connect() {
         this.toggleShippingAddress()
-        this.toggleBillingAddress()
+        if (this.shippingDeferredValue) this.updateTotal()
     }
 
     qualifiesForFreeShipping() {
@@ -27,29 +36,55 @@ export default class extends Controller {
                this.subtotalValue >= this.freeShippingThresholdValue
     }
 
+    // Mirrors Order#deferred_shipping? — pickup and free shipping are settled
+    // here and now even when the organisation prices shipping at dispatch.
+    shippingIsPending(isPickup, qualifiesForFree) {
+        return this.shippingDeferredValue && !isPickup && !qualifiesForFree
+    }
+
     updateTotal() {
         const isPickup = document.getElementById("delivery_method_pickup").checked
         const qualifiesForFree = this.qualifiesForFreeShipping()
-        const shipping = isPickup || qualifiesForFree ? 0 : this.shippingCostValue
+        const pending = this.shippingIsPending(isPickup, qualifiesForFree)
+        const shipping = isPickup || qualifiesForFree || pending ? 0 : this.shippingCostValue
         const total = this.subtotalValue + this.taxValue + shipping
 
-        this.shippingAmountTarget.textContent = this.formatCurrency(shipping)
-        this.totalAmountTarget.textContent = this.formatCurrency(total)
+        if (this.hasShippingAmountTarget) {
+            this.shippingAmountTarget.textContent = pending
+                ? this.shippingPendingLabelValue
+                : this.formatCurrency(shipping)
+        }
+        if (this.hasTotalAmountTarget) this.totalAmountTarget.textContent = this.formatCurrency(total)
+        if (this.hasTotalLabelTarget) {
+            this.totalLabelTarget.textContent = pending
+                ? this.totalWithoutShippingLabelValue
+                : this.totalLabelValue
+        }
+        if (this.hasShippingNoticeTarget) this.shippingNoticeTarget.classList.toggle("d-none", !pending)
+        if (this.hasTotalRowTarget) {
+            this.totalRowTarget.classList.toggle("mb-2", pending)
+            this.totalRowTarget.classList.toggle("mb-4", !pending)
+        }
     }
 
     toggleShippingAddress() {
         const isPickup = document.getElementById("delivery_method_pickup").checked
+        const sameAsBillingEl = document.getElementById("same_as_billing")
+        const sameAsBilling = sameAsBillingEl ? sameAsBillingEl.checked : false
 
+        // Whole shipping card hides only when pickup is selected.
         if (this.hasShippingAddressSectionTarget) {
             this.shippingAddressSectionTarget.style.display = isPickup ? "none" : "block"
         }
 
-        if (this.hasSameAsShippingOptionTarget) {
-            this.sameAsShippingOptionTarget.style.display = isPickup ? "none" : "flex"
+        // Inner shipping selector hides when shipping to billing address —
+        // the checkbox stays visible so the customer can flip it back.
+        if (this.hasShippingSelectorTarget) {
+            this.shippingSelectorTarget.style.display = sameAsBilling ? "none" : "block"
         }
 
         if (this.hasDateLabelTarget) {
-            this.dateLabelTarget.textContent = isPickup ? "Pickup Date" : "Delivery Date"
+            this.dateLabelTarget.textContent = isPickup ? this.pickupLabelValue : this.deliveryLabelValue
         }
     }
 
@@ -60,10 +95,17 @@ export default class extends Controller {
         }
     }
 
-    toggleBillingAddress() {
-        const sameAsShipping = document.getElementById("same_as_shipping")
-        if (sameAsShipping && this.hasBillingAddressFieldsTarget) {
-            this.billingAddressFieldsTarget.style.display = sameAsShipping.checked ? "none" : "block"
+    validateDate() {
+        if (!this.hasDateFieldTarget || !this.hasDeliveryDaysValue) return
+
+        const selected = this.dateFieldTarget.value
+        if (!selected) return
+
+        const date = new Date(selected + "T00:00:00")
+        const dayOfWeek = date.getDay()
+
+        if (!this.deliveryDaysValue.includes(dayOfWeek)) {
+            this.dateFieldTarget.value = this.earliestDateValue
         }
     }
 

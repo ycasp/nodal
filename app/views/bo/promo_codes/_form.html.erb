@@ -1,0 +1,129 @@
+<div class="row g-3">
+  <div class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title mb-4"><%= t('bo.pricing.promo_codes.card_title') %></h5>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.pricing.promo_codes.form.code') %> <span class="text-danger">*</span></label>
+            <%= f.text_field :code, class: "form-control font-monospace", placeholder: "SUMMER2026", required: true, style: "text-transform: uppercase;" %>
+            <small class="text-muted"><%= t('bo.pricing.promo_codes.form.code_hint') %></small>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.pricing.promo_codes.form.description') %></label>
+            <%= f.text_field :description, class: "form-control", placeholder: t('bo.pricing.promo_codes.form.description_placeholder') %>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.pricing.form.discount_type') %> <span class="text-danger">*</span></label>
+            <%= f.select :discount_type, [[t('bo.pricing.form.percentage'), 'percentage'], [t('bo.pricing.form.fixed_amount'), 'fixed']], {}, { class: "form-select", required: true } %>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.pricing.form.discount_value') %> <span class="text-danger">*</span></label>
+            <%= f.number_field :discount_value, class: "form-control", placeholder: "0.10", step: 0.01, min: 0, required: true %>
+            <small class="text-muted"><%= t('bo.pricing.form.discount_value_hint', symbol: @current_organisation.currency_symbol) %></small>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-md-6">
+            <label class="form-label"><%= t('bo.pricing.promo_codes.form.min_order_amount') %></label>
+            <%= f.number_field :min_order_amount, class: "form-control", placeholder: "0.00", step: 0.01, min: 0, value: @promo_code.min_order_amount&.to_f %>
+            <small class="text-muted"><%= t('bo.pricing.promo_codes.form.min_order_hint') %></small>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label"><%= t('bo.pricing.promo_codes.form.usage_limit') %></label>
+            <%= f.number_field :usage_limit, class: "form-control", placeholder: "∞", min: 1 %>
+            <small class="text-muted"><%= t('bo.pricing.promo_codes.form.usage_limit_hint') %></small>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label"><%= t('bo.pricing.promo_codes.form.per_customer_limit') %></label>
+            <%= f.number_field :per_customer_limit, class: "form-control", min: 1, value: @promo_code.per_customer_limit || 1 %>
+          </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div data-controller="promo-eligibility">
+          <label class="form-label fw-semibold"><%= t('bo.pricing.promo_codes.form.eligibility') %></label>
+          <div class="mb-3">
+            <div class="form-check mb-2">
+              <%= f.radio_button :eligibility, 'all_customers', class: "form-check-input", id: "eligibility_all", data: { action: "promo-eligibility#toggle", "promo-eligibility-target": "radio" } %>
+              <label class="form-check-label" for="eligibility_all">
+                <%= t('bo.pricing.promo_codes.form.all_customers') %>
+              </label>
+            </div>
+            <div class="form-check">
+              <%= f.radio_button :eligibility, 'specific_customers', class: "form-check-input", id: "eligibility_specific", data: { action: "promo-eligibility#toggle", "promo-eligibility-target": "radio" } %>
+              <label class="form-check-label" for="eligibility_specific">
+                <%= t('bo.pricing.promo_codes.form.specific_customers') %>
+              </label>
+            </div>
+          </div>
+
+          <div data-promo-eligibility-target="customerPicker" class="<%= 'd-none' unless @promo_code.eligibility == 'specific_customers' %>">
+            <div class="mb-3">
+              <label class="form-label"><%= t('bo.pricing.promo_codes.form.select_customers') %></label>
+              <%= f.select :eligible_customer_ids,
+                  options_for_select(@customers.map { |c| ["#{c.company_name} (#{c.email})", c.id] }, @promo_code.eligible_customer_ids),
+                  {},
+                  { multiple: true, class: "form-select", data: { controller: "tom-select" }, style: "min-height: 100px;" } %>
+            </div>
+            <% if @customer_categories&.any? %>
+              <div>
+                <label class="form-label"><%= t('bo.pricing.promo_codes.form.select_customer_categories') %></label>
+                <%= f.select :eligible_customer_category_ids,
+                    options_for_select(@customer_categories.map { |cc| [cc.name, cc.id] }, @promo_code.eligible_customer_category_ids),
+                    {},
+                    { multiple: true, class: "form-select", data: { controller: "tom-select" }, style: "min-height: 100px;" } %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <div class="form-check form-switch">
+              <%= f.check_box :stackable, class: "form-check-input", role: "switch", id: "stackableSwitch" %>
+              <label class="form-check-label" for="stackableSwitch">
+                <%= t('bo.pricing.form.stackable_label') %>
+              </label>
+            </div>
+            <small class="text-muted"><%= t('bo.pricing.promo_codes.form.stackable_hint') %></small>
+          </div>
+          <div class="col-md-6">
+            <div class="form-check form-switch">
+              <%= f.check_box :active, class: "form-check-input", role: "switch", id: "activeSwitch", checked: @promo_code.active.nil? || @promo_code.active? %>
+              <label class="form-check-label" for="activeSwitch">
+                <%= t('bo.pricing.form.active_label') %>
+              </label>
+            </div>
+            <small class="text-muted"><%= t('bo.pricing.form.active_hint') %></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-4"><%= t('bo.pricing.promo_codes.validity_title') %></h5>
+        <p class="text-muted small"><%= t('bo.pricing.form.no_expiration') %></p>
+
+        <div class="mb-3">
+          <label class="form-label"><%= t('bo.pricing.form.valid_from') %></label>
+          <%= f.date_field :valid_from, class: "form-control" %>
+        </div>
+
+        <div>
+          <label class="form-label"><%= t('bo.pricing.form.valid_until') %></label>
+          <%= f.date_field :valid_until, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<%# Replaces any previous logins-modal target content with the freshly
+   rendered modal for the requested customer. The auto-modal Stimulus
+   controller opens it and removes itself on close. %>
+<%= turbo_stream.update "customer_logins_modal_target" do %>
+  <%= render "bo/customers/logins_modal",
+             customer: @customer,
+             customer_users: @customer_users,
+             new_customer_user: @new_customer_user %>
+<% end %>

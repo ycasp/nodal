@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="mb-4">
+<div class="bo-page-header">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_pricing_path(params[:org_slug], tab: 'client_tiers'), class: "text-muted" do %>
-        <i class="fa-solid fa-arrow-left"></i>
+      <%= link_to bo_pricing_path(params[:org_slug], tab: 'client_tiers'), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
       <% end %>
 
       <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -12,12 +12,12 @@
       </div>
 
       <div>
-        <h4 class="mb-0"><%= t('bo.pricing.client_tiers.edit.title') %></h4>
-        <span class="text-muted"><%= @discount.customer.company_name %></span>
+        <h1><%= t('bo.pricing.client_tiers.edit.title') %></h1>
+        <span class="text-muted"><%= @discount.target_name %></span>
       </div>
     </div>
 
-    <div class="d-flex gap-2 align-items-center">
+    <div class="bo-page-actions">
       <%= link_to bo_pricing_path(params[:org_slug], tab: 'client_tiers'), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -27,6 +27,8 @@
     </div>
   </div>
 </div>
+
+<div class="bo-page-body">
 
 <% if @discount.errors.any? %>
   <div class="alert alert-danger mb-4">
@@ -48,8 +50,13 @@
 
           <div class="row g-3">
             <div class="col-md-12">
-              <label class="form-label"><%= t('bo.pricing.form.client') %> <span class="text-danger">*</span></label>
-              <%= f.collection_select :customer_id, @customers, :id, :company_name, { prompt: t('bo.pricing.form.select_client') }, { class: "form-select", required: true } %>
+              <% if @discount.category_based? %>
+                <label class="form-label"><%= t('bo.pricing.form.customer_category') %> <span class="text-danger">*</span></label>
+                <%= f.collection_select :customer_category_id, @customer_categories, :id, :name, { prompt: t('bo.pricing.form.select_category') }, { class: "form-select", required: true } %>
+              <% else %>
+                <label class="form-label"><%= t('bo.pricing.form.client') %> <span class="text-danger">*</span></label>
+                <%= f.collection_select :customer_id, @customers, :id, :company_name, { prompt: t('bo.pricing.form.select_client') }, { class: "form-select", required: true } %>
+              <% end %>
             </div>
           </div>
 
@@ -116,5 +123,7 @@
     </div>
   </div>
 <% end %>
+
+</div>
 
 <% end %>

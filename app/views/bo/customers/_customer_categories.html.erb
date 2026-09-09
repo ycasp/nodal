@@ -1,0 +1,55 @@
+<script>
+  document.addEventListener('turbo:load', function() {
+    document.querySelectorAll('.category-row').forEach(row => {
+      row.addEventListener('click', function() {
+        window.location.href = this.dataset.href;
+      });
+    });
+  });
+</script>
+
+<% if @customer_categories.any? %>
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th><%= t('bo.customer_categories.table.name') %></th>
+            <th><%= t('bo.customer_categories.table.description') %></th>
+            <th class="text-center"><%= t('bo.customer_categories.table.customers_count') %></th>
+            <th class="text-end"><%= t('bo.common.actions_column') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @customer_categories.each do |category| %>
+            <tr class="category-row" data-href="<%= edit_bo_customer_category_path(params[:org_slug], category) %>" style="cursor: pointer;">
+              <td class="fw-semibold"><%= category.name %></td>
+              <td class="text-muted"><%= category.description.presence || "—" %></td>
+              <td class="text-center">
+                <span class="badge bg-light text-dark border"><%= category.customers.count %></span>
+              </td>
+              <td class="text-end" style="white-space: nowrap;" onclick="event.stopPropagation();">
+                <%= link_to edit_bo_customer_category_path(params[:org_slug], category), class: "btn btn-sm btn-link text-muted" do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+                <%= button_to bo_customer_category_path(params[:org_slug], category), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: t('bo.common.confirm.delete') } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% else %>
+  <div class="card">
+    <div class="card-body text-center py-5">
+      <i class="fa-solid fa-layer-group text-muted mb-3" style="font-size: 2rem;"></i>
+      <p class="text-muted mb-3"><%= t('bo.customer_categories.empty') %></p>
+      <%= link_to new_bo_customer_category_path(params[:org_slug]), class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus me-1"></i> <%= t('bo.customer_categories.add') %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

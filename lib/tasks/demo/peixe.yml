@@ -1,0 +1,182 @@
+label: "Peixe & Marisco"
+emoji: "🐟"
+
+categories:
+  - name: "Peixe Fresco"
+    slug: "peixe-fresco"
+    description: "Peixe fresco do dia, capturado nas melhores águas portuguesas"
+    color: "#1565C0"
+
+  - name: "Peixe Congelado"
+    slug: "peixe-congelado"
+    description: "Peixe e marisco ultracongelados para máxima frescura"
+    color: "#0288D1"
+
+  - name: "Marisco"
+    slug: "marisco"
+    description: "Marisco fresco e vivo — amêijoas, gambas, percebes e mais"
+    color: "#E65100"
+
+  - name: "Conservas & Fumados"
+    slug: "conservas-fumados"
+    description: "Conservas artesanais e fumados de alta qualidade"
+    color: "#4E342E"
+
+products:
+  - name: "Sardinha Fresca"
+    category: "Peixe Fresco"
+    sku: "PX-SAR-FRE"
+    price: 380
+    unit: "kg"
+    min_qty: 10
+    stock: 500
+    description: "Sardinha atlântica fresca, ideal para grelhar. Calibre 40/60."
+
+  - name: "Dourada do Atlântico"
+    category: "Peixe Fresco"
+    sku: "PX-DOU-FRE"
+    price: 890
+    unit: "kg"
+    min_qty: 5
+    stock: 200
+    description: "Dourada fresca de aquacultura certificada. Peso médio 400g."
+
+  - name: "Robalo Fresco"
+    category: "Peixe Fresco"
+    sku: "PX-ROB-FRE"
+    price: 1190
+    unit: "kg"
+    min_qty: 5
+    stock: 150
+    description: "Robalo selvagem do Atlântico Norte. Peixe nobre de sabor intenso."
+
+  - name: "Lula Fresca Limpa"
+    category: "Peixe Fresco"
+    sku: "PX-LUL-FRE"
+    price: 750
+    unit: "kg"
+    min_qty: 5
+    stock: 180
+    description: "Lula já limpa e pronta a cozinhar. Captura do dia."
+
+  - name: "Polvo do Alto Mar"
+    category: "Peixe Fresco"
+    sku: "PX-POL-FRE"
+    price: 820
+    unit: "kg"
+    min_qty: 5
+    stock: 160
+    description: "Polvo cozido e congelado. Pronto a fatiar ou grelhar."
+
+  - name: "Mexilhão Cozido Congelado"
+    category: "Peixe Congelado"
+    sku: "PX-MEX-CON"
+    price: 290
+    unit: "caixa 1kg"
+    min_qty: 10
+    stock: 400
+    description: "Mexilhão cozido e ultracongelado. Caixa de 1kg."
+
+  - name: "Pota em Anéis Congelada"
+    category: "Peixe Congelado"
+    sku: "PX-POT-CON"
+    price: 450
+    unit: "caixa 1kg"
+    min_qty: 10
+    stock: 300
+    description: "Anéis de pota ultracongelados, calibrados. Caixa 1kg."
+
+  - name: "Amêijoa Boa"
+    category: "Marisco"
+    sku: "MS-AME-BOA"
+    price: 960
+    unit: "kg"
+    min_qty: 5
+    stock: 200
+    description: "Amêijoa boa viva, depurada e certificada. Origem: Ria de Aveiro."
+
+  - name: "Atum em Azeite — Lata 120g"
+    category: "Conservas & Fumados"
+    sku: "CON-ATU-AZE-120"
+    price: 285
+    unit: "lata"
+    min_qty: 24
+    stock: 600
+    description: "Atum em azeite virgem extra. Pesca sustentável certificada."
+
+  - name: "Sardinha em Azeite — Lata 125g"
+    category: "Conservas & Fumados"
+    sku: "CON-SAR-AZE-125"
+    price: 195
+    unit: "lata"
+    min_qty: 24
+    stock: 800
+    description: "Sardinha portuguesa em azeite. Produto artesanal, conserva premium."
+
+variant_products:
+  - name: "Bacalhau Salgado Seco"
+    category: "Conservas & Fumados"
+    sku: "PX-BAC-SAL"
+    unit: "kg"
+    min_qty: 10
+    attribute: "Calibre"
+    description: "Bacalhau norueguês salgado e seco. Disponível em vários calibres."
+    variants:
+      - name: "Especial (acima 800g)"
+        sku_suffix: "ESP"
+        price: 1290
+        stock: 200
+      - name: "Corrente (400g–800g)"
+        sku_suffix: "COR"
+        price: 980
+        stock: 300
+      - name: "Popular (200g–400g)"
+        sku_suffix: "POP"
+        price: 720
+        stock: 350
+      - name: "Desfiado"
+        sku_suffix: "DES"
+        price: 850
+        stock: 250
+
+  - name: "Camarão Congelado"
+    category: "Marisco"
+    sku: "MS-CAM-CON"
+    unit: "caixa 1kg"
+    min_qty: 5
+    attribute: "Calibre"
+    description: "Camarão ultracongelado, descascado e sem veio. Vários calibres."
+    variants:
+      - name: "Pequeno 40/60"
+        sku_suffix: "PEQ"
+        price: 680
+        stock: 400
+      - name: "Médio 30/40"
+        sku_suffix: "MED"
+        price: 890
+        stock: 350
+      - name: "Grande 20/30"
+        sku_suffix: "GRD"
+        price: 1190
+        stock: 250
+
+  - name: "Salmão do Atlântico"
+    category: "Peixe Fresco"
+    sku: "PX-SAL-FRE"
+    unit: "kg"
+    min_qty: 5
+    attribute: "Formato"
+    description: "Salmão fresco do Atlântico Norte. Disponível em diferentes formatos."
+    variants:
+      - name: "Posta"
+        sku_suffix: "POS"
+        price: 1050
+        stock: 200
+      - name: "Filete"
+        sku_suffix: "FIL"
+        price: 1290
+        stock: 180
+      - name: "Inteiro"
+        sku_suffix: "INT"
+        price: 880
+        stock: 150

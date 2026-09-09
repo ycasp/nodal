@@ -5,12 +5,12 @@
 .logo-icon {
   width: 28px;
   height: 28px;
-  background: var(--org-primary, $teal);
+  background: $teal;
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--org-primary-contrast, #ffffff);
+  color: #ffffff;
   font-weight: 700;
   font-size: 1rem;
   transition: background 0.2s ease;
@@ -28,5 +28,13 @@
 .footer-logo {
   .logo-text {
     color: #ffffff;
+  }
+}
+
+// Storefront: use organisation branding for logo
+.storefront-layout {
+  .logo-icon {
+    background: var(--org-primary, $teal);
+    color: var(--org-primary-contrast, #ffffff);
   }
 }

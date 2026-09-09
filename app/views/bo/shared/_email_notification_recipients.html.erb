@@ -1,0 +1,14 @@
+<% if @recipients.any? %>
+  <table class="table table-sm table-borderless mb-0" style="max-height: 200px; overflow-y: auto; display: block;">
+    <tbody>
+      <% @recipients.each do |customer| %>
+        <tr>
+          <td class="fw-medium small ps-0" style="width: 50%;"><%= customer.company_name %></td>
+          <td class="text-muted small text-end pe-0"><%= customer.email %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="text-muted small mb-0"><%= t('bo.pricing.email_notifications.modal.no_recipients') %></p>
+<% end %>

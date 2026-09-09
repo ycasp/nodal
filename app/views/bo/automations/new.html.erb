@@ -1,0 +1,30 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_automations_path(current_organisation.slug), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+      <div>
+        <h1><%= t('bo.automations.new.title') %></h1>
+        <p><%= t('bo.automations.new.subtitle') %></p>
+      </div>
+    </div>
+    <div class="bo-page-actions">
+      <%= link_to bo_automations_path(current_organisation.slug), class: "btn btn-outline-secondary" do %>
+        <%= t('bo.common.actions.cancel') %>
+      <% end %>
+      <button type="submit" form="automation-form" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i> <%= t('bo.common.actions.save_changes') %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <%= render "form", automation: @automation,
+             url: bo_automations_path(current_organisation.slug), method: :post %>
+</div>
+
+<% end %>

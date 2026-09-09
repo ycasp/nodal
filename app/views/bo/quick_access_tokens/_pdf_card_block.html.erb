@@ -1,0 +1,35 @@
+<div class="card <%= local_assigns[:variant] %>">
+  <div class="left">
+    <div class="qr-wrap"><%= qr_svg.html_safe %></div>
+    <div class="cta">
+      <div class="label"><%= t("bo.quick_access_tokens.pdf.cta_label") %></div>
+      <div class="sub"><%= t("bo.quick_access_tokens.pdf.cta_sub") %></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="top">
+      <div class="org-name"><%= organisation.name %></div>
+      <% if logo_data = org_logo_data_url(organisation) %>
+        <img class="org-logo" src="<%= logo_data %>" alt="">
+      <% end %>
+    </div>
+
+    <div class="who">
+      <div class="name"><%= customer_user.contact_name.presence || customer_user.email %></div>
+      <% if customer.company_name.present? %>
+        <div class="company"><%= customer.company_name %></div>
+      <% end %>
+    </div>
+
+    <div class="contacts">
+      <% [organisation.phone, organisation.whatsapp, organisation.contact_email].compact_blank.uniq.each do |line| %>
+        <span class="row"><%= line %></span>
+      <% end %>
+    </div>
+
+    <div class="footer">
+      <%= t("bo.quick_access_tokens.pdf.generated_on", date: l(token.created_at.to_date)) %><% unless token.non_expiring? %> · <%= t("bo.quick_access_tokens.pdf.expires_on", date: l(token.expires_at.to_date)) %><% end %>
+    </div>
+  </div>
+</div>

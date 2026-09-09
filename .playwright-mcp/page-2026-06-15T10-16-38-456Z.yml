@@ -1,0 +1,217 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "aviminho" [ref=e5] [cursor=pointer]:
+          - /url: /aviminho/home
+          - img "aviminho" [ref=e6]
+        - text: 
+        - generic [ref=e7]:
+          - list [ref=e8]:
+            - listitem [ref=e9]:
+              - link "Início" [ref=e10] [cursor=pointer]:
+                - /url: /aviminho/home
+            - listitem [ref=e11]:
+              - link "Produtos" [ref=e12] [cursor=pointer]:
+                - /url: /aviminho/products
+            - listitem [ref=e13]:
+              - link "Encomendas" [ref=e14] [cursor=pointer]:
+                - /url: /aviminho/orders
+            - listitem [ref=e15]:
+              - link "Contacto" [ref=e16] [cursor=pointer]:
+                - /url: /aviminho/contact
+          - generic [ref=e17]:
+            - link " 2 %" [ref=e18] [cursor=pointer]:
+              - /url: /aviminho/cart
+              - generic [ref=e19]: 
+              - generic [ref=e20]: "2"
+              - generic "Descontos de encomenda disponíveis!" [ref=e21]:
+                - generic [ref=e22]: "%"
+            - generic [ref=e23]:
+              - generic [ref=e24]: 
+              - text: Pizzaria Bella Napoli
+            - generic [ref=e25]:
+              - button " João Silva" [ref=e26] [cursor=pointer]:
+                - generic [ref=e27]: 
+                - text: João Silva
+              - text:   
+    - generic [ref=e28]:
+      - generic [ref=e29]: 
+      - text: Envio grátis em encomendas acima de €250
+  - main [ref=e30]:
+    - link " Voltar aos produtos" [ref=e32] [cursor=pointer]:
+      - /url: /aviminho/products
+      - generic [ref=e33]: 
+      - text: Voltar aos produtos
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - table [ref=e38]:
+          - rowgroup [ref=e39]:
+            - row "Produto Quantidade Preço Total" [ref=e40]:
+              - columnheader "Produto" [ref=e41]
+              - columnheader "Quantidade" [ref=e42]
+              - columnheader "Preço" [ref=e43]
+              - columnheader "Total" [ref=e44]
+              - columnheader [ref=e45]
+          - rowgroup [ref=e46]:
+            - row "Traseiro s/Osso 1058 5  €5.49 €27.45 " [ref=e47]:
+              - cell "Traseiro s/Osso 1058" [ref=e48]:
+                - generic [ref=e49]:
+                  - img [ref=e50]
+                  - generic [ref=e51]:
+                    - link "Traseiro s/Osso" [ref=e52] [cursor=pointer]:
+                      - /url: /aviminho/products/2984
+                    - text: "1058"
+              - cell "5 " [ref=e53]:
+                - generic [ref=e55]:
+                  - spinbutton [ref=e56]: "5"
+                  - button "" [ref=e57] [cursor=pointer]:
+                    - generic [ref=e58]: 
+              - cell "€5.49" [ref=e59]
+              - cell "€27.45" [ref=e60]
+              - cell "" [ref=e61]:
+                - button "" [ref=e63] [cursor=pointer]:
+                  - generic [ref=e64]: 
+            - row "Traseiro s/Osso 1053 3  €5.99 €17.97 " [ref=e65]:
+              - cell "Traseiro s/Osso 1053" [ref=e66]:
+                - generic [ref=e67]:
+                  - img [ref=e68]
+                  - generic [ref=e69]:
+                    - link "Traseiro s/Osso" [ref=e70] [cursor=pointer]:
+                      - /url: /aviminho/products/2984
+                    - text: "1053"
+              - cell "3 " [ref=e71]:
+                - generic [ref=e73]:
+                  - spinbutton [ref=e74]: "3"
+                  - button "" [ref=e75] [cursor=pointer]:
+                    - generic [ref=e76]: 
+              - cell "€5.99" [ref=e77]
+              - cell "€17.97" [ref=e78]
+              - cell "" [ref=e79]:
+                - button "" [ref=e81] [cursor=pointer]:
+                  - generic [ref=e82]: 
+        - text:  +   + 
+        - generic [ref=e83]:
+          - link " Continuar a Comprar" [ref=e84] [cursor=pointer]:
+            - /url: /aviminho/products
+            - generic [ref=e85]: 
+            - text: Continuar a Comprar
+          - button " Limpar Carrinho" [ref=e87] [cursor=pointer]:
+            - generic [ref=e88]: 
+            - text: Limpar Carrinho
+      - generic [ref=e89]:
+        - generic [ref=e91]:
+          - heading "Resumo da Encomenda" [level=5] [ref=e92]
+          - generic [ref=e93]:
+            - generic [ref=e94]: Subtotal (8 itens)
+            - generic [ref=e95]: €45.42
+          - separator [ref=e96]
+          - generic [ref=e97]:
+            - generic [ref=e98]: Total
+            - generic [ref=e99]: €45.42
+          - generic [ref=e100]:
+            - generic [ref=e102]: Gaste mais €204.58 para envio grátis
+            - progressbar [ref=e104]
+          - link " Finalizar Pedido" [ref=e105] [cursor=pointer]:
+            - /url: /aviminho/checkout
+            - generic [ref=e106]: 
+            - text: Finalizar Pedido
+        - generic [ref=e108]:
+          - heading "% Descontos de Encomenda Disponíveis" [level=6] [ref=e109]:
+            - generic [ref=e110]: "%"
+            - text: Descontos de Encomenda Disponíveis
+          - generic [ref=e111]:
+            - generic [ref=e112]: 
+            - generic [ref=e113]:
+              - generic [ref=e114]: 5% em encomendas acima de €500.00
+              - text: Gaste mais €454.58 para desbloquear
+    - generic [ref=e115]:
+      - heading "Também pode gostar" [level=6] [ref=e116]
+      - generic [ref=e118]:
+        - link "Coxa s/Osso e c/Pele Coxa s/Osso e c/Pele" [ref=e120] [cursor=pointer]:
+          - /url: /aviminho/products/2986
+          - generic [ref=e121]:
+            - img "Coxa s/Osso e c/Pele" [ref=e123]
+            - generic [ref=e125]: Coxa s/Osso e c/Pele
+        - link "Carne Picada de Frango Carne Picada de Frango" [ref=e127] [cursor=pointer]:
+          - /url: /aviminho/products/2983
+          - generic [ref=e128]:
+            - img "Carne Picada de Frango" [ref=e130]
+            - generic [ref=e132]: Carne Picada de Frango
+        - link "Produto 1 Produto 1" [ref=e134] [cursor=pointer]:
+          - /url: /aviminho/products/2773
+          - generic [ref=e135]:
+            - img "Produto 1" [ref=e137]
+            - generic [ref=e139]: Produto 1
+        - link "Produto 2 Produto 2" [ref=e141] [cursor=pointer]:
+          - /url: /aviminho/products/2772
+          - generic [ref=e142]:
+            - img "Produto 2" [ref=e144]
+            - generic [ref=e146]: Produto 2
+        - link "Produto 3 Produto 3" [ref=e148] [cursor=pointer]:
+          - /url: /aviminho/products/2771
+          - generic [ref=e149]:
+            - img "Produto 3" [ref=e151]
+            - generic [ref=e153]: Produto 3
+        - link "Produto 4 Produto 4" [ref=e155] [cursor=pointer]:
+          - /url: /aviminho/products/2770
+          - generic [ref=e156]:
+            - img "Produto 4" [ref=e158]
+            - generic [ref=e160]: Produto 4
+        - link "Carnaroli Carnaroli" [ref=e162] [cursor=pointer]:
+          - /url: /aviminho/products/2769
+          - generic [ref=e163]:
+            - img "Carnaroli" [ref=e165]
+            - generic [ref=e167]: Carnaroli
+        - link "Arborio Arborio" [ref=e169] [cursor=pointer]:
+          - /url: /aviminho/products/2768
+          - generic [ref=e170]:
+            - img "Arborio" [ref=e172]
+            - generic [ref=e174]: Arborio
+    - text: 
+  - contentinfo [ref=e175]:
+    - generic [ref=e177]:
+      - generic [ref=e179]:
+        - generic [ref=e180]:
+          - generic [ref=e181]: 
+          - link "demo@demo.pt" [ref=e182] [cursor=pointer]:
+            - /url: mailto:demo@demo.pt
+        - generic [ref=e183]:
+          - generic [ref=e184]: 
+          - link "+351234567890" [ref=e185] [cursor=pointer]:
+            - /url: tel:+351234567890
+        - generic [ref=e186]:
+          - generic [ref=e187]: 
+          - link "+351234567890" [ref=e188] [cursor=pointer]:
+            - /url: https://wa.me/351234567890
+      - generic [ref=e189]:
+        - link "" [ref=e190] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e191]: 
+        - link "" [ref=e192] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e193]: 
+        - link "" [ref=e194] [cursor=pointer]:
+          - /url: teste
+          - generic [ref=e195]: 
+        - link " Contacte-nos" [ref=e196] [cursor=pointer]:
+          - /url: /aviminho/contact
+          - generic [ref=e197]: 
+          - text: Contacte-nos
+    - text:    
+    - generic [ref=e199]:
+      - link "Termos de Serviço" [ref=e200] [cursor=pointer]:
+        - /url: /aviminho/terms
+      - link "Política de Privacidade" [ref=e201] [cursor=pointer]:
+        - /url: /aviminho/privacy
+    - contentinfo [ref=e202]:
+      - link "aviminho powered by N odal" [ref=e203] [cursor=pointer]:
+        - /url: https://www.nodal-seiri.dev
+        - generic [ref=e204]: aviminho
+        - generic [ref=e205]: powered by
+        - generic [ref=e206]:
+          - generic [ref=e207]: "N"
+          - generic [ref=e208]: odal
+  - link "Fale connosco no WhatsApp" [ref=e209] [cursor=pointer]:
+    - /url: https://wa.me/351234567890
+    - generic [ref=e210]: 

@@ -1,0 +1,54 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <h1><%= t('bo.unmet_demands.index.title') %></h1>
+      <p><%= t('bo.unmet_demands.index.subtitle') %></p>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <% if @demands_by_customer.empty? %>
+    <div class="card">
+      <div class="card-body text-center py-5 text-muted">
+        <i class="fa-solid fa-cart-flatbed-suitcase fa-2x mb-3 d-block opacity-50"></i>
+        <p class="mb-0"><%= t('bo.unmet_demands.index.empty') %></p>
+      </div>
+    </div>
+  <% else %>
+    <div class="accordion" id="faltasAccordion">
+      <% @demands_by_customer.each_with_index do |(customer, demands), idx| %>
+        <% total_short = demands.sum(&:shortfall) %>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button <%= 'collapsed' unless idx.zero? %>" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faltasCustomer<%= customer.id %>">
+              <span class="fw-semibold me-2"><%= customer.company_name %></span>
+              <span class="text-muted small me-auto"><%= customer.contact_name %></span>
+              <span class="badge bg-warning text-dark rounded-pill me-3">
+                <%= t('bo.unmet_demands.index.total_short', count: total_short) %>
+              </span>
+            </button>
+          </h2>
+          <div id="faltasCustomer<%= customer.id %>" class="accordion-collapse collapse <%= 'show' if idx.zero? %>"
+               data-bs-parent="#faltasAccordion">
+            <div class="accordion-body p-0">
+              <div class="px-3 py-2 border-bottom">
+                <%= link_to t('bo.unmet_demands.customer_card.open_customer'),
+                            bo_customer_path(org_slug: current_organisation.slug, id: customer.id),
+                            class: "small text-decoration-none" %>
+              </div>
+              <%= render "bo/unmet_demands/demands_table", demands: demands %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<%= render "bo/unmet_demands/trocar_modal", variants: @substitute_variants %>
+
+<% end %>

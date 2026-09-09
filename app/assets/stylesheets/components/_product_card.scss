@@ -1,0 +1,225 @@
+// Product Card Styles
+// Modern, subtle design following e-commerce best practices
+
+// Base price styling — declared globally so it also works inside the
+// home visual card (which doesn't share the .product-card ancestor).
+.product-card-price {
+  font-weight: 700;
+  color: var(--org-primary, #0d6efd);
+  margin: 0;
+}
+
+.product-card-price-discounted {
+  font-weight: 700;
+  color: #198754;
+  margin: 0;
+}
+
+.product-card-price-original {
+  color: #6c757d;
+  text-decoration: line-through;
+}
+
+.product-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  // Image container — square ratio for consistent scaling
+  .product-card-image {
+    position: relative;
+    aspect-ratio: 1;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .placeholder-icon {
+      font-size: 3rem;
+      color: #adb5bd;
+    }
+  }
+
+
+  // Card body
+  .card-body {
+    padding: 1rem;
+  }
+
+  // Category badge
+  .product-card-category {
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #6c757d;
+    border-radius: 4px;
+  }
+
+  // Product title
+  .product-card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0.5rem 0 0 0;
+    line-height: 1.4;
+
+    // Limit to 2 lines with ellipsis
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.8em; // Reserve space for 2 lines
+  }
+
+  // Attribute display on card
+  .product-card-attribute {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-top: 5px;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .product-card-attr-name {
+    color: #888;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .product-card-attr-chips {
+    display: flex;
+    gap: 3px;
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .product-card-attr-chip {
+    display: inline-block;
+    padding: 0 5px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    color: #555;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .product-card-attr-value {
+    color: #555;
+  }
+
+  // Card footer with price
+  .card-footer {
+    background-color: #fff;
+    border-top: none;
+    padding: 0.75rem 1rem;
+  }
+
+  // Price size in product cards (specific to .product-card context)
+  .product-card-price,
+  .product-card-price-discounted {
+    font-size: 1rem;
+  }
+  .product-card-price-original {
+    font-size: 0.8rem;
+  }
+
+  // Badge stack overlaid on the image, top-right corner
+  .product-card-badges {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+
+  // Discount badge
+  .product-card-discount-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
+  }
+
+  // Sale (promotion) badge
+  .product-card-sale-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
+  }
+
+  // Unit description
+  .product-card-unit {
+    font-size: 0.75rem;
+    color: #6c757d;
+  }
+}
+
+// Grid spacing adjustments
+.product-grid {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 1.5rem;
+
+  @media (max-width: 575.98px) {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.75rem;
+  }
+}
+
+// Mobile product card refinements
+@media (max-width: 575.98px) {
+  .product-card {
+    border-radius: 8px;
+
+    .card-body {
+      padding: 0.5rem 0.625rem;
+    }
+
+    .product-card-title {
+      font-size: 0.85rem;
+    }
+
+    .card-footer {
+      padding: 0.4rem 0.625rem;
+    }
+
+    .product-card-category {
+      font-size: 0.6rem;
+    }
+
+    .product-card-price {
+      font-size: 0.85rem;
+    }
+
+    .product-card-attribute {
+      font-size: 0.65rem;
+      gap: 2px;
+      margin-top: 4px;
+    }
+
+    .product-card-attr-chip {
+      padding: 0 4px;
+    }
+  }
+}

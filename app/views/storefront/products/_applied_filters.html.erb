@@ -1,17 +1,21 @@
 <% if active_filters.present? %>
-  <div class="mb-3">
-    <small class="text-muted me-2"><%= t('storefront.products.index.filters.active') %>:</small>
-    <% active_filters.each do |filter| %>
-      <%= link_to products_path(org_slug: params[:org_slug], **filter[:remove_params].symbolize_keys),
-          class: "badge bg-primary text-white text-decoration-none me-1" do %>
-        <% if filter[:type] == :category %>
-          <i class="fa-solid fa-folder me-1"></i>
-        <% elsif filter[:type] == :query %>
-          <i class="fa-solid fa-magnifying-glass me-1"></i>
+  <div class="applied-filters-bar mb-3">
+    <div class="applied-filters-track">
+      <small class="text-muted me-2 flex-shrink-0"><%= t('storefront.products.index.filters.active') %>:</small>
+      <% active_filters.each do |filter| %>
+        <%= link_to products_path(org_slug: params[:org_slug], **filter[:remove_params].symbolize_keys),
+            class: "badge bg-primary text-white text-decoration-none me-1 flex-shrink-0" do %>
+          <% if filter[:type] == :category %>
+            <i class="fa-solid fa-folder me-1"></i>
+          <% elsif filter[:type] == :query %>
+            <i class="fa-solid fa-magnifying-glass me-1"></i>
+          <% elsif filter[:type] == :attribute %>
+            <i class="fa-solid fa-filter me-1"></i>
+          <% end %>
+          <%= filter[:label] %>
+          <i class="fa-solid fa-xmark ms-1"></i>
         <% end %>
-        <%= filter[:label] %>
-        <i class="fa-solid fa-xmark ms-1"></i>
       <% end %>
-    <% end %>
+    </div>
   </div>
 <% end %>

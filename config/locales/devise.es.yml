@@ -9,6 +9,8 @@ es:
     failure:
       already_authenticated: "Ya has iniciado sesión."
       inactive: "Tu cuenta aún no ha sido activada."
+      customer_user_inactive: "Este login ha sido desactivado. Contacta con tu administrador."
+      customer_inactive: "Esta cuenta está inactiva. Contacta con tu administrador."
       invalid: "%{authentication_keys} o contraseña inválidos."
       locked: "Tu cuenta está bloqueada."
       last_attempt: "Tienes un intento más antes de que tu cuenta sea bloqueada."

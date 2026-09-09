@@ -1,0 +1,122 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-start">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_automations_path(current_organisation.slug), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+      <div>
+        <h1><%= @automation.name %></h1>
+        <p>
+          <%= @automation.report&.label %> ·
+          <%= automation_schedule_summary(@automation) %>
+        </p>
+      </div>
+    </div>
+    <div class="bo-page-actions">
+      <%# The whole point of this button: see the email now instead of waiting
+          until Friday. It never moves the schedule. %>
+      <%= button_to run_now_bo_automation_path(current_organisation.slug, @automation),
+                    method: :post, class: "btn btn-primary me-2 d-inline-block",
+                    form: { class: "d-inline" } do %>
+        <i class="fa-solid fa-paper-plane"></i> <%= t('bo.automations.show.run_now') %>
+      <% end %>
+      <%= link_to edit_bo_automation_path(current_organisation.slug, @automation),
+                  class: "btn btn-outline-primary" do %>
+        <i class="fa-solid fa-pen-to-square"></i> <%= t('bo.common.actions.edit') %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-muted small"><%= t('bo.automations.show.next_run') %></div>
+          <div class="fs-5">
+            <% if @automation.active? && @automation.next_run_at %>
+              <%= l(@automation.next_run_at.in_time_zone(@automation.time_zone), format: :long) %>
+            <% else %>
+              <span class="text-muted"><%= t('bo.automations.index.inactive') %></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-muted small mb-2"><%= t('bo.automations.show.recipients') %></div>
+          <%= render "bo/automations/recipients_summary", automation: @automation %>
+          <% if @automation.external_recipients? %>
+            <div class="small text-muted mt-2">
+              <%= @automation.external_emails.join(", ") %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title mb-0"><%= t('bo.automations.show.history') %></h5>
+    </div>
+    <% if @runs.empty? %>
+      <div class="card-body text-center py-4 text-muted border-top">
+        <%= t('bo.automations.show.no_runs') %>
+      </div>
+    <% else %>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th><%= t('bo.automations.show.when') %></th>
+              <th><%= t('bo.automations.show.status') %></th>
+              <th><%= t('bo.automations.show.period') %></th>
+              <th class="text-end"><%= t('bo.automations.show.rows') %></th>
+              <th class="text-end"><%= t('bo.automations.show.sent_to') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @runs.each do |run| %>
+              <tr>
+                <td>
+                  <%= l(run.created_at.in_time_zone(@automation.time_zone), format: :short) %>
+                  <% if run.manual? %>
+                    <span class="badge bg-light text-dark border ms-1"><%= t('bo.automations.show.manual') %></span>
+                  <% end %>
+                </td>
+                <td>
+                  <span class="badge <%= { AutomationRun::COMPLETED => 'bg-success',
+                                           AutomationRun::SKIPPED => 'bg-secondary',
+                                           AutomationRun::FAILED => 'bg-danger' }.fetch(run.status, 'bg-info') %>">
+                    <%= t("bo.automations.status.#{run.status}") %>
+                  </span>
+                  <% if run.error_message.present? %>
+                    <div class="small text-danger"><%= run.error_message %></div>
+                  <% elsif run.skip_reason.present? %>
+                    <div class="small text-muted"><%= t("bo.automations.skip_reason.#{run.skip_reason}") %></div>
+                  <% end %>
+                </td>
+                <td class="small text-muted">
+                  <% if run.period_start && run.period_end %>
+                    <%= l(run.period_start.in_time_zone(@automation.time_zone), format: :short) %> →
+                    <%= l(run.period_end.in_time_zone(@automation.time_zone), format: :short) %>
+                  <% end %>
+                </td>
+                <td class="text-end"><%= run.rows_count %></td>
+                <td class="text-end"><%= run.recipients_count %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% end %>

@@ -1,0 +1,23 @@
+<h1 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 600; color: #1a1a1a;">
+  <%= t('mailers.customer_mailer.invitation_instructions.banner_title') %>
+</h1>
+
+<p style="margin: 0 0 16px 0;"><%= t('mailers.customer_mailer.invitation_instructions.greeting', name: @resource.contact_name).html_safe %></p>
+
+<p style="margin: 0 0 24px 0;">
+  <%= t('mailers.customer_mailer.invitation_instructions.intro_html', organisation: @organisation.name, color: @organisation.effective_primary_color).html_safe %>
+</p>
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 32px 0;">
+  <tr>
+    <td style="background-color: <%= @organisation.effective_primary_color %>; border-radius: 6px;">
+      <%= link_to t('mailers.customer_mailer.invitation_instructions.accept_button'),
+          accept_customer_user_invitation_url(invitation_token: @token, org_slug: @organisation.slug),
+          style: 'display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px;' %>
+    </td>
+  </tr>
+</table>
+
+<p style="margin: 24px 0 0 0; color: #6b7177; font-size: 14px;">
+  <%= t('mailers.customer_mailer.invitation_instructions.ignore_notice') %>
+</p>

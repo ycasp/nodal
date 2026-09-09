@@ -1,0 +1,104 @@
+<div class="modal fade" id="openCartsModal" tabindex="-1" aria-labelledby="openCartsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="openCartsModalLabel">
+          <i class="fa-solid fa-shopping-cart me-2"></i>
+          <%= t('bo.dashboards.open_carts_modal.title', default: 'Carrinhos Abertos') %>
+          <span class="badge bg-secondary ms-2"><%= carts.size %></span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <% if carts.empty? %>
+          <div class="text-center text-muted py-5">
+            <i class="fa-solid fa-cart-plus fa-3x mb-3 opacity-50"></i>
+            <p class="mb-0"><%= t('bo.dashboards.open_carts_modal.empty', default: 'Sem carrinhos abertos.') %></p>
+          </div>
+        <% else %>
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 40px;"></th>
+                <th><%= t('bo.dashboards.open_carts_modal.columns.customer', default: 'Cliente') %></th>
+                <th class="text-center"><%= t('bo.dashboards.open_carts_modal.columns.items', default: 'Itens') %></th>
+                <th class="text-end"><%= t('bo.dashboards.open_carts_modal.columns.value', default: 'Valor') %></th>
+                <th><%= t('bo.dashboards.open_carts_modal.columns.age', default: 'Aberto há') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% carts.each do |cart| %>
+                <% row_id = "cart-detail-#{cart.id}" %>
+                <tr class="open-cart-row" data-bs-toggle="collapse" data-bs-target="#<%= row_id %>" aria-expanded="false" aria-controls="<%= row_id %>" style="cursor: pointer;">
+                  <td class="text-center text-muted">
+                    <i class="fa-solid fa-chevron-right open-cart-chevron" style="transition: transform 0.2s;"></i>
+                  </td>
+                  <td>
+                    <div class="fw-medium"><%= cart.customer&.company_name || t('bo.common.unknown', default: 'Unknown') %></div>
+                    <% if cart.customer_user %>
+                      <small class="text-muted">
+                        <i class="fa-solid fa-user fa-xs me-1"></i>
+                        <%= cart.customer_user.contact_name.presence || cart.customer_user.email %>
+                      </small>
+                    <% end %>
+                  </td>
+                  <td class="text-center"><%= cart.order_items.size %></td>
+                  <td class="text-end fw-semibold"><%= humanized_money_with_symbol(cart.total_amount) %></td>
+                  <% first_item_at = cart.order_items.map(&:created_at).min %>
+                  <td class="text-muted"><%= time_ago_in_words(first_item_at || cart.created_at) %></td>
+                </tr>
+                <tr class="open-cart-detail">
+                  <td colspan="5" class="p-0">
+                    <div class="collapse" id="<%= row_id %>">
+                      <div class="bg-light p-3">
+                        <table class="table table-sm mb-0 bg-white">
+                          <thead>
+                            <tr class="text-muted small">
+                              <th><%= t('bo.dashboards.open_carts_modal.items.product', default: 'Produto') %></th>
+                              <th><%= t('bo.dashboards.open_carts_modal.items.sku', default: 'SKU') %></th>
+                              <th><%= t('bo.dashboards.open_carts_modal.items.variant', default: 'Variante') %></th>
+                              <th class="text-center"><%= t('bo.dashboards.open_carts_modal.items.quantity', default: 'Qtd') %></th>
+                              <th class="text-end"><%= t('bo.dashboards.open_carts_modal.items.unit_price', default: 'Preço') %></th>
+                              <th><%= t('bo.dashboards.open_carts_modal.items.added', default: 'Adicionado há') %></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% cart.order_items.sort_by(&:created_at).each do |item| %>
+                              <tr>
+                                <td><%= item.product&.name %></td>
+                                <td><small class="font-monospace"><%= item.product_variant&.sku.presence || item.product&.sku.presence || '—' %></small></td>
+                                <td>
+                                  <% if item.product_variant && item.product_variant.respond_to?(:option_values_string) %>
+                                    <small class="text-muted"><%= item.product_variant.option_values_string.presence || '—' %></small>
+                                  <% else %>
+                                    <small class="text-muted">—</small>
+                                  <% end %>
+                                </td>
+                                <td class="text-center"><%= item.quantity %></td>
+                                <td class="text-end"><%= humanized_money_with_symbol(item.price) %></td>
+                                <td class="text-muted small"><%= time_ago_in_words(item.created_at) %></td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .open-cart-row[aria-expanded="true"] .open-cart-chevron {
+    transform: rotate(90deg);
+  }
+  .open-cart-detail > td {
+    border-top: none;
+  }
+</style>

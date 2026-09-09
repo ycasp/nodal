@@ -1,90 +1,389 @@
+<% sort_base_params = { org_slug: params[:org_slug], category: params[:category], queries: params[:queries], attrs: @current_attrs.presence, promo: params[:promo] } %>
+<% attr_filter_count = params[:attrs].present? ? params[:attrs].values.sum { |v| Array(v).length } : 0 %>
+<% active_filter_count = Array(params[:queries]).length + attr_filter_count %>
+
 <div data-controller="scroll-restoration">
-<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
-  <div>
-    <h1 class="mb-1"><%= t('storefront.products.index.title') %></h1>
-    <p class="text-muted mb-0"><%= t('storefront.products.index.subtitle') %></p>
+<div class="mb-2 mt-2"></div>
+
+<%# Breadcrumbs — desktop only (chips replace this on mobile) %>
+<nav aria-label="breadcrumb" class="mb-3 d-none d-lg-block">
+  <ol class="breadcrumb mb-0" style="min-height: 1.5rem;">
+    <% if @breadcrumbs.present? %>
+      <li class="breadcrumb-item">
+        <%= link_to products_path(org_slug: params[:org_slug]) do %>
+          <i class="fa-solid fa-home"></i>
+        <% end %>
+      </li>
+      <% @breadcrumbs.each_with_index do |category, index| %>
+        <% if index == @breadcrumbs.length - 1 %>
+          <li class="breadcrumb-item active" aria-current="page"><%= category.name %></li>
+        <% else %>
+          <li class="breadcrumb-item">
+            <%= link_to category.name, products_path(org_slug: params[:org_slug], category: category.id) %>
+          </li>
+        <% end %>
+      <% end %>
+    <% end %>
+  </ol>
+</nav>
+
+<%# Mobile category chips (visible only < lg) %>
+<%
+  # Determine which categories to show as chips (normal browsing; the
+  # "Campanhas" view is handled separately below):
+  # - Inside a category that HAS children → drill into those children, with a
+  #   back chip up to its parent (so you can reach deep categories on mobile).
+  # - Inside a leaf category with a parent → show its siblings to switch between.
+  # - Otherwise → top-level categories.
+  chip_current_label = nil
+  if @current_category && (@category_children[@current_category.id] || []).any?
+    chip_categories = @category_children[@current_category.id] || []
+    chip_back_target = @current_category.parent
+    chip_current_label = @current_category # shown as a non-clickable context label
+  elsif @current_category && @current_category.parent
+    chip_categories = (@category_children[@current_category.parent_id] || [])
+    chip_back_target = @current_category.parent
+  else
+    chip_categories = @categories
+    chip_back_target = nil
+  end
+%>
+<%# Mobile campaign context bar — clearly marks "you're inside Campanhas"
+    (separate from the category chips) and offers a one-tap exit. %>
+<% if @on_promotion %>
+  <div class="campaign-context-bar d-lg-none">
+    <%= link_to products_path(org_slug: params[:org_slug], promo: 1), class: "campaign-context-bar__title" do %>
+      <i class="fa-solid fa-tag me-1"></i><%= t('storefront.products.index.on_promotion') %>
+      <% if @current_category %><span class="campaign-context-bar__crumb">› <%= @current_category.name %></span><% end %>
+    <% end %>
+    <%= link_to products_path(org_slug: params[:org_slug]), class: "campaign-context-bar__exit" do %>
+      <%= t('storefront.products.index.exit_campaigns') %><i class="fa-solid fa-xmark ms-1"></i>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="mobile-category-chips d-lg-none" data-controller="horizontal-scroll">
+  <div class="mobile-category-chips-track" data-horizontal-scroll-target="container">
+    <% if @on_promotion %>
+      <%# Campaign categories (the context + exit live in the bar above). %>
+      <% (@campaign_categories || []).each do |category| %>
+        <% cat_params = { org_slug: params[:org_slug], category: category.id, queries: params[:queries], promo: 1 } %>
+        <% cat_params[:sort] = params[:sort] if params[:sort].present? %>
+        <%= link_to products_path(**cat_params),
+            class: "mobile-category-chip #{'active' if @current_category&.id == category.id}",
+            style: category.nav_style do %>
+          <%= category.name %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <% if chip_back_target %>
+        <% back_params = { org_slug: params[:org_slug], category: chip_back_target.id } %>
+        <% back_params[:sort] = params[:sort] if params[:sort].present? %>
+        <%= link_to products_path(**back_params), class: "mobile-category-chip back-chip" do %>
+          <i class="fa-solid fa-chevron-left me-1"></i> <%= chip_back_target.name %>
+        <% end %>
+      <% end %>
+
+      <% unless chip_back_target %>
+        <% all_params = { org_slug: params[:org_slug], queries: params[:queries] } %>
+        <% all_params[:sort] = params[:sort] if params[:sort].present? %>
+        <%= link_to products_path(**all_params),
+            class: "mobile-category-chip #{'active' if params[:category].blank? && params[:promo].blank?}" do %>
+          <%= t('storefront.products.index.all_products') %>
+        <% end %>
+      <% end %>
+
+      <%# "Campanhas" is a root-level entry — it only shows when no category is
+          selected at all (not even a top-level one like Prata). %>
+      <% if current_organisation.has_active_promotions? && @current_category.blank? %>
+        <%= link_to products_path(org_slug: params[:org_slug], promo: 1),
+            class: "mobile-category-chip mobile-category-chip--campaign #{'active' if params[:promo].present? && params[:category].blank?}" do %>
+          <%= t('storefront.products.index.on_promotion') %>
+        <% end %>
+      <% end %>
+
+      <%# Non-clickable label for the current category when drilling into its
+          children, so you keep the context without it looking tappable. %>
+      <% if chip_current_label %>
+        <span class="mobile-category-chip mobile-category-chip--current" style="<%= chip_current_label.nav_style %>"><%= chip_current_label.name %></span>
+      <% end %>
+
+      <% chip_categories.each do |category| %>
+        <% cat_params = { org_slug: params[:org_slug], category: category.id, queries: params[:queries] } %>
+        <% cat_params[:sort] = params[:sort] if params[:sort].present? %>
+        <%= link_to products_path(**cat_params),
+            class: "mobile-category-chip #{'active' if @current_category&.id == category.id}",
+            style: category.nav_style do %>
+          <%= category.name %>
+        <% end %>
+      <% end %>
+    <% end %>
   </div>
 </div>
-
-<%# Breadcrumbs when filtering by category %>
-<%= render 'storefront/shared/category_breadcrumbs', breadcrumbs: @breadcrumbs if @breadcrumbs.present? %>
 
 <%# Applied filters breadbox %>
 <%= render 'storefront/products/applied_filters', active_filters: @active_filters %>
 
-<div class="row">
-  <%# Sidebar with filters %>
-  <div class="col-lg-3 mb-4">
-    <div class="card">
-      <div class="card-body">
-        <h6 class="card-title mb-3"><%= t('storefront.products.index.search') %></h6>
-        <%= form_with url: products_path(org_slug: params[:org_slug]), method: :get, local: true do %>
-          <% Array(params[:categories]).each do |cat_id| %>
-            <%= hidden_field_tag 'categories[]', cat_id %>
+<%# Mobile sticky toolbar (visible only < lg) %>
+<div class="mobile-sticky-toolbar d-lg-none" data-controller="mobile-search-toggle">
+  <div class="d-flex justify-content-between align-items-center">
+    <small class="text-muted">
+      <% if @products.respond_to?(:any?) && @products.any? %>
+        <%= @pagy.count %> <%= t('storefront.products.index.products_count', count: @pagy.count) %>
+      <% end %>
+    </small>
+    <div class="d-flex gap-1 align-items-center">
+      <%# Search toggle %>
+      <button class="btn btn-sm btn-outline-secondary border-0 text-muted" type="button"
+              data-action="mobile-search-toggle#toggle">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <%# Sort %>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-outline-secondary border-0 text-muted" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-arrow-down-short-wide"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <% %w[name_asc name_desc price_asc price_desc newest].each do |sort_key| %>
+            <li>
+              <%= link_to t("storefront.products.index.sort.#{sort_key}"),
+                  products_path(**sort_base_params, sort: sort_key),
+                  class: "dropdown-item #{'active' if @current_sort == sort_key}" %>
+            </li>
           <% end %>
-          <% Array(params[:queries]).each do |q| %>
-            <%= hidden_field_tag 'queries[]', q %>
+        </ul>
+      </div>
+      <%# Filter button — only when there are attribute filters to show %>
+      <% if @available_attributes.present? %>
+        <button class="btn btn-sm btn-outline-secondary border-0 text-muted position-relative"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#mobileFilterSheet"
+                aria-controls="mobileFilterSheet">
+          <i class="fa-solid fa-sliders"></i>
+          <% if active_filter_count > 0 %>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 0.55rem;"><%= active_filter_count %></span>
           <% end %>
-          <div class="input-group">
-            <%= text_field_tag 'queries[]', nil, class: "form-control", placeholder: t('storefront.products.index.search_placeholder') %>
-            <button type="submit" class="btn btn-outline-secondary">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </div>
+        </button>
+      <% end %>
+    </div>
+  </div>
+  <%# Expandable search bar %>
+  <div class="mobile-toolbar-search collapsed" data-mobile-search-toggle-target="searchBar">
+    <%= form_with url: products_path(org_slug: params[:org_slug]), method: :get, local: true, class: "mt-2" do %>
+      <%= hidden_field_tag 'category', params[:category] if params[:category].present? %>
+      <%= hidden_field_tag 'sort', params[:sort] if params[:sort].present? %>
+      <%= render 'storefront/products/attrs_hidden_fields' %>
+      <div class="input-group input-group-sm autocomplete-wrapper" data-controller="autocomplete-search" data-autocomplete-search-url-value="<%= autocomplete_products_path(org_slug: params[:org_slug]) %>">
+        <%= text_field_tag 'queries[]', nil, class: "form-control", placeholder: t('storefront.products.index.search_placeholder'), data: { mobile_search_toggle_target: "input", autocomplete_search_target: "input", action: "input->autocomplete-search#search keydown->autocomplete-search#navigate" }, autocomplete: "off" %>
+        <button type="submit" class="btn btn-outline-secondary" aria-label="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <div class="autocomplete-results" data-autocomplete-search-target="results"></div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Mobile filter bottom sheet (refinement only — no categories) %>
+<div class="offcanvas offcanvas-bottom d-lg-none mobile-filter-sheet"
+     tabindex="-1"
+     id="mobileFilterSheet"
+     aria-labelledby="mobileFilterSheetLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="mobileFilterSheetLabel">
+      <i class="fa-solid fa-sliders me-2"></i><%= t('storefront.products.index.filters_title') %>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <% has_active_filters = params[:category].present? || Array(params[:queries]).any? || params[:attrs].present? %>
+
+  <% if @available_attributes.present? %>
+    <%# Body scrolls; the Apply/Clear footer stays pinned to the bottom so the
+        customer never has to scroll past the values to find the buttons. %>
+    <%= form_with url: products_path(org_slug: params[:org_slug]), method: :get, class: "mobile-filter-form" do %>
+      <%# Preserve the other active filters so applying attributes keeps them %>
+      <%= hidden_field_tag 'category', params[:category] if params[:category].present? %>
+      <% Array(params[:queries]).reject(&:blank?).each do |q| %>
+        <%= hidden_field_tag 'queries[]', q %>
+      <% end %>
+      <%= hidden_field_tag 'sort', params[:sort] if params[:sort].present? %>
+
+      <div class="offcanvas-body">
+        <h6 class="filter-section-title"><%= t('storefront.products.index.filters.filter_by') %></h6>
+        <div class="accordion accordion-flush" id="mobileAttributeFilters">
+          <% @available_attributes.each_with_index do |attribute, idx| %>
+            <div class="accordion-item border-0">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed px-0 py-2" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mobileAttr<%= idx %>"
+                        aria-expanded="false">
+                  <%= attribute[:name] %>
+                  <% selected_count = attribute[:values].count { |v| v[:selected] } %>
+                  <% if selected_count > 0 %>
+                    <span class="badge bg-primary ms-2"><%= selected_count %></span>
+                  <% end %>
+                </button>
+              </h2>
+              <div id="mobileAttr<%= idx %>" class="accordion-collapse collapse">
+                <div class="accordion-body px-0 pt-1 pb-2">
+                  <% attribute[:values].each do |value| %>
+                    <label class="attribute-filter-option d-flex align-items-center gap-2 py-2 text-body">
+                      <input type="checkbox" class="attr-filter-check"
+                             name="attrs[<%= attribute[:slug] %>][]"
+                             value="<%= value[:slug] %>"
+                             <%= 'checked' if value[:selected] %>>
+                      <% if value[:color_hex].present? %>
+                        <span class="attribute-color-swatch"
+                              style="background-color: <%= value[:color_hex] %>;"></span>
+                      <% else %>
+                        <i class="fa-regular fa-square attr-icon-unchecked text-primary"></i>
+                        <i class="fa-solid fa-square-check attr-icon-checked text-primary"></i>
+                      <% end %>
+                      <span class="flex-grow-1"><%= value[:label] %></span>
+                      <small class="text-muted">(<%= value[:count] %>)</small>
+                    </label>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mobile-filter-footer">
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="fa-solid fa-check me-2"></i><%= t('storefront.products.index.apply_filters') %>
+        </button>
+        <% if has_active_filters %>
+          <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary w-100" do %>
+            <i class="fa-solid fa-times me-2"></i><%= t('storefront.products.index.clear_filters') %>
+          <% end %>
         <% end %>
       </div>
+    <% end %>
+  <% elsif has_active_filters %>
+    <div class="offcanvas-body"></div>
+    <div class="mobile-filter-footer">
+      <%= link_to products_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary w-100" do %>
+        <i class="fa-solid fa-times me-2"></i><%= t('storefront.products.index.clear_filters') %>
+      <% end %>
     </div>
+  <% end %>
+</div>
 
+<%# Search bar / clear filters + product count / sort (desktop) %>
+<div class="row mb-2 align-items-center">
+  <%# Left: search bar (aligned with sidebar, desktop only) %>
+  <div class="col-lg-3 d-none d-lg-flex align-items-center gap-2">
+    <%= form_with url: products_path(org_slug: params[:org_slug]), method: :get, local: true, class: "flex-grow-1" do %>
+      <%= hidden_field_tag 'category', params[:category] if params[:category].present? %>
+      <% Array(params[:queries]).each do |q| %>
+        <%= hidden_field_tag 'queries[]', q %>
+      <% end %>
+      <%= hidden_field_tag 'sort', params[:sort] if params[:sort].present? %>
+      <%= render 'storefront/products/attrs_hidden_fields' %>
+      <div class="search-minimal autocomplete-wrapper" data-controller="autocomplete-search" data-autocomplete-search-url-value="<%= autocomplete_products_path(org_slug: params[:org_slug]) %>">
+        <%= text_field_tag 'queries[]', nil, class: "form-control", placeholder: t('storefront.products.index.search_placeholder'), data: { autocomplete_search_target: "input", action: "input->autocomplete-search#search keydown->autocomplete-search#navigate" }, autocomplete: "off" %>
+        <i class="fa-solid fa-magnifying-glass search-minimal-icon"></i>
+        <button type="submit" class="search-minimal-btn" aria-label="Search">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        <div class="autocomplete-results" data-autocomplete-search-target="results"></div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Right: attribute filters + sort (desktop) %>
+  <div class="col-lg-9">
+    <% if @products.any? || @current_attrs.present? %>
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-none d-lg-flex align-items-center flex-wrap gap-2">
+          <%= render 'storefront/products/attribute_filters' %>
+        </div>
+        <div class="d-none d-lg-flex align-items-center">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary border-0 text-muted text-uppercase dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.8rem; letter-spacing: 0.03em;">
+              <%= t('storefront.products.index.sort.label') %>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <% %w[name_asc name_desc price_asc price_desc newest].each do |sort_key| %>
+                <li>
+                  <%= link_to t("storefront.products.index.sort.#{sort_key}"),
+                      products_path(**sort_base_params, sort: sort_key),
+                      class: "dropdown-item #{'active' if @current_sort == sort_key}" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <%# Desktop sidebar with filters (hidden on mobile) %>
+  <div class="col-lg-3 mb-4 d-none d-lg-block">
     <%= render 'storefront/shared/category_sidebar', categories: @categories, current_categories: @current_categories %>
   </div>
 
   <%# Product grid %>
   <div class="col-lg-9">
     <% if @products.any? %>
-      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+      <div class="row row-cols-2 row-cols-md-2 row-cols-xl-3 product-grid">
         <% @products.each do |product| %>
           <div class="col">
-            <%= link_to product_path(org_slug: params[:org_slug], id: product, categories: params[:categories], queries: params[:queries]), class: "text-decoration-none" do %>
+            <%= link_to product_path(org_slug: params[:org_slug], id: product, category: params[:category], queries: params[:queries], attrs: @current_attrs.presence, page: params[:page], promo: params[:promo]), class: "text-decoration-none" do %>
               <div class="card h-100 product-card">
                 <% discount_info = @product_discounts[product.id] %>
-                <% if product.photo_attached? %>
-                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <%= image_tag product.photo, style: "max-height: 200px; max-width: 100%; object-fit: contain;" %>
-                  </div>
-                <% else %>
-                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <i class="fa-solid fa-image fa-3x text-muted"></i>
-                  </div>
-                <% end %>
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-start mb-2">
-                    <span class="badge bg-secondary-subtle text-secondary"><%= product.primary_category&.name %></span>
-                  </div>
-                  <h5 class="card-title text-dark mb-0"><%= product.name %></h5>
+                <div class="product-card-image">
+                  <%= render "storefront/shared/product_card_badges", discount_info: discount_info, product: product, unlock: @product_unlocks&.dig(product.id) %>
+                  <% if (display = product.display_photo) %>
+                    <%= image_tag display, alt: product.name, loading: "lazy" %>
+                  <% else %>
+                    <i class="fa-solid fa-image placeholder-icon"></i>
+                  <% end %>
                 </div>
-                <div class="card-footer bg-white border-top-0">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <% if discount_info && discount_info[:has_discount] %>
-                      <div class="price-with-discount">
-                        <span class="original-price text-muted text-decoration-line-through small">
-                          <%= humanized_money_with_symbol(discount_info[:base_price]) %>
-                        </span>
-                        <span class="discounted-price h5 mb-0 text-success">
-                          <%= humanized_money_with_symbol(discount_info[:final_price]) %>
-                        </span>
-                        <span class="badge bg-success">
-                          -<%= (discount_info[:effective_discount][:percentage] * 100).round(0) %>%
-                        </span>
-                        <% if discount_info[:all_discounts].any? { |d| d[:type] == :product } %>
-                          <span class="badge bg-danger ms-1"><%= t('storefront.products.index.sale_badge') %></span>
-                        <% end %>
-                      </div>
-                    <% elsif product.variable? %>
-                      <span class="h5 mb-0 text-primary"><%= product.display_price %></span>
-                    <% else %>
-                      <span class="h5 mb-0 text-primary"><%= humanized_money_with_symbol(product.price) %></span>
+                <div class="card-body">
+                  <% show_card_sku = product.show_sku_on_card? && product.sku.present? %>
+                  <% if product.primary_category&.name.present? || show_card_sku %>
+                    <div class="d-flex justify-content-between align-items-center gap-2">
+                      <span class="product-card-category"><%= product.primary_category&.name %></span>
+                      <% if show_card_sku %>
+                        <span class="product-card-sku text-muted small text-nowrap ms-auto">SKU: <%= product.sku %></span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                  <h5 class="product-card-title"><%= product.name %></h5>
+                  <% if @card_attributes&.any? && @card_attribute_data %>
+                    <% product_data = @card_attribute_data[product.id] %>
+                    <% if product_data %>
+                      <% @card_attributes.each do |attr| %>
+                        <% attr_values = product_data[attr] %>
+                        <% next if attr_values.blank? %>
+                        <% values = attr_values.map(&:value).uniq %>
+                        <div class="product-card-attribute">
+                          <span class="product-card-attr-name"><%= attr.name %>:</span>
+                          <% if values.size == 1 %>
+                            <span class="product-card-attr-value"><%= values.first %></span>
+                          <% elsif attr.card_display_mode == 'count' %>
+                            <span class="product-card-attr-value"><%= values.size %> <%= t('storefront.products.index.options') %></span>
+                          <% else %>
+                            <span class="product-card-attr-chips"><% values.each do |v| %><span class="product-card-attr-chip"><%= v %></span><% end %></span>
+                          <% end %>
+                        </div>
+                      <% end %>
                     <% end %>
-                    <small class="text-muted"><%= product.unit_description %></small>
+                  <% end %>
+                </div>
+                <div class="card-footer">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <% if show_prices? %>
+                      <%= render "storefront/shared/product_card_price", product: product, discount_info: discount_info %>
+                    <% end %>
+                    <span class="product-card-unit"><%= product.unit_description %></span>
                   </div>
                 </div>
               </div>
@@ -92,12 +391,25 @@
           </div>
         <% end %>
       </div>
+
+      <%# Pagination controls %>
+      <div class="mt-4 d-flex flex-column align-items-center">
+        <small class="text-muted mb-2">
+          <%= t('storefront.products.index.showing_products',
+                from: @pagy.from,
+                to: @pagy.to,
+                count: @pagy.count) %>
+        </small>
+        <% if @pagy.pages > 1 %>
+          <%== pagy_bootstrap_nav(@pagy) %>
+        <% end %>
+      </div>
     <% else %>
       <div class="text-center py-5">
         <i class="fa-solid fa-box-open fa-4x text-muted mb-3"></i>
         <h4><%= t('storefront.products.index.no_products') %></h4>
         <p class="text-muted">
-          <% if Array(params[:queries]).any? || Array(params[:categories]).any? %>
+          <% if Array(params[:queries]).any? || params[:category].present? %>
             <%= t('storefront.products.index.no_products_hint') %>
           <% else %>
             <%= t('storefront.products.index.empty_catalog') %>
@@ -108,32 +420,4 @@
   </div>
 </div>
 
-<style>
-  .product-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-  .category-link {
-    text-decoration: none;
-    color: inherit;
-  }
-  .category-link:hover {
-    color: var(--bs-primary);
-  }
-  .category-link.active {
-    color: var(--bs-primary);
-  }
-  .category-children.collapsed {
-    display: none;
-  }
-  .toggle-icon {
-    transition: transform 0.2s ease;
-  }
-  .toggle-icon.rotated {
-    transform: rotate(90deg);
-  }
-</style>
 </div>

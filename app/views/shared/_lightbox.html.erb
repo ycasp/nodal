@@ -1,0 +1,16 @@
+<div data-lightbox-target="modal"
+     data-action="click->lightbox#close keydown@window->lightbox#closeOnEscape"
+     class="modal fade"
+     tabindex="-1"
+     style="display: none; background: rgba(0,0,0,0.85);">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 bg-transparent shadow-none">
+      <div class="text-end mb-2">
+        <button type="button" class="btn btn-sm btn-light rounded-circle" data-action="lightbox#close" style="width: 32px; height: 32px; padding: 0;">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+      <img data-lightbox-target="image" src="" class="img-fluid rounded" style="max-height: 80vh; object-fit: contain;">
+    </div>
+  </div>
+</div>

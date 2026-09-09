@@ -1,0 +1,178 @@
+label: "Carnes & Charcutaria"
+emoji: "🥩"
+
+categories:
+  - name: "Bovino"
+    slug: "bovino"
+    description: "Carnes de bovino nacional e importado, maturadas e frescas"
+    color: "#B71C1C"
+
+  - name: "Suíno"
+    slug: "suino"
+    description: "Carnes de porco ibérico e nacional, cortes nobres e tradicionais"
+    color: "#D84315"
+
+  - name: "Aves"
+    slug: "aves"
+    description: "Frango, peru e outras aves de criação certificada"
+    color: "#F57F17"
+
+  - name: "Charcutaria"
+    slug: "charcutaria"
+    description: "Enchidos, presuntos e fumados artesanais portugueses"
+    color: "#4E342E"
+
+products:
+  - name: "Bife da Vazia"
+    category: "Bovino"
+    sku: "BV-BIF-VAZ"
+    price: 1890
+    unit: "kg"
+    min_qty: 5
+    stock: 200
+    description: "Bife da vazia de novilho nacional. Peça inteira ou fatiada."
+
+  - name: "Lombo de Novilho"
+    category: "Bovino"
+    sku: "BV-LOM-NOV"
+    price: 2490
+    unit: "kg"
+    min_qty: 3
+    stock: 120
+    description: "Lombo de novilho maturado 21 dias. Corte premium para grelhados."
+
+  - name: "Carne Picada de Bovino"
+    category: "Bovino"
+    sku: "BV-PIC-BOV"
+    price: 780
+    unit: "kg"
+    min_qty: 10
+    stock: 400
+    description: "Carne picada de bovino 100% nacional. Ideal para hambúrgueres e molhos."
+
+  - name: "Entrecosto de Porco"
+    category: "Suíno"
+    sku: "SU-ENT-POR"
+    price: 590
+    unit: "kg"
+    min_qty: 10
+    stock: 350
+    description: "Entrecosto de porco nacional fresco. Peça inteira."
+
+  - name: "Secretos de Porco Ibérico"
+    category: "Suíno"
+    sku: "SU-SEC-IBE"
+    price: 1690
+    unit: "kg"
+    min_qty: 5
+    stock: 150
+    description: "Secretos de porco ibérico de bolota. Corte nobre, sabor intenso."
+
+  - name: "Lombo de Porco"
+    category: "Suíno"
+    sku: "SU-LOM-POR"
+    price: 890
+    unit: "kg"
+    min_qty: 5
+    stock: 250
+    description: "Lombo de porco inteiro, limpo e pronto a fatiar."
+
+  - name: "Peito de Peru Fatiado"
+    category: "Aves"
+    sku: "AV-PEI-PER"
+    price: 690
+    unit: "kg"
+    min_qty: 5
+    stock: 300
+    description: "Peito de peru fatiado fino. Criação sem antibióticos."
+
+  - name: "Chouriço de Carne"
+    category: "Charcutaria"
+    sku: "CH-COU-CAR"
+    price: 890
+    unit: "kg"
+    min_qty: 10
+    stock: 400
+    description: "Chouriço de carne fumado artesanal. Produção tradicional alentejana."
+
+  - name: "Presunto Fatiado"
+    category: "Charcutaria"
+    sku: "CH-PRE-FAT"
+    price: 3290
+    unit: "kg"
+    min_qty: 2
+    stock: 100
+    description: "Presunto de porco ibérico fatiado à mão. Cura mínima de 24 meses."
+
+  - name: "Alheira de Mirandela"
+    category: "Charcutaria"
+    sku: "CH-ALH-MIR"
+    price: 790
+    unit: "kg"
+    min_qty: 10
+    stock: 350
+    description: "Alheira tradicional de Mirandela. Embalagem de 4 unidades."
+
+variant_products:
+  - name: "Frango Inteiro"
+    category: "Aves"
+    sku: "AV-FRA-INT"
+    unit: "un"
+    min_qty: 10
+    attribute: "Tamanho"
+    description: "Frango inteiro de criação ao ar livre. Vários calibres."
+    variants:
+      - name: "Pequeno (0.8-1.0kg)"
+        sku_suffix: "PEQ"
+        price: 350
+        stock: 300
+      - name: "Médio (1.0-1.3kg)"
+        sku_suffix: "MED"
+        price: 480
+        stock: 400
+      - name: "Grande (1.3-1.6kg)"
+        sku_suffix: "GRD"
+        price: 590
+        stock: 250
+
+  - name: "Picanha"
+    category: "Bovino"
+    sku: "BV-PIC-ANH"
+    unit: "kg"
+    min_qty: 3
+    attribute: "Maturação"
+    description: "Picanha de novilho com capa de gordura. Disponível com diferentes maturações."
+    variants:
+      - name: "Fresca"
+        sku_suffix: "FRE"
+        price: 1990
+        stock: 150
+      - name: "Maturada 21 dias"
+        sku_suffix: "M21"
+        price: 2490
+        stock: 100
+      - name: "Maturada 45 dias"
+        sku_suffix: "M45"
+        price: 2990
+        stock: 60
+
+  - name: "Hambúrguer Artesanal"
+    category: "Bovino"
+    sku: "BV-HAM-ART"
+    unit: "caixa 6un"
+    min_qty: 5
+    attribute: "Tipo"
+    description: "Hambúrgueres artesanais, 150g cada. Caixa de 6 unidades."
+    variants:
+      - name: "Clássico (100% Bovino)"
+        sku_suffix: "CLA"
+        price: 690
+        stock: 300
+      - name: "Black Angus"
+        sku_suffix: "ANG"
+        price: 990
+        stock: 200
+      - name: "Ibérico (Porco & Bovino)"
+        sku_suffix: "IBE"
+        price: 850
+        stock: 250

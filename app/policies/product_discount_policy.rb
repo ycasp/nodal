@@ -1,26 +1,30 @@
 class ProductDiscountPolicy < ApplicationPolicy
   def create?
-    user_works_for_records_organisation?
+    !pure_sales_rep? && user_works_for_records_organisation?
   end
 
   def new?
-    true
+    !pure_sales_rep?
+  end
+
+  def variant_overrides?
+    !pure_sales_rep?
   end
 
   def edit?
-    user_works_for_records_organisation?
+    !pure_sales_rep? && user_works_for_records_organisation?
   end
 
   def update?
-    user_works_for_records_organisation?
+    edit?
   end
 
   def destroy?
-    user_works_for_records_organisation?
+    !pure_sales_rep? && user_works_for_records_organisation?
   end
 
   def toggle_active?
-    user_works_for_records_organisation?
+    !pure_sales_rep? && user_works_for_records_organisation?
   end
 
   class Scope < ApplicationPolicy::Scope

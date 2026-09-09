@@ -1,0 +1,42 @@
+<%# Met / "unlock" hint for a line discount's condition (quantity or € value).
+    Locals: discount — a discount hash carrying :condition + :meets_condition.
+            live (optional) — when true, render both states (toggled live by the
+            product-pricing controller as the quantity changes). %>
+<% condition = discount[:condition] %>
+<% live = local_assigns.fetch(:live, false) %>
+<% if condition && !(condition[:type] == :quantity && condition[:quantity].to_i <= 1) %>
+  <% where = if condition[:scope] == :summed
+       condition[:target] == :category ? t('storefront.products.show.scope_category') : t('storefront.products.show.scope_summed_variants')
+     elsif @product&.variable?
+       t('storefront.products.show.scope_per_variant')
+     else
+       t('storefront.products.show.scope_per_line')
+     end %>
+  <% if condition[:type] == :amount %>
+    <% met_label = t('storefront.products.show.min_amount_met') %>
+    <% unmet_label = t('storefront.products.show.spend_to_unlock', amount: condition[:amount].format, where: where) %>
+  <% else %>
+    <% met_label = "#{t('storefront.products.show.min_quantity_met')} #{t('storefront.products.show.units_threshold', quantity: condition[:quantity])}" %>
+    <% unmet_label = t('storefront.products.show.buy_to_unlock', quantity: condition[:quantity], where: where) %>
+  <% end %>
+
+  <% if live %>
+    <%# Goal line — only while locked. The tracker below carries the live
+        "X to go" message and, once unlocked, the celebration + full bar. %>
+    <small class="text-warning d-block <%= 'd-none' if discount[:meets_condition] %>" data-product-pricing-target="panelUnmet">
+      <i class="fa-solid fa-info-circle me-1"></i><%= unmet_label %>
+    </small>
+    <div class="mt-2" data-product-pricing-target="tracker">
+      <div class="small fw-semibold mb-1" data-product-pricing-target="trackerLine">
+        <i class="me-1" data-product-pricing-target="trackerIcon"></i><span data-product-pricing-target="trackerText"></span>
+      </div>
+      <div class="progress" style="height: 6px;">
+        <div class="progress-bar" role="progressbar" data-product-pricing-target="progressBar" style="width: 0%;"></div>
+      </div>
+    </div>
+  <% elsif discount[:meets_condition] %>
+    <small class="text-success d-block"><i class="fa-solid fa-check me-1"></i><%= met_label %></small>
+  <% else %>
+    <small class="text-warning d-block"><i class="fa-solid fa-info-circle me-1"></i><%= unmet_label %></small>
+  <% end %>
+<% end %>

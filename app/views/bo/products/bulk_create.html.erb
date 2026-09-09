@@ -1,0 +1,154 @@
+<% content_for :bo_main_content do %>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsuites@4/dist/jsuites.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/jexcel.css">
+<script src="https://cdn.jsdelivr.net/npm/jsuites@4/dist/jsuites.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/jexcel.js"></script>
+
+<style>
+  .jexcel_container { width: 100%; }
+  .jexcel tbody td { font-size: 13px; }
+  .jexcel thead td { font-size: 12px; font-weight: 600; }
+  .cell-readonly { background-color: #f1f5f9 !important; color: #94a3b8 !important; }
+  .error-item { cursor: pointer; padding: 6px 8px; border-radius: 4px; margin-bottom: 4px; font-size: 13px; }
+  .error-item:hover { background-color: #f1f5f9; }
+</style>
+
+<div data-controller="bulk-create"
+     data-bulk-create-categories-value="<%= @categories.map { |c| { id: c.id, name: c.full_path } }.to_json %>"
+     data-bulk-create-attributes-value="<%= @product_attributes.map { |a| { id: a.id, name: a.name, values: a.product_attribute_values.naturally_sorted.map { |v| { id: v.id, value: v.value } } } }.to_json %>"
+     data-bulk-create-all-skus-value="<%= @all_skus.to_json %>"
+     data-bulk-create-variable-skus-value="<%= @variable_skus.to_json %>"
+     data-bulk-create-submit-url-value="<%= bulk_create_process_bo_products_path(params[:org_slug]) %>"
+     data-bulk-create-csrf-token-value="<%= form_authenticity_token %>"
+     data-bulk-create-attributes-url-value="<%= bo_product_attributes_path(params[:org_slug]) %>">
+
+  <div class="bo-page-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <%= link_to add_products_bo_products_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
+          <i class="fa-solid fa-arrow-left fa-lg"></i>
+        <% end %>
+
+        <div class="rounded bg-success d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
+          <i class="fa-solid fa-table-cells fa-lg"></i>
+        </div>
+
+        <div>
+          <h1><%= t('bo.products.bulk_create.title') %></h1>
+          <span class="text-muted"><%= t('bo.products.bulk_create.subtitle') %></span>
+        </div>
+      </div>
+      <div class="bo-page-actions">
+        <%= link_to add_products_bo_products_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
+          <%= t('bo.common.actions.cancel') %>
+        <% end %>
+        <button type="button" class="btn btn-primary" data-action="bulk-create#submit" data-bulk-create-target="submitButton" disabled>
+          <i class="fa-solid fa-check"></i> <%= t('bo.products.bulk_create.submit') %>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bo-page-body">
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="card mb-3">
+          <div class="card-body p-0">
+            <div data-bulk-create-target="spreadsheet"></div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mb-3">
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-action="bulk-create#addRow">
+            <i class="fa-solid fa-plus"></i> <%= t('bo.products.bulk_create.add_row') %>
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-sm" data-action="bulk-create#removeRow">
+            <i class="fa-solid fa-minus"></i> <%= t('bo.products.bulk_create.remove_row') %>
+          </button>
+        </div>
+
+        <!-- Photos Upload -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <h6 class="card-title mb-3"><%= t('bo.products.bulk_create.photos_title') %></h6>
+            <div class="border border-2 border-dashed rounded p-4 text-center"
+                 data-bulk-create-target="photoDropZone"
+                 data-action="dragover->bulk-create#photoDragover dragenter->bulk-create#photoDragenter dragleave->bulk-create#photoDragleave drop->bulk-create#photoDrop">
+              <i class="fa-solid fa-images fa-2x text-muted mb-2"></i>
+              <p class="mb-2 small"><%= t('bo.products.bulk_create.photos_drag_drop') %></p>
+              <div class="d-flex justify-content-center gap-2">
+                <label class="btn btn-outline-primary btn-sm">
+                  <i class="fa-solid fa-file-zipper me-1"></i> ZIP
+                  <input type="file" name="zip_file" accept=".zip" class="d-none"
+                         data-bulk-create-target="zipInput"
+                         data-action="change->bulk-create#zipSelected">
+                </label>
+                <label class="btn btn-outline-primary btn-sm">
+                  <i class="fa-solid fa-images me-1"></i> <%= t('bo.products.bulk_create.photos_select') %>
+                  <input type="file" name="image_files[]" accept="image/jpeg,image/png,image/gif,image/webp" multiple class="d-none"
+                         data-bulk-create-target="imageInput"
+                         data-action="change->bulk-create#imagesSelected">
+                </label>
+              </div>
+              <p class="text-muted mt-2 mb-0 small" data-bulk-create-target="photoFileName"><%= t('bo.products.bulk_create.photos_hint') %></p>
+            </div>
+
+            <!-- Photo mode -->
+            <div class="d-none mt-3" data-bulk-create-target="photoModeSection">
+              <label class="form-label fw-semibold small"><%= t('bo.products.bulk_create.photo_mode_label') %></label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="photo_mode" value="append" id="bulk_photo_mode_append" checked
+                       data-bulk-create-target="photoMode">
+                <label class="form-check-label small" for="bulk_photo_mode_append">
+                  <i class="fa-solid fa-plus me-1"></i> <%= t('bo.products.bulk_create.photo_mode_append') %>
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="photo_mode" value="replace" id="bulk_photo_mode_replace">
+                <label class="form-check-label small" for="bulk_photo_mode_replace">
+                  <i class="fa-solid fa-rotate me-1"></i> <%= t('bo.products.bulk_create.photo_mode_replace') %>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <!-- Instructions -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <h6 class="card-title mb-3"><%= t('bo.products.bulk_create.instructions_title') %></h6>
+            <ol class="small text-muted mb-3 ps-3">
+              <li class="mb-2"><%= t('bo.products.bulk_create.step_1') %></li>
+              <li class="mb-2"><%= t('bo.products.bulk_create.step_2') %></li>
+              <li class="mb-2"><%= t('bo.products.bulk_create.step_3') %></li>
+              <li class="mb-0"><%= t('bo.products.bulk_create.step_4') %></li>
+            </ol>
+            <div class="small">
+              <%= link_to bo_product_attributes_path(params[:org_slug]), target: "_blank", class: "text-decoration-none" do %>
+                <i class="fa-solid fa-external-link me-1"></i> <%= t('bo.products.bulk_create.manage_attributes') %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error/Warning Panel -->
+        <div data-bulk-create-target="errorsPanel">
+          <div class="card border-secondary">
+            <div class="card-body text-center text-muted py-4">
+              <i class="fa-solid fa-pencil fa-lg mb-2 d-block"></i>
+              <small><%= t('bo.products.bulk_create.panel_empty') %></small>
+            </div>
+          </div>
+        </div>
+
+        <div data-bulk-create-target="photoWarnings"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<% end %>

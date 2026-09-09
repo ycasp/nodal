@@ -1,0 +1,53 @@
+<h2 style="margin:0 0 4px 0;"><%= @automation.name %></h2>
+
+<p style="margin:0 0 2px 0;font-size:15px;font-weight:600;color:#1a1a1a;">
+  <%= @organisation.name %>
+</p>
+
+<p style="color:#6c757d;margin:0 0 20px 0;font-size:14px;">
+  <%= t("mailers.automation_mailer.digest.period",
+        from: l(@period.first.in_time_zone(@automation.time_zone), format: :short),
+        to:   l(@period.last.in_time_zone(@automation.time_zone), format: :short)) %>
+</p>
+
+<% if @rows.empty? %>
+  <p><%= t("mailers.automation_mailer.digest.empty") %></p>
+<% else %>
+  <p><strong><%= t("mailers.automation_mailer.digest.count", count: @rows.size) %></strong></p>
+
+  <table cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:14px;">
+    <thead>
+      <tr style="background:#f8f9fa;">
+        <% @columns.each do |column| %>
+          <th align="left" style="border-bottom:2px solid #dee2e6;"><%= column[:label] %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @rows.each do |row| %>
+        <tr>
+          <% @columns.each do |column| %>
+            <% value = row[column[:key]] %>
+            <td style="border-bottom:1px solid #edf0f2;">
+              <% if value.is_a?(Time) || value.is_a?(ActiveSupport::TimeWithZone) %>
+                <%= l(value.in_time_zone(@automation.time_zone), format: :short) %>
+              <% else %>
+                <%= value.presence || "—" %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if @rows.any? %>
+  <p style="color:#6c757d;margin-top:20px;font-size:13px;">
+    <%= t("mailers.automation_mailer.digest.csv_note") %>
+  </p>
+<% end %>
+
+<p style="color:#6c757d;margin-top:24px;font-size:12px;">
+  <%= t("mailers.automation_mailer.digest.footer", organisation: @organisation.name) %>
+</p>

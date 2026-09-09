@@ -1,0 +1,31 @@
+[     511ms] [ERROR] %s
+
+%o
+
+%o Error connecting controller Error: Missing target element "toggle" for "expandable" controller
+    at t.get (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:43203)
+    at t.connect (https://www.nodal-seiri.dev/assets/controllers/expandable_controller-f754acc2a8258ceb35cc89ee6e032829917d3d9324e5339319ef8146400cd53e.js:15:29)
+    at L.connect (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:26905)
+    at j.connectContextForScope (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:29697)
+    at https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:37287
+    at Array.forEach (<anonymous>)
+    at H.connectModule (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:37273)
+    at H.loadDefinition (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:36130)
+    at https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:39089
+    at Array.forEach (<anonymous>) {identifier: expandable, controller: t, element: div.mb-4} @ https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:3
+[   36774ms] [ERROR] %s
+
+%o
+
+%o Error connecting controller Error: Missing target element "toggle" for "expandable" controller
+    at t.get (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:43203)
+    at t.connect (https://www.nodal-seiri.dev/assets/controllers/expandable_controller-f754acc2a8258ceb35cc89ee6e032829917d3d9324e5339319ef8146400cd53e.js:15:29)
+    at L.connect (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:26905)
+    at j.connectContextForScope (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:29697)
+    at H.scopeConnected (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:36978)
+    at J.elementMatchedValue (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:35147)
+    at F.tokenMatched (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:15098)
+    at N.tokenMatched (https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:13795)
+    at https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:4:13689
+    at Array.forEach (<anonymous>) {identifier: expandable, controller: t, element: div.mb-4} @ https://www.nodal-seiri.dev/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js:3
+[   39792ms] [WARNING] The resource https://www.nodal-seiri.dev/assets/application-30abf86376e3d47bdc17b82cfa3bbe559c1cf171de4427528d32a9188cc629c0.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.nodal-seiri.dev/aviminho/products/2984:0

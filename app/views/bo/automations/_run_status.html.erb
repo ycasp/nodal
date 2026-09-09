@@ -1,0 +1,18 @@
+<% badge, icon = case run.status
+   when AutomationRun::COMPLETED then [ "bg-success", "fa-check" ]
+   when AutomationRun::SKIPPED   then [ "bg-secondary", "fa-minus" ]
+   when AutomationRun::FAILED    then [ "bg-danger", "fa-triangle-exclamation" ]
+   else [ "bg-info", "fa-spinner" ]
+   end %>
+
+<span class="badge <%= badge %>">
+  <i class="fa-solid <%= icon %> me-1"></i><%= t("bo.automations.status.#{run.status}") %>
+</span>
+<div class="small text-muted">
+  <%= l(run.created_at.in_time_zone(run.automation.time_zone), format: :short) %>
+  <% if run.status == AutomationRun::COMPLETED %>
+    · <%= t('bo.automations.index.rows', count: run.rows_count) %>
+  <% elsif run.skip_reason.present? %>
+    · <%= t("bo.automations.skip_reason.#{run.skip_reason}") %>
+  <% end %>
+</div>

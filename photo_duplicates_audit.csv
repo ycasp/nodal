@@ -1,0 +1,454 @@
+type,product_id,product_sku,product_name,variant_id,variant_sku,checksum,dup_count,wasted_bytes
+intra_product,1833,PB2505,Brinco Prata Fecho Omega,,,6pcswVOakhBlWuYN9c9oqQ==,2,1071842
+intra_product,2110,PF3364,Terço de Bolas de Prata,,,Zx4EerkdRMVansJx8C0HEQ==,2,231682
+intra_product,1838,PB2526,Brinco Prata Fecho Omega,,,XFHHPhbdD9Z2MehpGgLW1A==,2,336595
+intra_product,1841,PB2529,Brinco Prata Fecho Omega,,,SotQL+X3mR4r5gBGOYzLGg==,2,542150
+intra_product,1829,PB2503,Brinco Prata Fecho Omega,,,zkom+TQL6X1XDhjhugdPBA==,2,1189435
+intra_product,2118,PF3362,Colar terço bola de prata,,,NTDhqvzVtH2qH/GlPLP/2A==,2,228455
+intra_product,1839,PB2527,Brinco Prata Fecho Omega,,,5bmAzGJA7WS2Zr8t79gzYw==,2,286077
+intra_product,2112,PF3369,Colar terço bola de prata,,,tnT1QLQZ8quCkYV4XnPNtA==,2,283578
+intra_product,1831,PB2504,Brinco Prata Fecho Omega,,,NDInqqrHWqu4GOxwfbiZTg==,2,899591
+intra_product,1826,PB2501D,Brinco Prata Fecho Omega,,,Qt7Y6sfqRGYpg9A+xeXTOw==,2,1221296
+intra_product,2117,PF3360,Colar terço bola de prata,,,6dnwRJlY+iwdzGj9r8G7LA==,2,221962
+intra_product,1825,PB2500,Brinco Prata Fecho Omega,,,wspO6fxHyg1BPTJUdLD2wA==,2,121714
+intra_product,1834,PB2506,Brinco Prata Fecho Omega,,,/MxSp/PkE2MWC5j2Azcyyg==,2,943346
+intra_product,2109,PF1996/C,Colar terço bola de prata,,,9njEY126QTB4ktq8XQTCGA==,2,303561
+intra_product,2115,PF3361,Terço de Bolas de Prata,,,1tiEVo4IYWu3Qj1rOyG7XA==,2,230355
+intra_product,2116,PF3368,Terço de Bolas de Prata,,,YeULa7mXLSBNw8p9a2rkYA==,2,216294
+intra_product,1836,PB2524SF,Brinco Prata Fecho Omega,,,GpvT935+aYa4rvUVyNyg2w==,2,849558
+intra_product,1832,PB2504D,Brinco Prata Fecho Omega,,,38onD2G4keoGsZSqS4LxOA==,2,1357205
+intra_product,1828,PB2502D,Brinco Prata Fecho Omega,,,7/7cnoUsNRgv+sQC53Jkbg==,2,530024
+intra_product,1840,PB2528,Brinco Prata Fecho Omega,,,xmNJumiC5Aunjss+rDZHqw==,2,500705
+intra_product,1835,PB2524RB,Brinco Prata Fecho Omega,,,9hIP+SLpyZsHX1ojdNMmiw==,2,730078
+intra_product,1827,PB2502,Brinco Prata Fecho Omega,,,ui91LM30OP8hVNfOBmxnZw==,2,505411
+intra_product,2113,PF3368/C,Colar terço bola de prata,,,YeULa7mXLSBNw8p9a2rkYA==,2,216294
+intra_product,2114,PF3361/C,Colar terço bola de prata,,,1tiEVo4IYWu3Qj1rOyG7XA==,2,230355
+intra_product,1837,PB2524EM,Brinco Prata Fecho Omega,,,o7mZDOZKraHh0faIN2VfOw==,2,768298
+intra_product,2111,PF2732,Colar terço bola de prata,,,tnT1QLQZ8quCkYV4XnPNtA==,2,283578
+intra_product,1830,PB2503D,Brinco Prata Fecho Omega,,,fY8JkVqPikGGaNDa3VuS2A==,2,1194310
+product_variant_overlap,468,AK2216,Perfumador Rosa Claro,2214,AK2216-01AV,SJunE+lE8kqT2+aWlA+zGQ==,2,13140
+product_variant_overlap,468,AK2216,Perfumador Rosa Claro,2216,AK2216-01RS,Hjk/ElAJBN8pDiskue7R6A==,2,13815
+product_variant_overlap,469,AK2065,Perfumador Ambientador,2218,AK2065-01RO,TEb0CpJPFujDs8I2di70uQ==,2,26983
+product_variant_overlap,470,AK2075,Perfumador com Flores,3667,AK2075-04G,Xd8mHgR2W1KvzS1Fn4Gpyg==,2,6085
+product_variant_overlap,594,AH6021,Caneta/Esferográfica,2339,AH6021-01R,yJ6G8daQtrOMyL+CVaZcaQ==,2,16515
+product_variant_overlap,594,AH6021,Caneta/Esferográfica,2338,AH6021-01B,mpHzmTjWfrphoec43AD6wg==,2,16149
+product_variant_overlap,594,AH6021,Caneta/Esferográfica,2341,AH6021-02R,ImNxRsZGRltPC6JK4k8Ozw==,2,19664
+product_variant_overlap,477,AK2067,Perfumador Ambientador,2241,AK2067-04,kq+LSCSnrUz67ocBYmLrTQ==,2,6120
+product_variant_overlap,477,AK2067,Perfumador Ambientador,2242,AK2067-05,ZhTDTKBHCLASBcY8HhQcYQ==,2,5989
+product_variant_overlap,483,BA4224,Mealheiro,2247,BA4224RO,SgSPzdQEuI3tLIkCfHFrNA==,2,25597
+product_variant_overlap,483,BA4224,Mealheiro,2246,BA4224AZ,k8dFD4MaT4ezwogQaxpr7w==,2,25277
+product_variant_overlap,513,B4088,Mealheiro Madeira,2248,B4088AZ,ywk1D4akXXbCl9RjKOZKaA==,2,87354
+product_variant_overlap,513,B4088,Mealheiro Madeira,2249,B4088RO,z1vRm+AWk/Z3r99HJOD9hw==,2,32254
+product_variant_overlap,515,B4090,Mealheiro Madeira,2250,B4090AZ,sTIZ2d7BhEtCuBDk3YVZZA==,2,17555
+product_variant_overlap,515,B4090,Mealheiro Madeira,2251,B4090RO,kVdUOO+7ytRPxTVVn07vbA==,2,123228
+product_variant_overlap,519,BA2155,Anjo Protetor,2271,BA2155-02,Hn+WSDnu8KFOu+Go6Ayv1A==,2,10932
+product_variant_overlap,475,AK1814,Perfumador Rosa,2233,AK1814-01P,IpOBngumlxnxGifXCpEOzw==,2,4749
+product_variant_overlap,1688,A284,Moldura Batismo,4281,A284D,22/uz9dh8d8ZktIui9s4Lg==,2,72725
+product_variant_overlap,1688,A284,Moldura Batismo,4280,,22/uz9dh8d8ZktIui9s4Lg==,2,72725
+product_variant_overlap,519,BA2155,Anjo Protetor,2270,BA2155-01,LmJu6xyW/YxHVFP6Uu0XLQ==,2,12046
+product_variant_overlap,475,AK1814,Perfumador Rosa,2235,AK1814-03P,R8TsI66kqZSbMw5JKYFU2w==,2,7127
+product_variant_overlap,475,AK1814,Perfumador Rosa,2238,AK1814-03G,R8TsI66kqZSbMw5JKYFU2w==,2,7127
+product_variant_overlap,475,AK1814,Perfumador Rosa,2237,AK1814-02G,G9+Z1GbFP4sJElJFaXhEjg==,2,8094
+product_variant_overlap,1076,A223,Moldura Comunhão,3646,A223B,1a+kMR192VYGTr4XLl5Vpg==,2,61925
+product_variant_overlap,1132,B1382T,Placa Com Suporte Casamento,2758,B1382T/00D,w9OWWA4NzAxWU2+1j62osg==,2,93721
+product_variant_overlap,1132,B1382T,Placa Com Suporte Casamento,2757,B1382T/00,w9OWWA4NzAxWU2+1j62osg==,2,93721
+product_variant_overlap,1136,A202,Moldura Criança Madeira,2765,A202MBRO,Zr5KC5xWKcuNKf1beIszqw==,2,12424
+product_variant_overlap,1136,A202,Moldura Criança Madeira,2767,A202MCRO,Zr5KC5xWKcuNKf1beIszqw==,2,12424
+product_variant_overlap,1136,A202,Moldura Criança Madeira,2764,A202MBAZ,4h9FT/xdyLoZotXkipxxUA==,2,23661
+product_variant_overlap,1136,A202,Moldura Criança Madeira,2766,A202MCAZ,4h9FT/xdyLoZotXkipxxUA==,2,23661
+product_variant_overlap,1137,A205,Moldura Criança,2769,A205BRO,H76H4W2jTDc5425HnsOydA==,2,45054
+product_variant_overlap,1137,A205,Moldura Criança,2771,A205DRO,H76H4W2jTDc5425HnsOydA==,2,45054
+product_variant_overlap,1137,A205,Moldura Criança,2768,A205BAZ,PppF0Guu8zx7KvCzAnuqLg==,2,73647
+product_variant_overlap,1137,A205,Moldura Criança,2770,A205DAZ,PppF0Guu8zx7KvCzAnuqLg==,2,73647
+product_variant_overlap,1138,A210,Moldura Criança,2774,A210CA,zVjq7c3KBblao63+0p3NsA==,2,281938
+product_variant_overlap,1140,A212,Moldura Criança,2778,A212CA,tGec9hvbiob/VG4UhjoqRQ==,2,288598
+product_variant_overlap,1140,A212,Moldura Criança,2776,A212BA,glcMsxMLcXEogfPxsCqZUw==,2,206286
+product_variant_overlap,1189,A271T,Talheres de Criança,4170,A271TRO,GMdYKtsxUuFVlMnT+deaSA==,2,27338
+product_variant_overlap,1189,A271T,Talheres de Criança,4172,A271TAZ,/Dy9pMFbk2DftfSpUFlRXw==,2,28809
+product_variant_overlap,1395,BA1974,Suporte Comcaneta Fim de Curso,3221,BA1974-03,IcVC0WTUZp6hRWY6aNIoXA==,2,13134
+product_variant_overlap,1395,BA1974,Suporte Comcaneta Fim de Curso,3222,BA1974-04,czpteYMi97wCcOxWXR9PHw==,2,75108
+product_variant_overlap,1395,BA1974,Suporte Comcaneta Fim de Curso,3219,BA1974-01,UVCDoVols3RPdWoDQtcvqA==,2,77222
+product_variant_overlap,469,AK2065,Perfumador Ambientador,2219,AK2065-02BI,bMX23jn3JuQ4cRSYBaOGzQ==,2,19606
+product_variant_overlap,469,AK2065,Perfumador Ambientador,2220,AK2065-02RO,QdbCSemr/uMGdJylCOC4lQ==,2,15383
+product_variant_overlap,566,BA4200,Carrossel,4005,BA4200R,thDekGhZL59krxYeXn9Oig==,2,10298
+product_variant_overlap,569,A4205,Carrossel,2287,A4205-02R,nedDr+QPe/iHroP4ekLdlw==,2,16945
+product_variant_overlap,569,A4205,Carrossel,2288,A4205-01A,i67Woy9LgM1rXjaE78cmJQ==,2,14012
+product_variant_overlap,571,A4188,Candeeiro Criança,2304,A4188-04R,rLDF7Z2SsSqqptxCPDrkwQ==,2,5281
+product_variant_overlap,634,B101,Jarra de Água,2354,B10107,vsoFYaxohSS0JIdWJWj11w==,2,35250
+product_variant_overlap,634,B101,Jarra de Água,2352,B10105,RdDyuU11bV6lGEdAD8OJOg==,2,19322
+product_variant_overlap,657,PX004,Concha em Prata,2360,PX004LG,oBV1se+0mPaX2+msOy/omA==,2,67966
+product_variant_overlap,676,A226,Moldura Batismo,2374,A226B,UcMNU36JuHcFkhqdeopl0Q==,2,343179
+product_variant_overlap,678,A225,Moldura Batismo,2378,A225B,PI+GuKmNQ1dqPsxc6MxnZw==,2,44358
+product_variant_overlap,678,A225,Moldura Batismo,2379,A225D,PI+GuKmNQ1dqPsxc6MxnZw==,2,44358
+product_variant_overlap,679,A924,Moldura Batismo,2380,A924B,B47ZDi9CXEdjcSlp90766Q==,2,120393
+product_variant_overlap,706,A6000,Moldura Batismo,2397,A6000/10,IlrPOs8C8NvN7Qr9c9DFTA==,2,33514
+product_variant_overlap,707,A6090,Moldura Batismo,2399,A6090/9,knUD/j33Z+cvzARNBSRYtg==,2,341991
+product_variant_overlap,708,A6030,Moldura Batismo,2401,A6030/10,X0nJoOWYurv8rI213RSs0Q==,2,17777
+product_variant_overlap,733,B3760,Moldura Nascimento,2420,B3760B,07/rYJ6B6XcZ7x21rLx/BA==,2,78264
+product_variant_overlap,733,B3760,Moldura Nascimento,2421,B3760D,07/rYJ6B6XcZ7x21rLx/BA==,2,78264
+product_variant_overlap,740,B2665M,Medalha de Berço,2428,B2665MAZ,fc7ZjWs0ppfdyQTo/ypKvg==,2,1000123
+product_variant_overlap,740,B2665M,Medalha de Berço,2429,B2665MRO,nEF8bUdrOncQg2Fq7IQU5g==,2,1210455
+product_variant_overlap,764,A234MC,Medalha de Berço com Música,2431,A234MCAZ,qCs/XgQOr3+Oj0zcH4CvsQ==,2,32748
+product_variant_overlap,764,A234MC,Medalha de Berço com Música,2432,A234MCRO,NvKoqB2sB0fRhcqdhsGO+Q==,2,32088
+product_variant_overlap,865,A7010,Moldura Comunhão,3657,A7010/13,QMngUodim4U0oOihp9YENA==,2,154899
+product_variant_overlap,967,A2270,Moldura Árvore da Vida,2556,A2270/9,9V1g/rjvyBm8SlY4d7pIQQ==,2,285781
+product_variant_overlap,967,A2270,Moldura Árvore da Vida,2557,A2270/13,9V1g/rjvyBm8SlY4d7pIQQ==,2,285781
+product_variant_overlap,967,A2270,Moldura Árvore da Vida,2558,A2270/18,9V1g/rjvyBm8SlY4d7pIQQ==,2,285781
+product_variant_overlap,970,A120,Moldura,2561,A120S,+lEkvHFaSSB7hAbAg6JjKw==,2,48411
+product_variant_overlap,970,A120,Moldura,2560,A120B,+lEkvHFaSSB7hAbAg6JjKw==,2,48411
+product_variant_overlap,972,A1030,Moldura Liso,2567,A1030/20,emi8wJ5aTz8KJ3ZkPyLduQ==,2,103518
+product_variant_overlap,972,A1030,Moldura Liso,2566,A1030/15,emi8wJ5aTz8KJ3ZkPyLduQ==,2,103518
+product_variant_overlap,972,A1030,Moldura Liso,2565,A1030/10,emi8wJ5aTz8KJ3ZkPyLduQ==,2,103518
+product_variant_overlap,974,A1190,Moldura Lisa e Picotado,2572,A1190/9,FqWHgFOItyLdnZWBNTIUzg==,2,290690
+product_variant_overlap,974,A1190,Moldura Lisa e Picotado,2571,A1190/7,FqWHgFOItyLdnZWBNTIUzg==,2,290690
+product_variant_overlap,974,A1190,Moldura Lisa e Picotado,2570,A1190/5,FqWHgFOItyLdnZWBNTIUzg==,2,290690
+product_variant_overlap,974,A1190,Moldura Lisa e Picotado,2573,A1190/10,FqWHgFOItyLdnZWBNTIUzg==,2,290690
+product_variant_overlap,974,A1190,Moldura Lisa e Picotado,2574,A1190/15,FqWHgFOItyLdnZWBNTIUzg==,2,290690
+product_variant_overlap,1217,A3230,Moldura Elefante,2816,A3230/10R,CTEgzCwkPCJ5yzjexCfGVA==,2,23692
+product_variant_overlap,1217,A3230,Moldura Elefante,2815,A3230/10C,l4Y6ubgEfBpF2t6ZNQqFwA==,2,24346
+product_variant_overlap,1224,A3234,Conjunto de 2 Peças,2818,A3234/01R,9FYIEa6rbk3+Hoc3syvI6Q==,2,167517
+product_variant_overlap,1224,A3234,Conjunto de 2 Peças,2817,A3234/01C,IuDIAvs8gFRUT6yUl3co3Q==,2,202790
+product_variant_overlap,1262,B3096,Moldura Criança,2862,B3096BLAZ,kyNQiWwp0RSPAP4jBvHlLQ==,2,1718808
+product_variant_overlap,1262,B3096,Moldura Criança,2863,B3096BLRO,m173ZRC6boR/fiCYXGqwvg==,2,1698487
+product_variant_overlap,1263,B3120,Moldura Criança,2864,B3120BLAZ,g354t2Gw8lxIz7y6T9SNcA==,2,23636
+product_variant_overlap,1270,B3753,Moldura Criança Madeira,2867,B3753MBRO,eOEc8ubpHWQJ+hRBr+gbtQ==,2,18922
+product_variant_overlap,1025,A148/3,Guarda-Jóias,3473,A148/3-25,0tj/HxAxRU6EgdfHD/AhWQ==,2,1286902
+product_variant_overlap,1025,A148/3,Guarda-Jóias,3474,A148/3-50,TnEBDh7MqzxsxMzuKKoUaQ==,2,1364790
+product_variant_overlap,1025,A148/3,Guarda-Jóias,2633,A148/3-00,zEYNwpY5UTJj528rfsS1cQ==,2,1273168
+product_variant_overlap,1026,A148/5,Álbum de Casamento em Pele,3475,A148/5-25,iCQIZpw6+qQemJLrAG/z+A==,2,1819789
+product_variant_overlap,1026,A148/5,Álbum de Casamento em Pele,2635,A148/5-00,owmToQWGDgxIMf3oVAYI/w==,2,1810428
+product_variant_overlap,1026,A148/5,Álbum de Casamento em Pele,3476,A148/5-50,X2hD2P5D9LCBW2Ur+K/b8A==,2,1855665
+product_variant_overlap,1295,A961,Talheres de Criança,2892,A961TAZ,upot4xl/1Xx2nqX05sSBnQ==,2,140274
+product_variant_overlap,1300,B2003,Moldura Criança,2902,B2003/13C,17E5xNpCPeS1udZF6EcF4g==,2,195372
+product_variant_overlap,1306,B3116,Conjunto de 2 Peças,2910,B3116SPAZ,5G0ZRCmOkkvB24f6fp3MLA==,2,2161042
+product_variant_overlap,1306,B3116,Conjunto de 2 Peças,2911,B3116SPRO,KuaKXd5m3yaFaLE5auTHRw==,2,2050677
+product_variant_overlap,463,BA1847,Rosa especial Prata,2186,BA1847R,yHXVmOD5A70qKuoJIizKJQ==,2,153833
+product_variant_overlap,463,BA1847,Rosa especial Prata,2185,BA1847S,VLugZkkSnUOgm84PfumLMw==,2,177628
+product_variant_overlap,464,BA1765,Rosa Dourada ( Varias Cores ),2190,BA1765RR,8SVd7I9G9uhAuqxn7As4Ow==,2,15672
+product_variant_overlap,464,BA1765,Rosa Dourada ( Varias Cores ),2198,BA1765R,8SVd7I9G9uhAuqxn7As4Ow==,2,15672
+product_variant_overlap,464,BA1765,Rosa Dourada ( Varias Cores ),2196,BA1765B,Ugq6CzUO8l8kw1ZWI7pBOg==,2,22306
+product_variant_overlap,1023,A124,Moldura Casamento - 25ª-50ª,3634,A124B/00,zxS1+FW0q0EFG5w6LjIs/w==,2,119131
+product_variant_overlap,1023,A124,Moldura Casamento - 25ª-50ª,3633,A124B/50D,xUEfUvhMhIqtg/cM/g5X+w==,2,318038
+product_variant_overlap,1023,A124,Moldura Casamento - 25ª-50ª,3636,A124C/25,/ajC6PdE4d4wEiW+JKegyA==,2,118903
+product_variant_overlap,1023,A124,Moldura Casamento - 25ª-50ª,3632,A124B/25,/ajC6PdE4d4wEiW+JKegyA==,2,118903
+product_variant_overlap,1083,A139,Guarda-Jóias Casamento,3520,A139/3-50,p19LEDkx2najhbF3RTOK9A==,2,487651
+product_variant_overlap,1083,A139,Guarda-Jóias Casamento,3519,A139/3-25,tHnpHVpVTkHmdKM29ho//A==,2,516433
+product_variant_overlap,1083,A139,Guarda-Jóias Casamento,2711,A139/3-00D,udxqOuatmf+INFHkU1Cygg==,2,72125
+product_variant_overlap,1084,A140A,Moldura Casamento,3522,A140A/25,v6M7WGfTwRN9hnOZFlZ76w==,2,257873
+product_variant_overlap,1084,A140A,Moldura Casamento,3521,A140A/50,VwQQDs2+fVCG/KSji4ffBQ==,2,281442
+product_variant_overlap,1085,A140B,Moldura Casamento,3524,A140B/25,v6M7WGfTwRN9hnOZFlZ76w==,2,257873
+product_variant_overlap,1085,A140B,Moldura Casamento,3523,A140B/50,Nj2p5PjlVLX2R7TjGB/4NA==,2,209549
+product_variant_overlap,1086,A140C,Moldura Casamento,3526,A140C/25,v6M7WGfTwRN9hnOZFlZ76w==,2,257873
+product_variant_overlap,1086,A140C,Moldura Casamento,3525,A140C/50,Nj2p5PjlVLX2R7TjGB/4NA==,2,209549
+product_variant_overlap,939,A18/1,Imagem Sagrada Familia,2532,A18/2,qBgZpuMhNXCewyF1lMBhNQ==,2,50636
+product_variant_overlap,973,A2010,Moldura Liso,2568,A2010/18,R3UWtd/IiZnNwAZbv1cciA==,2,22845
+product_variant_overlap,973,A2010,Moldura Liso,2569,A2010/13,R3UWtd/IiZnNwAZbv1cciA==,2,22845
+product_variant_overlap,971,A2060,Moldura Liso,2562,A2060/9,AbMNChjC9mb7MAqiK5y3VQ==,2,121937
+product_variant_overlap,971,A2060,Moldura Liso,2564,A2060/18,AbMNChjC9mb7MAqiK5y3VQ==,2,121937
+product_variant_overlap,971,A2060,Moldura Liso,2563,A2060/13,AbMNChjC9mb7MAqiK5y3VQ==,2,121937
+product_variant_overlap,1082,A2086B,Moldura Casamento,3518,A2086B/25,kmBwzUzk+r0nVIDZruW1ew==,2,53127
+product_variant_overlap,1082,A2086B,Moldura Casamento,3517,A2086B/50,K4ziqdePnc458+HMxYoTLw==,2,53522
+product_variant_overlap,1082,A2086B,Moldura Casamento,2710,A2086B/00D,s3vK5MwNpvrQhCPr1vvioA==,2,53514
+product_variant_overlap,1138,A210,Moldura Criança,2772,A210BA,B4MB7xycfFSDEWMYC+amqA==,2,132622
+product_variant_overlap,676,A226,Moldura Batismo,2375,A226C,JM0J0dS1eL2MjRydXgWy9g==,2,191239
+product_variant_overlap,1150,A234M,Medalha   Anjo Comoração,2782,A234MRO,ANTbmy+p1HipiBC0VDp1kQ==,2,20548
+product_variant_overlap,1178,A238,Moldura Criança,2783,A238BA,Rwwc6TrORGgap/KoWb0D7Q==,2,106232
+product_variant_overlap,1178,A238,Moldura Criança,2784,A238BR,SgeN/dpQ3as6Uthtzk4wmg==,2,99522
+product_variant_overlap,1275,A239,Moldura Nascimento,2874,A239C,WIqwb6NsTTXh9pF4+vl7ig==,2,99860
+product_variant_overlap,1275,A239,Moldura Nascimento,2873,A239B,WIqwb6NsTTXh9pF4+vl7ig==,2,99860
+product_variant_overlap,1359,A241,Moldura Nascimento,2959,A241C,f8n1CAS5tO/A6q8s1+0p1Q==,2,95825
+product_variant_overlap,1359,A241,Moldura Nascimento,2958,A241B,f8n1CAS5tO/A6q8s1+0p1Q==,2,95825
+product_variant_overlap,1179,A250,Moldura Criança Madeira,2786,A250MBAZ,dy5N8CfO5YXektCRFPMb/g==,2,267454
+product_variant_overlap,1179,A250,Moldura Criança Madeira,2787,A250MBRO,26XRSLN6yZKodfDKkp3sLA==,2,249765
+product_variant_overlap,1180,A252,Moldura Criança Madeira,2791,A252MBRO,5pqbf94YMDjkeJGPGG6Blg==,2,250667
+product_variant_overlap,1180,A252,Moldura Criança Madeira,2790,A252MBAZ,jdqSg4eFVAP8urhDXJx+Sg==,2,267235
+product_variant_overlap,1181,A258,Moldura Criança,2798,A258CAZ,ZTswMLovrkQSaoeumV0u5Q==,2,315242
+product_variant_overlap,1181,A258,Moldura Criança,2795,A258BAZ,ZTswMLovrkQSaoeumV0u5Q==,2,315242
+product_variant_overlap,1181,A258,Moldura Criança,2799,A258CRO,02VpyF0DfzQw9fuigO5INQ==,2,297781
+product_variant_overlap,1181,A258,Moldura Criança,2796,A258BRO,02VpyF0DfzQw9fuigO5INQ==,2,297781
+product_variant_overlap,1181,A258,Moldura Criança,2794,A258B,60NHQQ+F/XeIkA6IpZp2SA==,2,288353
+product_variant_overlap,1181,A258,Moldura Criança,2797,A258C,60NHQQ+F/XeIkA6IpZp2SA==,2,288353
+product_variant_overlap,868,A259,Moldura Comunhão,3648,A259B,G5AI1x/P33hfiS7Rah+vWg==,2,346934
+product_variant_overlap,709,A260,Moldura Batismo,2402,A260B,tP/PF2fdDlH1jxLzlNH5+g==,2,312690
+product_variant_overlap,1182,A261,Moldura Criança,2801,A261DRO,QTJl2/8NY9JpdTUhuUwJbw==,2,348962
+product_variant_overlap,1184,A263,Moldura Criança,2807,A263D,LkVpImOydH6V9mDRqvDq2w==,2,995513
+product_variant_overlap,1184,A263,Moldura Criança,2804,A263B,LkVpImOydH6V9mDRqvDq2w==,2,995513
+product_variant_overlap,1184,A263,Moldura Criança,2808,A263DAZ,LVSIxoZCVrPJ959vm+jOqw==,2,383651
+product_variant_overlap,1184,A263,Moldura Criança,2805,A263BAZ,LVSIxoZCVrPJ959vm+jOqw==,2,383651
+product_variant_overlap,1184,A263,Moldura Criança,2809,A263DRO,oHtMTMMgpwDCMrCRvePWpA==,2,346014
+product_variant_overlap,1184,A263,Moldura Criança,2806,A263BRO,oHtMTMMgpwDCMrCRvePWpA==,2,346014
+product_variant_overlap,869,A265,Moldura Comunhão,3650,A265B,iFtu1/+ehakyBpgvKoiPCQ==,2,343272
+product_variant_overlap,672,A266,Moldura Batismo,2369,A266D,ViTnQuaW91915bEneD+4JA==,2,194367
+product_variant_overlap,672,A266,Moldura Batismo,2368,A266B,ViTnQuaW91915bEneD+4JA==,2,194367
+product_variant_overlap,867,A268M,Moldura Comunhão,3652,A268MB,nrUm+DGsgmJpzBjlBigo+A==,2,303556
+product_variant_overlap,1202,A272BAZ,Moldura Criança,4168,A272BRO,eNhS0Nez6bNAC2ZLA1nUbA==,2,379539
+product_variant_overlap,1202,A272BAZ,Moldura Criança,4167,A272CRO,eNhS0Nez6bNAC2ZLA1nUbA==,2,379539
+product_variant_overlap,1272,A274,Conjunto de 2 Peças,2872,A274RO,QdIH5O2TtFUjgx0/Y0AJqg==,2,117018
+product_variant_overlap,1276,A286,Moldura Gato,2876,A286DRO,uo/2O+L6XKrEsKFTcS08xg==,2,117123
+product_variant_overlap,1215,A3075,Porta-Dentinho,2811,A3075/02R,TooQyHJ6+Ms5g8vbpnH/mQ==,2,8392
+product_variant_overlap,1215,A3075,Porta-Dentinho,2810,A3075/02C,PyRm6GFSsZuBbwVGBg5nEA==,2,10216
+product_variant_overlap,1216,A3085,Porta-Dentinho,2812,A3085/02C,7qHnXXRlCpdcZ33UyAVPgA==,2,9169
+product_variant_overlap,1216,A3085,Porta-Dentinho,2813,A3085/02R,iCPVzRkf81sLP9q8cvmbNg==,2,9320
+product_variant_overlap,1233,A3610,Moldura Anjo da Guarda,2820,A3610/13PR,CkE7qiObeDD/5PK0XOWNQg==,2,1117169
+product_variant_overlap,571,A4188,Candeeiro Criança,2299,A4188-03A,mzswL5fHmFGjJP5GCDRqbQ==,2,81317
+product_variant_overlap,571,A4188,Candeeiro Criança,2301,A4188-05R,tRnHacyGrmelS78/skX6zg==,2,53485
+product_variant_overlap,572,A4199,Candeeiro Infantil,2306,A4199-03A,toq63juVEmWzLE/avh6biw==,2,38171
+product_variant_overlap,572,A4199,Candeeiro Infantil,2307,A4199-02A,BuTaFRZkJcZxhr4N7aMrTA==,2,36962
+product_variant_overlap,1134,A422T,Placa Com Suporte Casamento,3556,A422T/50,eTo4lRz+kbNZyrlUEs5gUg==,2,92584
+product_variant_overlap,1134,A422T,Placa Com Suporte Casamento,3555,A422T/25,M/WN7mzSu6FRmz8UWCTT3g==,2,64672
+product_variant_overlap,785,A7003,Jarra de Decoração,2452,A7003-03,ZQuNzyiL9+DTscxkqZ0+vw==,2,263573
+product_variant_overlap,785,A7003,Jarra de Decoração,2451,A7003-04,q1y0jrSo/xCXxLHSiIcMhA==,2,218613
+product_variant_overlap,1236,A756,Saco Porta-Chupeta,2830,A756SRO,7EFBU+4hUgS9bM3Ht7i9MA==,2,69151
+product_variant_overlap,1237,A757,Conjunto de 2 Peças,2832,A757SPAZ,7NiJua5b7vzmMgxXiZiCYg==,2,156973
+product_variant_overlap,1240,A770,Moldura Criança,2834,A770BLRO,TOEZr9eZVxw561vYWMZeEQ==,2,56652
+product_variant_overlap,1240,A770,Moldura Criança,2833,A770BLAZ,kdvaTzSrnci8McG57JMofg==,2,339543
+product_variant_overlap,1282,A789,Talher de Criança,2877,A789TAZ,T1sIKbQItjO3hNbog9pfOQ==,2,300860
+product_variant_overlap,1243,A861,Porta-Chupeta,2841,A861PAZ,pS5LcPvN13O9Duea9SX4yg==,2,7165
+product_variant_overlap,1243,A861,Porta-Chupeta,2842,A861PRO,LHBJTd4O2rkJa2bAxCtObw==,2,7177
+product_variant_overlap,1245,A900,Moldura Criança,2846,A900BLRO,iL0jnWqRX7OtnB5JEH0XAw==,2,1173565
+product_variant_overlap,1245,A900,Moldura Criança,2845,A900BLAZ,k54ZW3CDad2OUD4O/D8Saw==,2,1125629
+product_variant_overlap,1246,A902,Porta-Chupeta,2848,A902PAZ,6A8wPThZkX5lBm9oJuqc/w==,2,14837
+product_variant_overlap,1249,A905,Talheres de Criança,2853,A905RO,OU2uV0yOijHfhHzJRv4tYg==,2,95882
+product_variant_overlap,1287,A933,Saco Porta-Chupeta,2880,A933SRO,GKYAMS2pFHMx49QzMYlZUA==,2,23323
+product_variant_overlap,1288,A934,Conjunto de 2 Peças,2881,A934AZ,RE/YVrwuB5MDr2gIxeLFdA==,2,39414
+product_variant_overlap,1291,A938,Porta-Chupeta,2887,A938PRO,vcWltR7UEkRLj12G1AgVKQ==,2,33281
+product_variant_overlap,1293,A940,Conjunto de 2 Peças,2891,A940RO,33qbhG7EcBppp6qpXIljgg==,2,108069
+product_variant_overlap,1295,A961,Talheres de Criança,2893,A961TRO,RgQcgbZknj7wTN8o35T/UQ==,2,59502
+product_variant_overlap,1298,AE2001,Moldura Anjo,2899,AE2001/9C,s6wivIioucWVKlZzRFTAdg==,2,294219
+product_variant_overlap,1298,AE2001,Moldura Anjo,2898,AE2001/13R,s6wivIioucWVKlZzRFTAdg==,2,294219
+product_variant_overlap,1298,AE2001,Moldura Anjo,2897,AE2001/13C,s6wivIioucWVKlZzRFTAdg==,2,294219
+product_variant_overlap,1256,AE2039,Moldura Criança,2861,AE2039/9R,u2O7aEiLxShvnbKJ0tRuTA==,2,264713
+product_variant_overlap,1256,AE2039,Moldura Criança,2860,AE2039/9C,u2O7aEiLxShvnbKJ0tRuTA==,2,264713
+product_variant_overlap,1256,AE2039,Moldura Criança,2859,AE2039/13R,u2O7aEiLxShvnbKJ0tRuTA==,2,264713
+product_variant_overlap,1256,AE2039,Moldura Criança,2858,AE2039/13C,u2O7aEiLxShvnbKJ0tRuTA==,2,264713
+product_variant_overlap,1299,AE2081,Talher de Criança,2901,AE2081R,mYC6m8fPuByXhq6zUQ0lEA==,2,76724
+product_variant_overlap,947,AE5002/3C,Imagem Sagrada Família,2539,AE5002/2C,FQldtjaoayIqjPkIqVjTfg==,2,48667
+product_variant_overlap,1008,AE6008,Moldura,2614,AE6008/18,OfIv5/USyQvcbaJ9at2R+A==,2,312169
+product_variant_overlap,1008,AE6008,Moldura,2615,AE6008/13,OfIv5/USyQvcbaJ9at2R+A==,2,312169
+product_variant_overlap,1009,AE6018,Moldura,2616,AE6018/18,mt/KyFXk4UxLtqTMlqWSyA==,2,333756
+product_variant_overlap,1009,AE6018,Moldura,2617,AE6018/13,mt/KyFXk4UxLtqTMlqWSyA==,2,333756
+product_variant_overlap,1011,AE6019,Moldura Martelado,2620,AE6019/9,S6pys6k/sHsfR/emAU+t/Q==,2,1097958
+product_variant_overlap,1011,AE6019,Moldura Martelado,2618,AE6019/18,S6pys6k/sHsfR/emAU+t/Q==,2,1097958
+product_variant_overlap,1011,AE6019,Moldura Martelado,2619,AE6019/13,S6pys6k/sHsfR/emAU+t/Q==,2,1097958
+product_variant_overlap,1012,AE6022,Moldura,2621,AE6022/18,CD1ksVatTV3S+zvwk5/Z9w==,2,1096388
+product_variant_overlap,1012,AE6022,Moldura,2622,AE6022/13,CD1ksVatTV3S+zvwk5/Z9w==,2,1096388
+product_variant_overlap,999,AE6024,Moldura Lisa com Relevo,2604,AE6024/15,cHn6PVnCk883bActZxncqg==,2,16976
+product_variant_overlap,999,AE6024,Moldura Lisa com Relevo,2605,AE6024/10,cHn6PVnCk883bActZxncqg==,2,16976
+product_variant_overlap,1000,AE6208,Moldura Martelado,2606,AE6208/13,PbYd7DfsV325dlGA+/qTMQ==,2,48321
+product_variant_overlap,1000,AE6208,Moldura Martelado,2607,AE6208/10,PbYd7DfsV325dlGA+/qTMQ==,2,48321
+product_variant_overlap,1002,AE6434,Moldura,2608,AE6434/15,vLnfzvTCJXcYfLUvTyso0Q==,2,37113
+product_variant_overlap,1002,AE6434,Moldura,2609,AE6434/10,vLnfzvTCJXcYfLUvTyso0Q==,2,37113
+product_variant_overlap,1094,AE6440/13,Moldura Casamento,3537,AE6441/13,pdeIrZ4fBtXMmQ5WrurnOw==,2,36279
+product_variant_overlap,1109,AE6521/441,Guarda-Jóias,2749,AE6521/442,6hQu2vLERkmOP7QozjHBsg==,2,25412
+product_variant_overlap,1109,AE6521/441,Guarda-Jóias,3551,AE6521/440,6hQu2vLERkmOP7QozjHBsg==,2,25412
+product_variant_overlap,1124,AE6530,Álbum Casamento,3552,AE6530/50,aUVvPZZfl7/O1+RRpiy88A==,2,29406
+product_variant_overlap,592,AH6001,Caneta/Esferográfica,2332,AH6001-02R,bE9iOHcwcFN5n5eiOF36pg==,2,20537
+product_variant_overlap,592,AH6001,Caneta/Esferográfica,2331,AH6001-02B,3iHxU2VBVfygeAGS2IQzOw==,2,19134
+product_variant_overlap,592,AH6001,Caneta/Esferográfica,2330,AH6001-01R,ZIbvPdKbijkxku+kGPAebg==,2,21572
+product_variant_overlap,592,AH6001,Caneta/Esferográfica,2329,AH6001-01B,HjxkbDrFeHQkOur89v6rAQ==,2,25586
+product_variant_overlap,590,AH6002,Caneta/Esferográfica,2325,AH6002-03B,uTGraHzg+IbkOpqIuta6kQ==,2,20335
+product_variant_overlap,590,AH6002,Caneta/Esferográfica,2323,AH6002-02B,nTEynC4hMICdLxarf8htKQ==,2,22232
+product_variant_overlap,590,AH6002,Caneta/Esferográfica,2321,AH6002-01B,x1xrLP6E9Mw0aJ8PGBm0LQ==,2,20907
+product_variant_overlap,590,AH6002,Caneta/Esferográfica,2326,AH6002-03R,d52IH9FCAMikKwzQ74B/fA==,2,21566
+product_variant_overlap,590,AH6002,Caneta/Esferográfica,2322,AH6002-01R,06/6ircAW5uhbT8I33is3g==,2,22456
+product_variant_overlap,590,AH6002,Caneta/Esferográfica,2324,AH6002-02R,f4zliFyk8XYPAc+SHQjT7w==,2,21277
+product_variant_overlap,588,AH6006,Caneta/Esferográfica,2313,AH6006-03B,MMJBVQj+5deIkjDhtK9Tog==,2,17837
+product_variant_overlap,588,AH6006,Caneta/Esferográfica,2311,AH6006-02B,DaUCO2DbojBWsvG6gTIHuQ==,2,17921
+product_variant_overlap,588,AH6006,Caneta/Esferográfica,2309,AH6006-01B,6DUtBcj7g1/LrcPZ3dsSXQ==,2,22079
+product_variant_overlap,588,AH6006,Caneta/Esferográfica,2310,AH6006-01R,ji0MYj55DyO5974OvBQdaQ==,2,20990
+product_variant_overlap,588,AH6006,Caneta/Esferográfica,2312,AH6006-02R,ONfEM0+whimNb2iFnVTDtg==,2,17380
+product_variant_overlap,588,AH6006,Caneta/Esferográfica,2314,AH6006-03R,YJcyoE0/m4erWYmm+iPlwg==,2,17758
+product_variant_overlap,589,AH6012,Esferográfica,2320,AH6012-06B,j0Vjp0cgwpcEBrj+8QHd7Q==,2,16982
+product_variant_overlap,589,AH6012,Esferográfica,2316,AH6012-02B,Ze1qHxXGgQeVJdn/9RqwUw==,2,17473
+product_variant_overlap,589,AH6012,Esferográfica,2319,AH6012-05B,+OCcHVQ79st4n01RhWZePg==,2,18688
+product_variant_overlap,589,AH6012,Esferográfica,2318,AH6012-04B,deCqLTmwhx6vXEUGMn8wyw==,2,18543
+product_variant_overlap,589,AH6012,Esferográfica,2317,AH6012-03B,GigjOzWRQOoFuEwIe0Aexw==,2,23787
+product_variant_overlap,589,AH6012,Esferográfica,2315,AH6012-01B,nnKEeNxAsQYa9yLSbZA5/A==,2,23065
+product_variant_overlap,591,AH6014,Caneta/Esferográfica,2327,AH6014-02R,V8/KR46fnajyEljnvM9M8w==,2,9653
+product_variant_overlap,593,AH6019,Esferográfica,2334,AH6019-01R,SqnUi6DKT80/TJiXnqKz+A==,2,21215
+product_variant_overlap,593,AH6019,Esferográfica,2333,AH6019-01B,lZ445oZG6geaMk+FJhSuSQ==,2,24541
+product_variant_overlap,593,AH6019,Esferográfica,2337,AH6019-03B,/xrXt8wsROYJ2XHJws4gpw==,2,20493
+product_variant_overlap,593,AH6019,Esferográfica,2336,AH6019-02R,WOKNBv2LpVYJ/mFqSXnSSg==,2,22320
+product_variant_overlap,593,AH6019,Esferográfica,2335,AH6019-02B,NEZIXPOtf+R0a2c4uc+eZA==,2,22119
+product_variant_overlap,594,AH6021,Caneta/Esferográfica,2340,AH6021-02B,1UyO1I64Wyb2cYKh+zq0Hg==,2,14296
+product_variant_overlap,594,AH6021,Caneta/Esferográfica,2343,AH6021-03R,82QrTDfr6s8rYV8EhSEWLA==,2,17748
+product_variant_overlap,594,AH6021,Caneta/Esferográfica,2342,AH6021-03B,1Bf+VFawQ0ac2FsvRUcGiQ==,2,17114
+product_variant_overlap,1046,B1312A,Moldura Oval de Aniversário Casamento,3498,B1312A/50,TYQYjWpIUfa8xS3Bos986A==,2,99538
+product_variant_overlap,1046,B1312A,Moldura Oval de Aniversário Casamento,3499,B1312A/25,LQfSjFDOS7JI63pBYFNxkA==,2,116694
+product_variant_overlap,1052,B1435,Copos Celebração Casamento,3501,B1435/50,2B3kj5ImLTuiQhQHHHjDJA==,2,29750
+product_variant_overlap,1052,B1435,Copos Celebração Casamento,3500,B1435/25,dHrwD0Y/hL1OwQ+rH+6B8Q==,2,27187
+product_variant_overlap,1053,B1450,Copos Celebração Casamento,3502,B1450/25,1k/Vftzdxx/0JUilyCdFfQ==,2,16310
+product_variant_overlap,787,B17/315,Jarra de Decoração,2454,B17/3156,2MtK3sPbgs1YBwk7iUpgIg==,2,135988
+product_variant_overlap,787,B17/315,Jarra de Decoração,2453,B17/3154,L99WRKbLcRsyh6V2Z1Z9GA==,2,145993
+product_variant_overlap,787,B17/315,Jarra de Decoração,2455,B17/3159,mIGSrDVCwG3S29oRyLEvBg==,2,388332
+product_variant_overlap,1300,B2003,Moldura Criança,2903,B2003/13R,wWyIdu5mLZ2fbZDSSNPjxw==,2,136339
+product_variant_overlap,1301,B2073,Moldura Criança,2905,B2073/13R,sl4qL4NWRpsPezriEQylfA==,2,141387
+product_variant_overlap,1301,B2073,Moldura Criança,2904,B2073/13C,sl4qL4NWRpsPezriEQylfA==,2,141387
+product_variant_overlap,1331,B2093,Conjunto de 2 Peças,2937,B2093/1R,KbIAwl1w31QhJDPJPE97KQ==,2,113259
+product_variant_overlap,1331,B2093,Conjunto de 2 Peças,2936,B2093/1C,KbIAwl1w31QhJDPJPE97KQ==,2,113259
+product_variant_overlap,1374,B2372,Chupeta Urso,2975,B2372SRO,NXj9vp4KUjAWOtfAjFZ+hw==,2,600164
+product_variant_overlap,1374,B2372,Chupeta Urso,2974,B2372SAZ,ayWlbVIbksDF+5GnnvCoZQ==,2,491642
+product_variant_overlap,689,B2393,Moldura Batismo,2382,B2393BQ,LDZpTFMLnYikVCQaImhO+w==,2,356501
+product_variant_overlap,689,B2393,Moldura Batismo,2383,B2392DQ,LDZpTFMLnYikVCQaImhO+w==,2,356501
+product_variant_overlap,690,B2395,Moldura Batismo,2384,B2395BQ,fFkXsuP6WLTnMujQFmc5lA==,2,514444
+product_variant_overlap,690,B2395,Moldura Batismo,2385,B2394DQ,fFkXsuP6WLTnMujQFmc5lA==,2,514444
+product_variant_overlap,620,B2593,Copos Bodas Casamento,3457,B2593/50,FvUBr6sVNXMtAbukMt/SQQ==,2,120238
+product_variant_overlap,1077,B26/4810,Moldura Lisa Casamento,3509,B26/4820,G50axYXZ08xBkg81faVefg==,2,66551
+product_variant_overlap,677,B2665C,Medalha de Berço com Música,2377,B2665CRO,y8jT1ojc7J4EKpDOHh4Tdg==,2,206252
+product_variant_overlap,677,B2665C,Medalha de Berço com Música,2376,B2665CAZ,clt2QoNEjteOx4ks0jG7IQ==,2,224503
+product_variant_overlap,739,B2667,Imagem Nascimento ,2426,B2667AZ,ICiaFVviWqVityvXumdbrA==,2,116276
+product_variant_overlap,739,B2667,Imagem Nascimento ,2427,B2667R,ZWt7fI6snoJR1+nuUIoXuQ==,2,134093
+product_variant_overlap,723,B3733,Bolsa Porta-Chupeta Cegonha,2419,B3733RO,ePoBJkE0DjkBLukCNYbu+g==,2,692438
+product_variant_overlap,1304,B2981,Moldura Criança,2908,B2981CAZ,KOnp+jUmGQyLpMpRyeWLnQ==,2,13536
+product_variant_overlap,1334,B3072,Porta-Chupeta,2939,B3072PRO,nFGuHZTczTxCWvyqcSPBRA==,2,9865
+product_variant_overlap,1336,B3074,Conjunto de 2 Peças,2941,B3074RO,+pg2L2/gUeR5ftcrW9gfkw==,2,36220
+product_variant_overlap,1381,B3100,Moldura Urso Flor,2977,B3100BLRO,n6tGiaxXjI3wZ21CSBE4fw==,2,687663
+product_variant_overlap,1381,B3100,Moldura Urso Flor,2976,B3100BLAZ,TR4UWgTqkMX0gR9dZpeF3Q==,2,701062
+product_variant_overlap,1383,B3106,Bolsa Porta-Chupeta Urso e Flor,2978,B3106SAZ,UFcnQhHAovk2skftpVMfKQ==,2,646867
+product_variant_overlap,1383,B3106,Bolsa Porta-Chupeta Urso e Flor,2979,B3106SRO,dTyoMHjz1PFzx4pHt/stLw==,2,719716
+product_variant_overlap,1387,B3408,Moldura Sino,2981,B3408ERO,3YwW9X6prKp7us+9MXXaFQ==,2,8231
+product_variant_overlap,1387,B3408,Moldura Sino,2980,B3408EAZ,XdRiuGh6BYkvOUTKefHeLA==,2,9335
+product_variant_overlap,1388,B3410,Álbum Fotos Sino,2982,B3410DAZ,BE/v1/RmNJjznaXHeXo3ug==,2,17619
+product_variant_overlap,1388,B3410,Álbum Fotos Sino,2983,B3410DRO,ulF5rqCbFmsnudBtvqj8TA==,2,14834
+product_variant_overlap,1309,B3516,Moldura Criança,2912,B3516BAZ,ThIEkzgFr0ZcCXERWrIEtQ==,2,17706
+product_variant_overlap,1342,B3521,Conjunto de 2 Peças,2946,B3521AZ,uSrYnoGSGdSW6zD3KAJ85A==,2,18682
+product_variant_overlap,1310,B3581,Conjunto de 2 Peças,2914,B3581AZ,D/DKeGFhxHuFk+XAhLImwg==,2,13282
+product_variant_overlap,1354,B3630,Moldura Gato,2954,B3630DNAZ,9wNz+i4p+7L6xmfD5o5iDA==,2,23621
+product_variant_overlap,1347,B3640,Saco Porta-Chupeta,2948,B3640SAZ,T1mgnNDlFvwhH16L9VZ4Mw==,2,10156
+product_variant_overlap,1348,B3641,Conjunto de 2 Peças,2951,B3641RO,CbpXUX/7TNMDU04P61oPPA==,2,18835
+product_variant_overlap,720,B3742,Conjunto Batismo,2416,B3742AZ,lvTfp+CrObAQBNkz0PR+lw==,2,113939
+product_variant_overlap,1270,B3753,Moldura Criança Madeira,2868,B3753MCRO,uRsFBBETrn2QlWR08dMqqA==,2,577681
+product_variant_overlap,713,B3790BL,Moldura Batismo,2407,B3790BLRO,iM7Pv1J/jsaQy9hT3DpLAg==,2,150435
+product_variant_overlap,713,B3790BL,Moldura Batismo,2406,B3790BLAZ,iM7Pv1J/jsaQy9hT3DpLAg==,2,150435
+product_variant_overlap,715,B3791,Moldura Batismo,2410,B3791BL,iM7Pv1J/jsaQy9hT3DpLAg==,2,150435
+product_variant_overlap,717,B3793S,Bolsa Porta-Chupeta Cegonha,2414,B3793SAZ,Uvll0fJgs4Ux54ZAiSOpEw==,2,12424
+product_variant_overlap,716,B3794SP,Bolsa e Porta-Chupeta Cegonha,2413,B3794SPRO,8a8tOUrVWOQk3s2i7N+bkg==,2,34511
+product_variant_overlap,701,B3947,Conjunto Batismo,2390,B3947AZ,VCIHgX25BftUT7apLhysuQ==,2,73522
+product_variant_overlap,701,B3947,Conjunto Batismo,2391,B3947RO,RyCBqSHbmNNMB5JWNtP2eg==,2,69087
+product_variant_overlap,1739,P3038,Moldura Prata Criança,4479,P3038,TxH4u1/8gHkzEhnb66yaxA==,2,1006660
+product_variant_overlap,1360,B4420,Moldura Gato Estrelas,2962,B4420BRO,e1dfMUOimzl7T6RMw70tRg==,2,38265
+product_variant_overlap,1360,B4420,Moldura Gato Estrelas,2960,B4420DRO,/uxWESc950kmCsNRj7SsyQ==,2,40792
+product_variant_overlap,1321,B4422,Saco Porta-Chupeta,2922,B4422SAZ,U7nx6t0DKdLgjiVoIHpVkA==,2,96507
+product_variant_overlap,1321,B4422,Saco Porta-Chupeta,2923,B4422SRO,zzWVaIGggDsOwjHNtoTfvw==,2,23193
+product_variant_overlap,1322,B4423,Conjunto de 2 Peças,2925,B4423RO,RmdGY6nrHJqxY2npD+DVNg==,2,283238
+product_variant_overlap,1322,B4423,Conjunto de 2 Peças,2924,B4423AZ,QoI5MZysX4DfZ+uXUiC2ng==,2,66100
+product_variant_overlap,1323,B4425,Talheres de Criança,2926,B4425AZ,9URgJaQfO5V/LkjarASk5w==,2,29081
+product_variant_overlap,1323,B4425,Talheres de Criança,2927,B4425RO,Z9fjtPqvzh3ibQ6F3Vnngw==,2,115483
+product_variant_overlap,766,B6094,Medalha de Berço,2435,B6094AZ,jm3SrHoyKa1hQIMTBV35kg==,2,100312
+product_variant_overlap,765,B6094C,Medalha de Berço com Música,2434,B6094CRO,YS3BJDTG3/h47Fychovy8Q==,2,155970
+product_variant_overlap,776,B6122,Medalha de Berço,2437,B6122AZ,COt2Jzt/lxq8XccwbKqetg==,2,181505
+product_variant_overlap,777,B6122C,Medalha de Berço com Música,2439,B6122CAZ,g+rS62PgwJCMl01jlOSXkA==,2,185640
+product_variant_overlap,782,B6135,Medalha de Berço,2445,B6135AZ,icdjVryz6utsCWfMfYQIhQ==,2,122428
+product_variant_overlap,784,B6136,Medalha de Berço,2449,B6136AZ,KkvwMw7Ll+MxmRK/ZkItMA==,2,124041
+product_variant_overlap,783,B6136C,Medalha de Berço com Música,2447,B6136CAZ,EFQX8yoK9SY3sCscIobveQ==,2,121272
+product_variant_overlap,779,B6141,Medalha de Berço,2443,B6141AZ,rR3VvVCTBF7yQIIaixXaAQ==,2,150313
+product_variant_overlap,778,B6141C,Medalha de Berço com Música,2441,B6141CAZ,YS3Wusw4LovAfuBPz4oNTg==,2,174379
+product_variant_overlap,518,BA1833,Anjo da Sorte,2262,BA1833-03,/mNZFIrhTDzB9UE3CKV0kA==,2,5148
+product_variant_overlap,518,BA1833,Anjo da Sorte,2261,BA1833-02,kmQUJlJIIKbtZDE6fu2wzg==,2,5709
+product_variant_overlap,518,BA1833,Anjo da Sorte,2265,BA1833-06,8SnMTruEWhpIwK7z05T9Cg==,2,6453
+product_variant_overlap,518,BA1833,Anjo da Sorte,2266,BA1833-07,jCkfF9psi+DcWd+mbXZmeQ==,2,4918
+product_variant_overlap,466,BA2058W,Rosa ( Varias Cores ),2206,BA2058Y,e87Y8uE/ie/yTYbIRXUtCQ==,2,23558
+product_variant_overlap,466,BA2058W,Rosa ( Varias Cores ),2211,BA2058W,eY1EEUPLN7XD8VRtmyuSqg==,2,23425
+product_variant_overlap,466,BA2058W,Rosa ( Varias Cores ),4099,BA2058S,zIsZnbVes5IWec2C+OGRQg==,2,23932
+product_variant_overlap,466,BA2058W,Rosa ( Varias Cores ),2203,BA2058RS,Ug5ErbC99GPdli1403f2/g==,2,22865
+product_variant_overlap,466,BA2058W,Rosa ( Varias Cores ),2205,BA2058R,wMofT9uySsIlcPVdUOqSIQ==,2,24587
+product_variant_overlap,466,BA2058W,Rosa ( Varias Cores ),2208,BA2058P,0IdhDWhb87802kBlp+qvGw==,2,26193
+product_variant_overlap,466,BA2058W,Rosa ( Varias Cores ),2207,BA2058BS,jgxUUoI4LZ9baifWnDQZUQ==,2,26653
+product_variant_overlap,466,BA2058W,Rosa ( Varias Cores ),2209,BA2058B,tjWNedFJrXHN6InGs0bL+w==,2,23544
+product_variant_overlap,1034,A9150/10,Moldura - Casamento – 25 e 50 Anos,4227,A9150/15C,4JkTfdFrfgCbMJL6Kp3jpA==,2,598203
+product_variant_overlap,1034,A9150/10,Moldura - Casamento – 25 e 50 Anos,4224,A9150/10C,4JkTfdFrfgCbMJL6Kp3jpA==,2,598203
+product_variant_overlap,517,BA2080,Anjo da sorte,2258,BA2080-07,3g6klysBWUB8Fhp0QfhvXw==,2,6078
+product_variant_overlap,519,BA2155,Anjo Protetor,2273,BA2155-04,H4i3gjfJoSCmnPYJX7nN5A==,2,11351
+product_variant_overlap,519,BA2155,Anjo Protetor,2268,BA2155-07,hHLoluu/CdYlF8qhRHneIQ==,2,12539
+product_variant_overlap,566,BA4200,Carrossel,2282,BA4200-02R,EVKIxKTDxNRevyk6BT63tw==,2,55763
+product_variant_overlap,566,BA4200,Carrossel,2283,BA4200-02A,yEYN0RKDK8kE3MMSyna+EA==,2,558255
+product_variant_overlap,565,BA4201,Carrossel,2278,BA4201-01A,zOgK9SL/cgyiaNjuy7f0PQ==,2,863149
+product_variant_overlap,565,BA4201,Carrossel,2279,BA4201-01R,YIuMGEikF/BLiJqpEOgc3A==,2,753053
+product_variant_overlap,565,BA4201,Carrossel,2281,BA4201-02R,6ZiXehN64zan6QbCDpOXmQ==,2,566209
+product_variant_overlap,565,BA4201,Carrossel,2280,BA4201-02A,7dQkgjE5PcgxlI16EdC+BA==,2,65328
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2292,BA4203-12,XjpjM5zP4VoZmqlZD0ZBww==,2,9407
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2291,BA4203-11,ZksyG+zzJkNmu9tuLX7xIw==,2,10611
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2290,BA4203-10,sbI/OFL172kNwlnN2OzbKQ==,2,10400
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2289,BA4203-09,FS+kDsKMy+vxXAV8JkEGzA==,2,9983
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2298,BA4203-06,CrsFgnk2ud/EH7A/r88Rmw==,2,9867
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2297,BA4203-05,GIjKIgDX2KFolNkjtQJnJQ==,2,10404
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2296,BA4203-04,n6mKgnly0i0emDQ79lOv4Q==,2,10271
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2295,BA4203-03,H1/feGhPLF+cVHHFLf/HaQ==,2,10521
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2294,BA4203-02,B5OCuHNMf0C+iyA1RaS7Lw==,2,13214
+product_variant_overlap,570,BA4203,Luz de Presença - Vários Modelos,2293,BA4203-01,DtrK/nucZZD2AO9mwGb4wg==,2,11794
+product_variant_overlap,808,BA4787M,Porta-Velas,2460,BA4788M,GSc4wpfFGiOV2vZJ+3xbTA==,2,41044
+product_variant_overlap,812,BA6000M,Peça de Decoração Cómoda,2463,BA6002M,SCwRJR3gsz0zFWzs+Yqzdg==,2,908549
+product_variant_overlap,812,BA6000M,Peça de Decoração Cómoda,2462,BA6001M,SCwRJR3gsz0zFWzs+Yqzdg==,2,908549
+product_variant_overlap,830,BN227,Bibelot Decoração,2469,BN227/4,iSAglLnp/aZK8wPUU2m7ZA==,2,49611
+product_variant_overlap,830,BN227,Bibelot Decoração,3237,BN227/1,FXmcZFqe2qxTE5Md9gU3/w==,2,66559
+product_variant_overlap,830,BN227,Bibelot Decoração,2470,BN227/6,+1P/1tMBAVvU1AUBasFcUQ==,2,85929
+product_variant_overlap,830,BN227,Bibelot Decoração,2468,BN227/2,AXIPjlMqXA4upJZI9tHZCA==,2,45728
+product_variant_overlap,831,BN250C,Joaninha Bibelot,3238,BN252C,aEfmjY/u69b8c7UW+wV4xg==,2,60916
+product_variant_overlap,831,BN250C,Joaninha Bibelot,2473,BN251C,aEfmjY/u69b8c7UW+wV4xg==,2,60916
+product_variant_overlap,833,BN360,Bibelot Cão,1625,,NaENlOlA0bLF/5HUs1LQZA==,2,241033
+product_variant_overlap,833,BN360,Bibelot Cão,2480,BN360/3,n//uAcA5aO6K07xtI6Njow==,2,257641
+product_variant_overlap,833,BN360,Bibelot Cão,2481,BN360/4,jQx4/lGTJhAjYs+Lv0k+YA==,2,233384
+product_variant_overlap,833,BN360,Bibelot Cão,2478,BN360/1,/RiCSH31lAZL2IQhKe0pyA==,2,85712
+product_variant_overlap,833,BN360,Bibelot Cão,2479,BN360/2,ewdc/uRIi4fjEn/wsKez3w==,2,225672
+product_variant_overlap,563,BN4030,Urso com Música,2275,BN4030AZ,rOc6PyHZFqjS0hxXS9rjZA==,2,802497
+product_variant_overlap,563,BN4030,Urso com Música,2274,BN4030RO,3Ww5nJ7FqAHdsKO8+w8Ttw==,2,716236
+product_variant_overlap,564,BN4031,Urso com Música,2277,BN4031RO,FxeZ00UjvwQTeF00GuFJMA==,2,704488
+product_variant_overlap,564,BN4031,Urso com Música,2276,BN4031AZ,jK3knxRPQRE7asZbsDwFow==,2,725658
+product_variant_overlap,839,BN553D,Bibelot Romã,2484,BN554D,pwJqZbhfJweL/TFo0nG8DA==,2,107900
+product_variant_overlap,840,BN672D,Bibelot Romã,2487,BN674,cRYBCA/qxtONqiaemkKZPg==,2,117264
+product_variant_overlap,840,BN672D,Bibelot Romã,2486,BN673D,cRYBCA/qxtONqiaemkKZPg==,2,117264
+product_variant_overlap,840,BN672D,Bibelot Romã,3631,BN218,cRYBCA/qxtONqiaemkKZPg==,2,117264
+product_variant_overlap,848,BN907,Joaninha Bibelot,2493,BN907V,/s3VcTNjzyePc276GO5MeA==,2,21280
+product_variant_overlap,1034,A9150/10,Moldura - Casamento – 25 e 50 Anos,4223,A9150/10A,kQ8NFyRrhe/FCIDGNROX+A==,2,690260
+product_variant_overlap,1034,A9150/10,Moldura - Casamento – 25 e 50 Anos,4226,A9150/15A,kQ8NFyRrhe/FCIDGNROX+A==,2,690260
+product_variant_overlap,1066,P17/7009,Guarda-Jóias Alianças,2689,P17/7013,yOYSdkUATyUWnFzYBJhocg==,2,271457
+product_variant_overlap,1066,P17/7009,Guarda-Jóias Alianças,2688,P17/7012,yOYSdkUATyUWnFzYBJhocg==,2,271457
+product_variant_overlap,1072,P2715,Salva de Prata,3505,P2715/25,ivDF7A5zDUGhXtn7TZeBvw==,2,103839
+product_variant_overlap,1072,P2715,Salva de Prata,3504,P2715/50,8KV5jhIyIjn357rI1VGv+Q==,2,224434
+product_variant_overlap,615,P4061,Copos com Aplicação em Prata,3453,P4061/50,xI5quLEEdN8loOo+Nb0ReA==,2,117011
+product_variant_overlap,615,P4061,Copos com Aplicação em Prata,3454,P4061/25,xI5quLEEdN8loOo+Nb0ReA==,2,117011
+product_variant_overlap,655,PX001,Concha em Prata,2357,PX001LP,HT74SymjwPuNKWG0wJUgSA==,2,307291
+product_variant_overlap,655,PX001,Concha em Prata,2356,PX001LG,ofBqNT7zwQBtrT3pAY/R5Q==,2,534363
+product_variant_overlap,656,PX003,Concha em Prata,2358,PX003LG,Gp6br0bzqstNhkgOVscEsg==,2,479336
+product_variant_overlap,656,PX003,Concha em Prata,2359,PX003LP,ON8XHrR2jV01Jk+TgtvlAQ==,2,382151
+product_variant_overlap,657,PX004,Concha em Prata,2361,PX004LP,VzlH0iSYYsod6JeTTlZeTw==,2,73456
+product_variant_overlap,658,PX008,Concha em Prata,2363,PX008LP,GFAp4i/1SDznq6mRcGr6Ew==,2,386167
+product_variant_overlap,658,PX008,Concha em Prata,2362,PX008LG,29yqnz9iFnALORQ8iw+xnA==,2,493304
+product_variant_overlap,482,B4207,Mealheiro,2245,B4207-03,OmpHSOa36/X1kC/G76kLxg==,2,13570
+product_variant_overlap,482,B4207,Mealheiro,2244,B4207-02,F1RIfJvk2IzsuNx7jRgP8A==,2,11463
+product_variant_overlap,1370,B3994,Bolsa Porta-Chupeta,2970,B3994SRO,h8+A5G2ifSDDLVqMh1Zf6w==,2,680858
+product_variant_overlap,474,A1869,Mini Rosa Perfumada,3228,A1869-01,0li3KHk7fS0q6fjS5xjP5g==,2,8616
+product_variant_overlap,474,A1869,Mini Rosa Perfumada,3229,A1869-02,bE06kF1BNzdA6T1T9gwjkQ==,2,5154
+product_variant_overlap,474,A1869,Mini Rosa Perfumada,3230,A1869-03,aRIFpVGmaoi+f2yJJPtQVg==,2,7619
+product_variant_overlap,474,A1869,Mini Rosa Perfumada,3231,A1869-04,312R200SWhMfgR9t1g1qGg==,2,7816
+product_variant_overlap,1398,B1901,Bibelot Fim de Curso,3224,B1901-04,9Pg1gU7ehE+yrLNi+nIRVQ==,2,26998
+product_variant_overlap,1398,B1901,Bibelot Fim de Curso,3223,B1901-05,oPXPETeMsMPTLntUJVcqag==,2,114458
+product_variant_overlap,731,R471,Bibelot Cegonha,3736,R471,rQ/audbrQsViBu7fRYmB3g==,2,845325
+product_variant_overlap,1234,A403,Moldura Criança Madeira,2823,A403MBAZ,Ibh0UHIwPn91bIKAWANctQ==,2,24734
+product_variant_overlap,1234,A403,Moldura Criança Madeira,2826,A403MCRO,GLgSpcTcmQaseXsRUv2+pg==,2,24372
+product_variant_overlap,1234,A403,Moldura Criança Madeira,2824,A403MBRO,GLgSpcTcmQaseXsRUv2+pg==,2,24372
+product_variant_overlap,1278,A287,Moldura Cão,3739,A287,tTRhUeKlljpFxXFXUTNTDg==,2,28431
+product_variant_overlap,1233,A3610,Moldura Anjo da Guarda,2819,A3610/13PC,xM4BFCtYyyqFLkXTX+t9Bg==,2,802484
+product_variant_overlap,1233,A3610,Moldura Anjo da Guarda,2821,A3610/9PC,xM4BFCtYyyqFLkXTX+t9Bg==,2,802484
+product_variant_overlap,700,B3946,Conjunto Com3 Peças,1492,"",zFc6aA2cI5SgLg7YND1Xsg==,2,16854
+product_variant_overlap,887,B2527CXT,Caixa Madeira Comunhão com Terços Menina,1679,,2/Gd96kjM1yN1UN/P5uldA==,2,24630
+product_variant_overlap,887,B2527CXT,Caixa Madeira Comunhão com Terços Menina,3963,B2529CXT,2/Gd96kjM1yN1UN/P5uldA==,2,24630
+product_variant_overlap,1585,PM33,Cruz de Chapa de Prata,3968,PM3382,qG74hpNcJuNn4uLKNQOY+Q==,2,195945
+product_variant_overlap,1953,PA1980S,ANEL MARCASSITES PRATA 925,5246,PA1980S,/rFiB7WCPIRT1VGNf4EiGQ==,2,521628
+product_variant_overlap,425,P17/7018,Guarda-Jóias Alianças,1215,P17/7021,PSjz9R1LlwvhFH9Mrx2sGA==,2,58241
+product_variant_overlap,424,P12/8007,Moldura Casamento Prata,900,P12/8015,GrdOxGf3lG9uLAJzvvquqQ==,2,197895
+product_variant_overlap,1372,B3993,Porta-Chupeta Bébé,2972,B3993PRO,vCrqbry8jPlRfuVTlZawIA==,2,6663
+product_variant_overlap,380,P1705/2,Moldura em Prata Ondas,816,P1705/3,x8N5h1Rb8dBa6kT2QHAU+Q==,2,1435595
+product_variant_overlap,1254,A959SAZ,Bolsa Porta-Chupeta,3996,A959SAZ,r0IvGFw8l1AJfcEtn8ubGw==,2,1139401
+product_variant_overlap,1361,B4424,Conjunto de 3 Peças Urso,2965,B4424RO,9lZqx4OW3OskMFjPt6wKuA==,2,1399476
+product_variant_overlap,284,P21/0002C,Porta-Chupeta Prata - Vários Modelos,610,P21/0002C,iXra3iQnY0CTqI/xUgMioA==,2,623892
+product_variant_overlap,1704,A278T,Talher de Criança,4334,,prIFv9hIoCAgtDifzG+Xqw==,2,37208
+product_variant_overlap,661,PCOXMPG,Concha Vieira em Prata,4007,PCOXMPG1,hZLDqyyGRFVvvH7KoEjrvQ==,2,358407
+product_variant_overlap,1685,A149,Moldura - Casamento - 25 e 50 Anos,4255,A149B/25,JGO68nWGX8ou/xzp+3Ys2A==,2,357206
+product_variant_overlap,1685,A149,Moldura - Casamento - 25 e 50 Anos,4247,A149C/25,JGO68nWGX8ou/xzp+3Ys2A==,2,357206
+product_variant_overlap,1685,A149,Moldura - Casamento - 25 e 50 Anos,4245,A149A/25,JGO68nWGX8ou/xzp+3Ys2A==,2,357206
+product_variant_overlap,1686,A160,Moldura - Casamento – 25 e 50 Anos,4263,A160A/50,BvFCd+wGxkwcWWJ9asjsuA==,2,88683
+product_variant_overlap,1404,B3990,Moldura Bebé Carrinho,3227,B3990DLRO,+aw+v1Z81dmDVDXAoAHUvA==,2,1492101
+product_variant_overlap,1404,B3990,Moldura Bebé Carrinho,3225,B3990BLRO,+aw+v1Z81dmDVDXAoAHUvA==,2,1492101
+product_variant_overlap,1044,AE6701/13,Moldura Casamento,4098,AE6700/13,8ogvT1EgYrXl4k2JoyZ0xA==,2,62216
+product_variant_overlap,1044,AE6701/13,Moldura Casamento,4096,AE6700/18,8ogvT1EgYrXl4k2JoyZ0xA==,2,62216

@@ -5,8 +5,17 @@ class Bo::DashboardsController < Bo::BaseController
 
   # GET /bo/dashboards
   def index
+    # Pure reps have no business on the org dashboard (leaks org-wide KPIs).
+    # Send them to their personal carteira instead — that's their CRM home.
+    if pure_sales_rep?
+      redirect_to bo_sales_rep_carteira_path(org_slug: current_organisation.slug)
+      return
+    end
+
     @organisation = current_organisation
     authorize :dashboard, :index?
+    @open_carts = Dashboard::Metrics.open_carts_detail(@organisation)
+    @customer_health = Dashboard::Metrics.customer_health(organisation: @organisation)
   end
 
   # GET /bo/dashboards/metrics

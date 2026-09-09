@@ -33,21 +33,35 @@
             <div class="col-md-12">
               <label class="form-label"><%= t('bo.categories.form.parent_category') %></label>
               <%
-                # Get all categories except current one, ordered by ancestry for tree-like display
+                # Get all categories except current one, sorted by full path
                 parent_options = current_organisation.categories.kept
                   .where.not(id: category.id)
-                  .order(:ancestry, :position)
+                  .sorted_by_full_path
                   .map { |c| [c.full_path, c.id] }
               %>
               <%= f.select :parent_id,
                     parent_options,
                     { include_blank: t('bo.categories.form.no_parent') },
-                    { class: "form-select", data: { category_form_target: "parentSelect", action: "change->category-form#checkDepth" } } %>
+                    { class: "form-select", data: { controller: "tom-select", category_form_target: "parentSelect", action: "change->category-form#checkDepth" } } %>
               <small class="text-muted"><%= t('bo.categories.form.parent_hint') %></small>
               <div class="alert alert-warning mt-2 d-none" data-category-form-target="depthWarning">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <%= t('bo.categories.form.depth_warning') %>
               </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-12">
+              <label class="form-label"><%= t('bo.categories.form.default_product_sort') %></label>
+              <%= f.select :default_product_sort,
+                    options_for_select(
+                      Product::SORT_OPTIONS.map { |k| [t("storefront.products.index.sort.#{k}"), k] },
+                      category.default_product_sort
+                    ),
+                    { include_blank: t('bo.categories.form.use_org_default') },
+                    { class: "form-select" } %>
+              <small class="text-muted"><%= t('bo.categories.form.default_product_sort_hint') %></small>
             </div>
           </div>
         </div>
@@ -60,12 +74,94 @@
           <h5 class="card-title mb-4"><%= t('bo.categories.form.appearance') %></h5>
 
           <div class="mb-3">
+            <label class="form-label"><%= t('bo.categories.form.photo') %></label>
+            <% if category.photo.attached? %>
+              <div class="mb-2">
+                <%= image_tag category.photo, style: "max-height: 80px; max-width: 100%; object-fit: cover;", class: "border rounded" %>
+              </div>
+            <% end %>
+            <%= f.file_field :photo, class: "form-control", accept: "image/png,image/jpeg,image/webp" %>
+            <small class="text-muted"><%= t('bo.categories.form.photo_hint') %></small>
+          </div>
+
+          <div class="mb-3">
             <label class="form-label"><%= t('bo.categories.form.color') %></label>
+
+            <%# Preset swatches. These only drive the hidden field below — the
+                free picker stays available for anything outside the palette. %>
+            <div class="category-swatches mb-2">
+              <% Category::NAV_COLORS.each do |preset| %>
+                <button type="button"
+                        class="category-swatch <%= 'selected' if category.color.to_s.casecmp?(preset) %>"
+                        style="background-color: <%= preset %>;"
+                        title="<%= preset %>"
+                        data-color="<%= preset %>"
+                        data-action="click->category-form#pickColor"
+                        data-category-form-target="swatch"></button>
+              <% end %>
+            </div>
+
             <div class="input-group">
-              <%= f.color_field :color, class: "form-control form-control-color", value: category.color.presence || "#6c757d" %>
-              <%= f.text_field :color, class: "form-control", placeholder: "#6c757d" %>
+              <%# Only the text field is named category[color] — the picker is
+                  unnamed and syncs into it. Two inputs sharing the name made
+                  the empty text field silently win and wipe the colour. %>
+              <input type="color"
+                     class="form-control form-control-color"
+                     value="<%= category.color.presence || '#6c757d' %>"
+                     aria-label="<%= t('bo.categories.form.color') %>"
+                     data-category-form-target="colorPicker"
+                     data-action="input->category-form#syncFromPicker">
+              <%= f.text_field :color, class: "form-control", placeholder: "#6c757d",
+                    data: { category_form_target: "colorText", action: "input->category-form#syncFromText" } %>
+              <button type="button" class="btn btn-outline-secondary"
+                      title="<%= t('bo.categories.form.color_clear') %>"
+                      data-action="click->category-form#clearColor">
+                <i class="fa-solid fa-eraser"></i>
+              </button>
+            </div>
+            <small class="text-muted"><%= t('bo.categories.form.color_hint') %></small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label"><%= t('bo.categories.form.nav_emphasis') %></label>
+            <div class="d-flex gap-3">
+              <div class="form-check">
+                <%= f.check_box :nav_bold, class: "form-check-input", id: "category_nav_bold",
+                      data: { category_form_target: "navBold", action: "change->category-form#updatePreview" } %>
+                <label class="form-check-label" for="category_nav_bold">
+                  <strong><%= t('bo.categories.form.nav_bold') %></strong>
+                </label>
+              </div>
+              <div class="form-check">
+                <%= f.check_box :nav_italic, class: "form-check-input", id: "category_nav_italic",
+                      data: { category_form_target: "navItalic", action: "change->category-form#updatePreview" } %>
+                <label class="form-check-label" for="category_nav_italic">
+                  <em><%= t('bo.categories.form.nav_italic') %></em>
+                </label>
+              </div>
+            </div>
+            <small class="text-muted d-block mb-2"><%= t('bo.categories.form.nav_emphasis_hint') %></small>
+
+            <div class="category-nav-preview">
+              <span class="category-nav-preview__label"><%= t('bo.categories.form.nav_preview') %></span>
+              <span data-category-form-target="preview" style="<%= category.nav_style %>">
+                <%= category.name.presence || t('bo.categories.form.nav_preview_placeholder') %>
+              </span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-3"><%= t('bo.categories.form.visibility') %></h5>
+          <div class="form-check form-switch">
+            <%= f.check_box :published, class: "form-check-input", id: "category_published" %>
+            <label class="form-check-label" for="category_published">
+              <%= t('bo.categories.form.published') %>
+            </label>
+          </div>
+          <small class="text-muted d-block mt-2"><%= t('bo.categories.form.published_hint') %></small>
         </div>
       </div>
 

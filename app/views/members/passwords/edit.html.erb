@@ -13,21 +13,33 @@
   <%= f.full_error :reset_password_token %>
 
   <div class="auth-field">
-    <%= f.input :password,
-                label: "New password",
-                required: true,
-                autofocus: true,
-                placeholder: "Enter your new password",
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
+    <label class="auth-label">New password</label>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.input :password,
+                  label: false,
+                  required: true,
+                  autofocus: true,
+                  placeholder: "Enter your new password",
+                  hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                  input_html: { autocomplete: "new-password", data: { password_visibility_target: "input" } } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
   </div>
 
   <div class="auth-field">
-    <%= f.input :password_confirmation,
-                label: "Confirm your new password",
-                required: true,
-                placeholder: "Confirm your new password",
-                input_html: { autocomplete: "new-password" } %>
+    <label class="auth-label">Confirm your new password</label>
+    <div class="auth-password-wrapper" data-controller="password-visibility">
+      <%= f.input :password_confirmation,
+                  label: false,
+                  required: true,
+                  placeholder: "Confirm your new password",
+                  input_html: { autocomplete: "new-password", data: { password_visibility_target: "input" } } %>
+      <button type="button" class="auth-password-toggle" data-action="password-visibility#toggle" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" data-password-visibility-target="icon"></i>
+      </button>
+    </div>
   </div>
 
   <div class="auth-actions">

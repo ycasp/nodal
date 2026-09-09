@@ -1,0 +1,45 @@
+<%#
+  Discount/promotion badges overlaid on the product card image.
+  Renders nothing if there's no meaningful discount.
+
+  Locals:
+    discount_info         — Hash from DiscountCalculator#discount_breakdown (or nil)
+    show_discount_badge   — Boolean, default true (the "-X%" pill)
+    show_promotion_badge  — Boolean, default true (the "PROMOÇÃO" pill, only if a product/category discount applies)
+%>
+<% show_discount_badge = local_assigns.fetch(:show_discount_badge, true) %>
+<% show_promotion_badge = local_assigns.fetch(:show_promotion_badge, true) %>
+<% product = local_assigns[:product] %>
+<% unlock = local_assigns[:unlock] %>
+<% pct = discount_info && discount_info[:has_discount] ? discount_info[:effective_discount][:percentage].to_f : 0 %>
+<% has_visible_discount = pct.finite? && pct > 0 %>
+<% has_promotion = discount_info && discount_info[:all_discounts]&.any? { |d| d[:type] == :product || d[:type] == :category } %>
+<%# A "flag-worthy" discount is a campaign (product/category), a per-product
+    special price, or a variant override — but NOT the customer's global tier,
+    which applies to everything and shouldn't make the whole catalog look on sale. %>
+<% has_flag = discount_info && discount_info[:all_discounts]&.any? { |d| [:product, :category, :customer_product, :variant].include?(d[:type]) } %>
+<% show_pct = show_discount_badge && has_visible_discount && has_flag %>
+<% show_promo = show_promotion_badge && has_promotion && current_organisation&.show_sale_badge %>
+<%# pct is the cheapest variant's effective % (= the max for a fixed € discount).
+    When that discount isn't uniform across a variable product's price range,
+    label it "up to" instead of a single, misleading percentage. %>
+<% up_to = false %>
+<% if show_pct && product&.variable? && (dr = product.discounted_price_range(current_customer, for_display: !@honest_cards, cart_context: @cart_context)) && dr[:range] && dr[:original_max].cents.positive? %>
+  <% pct_low = 1 - (dr[:final_max].to_f / dr[:original_max].to_f) %>
+  <% up_to = (pct - pct_low).abs > 0.005 %>
+<% end %>
+<% if show_pct || show_promo || unlock %>
+  <div class="product-card-badges">
+    <% if show_promo %>
+      <span class="badge product-card-sale-badge" style="<%= sale_badge_style(current_organisation) %>"><%= sale_badge_label(current_organisation) %></span>
+    <% end %>
+    <% if show_pct %>
+      <span class="badge bg-success product-card-discount-badge">
+        <%= up_to ? t('storefront.products.index.discount_up_to', percentage: (pct * 100).round(0)) : "-#{(pct * 100).round(0)}%" %>
+      </span>
+    <% elsif unlock %>
+      <%# Conditional discount not yet unlocked — show it with its condition, not as an applied price. %>
+      <span class="badge bg-primary product-card-discount-badge"><%= t('storefront.products.index.discount_from', discount: unlock[:discount_label], condition: unlock[:condition_label]) %></span>
+    <% end %>
+  </div>
+<% end %>

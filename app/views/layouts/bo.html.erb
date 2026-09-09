@@ -9,6 +9,8 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "actiontext", "data-turbo-track": "reload" %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.bootstrap5.min.css">
     <%= javascript_importmap_tags %>
   </head>
 
@@ -16,9 +18,14 @@
     <%= render "bo/shared/bo_sidebar" %>
     <%= render "bo/shared/bo_navbar" %>
 
-    <main class="bo-main-content">
+    <main class="bo-main-content" data-controller="bo-form-guard">
       <%= yield :bo_main_content %>
     </main>
+
+    <%# Body-level targets used by Turbo Stream actions that inject modals
+        (logins management, invitation share). Stable across all bo pages. %>
+    <div id="customer_logins_modal_target"></div>
+    <div id="invite_share_modal_target"></div>
 
     <%= render "shared/flashes" %>
   </body>

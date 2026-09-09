@@ -1,0 +1,150 @@
+<%# Bulk add-to-cart grid: shown on a variable product page when
+    product.add_to_cart_mode == "grid". Renders one row per visible variant
+    with its own qty input; one submit button bulk-adds the qty > 0 rows.
+    Single <table> layout to avoid duplicated inputs across breakpoints;
+    horizontal scroll on small viewports via .table-responsive. %>
+<% visible_variants = product.product_variants.published
+                              .where(is_default: false)
+                              .where.not(unit_price_cents: [nil, 0])
+                              .includes(variant_attribute_values: { product_attribute_value: :product_attribute })
+                              .to_a
+                              .select { |v| v.available? || v.effective_stock_policy != "hide" }
+                              .sort_by(&:natural_sort_key) %>
+
+<% preview_count = 4 %>
+<% interactive = !browsing_as_member? && !product.price_on_request? %>
+<% min_qty = product.min_quantity || 1 %>
+<% attribute_names = product.product_product_attributes.includes(:product_attribute).order(:position).map { |ppa| ppa.product_attribute.name } %>
+
+<%# Live combined-minimum counter (illustrative only — never blocks adding) %>
+<% combined_counter = interactive && product.min_quantity_combined? && product.enforced_min_quantity.present? && product.combined_min_reachable? %>
+<% in_cart_qty = combined_counter ? current_cart&.order_items&.where(product_id: product.id)&.sum(:quantity).to_i : 0 %>
+<% counter_data = combined_counter ? {
+     min_quantity_counter_min_value: product.enforced_min_quantity,
+     min_quantity_counter_in_cart_value: in_cart_qty,
+     min_quantity_counter_label_value: product.minimum_quantity_label,
+     min_quantity_counter_below_value: t('storefront.products.show.grid.min_counter_below'),
+     min_quantity_counter_met_value: t('storefront.products.show.grid.min_counter_met')
+   } : {} %>
+
+<%# Live unlock pricing for a conditional discount (nil when there's none). %>
+<% grid = interactive ? grid_live_pricing(product, visible_variants) : nil %>
+
+<% if visible_variants.empty? %>
+  <p class="text-muted small"><%= t('storefront.products.show.grid.no_variants') %></p>
+<% else %>
+  <% controllers = ["expandable"] %>
+  <% controllers << "min-quantity-counter" if combined_counter %>
+  <% controllers << "grid-pricing" if grid %>
+  <% wrapper_data = counter_data.merge(controller: controllers.join(" ")) %>
+  <% if grid %>
+    <% wrapper_data.merge!(
+         grid_pricing_pricing_value: grid[:pricing].to_json,
+         grid_pricing_condition_type_value: grid[:condition_type],
+         grid_pricing_threshold_value: grid[:threshold],
+         grid_pricing_scope_value: grid[:scope],
+         grid_pricing_cart_summed_value: grid[:cart_summed],
+         grid_pricing_currency_symbol_value: current_organisation.currency_symbol,
+         grid_pricing_product_pricing_outlet: "[data-controller~='product-pricing']"
+       ) %>
+  <% end %>
+  <div class="mb-4" <%= tag.attributes(data: wrapper_data) %>>
+    <%= form_with url: bulk_add_order_items_path(org_slug: params[:org_slug]),
+                  method: :post, local: true do |f| %>
+      <%= hidden_field_tag :product_id, product.id %>
+
+      <%# Carry the listing filters/page so the post-add redirect (and the
+          "back to products" link) returns to where the customer came from. %>
+      <%= hidden_field_tag :category, params[:category] if params[:category].present? %>
+      <% Array(params[:queries]).each do |query| %>
+        <%= hidden_field_tag "queries[]", query %>
+      <% end %>
+      <%= hidden_field_tag :page, params[:page] if params[:page].present? %>
+      <%= hidden_field_tag :promo, params[:promo] if params[:promo].present? %>
+      <%= render 'storefront/products/attrs_hidden_fields' %>
+
+      <% if combined_counter %>
+        <p class="small mb-2">
+          <i class="fa-solid fa-layer-group me-1 text-muted"></i><span class="text-muted" data-min-quantity-counter-target="output"></span>
+        </p>
+      <% elsif interactive && product.minimum_quantity_label %>
+        <p class="text-muted small mb-2">
+          <i class="fa-solid fa-circle-info me-1"></i><%= t('storefront.cart.minimum_per_variant', minimum: product.minimum_quantity_label) %>
+        </p>
+      <% end %>
+
+      <div class="table-responsive">
+        <table class="table align-middle mb-2">
+          <thead class="table-light">
+            <tr>
+              <th class="align-middle">
+                <%= t('storefront.products.show.grid.variant') %>
+                <% if attribute_names.any? %>
+                  <div class="text-muted fw-normal mt-1" style="font-size: 0.7rem;"><%= attribute_names.join(' / ') %></div>
+                <% end %>
+              </th>
+              <th class="text-center align-middle"><%= t('storefront.products.show.grid.sku') %></th>
+              <% if show_prices? %><th class="text-center align-middle"><%= t('storefront.products.show.grid.price') %></th><% end %>
+              <% if interactive %><th class="text-center align-middle" style="width: 140px;"><%= t('storefront.products.show.grid.quantity') %></th><% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% visible_variants.each_with_index do |variant, idx| %>
+              <% calc = DiscountCalculator.new(product: product, customer: current_customer, quantity: min_qty, variant: variant) %>
+              <% discounted = calc.effective_discount[:percentage].to_f > 0 %>
+              <% hidden = idx >= preview_count %>
+              <tr style="<%= 'display: none;' if hidden %>" <%= 'data-expandable-target="item"'.html_safe if hidden %>>
+                <td>
+                  <div class="fw-medium"><%= variant.option_values_string.presence || variant.name %></div>
+                  <% unless variant.purchasable? %>
+                    <span class="badge bg-danger-subtle text-danger small mt-1"><%= t('storefront.carts.show.stock.out_of_stock') %></span>
+                  <% end %>
+                </td>
+                <td class="text-muted small text-center align-middle"><%= variant.sku %></td>
+                <% if show_prices? %>
+                  <td class="text-center align-middle">
+                    <span class="text-decoration-line-through text-muted small d-block <%= 'd-none' unless discounted %>" data-grid-pricing-target="rowOriginal"><%= money_amount(calc.base_price) %></span>
+                    <span class="<%= 'text-success fw-medium' if discounted %>" data-grid-pricing-target="rowPrice"><%= money_amount(calc.final_price) %></span>
+                  </td>
+                <% end %>
+                <% if interactive %>
+                  <td class="text-center align-middle">
+                    <% input_data = { variant_id: variant.id } %>
+                    <% input_data[:min_quantity_counter_target] = "input" if combined_counter %>
+                    <% input_data[:grid_pricing_target] = "rowInput" if grid %>
+                    <% acts = [] %>
+                    <% acts << "input->min-quantity-counter#update" if combined_counter %>
+                    <% acts << "input->grid-pricing#update" if grid %>
+                    <% input_data[:action] = acts.join(" ") if acts.any? %>
+                    <%= number_field_tag "bulk_items[#{variant.id}]", 0, min: 0, class: "form-control text-center mx-auto d-block", style: "width: 100px;", data: input_data %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <%# The summed-condition tracker lives in the "Descontos Disponíveis" panel
+          above the grid (driven via the product-pricing outlet), so it matches
+          the simple-product layout — not a separate bar at the foot. %>
+
+      <% if visible_variants.size > preview_count %>
+        <div class="text-center my-3">
+          <a href="#" class="btn btn-outline-primary btn-sm fw-medium rounded-pill px-4"
+             data-expandable-target="toggle"
+             data-collapse-label="<i class='fa-solid fa-chevron-up me-1'></i> <%= t('storefront.products.show.grid.show_less') %>"
+             data-action="click->expandable#toggle">
+            <i class="fa-solid fa-chevron-down me-1"></i> <%= t('storefront.products.show.grid.show_more', count: visible_variants.size - preview_count) %>
+          </a>
+        </div>
+      <% end %>
+
+      <% if interactive %>
+        <button type="submit" class="btn btn-primary btn-lg w-100 mt-2" style="border-radius: 8px;">
+          <i class="fa-solid fa-cart-plus me-2"></i><%= t('storefront.products.show.grid.add_to_cart') %><span data-grid-pricing-target="buttonTotal"></span>
+        </button>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

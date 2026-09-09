@@ -1,0 +1,58 @@
+<%#
+  Unified card used in every home carousel.
+
+  Locals:
+    link_path     — required, the URL the card links to
+    name          — required, displayed beneath the image
+    image         — optional, ActiveStorage attachment / Blob
+    fallback_color — optional, CSS color for image-less cards (categories)
+    badge         — optional, single text badge (e.g. "Novo")
+    product       — optional, Product instance — only needed when show_price
+    discount_info — optional, DiscountCalculator#discount_breakdown hash
+    show_price    — optional, when true renders the price block under the name
+%>
+<% discount_info = local_assigns[:discount_info] %>
+<% show_price = local_assigns.fetch(:show_price, false) %>
+<% show_discount_badge = local_assigns.fetch(:show_discount_badge, true) %>
+<% show_sale_badge = local_assigns.fetch(:show_sale_badge, true) %>
+<%
+  pct = discount_info && discount_info[:has_discount] ? discount_info[:effective_discount][:percentage].to_f : 0
+  has_promo_badge = show_sale_badge && current_organisation&.show_sale_badge && discount_info && discount_info[:all_discounts]&.any? { |d| d[:type] == :product || d[:type] == :category }
+  show_pct_badge = show_discount_badge && pct.finite? && pct > 0
+%>
+<%= link_to link_path, class: "text-decoration-none" do %>
+  <div class="home-visual-card">
+    <% if has_promo_badge || show_pct_badge %>
+      <div class="home-visual-card__badges">
+        <% if has_promo_badge %>
+          <span class="home-visual-card__sale-badge" style="<%= sale_badge_style(current_organisation) %>"><%= sale_badge_label(current_organisation) %></span>
+        <% end %>
+        <% if show_pct_badge %>
+          <span class="home-visual-card__discount-badge">-<%= (pct * 100).round(0) %>%</span>
+        <% end %>
+      </div>
+    <% elsif defined?(badge) && badge.present? %>
+      <span class="home-visual-card__badge"><%= badge %></span>
+    <% end %>
+    <% if defined?(image) && image %>
+      <div class="home-visual-card__image-wrapper">
+        <%= image_tag image, class: "home-visual-card__image", alt: name, loading: "lazy" %>
+      </div>
+    <% elsif defined?(fallback_color) && fallback_color %>
+      <div class="home-visual-card__image-wrapper" style="background: <%= fallback_color %>;">
+      </div>
+    <% else %>
+      <div class="home-visual-card__placeholder">
+        <i class="fa-solid fa-image"></i>
+      </div>
+    <% end %>
+    <div class="home-visual-card__body">
+      <span class="home-visual-card__name"><%= name %></span>
+      <% if show_price && product %>
+        <div class="home-visual-card__price">
+          <%= render "storefront/shared/product_card_price", product: product, discount_info: discount_info %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

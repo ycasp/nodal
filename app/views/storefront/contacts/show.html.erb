@@ -1,96 +1,111 @@
-<div class="row justify-content-center">
-  <div class="col-lg-8">
-    <h2 class="mb-4"><%= t('storefront.contact.title') %></h2>
+<%= render "storefront/shared/page_header", title: t('storefront.contact.title') %>
 
-    <% if @organisation.has_contact_info? %>
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-            <% if @organisation.contact_email.present? || @organisation.phone.present? || @organisation.whatsapp.present? %>
-              <div class="col-md-6 mb-4 mb-md-0">
-                <h5 class="mb-3"><%= t('storefront.contact.get_in_touch') %></h5>
+<% has_contact = @organisation.contact_email.present? || @organisation.phone.present? || @organisation.whatsapp.present? %>
+<% has_location = @organisation.display_contact_address.present? || @organisation.business_hours.present? %>
 
-                <% if @organisation.contact_email.present? %>
-                  <div class="d-flex align-items-center mb-3">
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                      <i class="fa-solid fa-envelope text-primary"></i>
-                    </div>
-                    <div>
-                      <small class="text-muted d-block"><%= t('storefront.contact.email') %></small>
-                      <%= mail_to @organisation.contact_email, @organisation.contact_email, class: "text-decoration-none", style: "color: #{@organisation.effective_primary_color};" %>
-                    </div>
-                  </div>
-                <% end %>
+<% if has_contact || has_location %>
+  <div class="row g-4">
+    <% col_class = has_contact && has_location ? "col-md-6" : "col-md-8 mx-auto" %>
 
-                <% if @organisation.phone.present? %>
-                  <div class="d-flex align-items-center mb-3">
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                      <i class="fa-solid fa-phone text-primary"></i>
-                    </div>
-                    <div>
-                      <small class="text-muted d-block"><%= t('storefront.contact.phone') %></small>
-                      <%= link_to @organisation.phone, "tel:#{@organisation.phone.gsub(/\s/, '')}", class: "text-decoration-none", style: "color: #{@organisation.effective_primary_color};" %>
-                    </div>
-                  </div>
-                <% end %>
+    <% if has_contact %>
+      <div class="<%= col_class %>">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
+          <div class="card-body">
+            <h5 class="card-title mb-3">
+              <i class="fa-solid fa-message me-2" style="color: var(--org-secondary);"></i>
+              <%= t('storefront.contact.get_in_touch') %>
+            </h5>
 
-                <% if @organisation.whatsapp.present? %>
-                  <div class="d-flex align-items-center mb-3">
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                      <i class="fa-brands fa-whatsapp text-success"></i>
-                    </div>
-                    <div>
-                      <small class="text-muted d-block"><%= t('storefront.contact.whatsapp') %></small>
-                      <%= link_to @organisation.whatsapp, "https://wa.me/#{@organisation.whatsapp.gsub(/\D/, '')}", target: "_blank", class: "text-decoration-none", style: "color: #{@organisation.effective_primary_color};" %>
-                    </div>
-                  </div>
-                <% end %>
+            <% if @organisation.contact_email.present? %>
+              <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+                  <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div>
+                  <small class="text-muted d-block"><%= t('storefront.contact.email') %></small>
+                  <%= mail_to @organisation.contact_email, @organisation.contact_email, class: "text-decoration-none", style: "color: #{@organisation.effective_primary_color};" %>
+                </div>
               </div>
             <% end %>
 
-            <% if @organisation.display_contact_address.present? || @organisation.business_hours.present? %>
-              <div class="col-md-6">
-                <% if @organisation.display_contact_address.present? %>
-                  <h5 class="mb-3"><%= t('storefront.contact.address') %></h5>
-                  <div class="d-flex align-items-start mb-4">
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px;">
-                      <i class="fa-solid fa-location-dot text-primary"></i>
-                    </div>
-                    <div>
-                      <% addr = @organisation.display_contact_address %>
-                      <% if addr.street_name.present? %>
-                        <%= addr.street_name %><%= " #{addr.street_nr}" if addr.street_nr.present? %><br>
-                      <% end %>
-                      <% if addr.postal_code.present? || addr.city.present? %>
-                        <%= [addr.postal_code, addr.city].compact.reject(&:blank?).join(' ') %><br>
-                      <% end %>
-                      <% if addr.country.present? %>
-                        <%= addr.country %>
-                      <% end %>
-                    </div>
-                  </div>
-                <% end %>
+            <% if @organisation.phone.present? %>
+              <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+                  <i class="fa-solid fa-phone"></i>
+                </div>
+                <div>
+                  <small class="text-muted d-block"><%= t('storefront.contact.phone') %></small>
+                  <%= link_to @organisation.phone, "tel:#{@organisation.phone.gsub(/\s/, '')}", class: "text-decoration-none", style: "color: #{@organisation.effective_primary_color};" %>
+                </div>
+              </div>
+            <% end %>
 
-                <% if @organisation.business_hours.present? %>
-                  <h5 class="mb-3"><%= t('storefront.contact.business_hours') %></h5>
-                  <div class="d-flex align-items-start">
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px;">
-                      <i class="fa-solid fa-clock text-primary"></i>
-                    </div>
-                    <div>
-                      <%= simple_format @organisation.business_hours, {}, wrapper_tag: "div" %>
-                    </div>
-                  </div>
-                <% end %>
+            <% if @organisation.whatsapp.present? %>
+              <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px; background: rgba(var(--org-primary-rgb), 0.1);">
+                  <i class="fa-brands fa-whatsapp text-success"></i>
+                </div>
+                <div>
+                  <small class="text-muted d-block"><%= t('storefront.contact.whatsapp') %></small>
+                  <%= link_to @organisation.whatsapp, "https://wa.me/#{@organisation.whatsapp.gsub(/\D/, '')}", target: "_blank", class: "text-decoration-none", style: "color: #{@organisation.effective_primary_color};" %>
+                </div>
               </div>
             <% end %>
           </div>
         </div>
       </div>
-    <% else %>
-      <div class="alert alert-info">
-        <%= t('storefront.contact.no_contact_info') %>
+    <% end %>
+
+    <% if has_location %>
+      <div class="<%= col_class %>">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
+          <div class="card-body">
+            <h5 class="card-title mb-3">
+              <i class="fa-solid fa-building me-2" style="color: var(--org-secondary);"></i>
+              <%= t('storefront.contact.location_and_hours') %>
+            </h5>
+
+            <% if @organisation.display_contact_address.present? %>
+              <div class="d-flex align-items-start mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+                  <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div>
+                  <% addr = @organisation.display_contact_address %>
+                  <% if addr.street_name.present? %>
+                    <%= addr.street_name %><%= " #{addr.street_nr}" if addr.street_nr.present? %><br>
+                  <% end %>
+                  <% if addr.postal_code.present? || addr.city.present? %>
+                    <%= [addr.postal_code, addr.city].compact.reject(&:blank?).join(' ') %><br>
+                  <% end %>
+                  <% if addr.country.present? %>
+                    <%= addr.country %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <% if @organisation.display_contact_address.present? && @organisation.business_hours.present? %>
+              <hr>
+            <% end %>
+
+            <% if @organisation.business_hours.present? %>
+              <div class="d-flex align-items-start">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px; background: rgba(var(--org-primary-rgb), 0.1); color: var(--org-primary);">
+                  <i class="fa-solid fa-clock"></i>
+                </div>
+                <div>
+                  <%= simple_format @organisation.business_hours, {}, wrapper_tag: "div" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </div>
     <% end %>
   </div>
-</div>
+<% else %>
+  <div class="alert alert-info">
+    <%= t('storefront.contact.no_contact_info') %>
+  </div>
+<% end %>

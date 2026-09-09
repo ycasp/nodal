@@ -20,6 +20,7 @@
 <!-- Page Body -->
 <div class="bo-page-body">
   <div class="card">
+    <div class="table-responsive">
     <table class="table table-hover mb-0">
       <thead class="table-light">
         <tr>
@@ -52,6 +53,9 @@
               <span class="badge <%= org_member.role == 'owner' ? 'bg-danger' : org_member.role == 'admin' ? 'bg-warning text-dark' : 'bg-secondary' %>">
                 <%= t("bo.team_members.roles.#{org_member.role}") %>
               </span>
+              <% if org_member.is_sales_rep? %>
+                <span class="badge bg-info ms-1">Vendedor</span>
+              <% end %>
             </td>
             <td>
               <% if org_member.pending_invitation? %>
@@ -88,8 +92,14 @@
                 <% end %>
               <% end %>
 
+              <% if org_member.is_sales_rep? && current_org_member&.role&.in?(%w[owner admin]) %>
+                <%= link_to carteira_bo_team_member_path(params[:org_slug], org_member), class: "btn btn-sm btn-link text-muted", title: "Gerir carteira" do %>
+                  <i class="fa-solid fa-briefcase"></i>
+                <% end %>
+              <% end %>
+
               <% if policy(org_member).edit? %>
-                <%= link_to edit_bo_team_member_path(params[:org_slug], org_member), class: "btn btn-sm btn-link text-muted", title: t('bo.team_members.index.edit_role') do %>
+                <%= link_to edit_bo_team_member_path(params[:org_slug], org_member), class: "btn btn-sm btn-link text-muted", title: is_self ? t('bo.team_members.index.edit_profile', default: 'Edit profile') : t('bo.team_members.index.edit_role') do %>
                   <i class="fa-solid fa-pen-to-square"></i>
                 <% end %>
               <% end %>
@@ -108,6 +118,7 @@
         <% end %>
       </tbody>
     </table>
+    </div>
   </div>
 </div>
 

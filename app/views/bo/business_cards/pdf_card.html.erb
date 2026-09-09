@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    <%= render "bo/quick_access_tokens/pdf_styles", primary_color: @organisation.effective_primary_color || "#111" %>
+    <%= render "bo/business_cards/styles_overrides" %>
+    @page { size: 85mm 55mm; margin: 0; }
+    html, body { width: 85mm; height: 55mm; margin: 0; padding: 0; }
+    .card { width: 85mm; height: 55mm; }
+  </style>
+</head>
+<body>
+  <%= render "bo/business_cards/card_block",
+             organisation: @organisation,
+             qr_svg: @qr_svg %>
+</body>
+</html>

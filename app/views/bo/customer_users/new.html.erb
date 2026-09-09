@@ -1,0 +1,40 @@
+<% content_for :bo_main_content do %>
+
+<div class="bo-page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to bo_customer_path(params[:org_slug], @customer), class: "text-muted text-decoration-none" do %>
+        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <% end %>
+
+      <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+
+      <div>
+        <h1><%= t('bo.customer_users.new.title') %></h1>
+        <span class="text-muted"><%= t('bo.customer_users.new.subtitle', company: @customer.company_name) %></span>
+      </div>
+    </div>
+
+    <div class="bo-page-actions">
+      <%= link_to bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-secondary" do %>
+        <%= t('bo.common.actions.cancel', default: 'Cancel') %>
+      <% end %>
+      <button type="submit" form="new-customer-user-form" class="btn btn-primary">
+        <i class="fa-solid fa-paper-plane"></i> <%= t('bo.customer_users.new.submit') %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="bo-page-body">
+  <%= form_with model: @customer_user,
+                url: bo_customer_customer_users_path(org_slug: params[:org_slug], customer_id: @customer.id),
+                method: :post,
+                id: "new-customer-user-form" do |f| %>
+    <%= render "form", f: f %>
+  <% end %>
+</div>
+
+<% end %>
