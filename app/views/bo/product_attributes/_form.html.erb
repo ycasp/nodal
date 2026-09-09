@@ -24,37 +24,10 @@
           </div>
 
           <div class="row g-3 mt-2">
-            <div class="col-md-6">
-              <label class="form-label"><%= t('bo.product_attributes.form.display_type') %></label>
-              <%= f.select :display_type,
-                    ProductAttribute::DISPLAY_TYPES.map { |dt| [t("bo.product_attributes.form.display_types.#{dt}"), dt] },
-                    {},
-                    class: "form-select" %>
-              <small class="text-muted"><%= t('bo.product_attributes.form.display_type_hint') %></small>
-            </div>
-            <div class="col-md-6 d-flex align-items-end gap-4">
-              <div class="form-check mb-2">
+            <div class="col-md-12">
+              <div class="form-check">
                 <%= f.check_box :active, class: "form-check-input" %>
                 <%= f.label :active, t('bo.product_attributes.form.active'), class: "form-check-label" %>
-              </div>
-            </div>
-          </div>
-
-          <div data-controller="toggle-visibility">
-            <div class="row g-3 mt-2">
-              <div class="col-md-6 d-flex align-items-end">
-                <div class="form-check mb-2">
-                  <%= f.check_box :show_on_card, class: "form-check-input", data: { action: "change->toggle-visibility#toggle", toggle_visibility_target: "trigger" } %>
-                  <%= f.label :show_on_card, t('bo.product_attributes.form.show_on_card'), class: "form-check-label" %>
-                </div>
-              </div>
-              <div class="col-md-6" <%= 'style="display:none"'.html_safe unless product_attribute.show_on_card? %> data-toggle-visibility-target="content">
-                <label class="form-label"><%= t('bo.product_attributes.form.card_display_mode') %></label>
-                <%= f.select :card_display_mode,
-                      ProductAttribute::CARD_DISPLAY_MODES.map { |m| [t("bo.product_attributes.form.card_display_modes.#{m}"), m] },
-                      {},
-                      class: "form-select form-select-sm" %>
-                <small class="text-muted"><%= t('bo.product_attributes.form.card_display_mode_hint') %></small>
               </div>
             </div>
           </div>
@@ -71,7 +44,7 @@
           </div>
 
           <div data-nested-fields-target="container">
-            <%= f.fields_for :product_attribute_values, product_attribute.product_attribute_values.order(created_at: :desc) do |value_form| %>
+            <%= f.fields_for :product_attribute_values do |value_form| %>
               <%= render 'value_fields', f: value_form %>
             <% end %>
           </div>

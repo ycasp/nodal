@@ -1,7 +1,6 @@
 require_relative "boot"
 
 require "rails/all"
-require_relative "../app/middleware/block_bot_user_agents"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -38,20 +37,7 @@ module Nodal
     config.i18n.fallbacks = true
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 
-    # Use Solid Queue for background jobs (PostgreSQL-backed, no Redis needed)
-    config.active_job.queue_adapter = :solid_queue
-
-    config.middleware.insert_before Rack::Runtime, BlockBotUserAgents
-
-    # Host used to serve the BO and as the always-on fallback for storefront.
-    # Custom-domain requests redirect BO traffic here. Override via env var
-    # for dev/test or alternative deployments.
-    config.x.canonical_host = ENV.fetch("CANONICAL_HOST", "nodal-seiri.dev")
-
-    # Domain used in the "no-reply@…" From: header of outgoing emails. By
-    # default we strip a leading "www." from canonical_host so the sender
-    # lives on the apex that Resend authorises; override here when the
-    # convention doesn't fit (e.g. mail.example.com).
-    config.x.mail_sender_domain = ENV.fetch("MAIL_SENDER_DOMAIN", nil)
+    # Use Sidekiq for background jobs
+    config.active_job.queue_adapter = :sidekiq
   end
 end

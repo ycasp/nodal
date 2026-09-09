@@ -4,11 +4,9 @@ module BrandingHelper
 
     primary = organisation.effective_primary_color
     secondary = organisation.effective_secondary_color
-    campaign = organisation.effective_campaign_color
     primary_hover = darken_color(primary, 15)
     contrast = contrast_color(primary)
     primary_rgb = hex_to_rgb(primary)
-    secondary_rgb = hex_to_rgb(secondary)
 
     content_tag(:style) do
       <<~CSS.html_safe
@@ -18,24 +16,9 @@ module BrandingHelper
           --org-secondary: #{secondary};
           --org-primary-contrast: #{contrast};
           --org-primary-rgb: #{primary_rgb};
-          --org-secondary-rgb: #{secondary_rgb};
-          --campaign-color: #{campaign};
         }
       CSS
     end
-  end
-
-  # Label for the storefront promotion badge: the org's custom text, or the
-  # translated default ("PROMOÇÃO"/"SALE"/"OFERTA") when unset.
-  def sale_badge_label(organisation)
-    organisation&.sale_badge_text.presence || t('storefront.products.index.sale_badge')
-  end
-
-  # Inline style for the promotion badge: the org's colour as background, with a
-  # black/white text colour picked for contrast so it stays readable.
-  def sale_badge_style(organisation)
-    bg = organisation&.effective_sale_badge_color || '#dc3545'
-    "background-color: #{bg}; color: #{contrast_color(bg)};"
   end
 
   def organisation_favicon_tag(organisation)

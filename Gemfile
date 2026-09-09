@@ -42,7 +42,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.2"
+# gem "image_processing", "~> 1.2"
 
 gem "bootstrap", "~> 5.3"
 gem "autoprefixer-rails"
@@ -83,48 +83,16 @@ gem 'discard'        # Soft delete
 # gem for money handling
 gem 'money-rails', '~> 1.12'
 
-# pagination
-gem 'pagy', '~> 9.0'
-
 # background jobs
-gem 'solid_queue', '~> 1.1'
+gem 'sidekiq', '~> 7.0'
+gem 'sidekiq-scheduler', '~> 5.0'
+gem 'redis', '~> 5.0'
 
 # HTTP client for ERP integrations
 gem 'faraday', '~> 2.0'
 
-# ZIP file handling for product image import — only loaded by the
-# image import service / rake task, kept out of the boot path.
-gem 'rubyzip', '~> 2.3', require: false
-
-# Excel file parsing for product import — only loaded by import jobs.
-gem 'roo', '~> 2.10', require: false
-
-# Excel file generation for exports — only loaded by ExportService.
-gem 'caxlsx', '~> 4.1', require: false
-
-# PDF generation from HTML (uses Chrome headless). Referenced at
-# class-load time by GenerateQuickAccessPdfsJob#retry_on, so eager
-# loading would pull it in anyway — keep it required at boot.
-gem 'grover', '~> 1.1'
-
-# QR code generation (used only by QuickAccessPdfRenderer).
-gem 'rqrcode', '~> 2.2', require: false
-
-# Code128 barcode generation for the catalog PDF (scan-to-cart). Rendered as
-# inline SVG in the catalog templates; required lazily by CatalogHelper.
-gem 'barby', '~> 0.7', require: false
-
-# PDF merging for chunked catalog generation — only by CatalogPdfService.
-gem 'combine_pdf', '~> 1.0', require: false
-
-# Firebird database client for direct ERP connections
-# Requires libfbclient native library (installed on Heroku via Aptfile)
-# Install with: bundle config set --local with firebird && bundle install
-group :firebird do
-  gem 'fb', '~> 0.9', require: false
-end
-
-# Resend for mailing (via SMTP, no gem needed)
+# sendgrid for mailing
+gem 'sendgrid-ruby'
 
 group :development, :test do
   gem "dotenv-rails"

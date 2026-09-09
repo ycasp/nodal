@@ -1,21 +1,18 @@
 <% content_for :bo_main_content do%>
 
-<div class="bo-page-header">
+<div class="container-fluid py-4">
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-start mb-4">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_orders_path(org_slug: @current_organisation.slug), class: "text-muted text-decoration-none" do %>
-        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <%= link_to bo_orders_path(org_slug: @current_organisation.slug), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
       <% end %>
       <div>
-        <h1><%= t('bo.orders.new.title') %></h1>
-        <p><%= t('bo.orders.new.subtitle') %></p>
+        <h1 class="h3 mb-0"><%= t('bo.orders.new.title') %></h1>
+        <p class="text-muted mb-0"><%= t('bo.orders.new.subtitle') %></p>
       </div>
     </div>
   </div>
-</div>
-
-<div class="bo-page-body">
 
   <div class="row">
     <div class="col-lg-9">
@@ -38,14 +35,13 @@
             <h5 class="card-title mb-4"><%= t('bo.orders.form.customer') %></h5>
             <div class="mb-3">
               <%= f.label :customer_id, t('bo.orders.form.select_customer'), class: "form-label" %>
-              <%= f.collection_select :customer_id, @customers, :id, :company_name, { prompt: t('bo.orders.form.choose_customer') }, { class: "form-select", data: { controller: "tom-select" } } %>
+              <%= f.collection_select :customer_id, @customers, :id, :company_name, { prompt: t('bo.orders.form.choose_customer') }, { class: "form-select" } %>
             </div>
           </div>
         </div>
 
         <!-- Order Items -->
-        <div class="card mb-4" data-controller="order-items"
-             data-order-items-pricing-url-value="<%= variant_pricing_bo_orders_path(params[:org_slug]) %>">
+        <div class="card mb-4" data-controller="order-items">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h5 class="card-title mb-0"><%= t('bo.orders.show.order_items') %></h5>
@@ -58,17 +54,16 @@
               <table class="table align-middle mb-0">
                 <thead class="table-light">
                   <tr>
-                    <th style="width: 34%"><%= t('bo.common.product') %></th>
-                    <th style="width: 12%"><%= t('bo.orders.form.quantity') %></th>
-                    <th style="width: 18%"><%= t('bo.orders.form.unit_price') %></th>
-                    <th style="width: 14%"><%= t('bo.orders.form.discount') %></th>
-                    <th style="width: 17%"><%= t('bo.common.total') %></th>
+                    <th style="width: 40%"><%= t('bo.common.product') %></th>
+                    <th style="width: 15%"><%= t('bo.orders.form.quantity') %></th>
+                    <th style="width: 20%"><%= t('bo.orders.form.unit_price') %></th>
+                    <th style="width: 20%"><%= t('bo.common.total') %></th>
                     <th style="width: 5%"></th>
                   </tr>
                 </thead>
                 <tbody data-order-items-target="container">
                   <%= f.fields_for :order_items do |item_form| %>
-                    <%= render "order_items_fields", f: item_form %>
+                    <%= render "order_items_fields", f: item_form, products: @products %>
                   <% end %>
                 </tbody>
               </table>
@@ -84,7 +79,35 @@
             </div>
           </div>
 
-          <%= render "order_item_template" %>
+          <template data-order-items-target="template">
+            <tr>
+              <td>
+                <select name="order[order_items_attributes][NEW_INDEX][product_id]" class="form-select form-select-sm" data-action="change->order-items#updatePrice">
+                  <option value=""><%= t('bo.orders.form.select_product') %></option>
+                  <% @products.each do |product| %>
+                    <option value="<%= product.id %>" data-price="<%= product.price %>"><%= product.name %></option>
+                  <% end %>
+                </select>
+              </td>
+              <td>
+                <input type="number" name="order[order_items_attributes][NEW_INDEX][quantity]" class="form-control form-control-sm" value="1" min="1" data-quantity-field data-action="input->order-items#calculate">
+              </td>
+              <td>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text">$</span>
+                  <input type="number" name="order[order_items_attributes][NEW_INDEX][unit_price]" class="form-control form-control-sm" step="0.01" min="0" data-price-field data-action="input->order-items#calculate">
+                </div>
+              </td>
+              <td>
+                <span class="fw-medium">$<span data-line-total>0.00</span></span>
+              </td>
+              <td>
+                <button type="button" class="btn btn-sm btn-link text-danger p-0" data-action="order-items#remove">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </template>
         </div>
 
         <!-- Order Details -->
@@ -120,6 +143,28 @@
           <%= link_to t('bo.common.actions.cancel'), bo_orders_path(org_slug: @current_organisation.slug), class: "btn btn-outline-secondary" %>
         </div>
       <% end %>
+    </div>
+
+    <!-- Right Column - Products Reference -->
+    <div class="col-lg-3">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="mb-3">
+            <i class="fa-solid fa-box me-2 text-primary"></i><%= t('bo.orders.form.available_products') %>
+          </h6>
+          <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+            <% @products.each do |product| %>
+              <div class="list-group-item px-0 py-2">
+                <div class="fw-medium small"><%= product.name %></div>
+                <div class="d-flex justify-content-between text-muted small">
+                  <span><%= product.sku || t('bo.orders.form.no_sku') %></span>
+                  <span>$<%= number_with_precision(product.price, precision: 2) %></span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

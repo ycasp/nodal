@@ -1,59 +1,19 @@
-<div class="category-sidebar sidebar-sticky" data-controller="storefront-category-tree">
-  <% if params[:category].present? || Array(params[:queries]).any? || params[:attrs].present? %>
-    <div class="mb-3">
-      <%= link_to products_path(org_slug: params[:org_slug]), class: "category-clear-link" do %>
-        <i class="fa-solid fa-times me-2"></i><%= t('storefront.products.index.clear_filters') %>
-      <% end %>
-    </div>
-  <% end %>
-
-  <h6 class="category-sidebar-title"><%= t('storefront.products.index.categories') %></h6>
-
-  <ul class="category-list">
-    <li class="category-list-item">
-      <% all_params = { org_slug: params[:org_slug], queries: params[:queries] } %>
-      <% all_params[:sort] = params[:sort] if params[:sort].present? %>
-      <%= link_to products_path(**all_params),
-          class: "category-link #{'active' if params[:category].blank? && params[:promo].blank?}" do %>
-        <%= t('storefront.products.index.all_products') %>
-      <% end %>
-    </li>
-    <% if current_organisation.has_active_promotions? %>
-      <% campaign_has_children = @on_promotion && @campaign_categories&.any? %>
-      <li class="category-list-item" data-storefront-category-tree-target="item">
-        <%= link_to products_path(org_slug: params[:org_slug], promo: 1),
-            class: "category-link category-link--campaign #{'active' if params[:promo].present? && params[:category].blank?}",
-            data: campaign_has_children ? { action: "click->storefront-category-tree#toggleFromLink", storefront_category_tree_target: "parentLink" } : {} do %>
-          <span class="category-link-name"><%= t('storefront.products.index.on_promotion') %></span>
-          <% if campaign_has_children %>
-            <span class="category-link-right">
-              <i class="fa-solid fa-chevron-right category-chevron expanded" data-storefront-category-tree-target="icon"></i>
-            </span>
+<div class="card mt-3">
+  <div class="card-body">
+    <h6 class="card-title mb-3"><%= t('storefront.products.index.categories') %></h6>
+    <div class="category-sidebar" data-controller="storefront-category-tree">
+      <ul class="list-unstyled mb-0">
+        <li>
+          <%= link_to products_path(org_slug: params[:org_slug], queries: params[:queries]),
+              class: "category-link d-block py-1 #{'active fw-bold' if Array(params[:categories]).empty?}" do %>
+            <i class="fa-solid fa-grid-2 me-2"></i>
+            <%= t('storefront.products.index.all_products') %>
           <% end %>
+        </li>
+        <% categories.each do |category| %>
+          <%= render 'storefront/shared/category_tree_item', category: category, current_categories: local_assigns[:current_categories] %>
         <% end %>
-        <% if campaign_has_children %>
-          <ul class="category-list category-children" data-storefront-category-tree-target="children">
-            <% @campaign_categories.each do |campaign_category| %>
-              <li class="category-list-item">
-                <%= link_to products_path(org_slug: params[:org_slug], promo: 1, category: campaign_category.id),
-                    class: "category-link #{'active' if @current_category&.id == campaign_category.id}" do %>
-                  <span class="category-link-name" style="<%= campaign_category.nav_style %>"><%= campaign_category.name %></span>
-                  <span class="category-link-right">
-                    <span class="category-count"><%= @campaign_category_counts[campaign_category.id] %></span>
-                  </span>
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
-      </li>
-    <% end %>
-    <%# Hide the normal category tree while on the "Campanhas" view, so the
-        promo categories aren't duplicated alongside the full tree. %>
-    <% unless @on_promotion %>
-      <% categories.each do |category| %>
-        <%= render 'storefront/shared/category_tree_item', category: category, current_categories: local_assigns[:current_categories] %>
-      <% end %>
-    <% end %>
-  </ul>
+      </ul>
+    </div>
+  </div>
 </div>

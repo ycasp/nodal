@@ -1,7 +1,6 @@
 <footer class="storefront-footer border-top mt-auto">
   <% if current_organisation.has_contact_info? %>
-    <!-- Desktop footer -->
-    <div class="container py-4 d-none d-md-block">
+    <div class="container py-4">
       <div class="row align-items-center">
         <div class="col-md-6 mb-3 mb-md-0">
           <div class="d-flex flex-wrap gap-4">
@@ -27,22 +26,7 @@
             <% end %>
           </div>
         </div>
-        <div class="col-md-6 text-md-end d-flex align-items-center justify-content-md-end gap-3">
-          <% if current_organisation.instagram_url.present? %>
-            <%= link_to current_organisation.instagram_url, target: "_blank", class: "text-muted fs-5", title: "Instagram" do %>
-              <i class="fa-brands fa-instagram"></i>
-            <% end %>
-          <% end %>
-          <% if current_organisation.facebook_url.present? %>
-            <%= link_to current_organisation.facebook_url, target: "_blank", class: "text-muted fs-5", title: "Facebook" do %>
-              <i class="fa-brands fa-facebook"></i>
-            <% end %>
-          <% end %>
-          <% if current_organisation.linkedin_url.present? %>
-            <%= link_to current_organisation.linkedin_url, target: "_blank", class: "text-muted fs-5", title: "LinkedIn" do %>
-              <i class="fa-brands fa-linkedin"></i>
-            <% end %>
-          <% end %>
+        <div class="col-md-6 text-md-end">
           <%= link_to contact_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary btn-sm" do %>
             <i class="fa-solid fa-address-card me-1"></i>
             <%= t('storefront.footer.contact_us') %>
@@ -50,39 +34,7 @@
         </div>
       </div>
     </div>
-
-    <!-- Mobile footer (simplified) -->
-    <div class="container py-4 d-md-none">
-      <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
-        <% if current_organisation.instagram_url.present? %>
-          <%= link_to current_organisation.instagram_url, target: "_blank", class: "text-muted fs-5", title: "Instagram" do %>
-            <i class="fa-brands fa-instagram"></i>
-          <% end %>
-        <% end %>
-        <% if current_organisation.facebook_url.present? %>
-          <%= link_to current_organisation.facebook_url, target: "_blank", class: "text-muted fs-5", title: "Facebook" do %>
-            <i class="fa-brands fa-facebook"></i>
-          <% end %>
-        <% end %>
-        <% if current_organisation.linkedin_url.present? %>
-          <%= link_to current_organisation.linkedin_url, target: "_blank", class: "text-muted fs-5", title: "LinkedIn" do %>
-            <i class="fa-brands fa-linkedin"></i>
-          <% end %>
-        <% end %>
-        <%= link_to contact_path(org_slug: params[:org_slug]), class: "btn btn-outline-secondary btn-sm" do %>
-          <i class="fa-solid fa-address-card me-1"></i>
-          <%= t('storefront.footer.contact_us') %>
-        <% end %>
-      </div>
-    </div>
   <% end %>
-
-  <div class="container py-2">
-    <div class="d-flex justify-content-center gap-3">
-      <%= link_to t("footer.legal.terms"), terms_path(org_slug: current_organisation.slug), class: "text-muted small text-decoration-none" %>
-      <%= link_to t("footer.legal.privacy"), privacy_path(org_slug: current_organisation.slug), class: "text-muted small text-decoration-none" %>
-    </div>
-  </div>
 
   <%= render "storefront/shared/powered_by_nodal" %>
 </footer>

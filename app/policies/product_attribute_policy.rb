@@ -8,31 +8,31 @@ class ProductAttributePolicy < ApplicationPolicy
   end
 
   def new?
-    !pure_sales_rep? && member_working_for_organisation?
+    member_working_for_organisation?
   end
 
   def create?
-    !pure_sales_rep? && member_working_for_organisation?
+    member_working_for_organisation?
   end
 
   def edit?
-    !pure_sales_rep? && belongs_to_organisation?
+    belongs_to_organisation?
   end
 
   def update?
-    edit?
+    belongs_to_organisation?
   end
 
   def destroy?
-    !pure_sales_rep? && belongs_to_organisation?
+    belongs_to_organisation?
   end
 
   def restore?
-    !pure_sales_rep? && belongs_to_organisation?
+    belongs_to_organisation?
   end
 
   def reorder?
-    !pure_sales_rep? && member_working_for_organisation?
+    member_working_for_organisation?
   end
 
   private

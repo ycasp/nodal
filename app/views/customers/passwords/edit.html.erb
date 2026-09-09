@@ -1,0 +1,47 @@
+<%= render "customers/shared/auth_logo" %>
+
+<h1 class="auth-title"><%= t('auth.reset_password.title') %></h1>
+<p class="auth-subtitle"><%= t('auth.reset_password.subtitle') %></p>
+
+<%= simple_form_for(resource, as: resource_name, url: customer_password_path(org_slug: @organisation.slug), html: { method: :put, class: "auth-form" }) do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.input :reset_password_token, as: :hidden %>
+  <%= f.full_error :reset_password_token %>
+
+  <div class="auth-field">
+    <%= f.input :password,
+                label: t('auth.reset_password.new_password'),
+                required: true,
+                autofocus: true,
+                placeholder: t('auth.reset_password.new_password_placeholder'),
+                hint: (@minimum_password_length ? t('auth.reset_password.password_hint', count: @minimum_password_length) : nil),
+                input_html: { autocomplete: "new-password" } %>
+  </div>
+
+  <div class="auth-field">
+    <%= f.input :password_confirmation,
+                label: t('auth.reset_password.confirm_password'),
+                required: true,
+                placeholder: t('auth.reset_password.confirm_password_placeholder'),
+                input_html: { autocomplete: "new-password" } %>
+  </div>
+
+  <div class="auth-actions">
+    <%= f.button :submit, t('auth.reset_password.submit'), class: "auth-submit-btn" %>
+  </div>
+<% end %>
+
+<div class="auth-divider">
+  <span><%= t('auth.reset_password.or') %></span>
+</div>
+
+<div class="auth-footer">
+  <p><%= t('auth.reset_password.remember_password') %> <%= link_to t('auth.reset_password.sign_in'), new_customer_session_path(org_slug: @organisation.slug), class: "auth-link" %></p>
+</div>
+
+<div class="auth-powered-by">
+  <a href="https://www.nodal-seiri.dev" target="_blank" rel="noopener">
+    <%= t('auth.sign_in.powered_by') %> <span class="auth-powered-logo"><span class="auth-powered-icon">N</span>odal</span>
+  </a>
+</div>

@@ -52,7 +52,11 @@
               <tr>
                 <td style="background-color: #fef3c7; padding: 16px 24px; border-radius: 12px; text-align: center;">
                   <span style="font-size: 28px; font-weight: 700; color: #92400e;">
-                    <%= @discount.value_display %> <%= t('mailers.common.off') %>
+                    <% if @discount.percentage? %>
+                      <%= @discount.value_display %> <%= t('mailers.common.off') %>
+                    <% else %>
+                      <%= @discount.discount_value.format %> <%= t('mailers.common.off') %>
+                    <% end %>
                   </span>
                   <p style="margin: 4px 0 0 0; font-size: 14px; color: #92400e;"><%= t('mailers.customer_mailer.order_discount.on_entire_order') %></p>
                 </td>

@@ -1,6 +1,6 @@
 <% content_for :bo_main_content do %>
 
-<div class="bo-page-header">
+<div class="mb-4">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
       <div class="rounded bg-success d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
@@ -8,21 +8,19 @@
       </div>
 
       <div>
-        <h1><%= t('bo.products.import.results_title') %></h1>
+        <h4 class="mb-0"><%= t('bo.products.import.results_title') %></h4>
         <span class="text-muted"><%= t('bo.products.import.results_subtitle') %></span>
       </div>
     </div>
 
     <%= link_to bo_products_path(params[:org_slug]), class: "btn btn-primary" do %>
-      <i class="fa-solid fa-arrow-left fa-lg"></i> <%= t('bo.products.import.back_to_products') %>
+      <i class="fa-solid fa-arrow-left"></i> <%= t('bo.products.import.back_to_products') %>
     <% end %>
   </div>
 </div>
 
-<div class="bo-page-body">
-
 <div class="row">
-  <div class="col-md-3 mb-3">
+  <div class="col-md-4 mb-3">
     <div class="card text-center h-100">
       <div class="card-body">
         <div class="display-4 text-success mb-2"><%= @result.created %></div>
@@ -31,7 +29,7 @@
     </div>
   </div>
 
-  <div class="col-md-3 mb-3">
+  <div class="col-md-4 mb-3">
     <div class="card text-center h-100">
       <div class="card-body">
         <div class="display-4 text-primary mb-2"><%= @result.updated %></div>
@@ -40,16 +38,7 @@
     </div>
   </div>
 
-  <div class="col-md-3 mb-3">
-    <div class="card text-center h-100">
-      <div class="card-body">
-        <div class="display-4 text-info mb-2"><%= @result.photos_attached %></div>
-        <h5 class="card-title text-muted"><%= t('bo.products.import.photos_attached') %></h5>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-3 mb-3">
+  <div class="col-md-4 mb-3">
     <div class="card text-center h-100">
       <div class="card-body">
         <div class="display-4 <%= @result.errors.any? ? 'text-danger' : 'text-muted' %> mb-2"><%= @result.errors.size %></div>
@@ -103,7 +92,5 @@
     <%= t('bo.products.import.no_products_imported') %>
   </div>
 <% end %>
-
-</div>
 
 <% end %>

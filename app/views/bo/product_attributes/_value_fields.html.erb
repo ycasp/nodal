@@ -2,7 +2,7 @@
   <div class="row g-2 align-items-end">
     <div class="col-md-5">
       <label class="form-label small"><%= t('bo.product_attributes.form.value_name') %></label>
-      <%= f.text_field :value, class: "form-control form-control-sm", placeholder: t('bo.product_attributes.form.placeholders.value'), oninput: "this.value = this.value.replace(/,/g, '.')" %>
+      <%= f.text_field :value, class: "form-control form-control-sm", placeholder: t('bo.product_attributes.form.placeholders.value') %>
     </div>
     <div class="col-md-3">
       <label class="form-label small"><%= t('bo.product_attributes.form.value_slug') %></label>
@@ -11,12 +11,8 @@
     <div class="col-md-2">
       <label class="form-label small"><%= t('bo.product_attributes.form.color') %></label>
       <div class="input-group input-group-sm">
-        <input type="color" class="form-control form-control-color form-control-sm"
-               value="<%= f.object.color_hex.presence || '#6c757d' %>"
-               style="width: 38px;"
-               oninput="this.nextElementSibling.value = this.value">
-        <%= f.text_field :color_hex, class: "form-control form-control-sm", placeholder: "#FFFFFF", style: "font-size: 0.75rem;",
-            oninput: "this.previousElementSibling.value = this.value || '#6c757d'" %>
+        <%= f.color_field :color_hex, class: "form-control form-control-color form-control-sm", value: f.object.color_hex.presence || "#6c757d", style: "width: 38px;" %>
+        <%= f.text_field :color_hex, class: "form-control form-control-sm", placeholder: "#FFFFFF", style: "font-size: 0.75rem;" %>
       </div>
     </div>
     <div class="col-md-2 text-end">

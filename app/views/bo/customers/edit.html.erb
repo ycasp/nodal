@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do%>
 
-<div class="bo-page-header">
+<div class="mb-4">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_customer_path(params[:org_slug], @customer, filter_params_hash), class: "text-muted text-decoration-none" do %>
-        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <%= link_to bo_customer_path(params[:org_slug], @customer), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
       <% end %>
 
       <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 60px; height: 60px; font-size: 1.25rem;">
@@ -12,13 +12,13 @@
       </div>
 
       <div>
-        <h1>Editar empresa: <%= @customer.company_name %></h1>
-        <p class="text-muted small">Edita dados fiscais e de contacto da empresa. Para gerir as pessoas/logins, volta à página do cliente.</p>
+        <h4 class="mb-0"><%= t('bo.customers.edit.title') %></h4>
+        <span class="text-muted"><%= @customer.company_name %></span>
       </div>
     </div>
 
-    <div class="bo-page-actions">
-      <%= link_to bo_customer_path(params[:org_slug], @customer, filter_params_hash), class: "btn btn-outline-secondary" do %>
+    <div class="d-flex gap-2 align-items-center">
+      <%= link_to bo_customer_path(params[:org_slug], @customer), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
       <button type="submit" form="customer-form" class="btn btn-primary">
@@ -28,96 +28,33 @@
   </div>
 </div>
 
-<div class="bo-page-body">
-<%= form_with model: @customer, url: bo_customer_path(params[:org_slug], @customer, filter_params_hash), method: :patch, id: "customer-form" do |f| %>
+<%= form_with model: @customer, url: bo_customer_path(params[:org_slug], @customer), method: :patch, id: "customer-form" do |f| %>
   <div class="row g-3">
     <div class="col-md-8">
       <div class="card mb-3">
         <div class="card-body">
-          <% if pure_sales_rep? %>
-            <h5 class="card-title mb-1">Empresa</h5>
-            <p class="text-muted small mb-4">Dados fiscais e de contacto desta empresa.</p>
-          <% else %>
-            <h5 class="card-title mb-4"><%= t('bo.customers.form.contact_information') %></h5>
-          <% end %>
+          <h5 class="card-title mb-4"><%= t('bo.customers.form.contact_information') %></h5>
 
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label"><%= t('bo.customers.form.contact_name') %></label>
-              <%= f.text_field :contact_name, class: "form-control", placeholder: t('bo.customers.form.contact_name_placeholder') %>
+              <%= f.text_field :contact_name, class: "form-control", placeholder: t('bo.customers.form.placeholders.contact_name') %>
             </div>
             <div class="col-md-6">
-              <label class="form-label"><%= pure_sales_rep? ? "Email da empresa" : t('bo.customers.form.email') %></label>
-              <%= f.email_field :email, class: "form-control", placeholder: t('bo.customers.form.email_placeholder') %>
+              <label class="form-label"><%= t('bo.customers.form.email') %></label>
+              <%= f.email_field :email, class: "form-control", placeholder: t('bo.customers.form.placeholders.email') %>
             </div>
           </div>
 
           <div class="row g-3 mt-1">
             <div class="col-md-6">
-              <label class="form-label"><%= pure_sales_rep? ? "Telefone da empresa" : t('bo.customers.form.phone') %></label>
-              <%= f.text_field :contact_phone, class: "form-control", placeholder: t('bo.customers.form.phone_placeholder') %>
+              <label class="form-label"><%= t('bo.customers.form.phone') %></label>
+              <%= f.text_field :contact_phone, class: "form-control", placeholder: t('bo.customers.form.placeholders.phone') %>
             </div>
           </div>
-
-          <% if pure_sales_rep? %>
-            <hr class="my-4">
-
-            <%# Read-only fiscal/billing data — admin-only to change.
-                Rendered as plain text (no inputs) to avoid suggesting editability. %>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label mb-1">NIF</label>
-                <div class="text-muted small py-1">
-                  <i class="fa-solid fa-building me-1"></i> <%= @customer.taxpayer_id.presence || "—" %>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label mb-1">Morada de Faturação</label>
-                <div class="text-muted small py-1">
-                  <i class="fa-solid fa-location-dot me-1"></i> <%= @customer.billing_address&.full_address || "—" %>
-                </div>
-              </div>
-            </div>
-
-            <hr class="my-4">
-
-            <%# Shipping addresses — existing are read-only, new ones can be added %>
-            <h6 class="mb-3">Moradas de Envio</h6>
-            <% if @customer.shipping_addresses.any? %>
-              <ul class="list-unstyled small mb-3">
-                <% @customer.shipping_addresses.each do |addr| %>
-                  <li class="text-muted py-1">
-                    <i class="fa-solid fa-truck me-1"></i> <%= addr.full_address %>
-                  </li>
-                <% end %>
-              </ul>
-            <% end %>
-
-            <div data-controller="nested-addresses">
-              <div data-nested-addresses-target="container">
-                <%# Only renders NEW shipping address inputs (no fields_for over existing,
-                    so the existing records aren't touched on submit). %>
-              </div>
-
-              <template data-nested-addresses-target="template">
-                <%= f.fields_for(
-                  :shipping_addresses_with_archived,
-                  Address.new(address_type: "shipping", active: true),
-                  child_index: "NEW_RECORD"
-                ) do |sa| %>
-                  <%= render "shipping_address_fields", f: sa %>
-                <% end %>
-              </template>
-
-              <button type="button" class="btn btn-sm btn-outline-primary mt-2" data-action="nested-addresses#add">
-                <i class="fa-solid fa-plus"></i> Adicionar morada de envio
-              </button>
-            </div>
-          <% end %>
         </div>
       </div>
 
-      <% unless pure_sales_rep? %>
       <div class="card">
         <div class="card-body">
           <h5 class="card-title mb-4"><%= t('bo.customers.form.company_details') %></h5>
@@ -125,7 +62,7 @@
           <div class="row g-3">
             <div class="col-md-12">
               <label class="form-label"><%= t('bo.customers.form.company_name') %></label>
-              <%= f.text_field :company_name, class: "form-control", placeholder: t('bo.customers.form.company_name_placeholder') %>
+              <%= f.text_field :company_name, class: "form-control", placeholder: t('bo.customers.form.placeholders.company_name') %>
             </div>
           </div>
 
@@ -203,11 +140,9 @@
           </div>
         </div>
       </div>
-      <% end %>
     </div>
 
     <div class="col-md-4">
-      <% unless pure_sales_rep? %>
       <div class="card mb-3">
         <div class="card-body">
           <h5 class="card-title mb-4"><%= t('bo.customers.form.account_status') %></h5>
@@ -217,24 +152,6 @@
             <label class="form-check-label" for="activeSwitch"><%= t('bo.customers.form.active_customer') %></label>
           </div>
           <small class="text-muted"><%= t('bo.customers.form.inactive_hint') %></small>
-
-          <hr class="my-3">
-
-          <div class="form-check form-switch">
-            <%= f.check_box :email_notifications_enabled, class: "form-check-input", role: "switch", id: "emailNotificationsSwitch" %>
-            <label class="form-check-label" for="emailNotificationsSwitch"><%= t('bo.customers.form.email_notifications') %></label>
-          </div>
-          <small class="text-muted"><%= t('bo.customers.form.email_notifications_hint') %></small>
-        </div>
-      </div>
-
-      <div class="card mb-3">
-        <div class="card-body">
-          <h5 class="card-title mb-4"><%= t('bo.customers.form.category') %></h5>
-          <%= f.select :customer_category_id,
-              options_from_collection_for_select(@customer_categories, :id, :name, @customer.customer_category_id),
-              { include_blank: t('bo.customers.form.no_category') },
-              class: "form-select" %>
         </div>
       </div>
 
@@ -253,51 +170,8 @@
           </div>
         </div>
       </div>
-      <% else %>
-      <div class="card border-info">
-        <div class="card-body">
-          <h5 class="card-title mb-3"><i class="fa-solid fa-info-circle text-info me-2"></i>Edição limitada</h5>
-          <p class="small text-muted mb-0">
-            Como vendedor, podes atualizar dados de contacto (nome, email, telefone) mas não a empresa, NIF ou moradas — essas alterações requerem um admin.
-          </p>
-        </div>
-      </div>
-      <% end %>
     </div>
   </div>
 <% end %>
-
-<%# Separate form (outside the main customer form) for vendedor atribuído.
-    Only admins/owners can change it — pure reps don't see this card. %>
-<% if current_org_member&.role&.in?(%w[owner admin]) %>
-  <div class="row g-3 mt-3">
-    <div class="col-md-8 offset-md-0">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-3"><i class="fa-solid fa-user-tie me-2"></i>Vendedor atribuído</h5>
-          <%= form_with url: bo_customer_customer_assignment_path(org_slug: current_organisation.slug, customer_id: @customer.id), method: :post, local: true, class: "d-flex gap-2 align-items-center flex-wrap" do %>
-            <% rep_options = current_organisation.org_members.where(is_sales_rep: true).joins(:member).includes(:member).map { |om| [om.display_name, om.id] } %>
-            <%= select_tag :org_member_id,
-                  options_for_select([["Nenhum (sem vendedor)", nil]] + rep_options, @customer.sales_rep&.id),
-                  class: "form-select",
-                  style: "max-width: 360px;" %>
-            <button type="submit" class="btn btn-primary">
-              <i class="fa-solid fa-check me-1"></i> Atualizar vendedor
-            </button>
-            <% if @customer.sales_rep %>
-              <small class="text-muted ms-2">
-                Atual: <strong><%= @customer.sales_rep.display_name %></strong>
-                <% if (assigned = @customer.customer_assignment&.assigned_at) %>
-                  (desde <%= l(assigned.to_date, format: :short) %>)
-                <% end %>
-              </small>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </div>
-<% end %>
-</div>
 
 <% end %>

@@ -4,13 +4,12 @@ class DiscountCalculator
   # for_display: true - shows all available discounts (ignoring min_quantity) for product pages
   # for_display: false - only shows applicable discounts (respecting min_quantity) for cart/checkout
   # variant: optional ProductVariant - if provided, uses variant price as base price
-  def initialize(product:, customer: nil, quantity: 1, for_display: false, variant: nil, cart_context: nil)
+  def initialize(product:, customer: nil, quantity: 1, for_display: false, variant: nil)
     @product = product
     @customer = customer
     @quantity = quantity
     @for_display = for_display
-    @variant = variant || pick_reference_variant
-    @cart_context = cart_context
+    @variant = variant || product.default_variant
   end
 
   # Returns all applicable discounts with metadata
@@ -39,34 +38,11 @@ class DiscountCalculator
     base_price - final_price
   end
 
-  # Returns only the discounts that actually contribute to the final price
-  def applied_discounts
-    @applied_discounts ||= begin
-      return [] if all_discounts.empty?
-
-      stackable = all_discounts.select { |d| d[:stackable] }
-      exclusive = all_discounts.reject { |d| d[:stackable] }
-
-      applied = []
-
-      # Best exclusive discount wins among non-stackable
-      if exclusive.any?
-        best = find_best_exclusive(exclusive)
-        applied << best[:discount] if best[:discount]
-      end
-
-      # All stackable discounts are applied
-      applied += stackable
-      applied
-    end
-  end
-
   # Returns display-friendly breakdown
   def discount_breakdown
     {
       base_price: base_price,
       all_discounts: all_discounts,
-      applied_discounts: applied_discounts,
       effective_discount: effective_discount,
       final_price: final_price,
       savings: savings,
@@ -77,103 +53,31 @@ class DiscountCalculator
 
   private
 
-  # Evaluates a discount's condition. For a "summed" condition the threshold is
-  # checked against the cart-wide total for the discount's target (a product's
-  # variants, or all products in a category); otherwise against this line.
-  def meets_condition?(source)
-    qty, amount = condition_inputs(source)
-    source.condition_met?(quantity: qty, line_amount_cents: amount)
-  end
-
-  def condition_inputs(source)
-    return [quantity, @line_amount_cents] unless source.summed_condition? && @cart_context
-
-    if source.product_id
-      [@cart_context.product_quantity(source.product_id), @cart_context.product_amount_cents(source.product_id)]
-    elsif source.category_id
-      [@cart_context.category_quantity(source.category_id), @cart_context.category_amount_cents(source.category_id)]
-    else
-      [quantity, @line_amount_cents]
-    end
-  end
-
-  # Builds a line-level discount hash for a source that carries a condition
-  # (ProductDiscount / CustomerProductDiscount via HasDiscountCondition).
-  def build_line_discount(type, label, source, meets)
-    {
-      type: type,
-      discount_type: source.discount_type,
-      value: source.discount_value,
-      stackable: source.stackable,
-      label: label,
-      valid_until: source.valid_until,
-      source: source,
-      meets_condition: meets,
-      condition: source.condition_requirement,
-      # Back-compat with the quantity "unlock" badge (amount conditions land in
-      # the generalised cart nudge — Phase 2).
-      meets_min_quantity: meets,
-      min_quantity_required: (source.quantity_condition? ? source.min_quantity : nil)
-    }
-  end
-
-  # On variable products the default variant is a placeholder with no price,
-  # so for display we pick the cheapest visible non-default variant — that
-  # way base_price/final_price/percentage are meaningful on listings/cards.
-  # Visibility matches the storefront rule: hidden (out-of-stock + hide policy)
-  # variants are excluded so the displayed range/price reflects what the
-  # customer can actually see and buy.
-  def pick_reference_variant
-    default = product.default_variant
-    return default unless for_display && product.has_variants?
-
-    candidates = product.product_variants
-                        .where(is_default: false, published: true)
-                        .where.not(unit_price_cents: [nil, 0])
-                        .to_a
-                        .select { |v| v.available? || v.effective_stock_policy != 'hide' }
-    cheapest = candidates.min_by(&:unit_price_cents)
-    cheapest || default
-  end
-
   def collect_discounts
     discounts = []
-    # Value of this line (base price × quantity), for amount-based conditions.
-    @line_amount_cents = (base_price * quantity).cents
 
     # 1. Product-level discounts (global, for all customers)
-    # Variant-level overrides: custom discount replaces product discounts,
-    # exclude_from_discounts skips them entirely
-    if variant&.has_custom_discount?
-      discounts << {
-        type: :variant,
-        discount_type: variant.custom_discount_type,
-        value: variant.custom_discount_value,
-        stackable: false,
-        label: "Variant Discount",
-        valid_until: nil,
-        source: variant
-      }
-    elsif variant&.exclude_from_discounts?
-      # Skip product discounts entirely
+    # for_display: true - show all available discounts (ignore min_quantity)
+    # for_display: false - only applicable discounts (respect min_quantity)
+    product_discounts = if for_display
+      product.product_discounts.active
     else
-      # for_display: true - show all available discounts (ignore the condition)
-      # for_display: false - only discounts whose condition (quantity or €) is met
-      product.product_discounts.active.each do |pd|
-        meets = meets_condition?(pd)
-        next if !for_display && !meets
+      product.product_discounts.active.where("min_quantity <= ?", quantity)
+    end
 
-        discounts << build_line_discount(:product, "Product Sale", pd, meets)
-      end
-
-      # Category-level discounts: find active discounts for any category
-      # the product belongs to, including ancestor categories
-      find_category_discounts.each do |cd|
-        meets = meets_condition?(cd)
-        next if !for_display && !meets
-
-        discounts << build_line_discount(:category, "Category Sale", cd, meets)
-      end
+    product_discounts.each do |pd|
+      meets_min_quantity = quantity >= pd.min_quantity
+      discounts << {
+        type: :product,
+        discount_type: pd.discount_type,
+        value: pd.discount_value,
+        stackable: pd.stackable,
+        label: "Product Sale",
+        valid_until: pd.valid_until,
+        source: pd,
+        meets_min_quantity: meets_min_quantity,
+        min_quantity_required: pd.min_quantity
+      }
     end
 
     return discounts unless customer
@@ -181,16 +85,15 @@ class DiscountCalculator
     # 2. Customer-product specific discounts
     cpd = product.active_discount_for(customer)
     if cpd && cpd.active?
-      meets = meets_condition?(cpd)
-      discounts << build_line_discount(:customer_product, "Your Special Price", cpd, meets) if for_display || meets
-    end
-
-    # 2b. Customer-category specific discounts
-    find_customer_category_discounts.each do |ccpd|
-      meets = meets_condition?(ccpd)
-      next if !for_display && !meets
-
-      discounts << build_line_discount(:customer_product, "Your Special Price", ccpd, meets)
+      discounts << {
+        type: :customer_product,
+        discount_type: cpd.discount_type,
+        value: cpd.discount_percentage,  # CustomerProductDiscount uses discount_percentage
+        stackable: cpd.stackable,
+        label: "Your Special Price",
+        valid_until: cpd.valid_until,
+        source: cpd
+      }
     end
 
     # 3. Customer global discount (client tier)
@@ -311,8 +214,6 @@ class DiscountCalculator
       end
     end
 
-    return { percentage: 0, savings: Money.new(0, currency), source: :none, label: nil } if best.nil?
-
     effective_pct = (best_savings.to_f / base_price.to_f).round(4) rescue 0
 
     {
@@ -329,44 +230,6 @@ class DiscountCalculator
 
     result = price - discount_info[:savings]
     [result, Money.new(0, currency)].max
-  end
-
-  def find_category_discounts
-    # Collect all category IDs the product belongs to, plus their ancestors
-    category_ids = product.categories.flat_map { |cat| cat.path_ids }.uniq
-    return [] if category_ids.empty?
-
-    ProductDiscount.active
-      .for_category
-      .where(organisation: product.organisation, category_id: category_ids)
-  end
-
-  def find_customer_category_discounts
-    return [] unless customer
-
-    category_ids = product.categories.flat_map { |cat| cat.path_ids }.uniq
-    return [] if category_ids.empty?
-
-    # Direct customer match
-    direct = CustomerProductDiscount.active
-      .for_category
-      .where(customer: customer, organisation: product.organisation, category_id: category_ids)
-
-    # Also include customer_category-based matches
-    if customer.customer_category_id.present?
-      category_based = CustomerProductDiscount.active
-        .for_category
-        .where(customer_category_id: customer.customer_category_id, organisation: product.organisation, category_id: category_ids)
-        .where(customer_id: nil)
-
-      # Direct customer discounts take precedence — only include category-based for categories not already covered
-      covered_category_ids = direct.pluck(:category_id)
-      category_based = category_based.where.not(category_id: covered_category_ids) if covered_category_ids.any?
-
-      return direct.to_a + category_based.to_a
-    end
-
-    direct.to_a
   end
 
   def currency

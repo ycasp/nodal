@@ -37,7 +37,7 @@
           <div class="row g-3">
             <div class="col-md-12">
               <div class="form-check">
-                <%= f.check_box :track_stock, class: "form-check-input", data: { controller: "toggle-field", toggle_field_target_value: "#stock-quantity-field", action: "change->toggle-field#change" } %>
+                <%= f.check_box :track_stock, class: "form-check-input", data: { controller: "toggle-field", toggle_field_target_value: "#stock-quantity-field" } %>
                 <%= f.label :track_stock, t('bo.product_variants.form.track_stock'), class: "form-check-label" %>
               </div>
               <small class="text-muted"><%= t('bo.product_variants.form.track_stock_hint') %></small>
@@ -60,10 +60,7 @@
           <% if variant.photo.attached? %>
             <div class="mb-3">
               <%= image_tag variant.photo.variant(resize_to_limit: [200, 200]), class: "rounded mb-2" %>
-              <div class="form-check mt-1">
-                <%= check_box_tag "product_variant[remove_photo]", "1", false, class: "form-check-input", id: "remove_photo" %>
-                <label class="form-check-label text-danger small" for="remove_photo"><%= t('bo.product_variants.form.remove_image') %></label>
-              </div>
+              <p class="text-muted small mb-0"><%= t('bo.product_variants.form.current_image') %></p>
             </div>
           <% end %>
 
@@ -81,22 +78,8 @@
           <h5 class="card-title mb-3"><%= t('bo.product_variants.form.availability') %></h5>
 
           <div class="form-check mb-3">
-            <%= f.check_box :published, class: "form-check-input" %>
-            <%= f.label :published, t('bo.product_variants.form.published'), class: "form-check-label" %>
-          </div>
-
-          <div class="mb-3">
-            <%= f.label :stock_policy, t('bo.product_variants.form.stock_policy'), class: "form-label" %>
-            <% org_strategy = t("bo.product_variants.form.stock_policy_org_#{current_organisation.out_of_stock_strategy}") %>
-            <%= f.select :stock_policy,
-              options_for_select([
-                [t('bo.product_variants.form.stock_policy_inherit', strategy: org_strategy), 'inherit'],
-                [t('bo.product_variants.form.stock_policy_track_only'), 'track_only'],
-                [t('bo.product_variants.form.stock_policy_show_badge'), 'show_badge'],
-                [t('bo.product_variants.form.stock_policy_hide'), 'hide']
-              ], variant.stock_policy || 'inherit'),
-              {}, class: "form-select form-select-sm" %>
-            <small class="text-muted d-block mt-1"><%= t('bo.product_variants.form.stock_policy_hint') %></small>
+            <%= f.check_box :available, class: "form-check-input" %>
+            <%= f.label :available, t('bo.product_variants.form.available'), class: "form-check-label" %>
           </div>
 
           <% if variant.persisted? && !variant.is_default? %>
@@ -109,26 +92,24 @@
         </div>
       </div>
 
-      <% current_value_ids = variant.persisted? ? variant.attribute_values.pluck(:id) : [] %>
-
-      <% if @product_values_by_attribute.present? %>
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title mb-3"><%= t('bo.product_variants.form.options') %></h5>
-            <% @product_values_by_attribute.each do |attribute, values| %>
-              <%= render 'bo/product_variants/attribute_select', attribute: attribute, values: values, current_value_ids: current_value_ids, used_value_ids: @used_value_ids %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-
-      <% if @extra_values_by_attribute.present? %>
+      <% if variant.persisted? && variant.attribute_values.any? %>
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title mb-3"><%= t('bo.product_variants.form.add_attribute') %></h5>
-            <% @extra_values_by_attribute.each do |attribute, values| %>
-              <%= render 'bo/product_variants/attribute_select', attribute: attribute, values: values, current_value_ids: current_value_ids, used_value_ids: @used_value_ids %>
-            <% end %>
+            <h5 class="card-title mb-3"><%= t('bo.product_variants.form.options') %></h5>
+            <dl class="row mb-0">
+              <% variant.attribute_values.includes(:product_attribute).each do |value| %>
+                <dt class="col-6"><%= value.product_attribute.name %></dt>
+                <dd class="col-6">
+                  <% if value.color_hex.present? %>
+                    <span class="badge" style="background-color: <%= value.color_hex %>; color: <%= contrast_color(value.color_hex) %>;">
+                      <%= value.value %>
+                    </span>
+                  <% else %>
+                    <span class="badge bg-secondary"><%= value.value %></span>
+                  <% end %>
+                </dd>
+              <% end %>
+            </dl>
           </div>
         </div>
       <% end %>

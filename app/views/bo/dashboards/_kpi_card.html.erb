@@ -1,4 +1,3 @@
-<% drill_modal_id = local_assigns[:drill_modal_id] %>
 <div class="card dashboard__card kpi" data-kpi="<%= id %>" data-format="<%= format %>">
   <div class="card-body">
     <div class="kpi__header">
@@ -9,10 +8,6 @@
         <%= link_to drill_path, class: "kpi__drill-link" do %>
           <i class="fa-solid fa-arrow-up-right-from-square"></i>
         <% end %>
-      <% elsif drill_modal_id %>
-        <button type="button" class="kpi__drill-link" data-bs-toggle="modal" data-bs-target="#<%= drill_modal_id %>">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </button>
       <% end %>
     </div>
     <div class="kpi__body">
@@ -20,7 +15,7 @@
       <div class="kpi__value">--</div>
       <div class="kpi__footer">
         <span class="kpi__delta">--</span>
-        <span class="kpi__period"><%= t('bo.dashboards.kpi.vs_prev_period') unless id == "open_carts" %></span>
+        <span class="kpi__period"><%= t('bo.dashboards.kpi.vs_prev_period') %></span>
       </div>
     </div>
     <div class="kpi__sparkline-wrapper">

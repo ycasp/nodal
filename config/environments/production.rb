@@ -67,8 +67,10 @@ Rails.application.configure do
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
-  # Background jobs via Solid Queue (uses primary PostgreSQL database)
-  config.active_job.queue_adapter = :solid_queue
+  # Use a real queuing backend for Active Job (and separate queues per environment).
+  # config.active_job.queue_adapter = :resque
+  # config.active_job.queue_name_prefix = "nodal_production"
+  config.active_job.queue_adapter = :inline
 
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp
@@ -80,13 +82,13 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.smtp_settings = {
-    address: 'smtp.resend.com',
-    port: 465,
+    address: 'smtp.sendgrid.net',
+    port: 587,
     domain: ENV['APP_HOST'],
-    user_name: 'resend',
-    password: ENV['RESEND_API_KEY'],
+    user_name: 'apikey',
+    password: ENV['SENDGRID_API_KEY'],
     authentication: :plain,
-    tls: true
+    enable_starttls_auto: true
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.

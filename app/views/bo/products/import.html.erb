@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="bo-page-header">
+<div class="mb-4">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_products_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
-        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <%= link_to bo_products_path(params[:org_slug]), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
       <% end %>
 
       <div class="rounded bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
@@ -12,131 +12,52 @@
       </div>
 
       <div>
-        <h1><%= t('bo.products.import.title') %></h1>
+        <h4 class="mb-0"><%= t('bo.products.import.title') %></h4>
         <span class="text-muted"><%= t('bo.products.import.subtitle') %></span>
       </div>
-    </div>
-    <div class="bo-page-actions">
-      <%= link_to bo_products_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
-        <%= t('bo.common.actions.cancel') %>
-      <% end %>
-      <button type="submit" form="import-form" class="btn btn-primary">
-        <i class="fa-solid fa-arrow-right"></i> <%= t('bo.products.import.next_step') %>
-      </button>
     </div>
   </div>
 </div>
 
-<div class="bo-page-body">
-
-<%= form_with url: import_mapping_bo_products_path(params[:org_slug]), method: :post, multipart: true, id: "import-form", data: { controller: "file-upload import-form", turbo: false, import_form_all_skus_value: @all_skus.to_json } do %>
-
 <div class="row">
   <div class="col-md-8">
-    <!-- CSV Upload -->
-    <div class="card mb-3">
+    <div class="card">
       <div class="card-body">
         <h5 class="card-title mb-4"><%= t('bo.products.import.upload_file') %></h5>
 
-        <div class="mb-0">
-          <div class="border border-2 border-dashed rounded p-5 text-center"
-               data-file-upload-target="dropZone"
-               data-action="dragover->file-upload#dragover dragenter->file-upload#dragenter dragleave->file-upload#dragleave drop->file-upload#drop">
-            <i class="fa-solid fa-file-csv fa-3x text-muted mb-3"></i>
-            <p class="mb-2"><%= t('bo.products.import.drag_drop') %></p>
-            <p class="text-muted mb-3"><%= t('bo.products.import.or') %></p>
-            <label class="btn btn-outline-primary">
-              <%= t('bo.products.import.browse_files') %>
-              <input type="file"
-                     name="file"
-                     accept=".csv,.xlsx,.xls"
-                     class="d-none"
-                     data-file-upload-target="input"
-                     data-action="change->file-upload#fileSelected"
-                     required>
-            </label>
-            <p class="text-muted mt-3 mb-0" data-file-upload-target="fileName"><%= t('bo.products.import.csv_excel_only') %></p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Photos Upload (optional) -->
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title mb-4"><%= t('bo.products.import.photos_title') %></h5>
-
-        <div class="mb-0">
-          <div class="border border-2 border-dashed rounded p-5 text-center"
-               data-import-form-target="zipDropZone"
-               data-action="dragover->import-form#zipDragover dragenter->import-form#zipDragenter dragleave->import-form#zipDragleave drop->import-form#zipDrop">
-            <i class="fa-solid fa-images fa-3x text-muted mb-3"></i>
-            <p class="mb-2"><%= t('bo.products.import.photos_drag_drop') %></p>
-            <p class="text-muted mb-3"><%= t('bo.products.import.or') %></p>
-            <div class="d-flex justify-content-center gap-2">
+        <%= form_with url: import_mapping_bo_products_path(params[:org_slug]), method: :post, multipart: true, id: "import-form", data: { controller: "file-upload", turbo: false } do %>
+          <div class="mb-4">
+            <div class="border border-2 border-dashed rounded p-5 text-center"
+                 data-file-upload-target="dropZone"
+                 data-action="dragover->file-upload#dragover dragenter->file-upload#dragenter dragleave->file-upload#dragleave drop->file-upload#drop">
+              <i class="fa-solid fa-cloud-arrow-up fa-3x text-muted mb-3"></i>
+              <p class="mb-2"><%= t('bo.products.import.drag_drop') %></p>
+              <p class="text-muted mb-3"><%= t('bo.products.import.or') %></p>
               <label class="btn btn-outline-primary">
-                <i class="fa-solid fa-file-zipper me-1"></i> <%= t('bo.products.import.upload_zip') %>
+                <%= t('bo.products.import.browse_files') %>
                 <input type="file"
-                       name="zip_file"
-                       accept=".zip"
+                       name="file"
+                       accept=".csv"
                        class="d-none"
-                       data-import-form-target="zipInput"
-                       data-action="change->import-form#zipSelected">
+                       data-file-upload-target="input"
+                       data-action="change->file-upload#fileSelected"
+                       required>
               </label>
-              <label class="btn btn-outline-primary">
-                <i class="fa-solid fa-images me-1"></i> <%= t('bo.products.import.upload_images') %>
-                <input type="file"
-                       name="image_files[]"
-                       accept="image/jpeg,image/png,image/gif,image/webp"
-                       multiple
-                       class="d-none"
-                       data-import-form-target="imageInput"
-                       data-action="change->import-form#imagesSelected">
-              </label>
+              <p class="text-muted mt-3 mb-0" data-file-upload-target="fileName"><%= t('bo.products.import.csv_only') %></p>
             </div>
-            <p class="text-muted mt-3 mb-0" data-import-form-target="zipFileName"><%= t('bo.products.import.photos_hint') %></p>
           </div>
-        </div>
 
-        <!-- Photo mode (shown when photos are selected) -->
-        <div class="d-none mt-3" data-import-form-target="photoModeSection">
-          <label class="form-label fw-semibold"><%= t('bo.products.import.photo_mode_label') %></label>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="photo_mode" value="append" id="photo_mode_append" checked>
-            <label class="form-check-label" for="photo_mode_append">
-              <i class="fa-solid fa-plus me-1"></i> <%= t('bo.products.import.photo_mode_append') %>
-            </label>
+          <div class="d-flex justify-content-end gap-2">
+            <%= link_to bo_products_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
+              <%= t('bo.common.actions.cancel') %>
+            <% end %>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-arrow-right"></i> <%= t('bo.products.import.next_step') %>
+            </button>
           </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="photo_mode" value="replace" id="photo_mode_replace">
-            <label class="form-check-label" for="photo_mode_replace">
-              <i class="fa-solid fa-rotate me-1"></i> <%= t('bo.products.import.photo_mode_replace') %>
-            </label>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
-
-    <!-- Category Selection -->
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title mb-3"><%= t('bo.products.import.category_title') %></h5>
-        <p class="text-muted mb-3"><%= t('bo.products.import.category_desc') %></p>
-
-        <select name="category_id" class="form-select" data-controller="tom-select">
-          <option value=""><%= t('bo.products.import.no_category') %></option>
-          <% @categories.each do |category| %>
-            <option value="<%= category.id %>"><%= category.full_path %></option>
-          <% end %>
-        </select>
-
-        <small class="text-muted mt-2 d-block">
-          <i class="fa-solid fa-info-circle me-1"></i>
-          <%= t('bo.products.import.category_priority_hint') %>
-        </small>
-      </div>
-    </div>
-
   </div>
 
   <div class="col-md-4">
@@ -151,7 +72,6 @@
           <li><code>description</code> - <%= t('bo.products.import.field_description') %></li>
           <li><code>sku</code> - <%= t('bo.products.import.field_sku') %></li>
           <li><code>price</code> - <%= t('bo.products.import.field_price') %></li>
-          <li><code>category</code> - <%= t('bo.products.import.field_category') %></li>
           <li><code>unit_description</code> - <%= t('bo.products.import.field_unit_description') %></li>
           <li><code>min_quantity</code> - <%= t('bo.products.import.field_min_quantity') %></li>
           <li><code>min_quantity_type</code> - <%= t('bo.products.import.field_min_quantity_type') %></li>
@@ -162,19 +82,9 @@
           <i class="fa-solid fa-info-circle me-2"></i>
           <%= t('bo.products.import.sku_upsert_hint') %>
         </div>
-
-        <div class="alert alert-secondary mt-3">
-          <i class="fa-solid fa-images me-2"></i>
-          <%= t('bo.products.import.zip_matching_hint') %>
-        </div>
       </div>
     </div>
-    <div data-import-form-target="photoWarnings"></div>
   </div>
-</div>
-
-<% end %>
-
 </div>
 
 <% end %>
