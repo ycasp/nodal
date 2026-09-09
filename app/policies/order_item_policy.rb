@@ -1,20 +1,20 @@
 class OrderItemPolicy < ApplicationPolicy
   def create?
-    order_owner_and_draft? || member_impersonating_order_customer?
+    order_owner_and_draft?
   end
 
   def update?
-    create?
+    order_owner_and_draft?
   end
 
   def destroy?
-    create?
+    order_owner_and_draft?
   end
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.is_a?(CustomerUser)
-        scope.joins(:order).where(orders: { customer_user_id: user.id })
+      if user.is_a?(Customer)
+        scope.joins(:order).where(orders: { customer_id: user.id })
       elsif user.is_a?(Member)
         scope.joins(order: :organisation).where(organisations: { id: user.organisation_ids })
       else
@@ -26,17 +26,8 @@ class OrderItemPolicy < ApplicationPolicy
   private
 
   def order_owner_and_draft?
-    user.is_a?(CustomerUser) &&
-      record.order.customer_user_id == user.id &&
+    user.is_a?(Customer) &&
+      record.order.customer == user &&
       record.order.draft?
-  end
-
-  # Sales reps act as the empresa during impersonation; they're allowed to
-  # manage line items on the draft cart of the empresa they're impersonating.
-  def member_impersonating_order_customer?
-    return false unless user.is_a?(Member)
-    return false unless context.is_a?(PunditContext) && context.impersonating?
-
-    context.impersonated_customer_id.to_i == record.order.customer_id && record.order.draft?
   end
 end

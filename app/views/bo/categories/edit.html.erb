@@ -1,10 +1,10 @@
 <% content_for :bo_main_content do %>
 
-<div class="bo-page-header">
+<div class="mb-4">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <%= link_to bo_categories_path(params[:org_slug]), class: "text-muted text-decoration-none" do %>
-        <i class="fa-solid fa-arrow-left fa-lg"></i>
+      <%= link_to bo_categories_path(params[:org_slug]), class: "text-muted" do %>
+        <i class="fa-solid fa-arrow-left"></i>
       <% end %>
 
       <div class="rounded d-flex align-items-center justify-content-center text-white"
@@ -13,12 +13,12 @@
       </div>
 
       <div>
-        <h1><%= t('bo.categories.edit.title') %></h1>
+        <h4 class="mb-0"><%= t('bo.categories.edit.title') %></h4>
         <span class="text-muted"><%= @category.name %></span>
       </div>
     </div>
 
-    <div class="bo-page-actions">
+    <div class="d-flex gap-2 align-items-center">
       <%= link_to bo_categories_path(params[:org_slug]), class: "btn btn-outline-secondary" do %>
         <%= t('bo.common.actions.cancel') %>
       <% end %>
@@ -29,10 +29,6 @@
   </div>
 </div>
 
-<div class="bo-page-body">
-
 <%= render 'form', category: @category %>
-
-</div>
 
 <% end %>

@@ -1,189 +1,150 @@
-<%
-  controllers = "image-gallery"
-  row_data = {}
-  if @product.has_variants? && @attributes_with_values.present?
-    controllers += " variant-selector"
-    row_data.merge!(
-      "variant-selector-variants-value" => @variants.map { |v|
-        vd = @variant_discounts[v.id] || { has_discount: false, final_price_cents: v.unit_price_cents, discount_percentage: 0 }
-        {
-          id: v.id, name: v.name, sku: v.sku,
-          price_cents: v.unit_price_cents,
-          original_price_cents: @product.unit_price,
-          attribute_value_ids: v.attribute_values.pluck(:id),
-          in_stock: v.in_stock?, stock_quantity: v.stock_quantity,
-          track_stock: v.track_stock?, purchasable: v.purchasable?,
-          photo_url: v.photo.attached? ? url_for(v.photo.variant(resize_to_limit: [400, 400])) : nil,
-          has_discount: vd[:has_discount],
-          final_price_cents: vd[:final_price_cents],
-          discount_percentage: vd[:discount_percentage]
-        }
-      }.to_json,
-      "variant-selector-currency-symbol-value" => current_organisation.currency_symbol,
-      "variant-selector-default-price-cents-value" => @default_variant&.unit_price_cents || @product.unit_price,
-      "variant-selector-default-final-price-cents-value" => @reference_breakdown[:final_price].cents,
-      "variant-selector-default-has-discount-value" => @reference_breakdown[:has_discount].to_s,
-      "variant-selector-default-discount-percentage-value" => (@reference_breakdown[:has_discount] && @reference_breakdown[:effective_discount][:percentage].to_f.finite? ? (@reference_breakdown[:effective_discount][:percentage] * 100).round(0) : 0).to_s,
-      "variant-selector-min-quantity-value" => @product.quantity_input_min,
-      "variant-selector-default-sku-value" => @product.sku,
-      "variant-selector-in-stock-text-value" => t('storefront.products.show.in_stock'),
-      "variant-selector-out-of-stock-text-value" => t('storefront.products.show.out_of_stock'),
-      "variant-selector-display-price-value" => (@display_price || @product.display_price),
-      "variant-selector-display-price-original-value" => (@display_price_original || "")
-    )
-    # Hand price/total/tracker to the product-pricing controller — selector mode
-    # only (in grid mode the grid-pricing controller drives the panel tracker).
-    unless @product.grid_add_to_cart?
-      row_data["variant-selector-product-pricing-outlet"] = "[data-controller~='product-pricing']"
-    end
-  end
-%>
-<div class="row g-4 mt-4" data-controller="<%= controllers %>" <%= row_data.map { |k, v| "data-#{k}=\"#{ERB::Util.html_escape(v)}\"" }.join(" ").html_safe %>>
+<%= link_to products_path(org_slug: params[:org_slug], category: params[:category], query: params[:query]), class: "btn btn-outline-secondary mb-4 mt-5" do %>
+  <i class="fa-solid fa-arrow-left me-2"></i><%= t('storefront.products.show.back_to_products') %>
+<% end %>
+
+<div class="row g-4" data-controller="image-gallery">
   <!-- Left Column - Product Image -->
   <div class="col-lg-6">
-    <div class="position-sticky" style="top: 6rem;">
-      <%= link_to products_path(org_slug: params[:org_slug], category: params[:category], queries: params[:queries], attrs: params[:attrs]&.to_unsafe_h, page: params[:page], promo: params[:promo]), class: "text-muted text-decoration-none small d-inline-flex align-items-center mb-3" do %>
-        <i class="fa-solid fa-chevron-left me-1" style="font-size: 0.7rem;"></i> <%= t('storefront.products.show.back_to_products') %>
-      <% end %>
     <div class="card border-0 shadow-sm position-relative" style="background-color: #f8f9fa; border-radius: 12px; overflow: hidden;">
+      <!-- Category Badge on Image -->
+      <span class="badge bg-dark position-absolute" style="top: 16px; left: 16px; z-index: 10; padding: 8px 14px; border-radius: 20px;">
+        <i class="fa-solid fa-tag me-1"></i><%= @product.category&.name %>
+      </span>
+
       <% discount_breakdown = @discount_calculator.discount_breakdown %>
 
       <!-- Main Image -->
-      <%
-        all_photos = @product.photos.to_a
-        if @product.has_variants? && defined?(@variants)
-          @variants.each { |v| all_photos << v.photo if v.photo.attached? }
-        end
-      %>
-      <div class="d-flex align-items-center justify-content-center product-detail-image-container" style="min-height: 400px; padding: 40px;">
-        <% if all_photos.any? %>
-          <%= image_tag all_photos.first, class: "img-fluid", style: "max-height: 350px; object-fit: contain;", data: { image_gallery_target: "mainImage", variant_selector_target: "image" } %>
+      <div class="d-flex align-items-center justify-content-center" style="min-height: 400px; padding: 40px;">
+        <% if @product.photo_attached? %>
+          <%= image_tag @product.photo, class: "img-fluid", style: "max-height: 350px; object-fit: contain;", data: { image_gallery_target: "mainImage" } %>
         <% else %>
           <i class="fa-solid fa-image fa-5x text-muted"></i>
         <% end %>
       </div>
 
       <!-- Zoom Button -->
-      <% if all_photos.any? %>
+      <% if @product.photo_attached? %>
         <button class="btn btn-dark btn-sm position-absolute" style="bottom: 16px; right: 16px; border-radius: 20px; padding: 6px 16px;" data-bs-toggle="modal" data-bs-target="#imageModal">
           <i class="fa-solid fa-magnifying-glass-plus me-1"></i><%= t('storefront.products.show.zoom') %>
         </button>
       <% end %>
     </div>
 
-    <!-- Thumbnails (product photos + variant photos) -->
-    <% all_photos = @product.all_photos %>
-    <% if all_photos.any? %>
+    <!-- Thumbnails (if photos exist) -->
+    <% if @product.photo_attached? %>
       <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
-        <% all_photos.each do |photo| %>
+        <% @product.photos.each do |photo| %>
           <div class="border rounded p-1"
                style="width: 60px; height: 60px; cursor: pointer;"
                data-image-gallery-target="thumbnail"
                data-image-url="<%= url_for(photo) %>"
                data-action="click->image-gallery#select">
-            <%= image_tag photo, class: "img-fluid h-100 w-100", style: "object-fit: cover; border-radius: 4px;", loading: "lazy" %>
+            <%= image_tag photo, class: "img-fluid h-100 w-100", style: "object-fit: cover; border-radius: 4px;" %>
           </div>
         <% end %>
       </div>
     <% end %>
-    </div>
   </div>
 
   <!-- Right Column - Product Details -->
-  <% pp = @product_pricing %>
-  <% pricing_data = pp ? {
-       controller: "product-pricing",
-       product_pricing_locked_unit_cents_value: pp[:locked_unit_cents],
-       product_pricing_unlocked_unit_cents_value: pp[:unlocked_unit_cents],
-       product_pricing_base_unit_cents_value: pp[:base_unit_cents],
-       product_pricing_condition_type_value: pp[:condition_type],
-       product_pricing_threshold_value: pp[:threshold],
-       product_pricing_cart_current_value: pp[:cart_current],
-       product_pricing_cart_current_label_value: pp[:cart_current_label],
-       product_pricing_discount_label_value: pp[:discount_label],
-       product_pricing_currency_symbol_value: pp[:currency_symbol],
-       product_pricing_remaining_template_value: t('storefront.carts.show.nudge.remaining', remaining: '%{remaining}', discount: '%{discount}'),
-       product_pricing_celebration_default_value: t('storefront.products.show.unlocked_add_to_cart', discount: pp[:discount_label]),
-       product_pricing_celebration_from_cart_template_value: t('storefront.products.show.unlocked_from_cart', discount: pp[:discount_label], cart: '%{cart}'),
-       product_pricing_discount_applied_template_value: t('storefront.products.show.discount_applied', discount: '%{discount}'),
-       product_pricing_variant_pricing_value: (@variant_pricing || {}).to_json
-     } : {} %>
-  <div class="col-lg-6" <%= tag.attributes(data: pricing_data) %>>
-    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
       <div class="card-body p-4">
-        <!-- Product Name -->
-        <h1 class="mb-2" style="font-size: 2rem; font-weight: 600;"><%= @product.name %></h1>
+        <!-- Product Name & Category -->
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <h1 class="mb-0" style="font-size: 2rem; font-weight: 600;"><%= @product.name %></h1>
+          <span class="badge bg-secondary-subtle text-secondary" style="padding: 6px 12px; border-radius: 20px;">
+            <i class="fa-solid fa-box me-1"></i><%= @product.category&.name %>
+          </span>
+        </div>
 
         <!-- Description -->
-        <% if @product.rich_description.body.present? %>
-          <div class="text-muted mb-4"><%= @product.rich_description %></div>
-        <% else %>
-          <p class="text-muted mb-4"><%= @product.description %></p>
+        <p class="text-muted mb-4"><%= @product.description %></p>
+
+        <%# Build variants JSON for Stimulus controller if product has variants %>
+        <% if @product.has_variants? && @attributes_with_values.present? %>
+          <%
+            variants_json = @variants.map do |v|
+              {
+                id: v.id,
+                name: v.name,
+                sku: v.sku,
+                price_cents: v.unit_price_cents,
+                original_price_cents: @product.unit_price,
+                attribute_value_ids: v.attribute_values.pluck(:id),
+                in_stock: v.in_stock?,
+                stock_quantity: v.stock_quantity,
+                track_stock: v.track_stock?,
+                purchasable: v.purchasable?,
+                photo_url: v.photo.attached? ? url_for(v.photo.variant(resize_to_limit: [400, 400])) : nil
+              }
+            end
+          %>
+          <div data-controller="variant-selector"
+               data-variant-selector-variants-value="<%= variants_json.to_json %>"
+               data-variant-selector-currency-symbol-value="<%= current_organisation.currency_symbol %>"
+               data-variant-selector-default-price-cents-value="<%= @default_variant&.unit_price_cents || @product.unit_price %>"
+               data-variant-selector-min-quantity-value="<%= @product.min_quantity || 1 %>"
+               data-variant-selector-default-sku-value="<%= @product.sku %>">
         <% end %>
 
         <!-- Price -->
-        <% if show_prices? %>
         <div class="mb-3">
-          <% if @product.price_on_request? %>
-            <span class="text-primary" style="font-size: 2rem; font-weight: 700;"><%= t('storefront.products.show.price_on_request') %></span>
+          <% if discount_breakdown[:has_discount] %>
+            <div class="price-with-discount">
+              <span class="original-price text-muted text-decoration-line-through" style="font-size: 1.5rem;">
+                <%= humanized_money_with_symbol(discount_breakdown[:base_price]) %>
+              </span>
+              <span class="discounted-price text-success" style="font-size: 2.5rem; font-weight: 700;">
+                <%= humanized_money_with_symbol(discount_breakdown[:final_price]) %>
+              </span>
+              <span class="badge bg-success fs-6">
+                -<%= (discount_breakdown[:effective_discount][:percentage] * 100).round(0) %>% OFF
+              </span>
+              <% if discount_breakdown[:all_discounts].any? { |d| d[:type] == :product } %>
+                <span class="badge bg-danger fs-6 ms-1"><%= t('storefront.products.index.sale_badge') %></span>
+              <% end %>
+            </div>
           <% elsif @product.variable? %>
-            <%# Honest no-selection header: strikethrough only when the range is
-                actually discounted (conditions respected). JS swaps to the
-                selected variant's honest price. %>
-            <% var_has_disc = @display_price_original.present? %>
-            <div class="price-with-discount">
-              <span class="original-price text-muted text-decoration-line-through <%= 'd-none' unless var_has_disc %>" style="font-size: 1.5rem;" data-variant-selector-target="originalPrice" data-product-pricing-target="headerOriginal">
-                <%= @display_price_original %>
-              </span>
-              <span class="<%= var_has_disc ? 'text-success' : 'text-primary' %>" data-variant-selector-target="mainPrice" data-product-pricing-target="headerPrice" style="font-size: 2.5rem; font-weight: 700;">
-                <%= @display_price || money_amount(@reference_breakdown[:final_price]) %>
-              </span>
-            </div>
-          <% elsif @product_pricing %>
-            <%# Simple product — price updated live by the product-pricing JS. %>
-            <% has_disc = @actual_breakdown[:has_discount] %>
-            <div class="price-with-discount">
-              <span class="original-price text-muted text-decoration-line-through <%= 'd-none' unless has_disc %>" data-product-pricing-target="headerOriginal" style="font-size: 1.5rem;">
-                <%= money_amount(@actual_breakdown[:base_price]) %>
-              </span>
-              <span class="<%= has_disc ? 'text-success' : 'text-primary' %>" data-product-pricing-target="headerPrice" style="font-size: 2.5rem; font-weight: 700;">
-                <%= money_amount(@actual_breakdown[:final_price]) %>
-              </span>
-            </div>
+            <span class="text-primary" data-variant-selector-target="mainPrice" style="font-size: 2.5rem; font-weight: 700;"><%= @default_variant&.price ? humanized_money_with_symbol(@default_variant.price) : @product.display_price %></span>
           <% else %>
-            <span class="text-primary" style="font-size: 2.5rem; font-weight: 700;"><%= money_amount(@product.price) %></span>
+            <span class="text-primary" style="font-size: 2.5rem; font-weight: 700;"><%= humanized_money_with_symbol(@product.price) %></span>
           <% end %>
-          <% if @product.unit_description.present? && !@product.price_on_request? %>
-            <span class="text-muted fs-5">/ <%= @product.unit_description %></span>
-          <% end %>
+          <span class="text-muted fs-5">/ <%= @product.unit_description || 'unit' %></span>
         </div>
-        <% end %>
 
         <!-- Discount Details Section -->
-        <% if show_prices? && discount_breakdown[:has_discount] && !@product.price_on_request? %>
+        <% if discount_breakdown[:has_discount] %>
           <div class="alert alert-success mb-4" style="border-radius: 10px;">
             <h6 class="alert-heading mb-3">
               <i class="fa-solid fa-tags me-2"></i><%= t('storefront.products.show.available_discounts') %>
             </h6>
-            <% discount_breakdown[:applied_discounts].each do |discount| %>
-              <div class="d-flex justify-content-between align-items-center py-2 <%= 'border-bottom' unless discount == discount_breakdown[:applied_discounts].last %>">
+            <% discount_breakdown[:all_discounts].each do |discount| %>
+              <div class="d-flex justify-content-between align-items-center py-2 <%= 'border-bottom' unless discount == discount_breakdown[:all_discounts].last %>">
                 <div>
                   <% case discount[:type] %>
-                  <% when :product, :variant %>
-                    <% if current_organisation.show_sale_badge %><span class="badge me-2" style="<%= sale_badge_style(current_organisation) %>"><%= sale_badge_label(current_organisation) %></span><% end %>
+                  <% when :product %>
+                    <span class="badge bg-danger me-2"><%= t('storefront.products.index.sale_badge') %></span>
                     <strong><%= t('storefront.products.show.product_discount') %></strong>
-                    <%= render 'storefront/products/discount_condition', discount: discount, live: discount[:source].equal?(@live_discount&.dig(:source)) %>
-                  <% when :category %>
-                    <% if current_organisation.show_sale_badge %><span class="badge me-2" style="<%= sale_badge_style(current_organisation) %>"><%= sale_badge_label(current_organisation) %></span><% end %>
-                    <strong><%= t('storefront.products.show.category_discount') %></strong>
-                    <%= render 'storefront/products/discount_condition', discount: discount, live: discount[:source].equal?(@live_discount&.dig(:source)) %>
+                    <% if discount[:min_quantity_required] && discount[:min_quantity_required] > 1 %>
+                      <% if discount[:meets_min_quantity] %>
+                        <small class="text-success d-block">
+                          <i class="fa-solid fa-check me-1"></i><%= t('storefront.products.show.min_quantity_met') %> (<%= discount[:min_quantity_required] %>+ units)
+                        </small>
+                      <% else %>
+                        <small class="text-warning d-block">
+                          <i class="fa-solid fa-info-circle me-1"></i><%= t('storefront.products.show.buy_to_unlock', quantity: discount[:min_quantity_required]) %>
+                        </small>
+                      <% end %>
+                    <% end %>
                   <% when :customer %>
+                    <span class="badge bg-info me-2">VIP</span>
                     <strong><%= t('storefront.products.show.customer_tier_discount') %></strong>
+                    <small class="text-muted d-block">Special pricing for your account</small>
                   <% when :customer_product %>
-                    <span class="badge bg-primary me-2"><%= t('storefront.products.show.special_badge') %></span>
+                    <span class="badge bg-primary me-2">SPECIAL</span>
                     <strong><%= t('storefront.products.show.your_special_price') %></strong>
-                    <small class="text-muted d-block"><%= t('storefront.products.show.special_price_subtitle') %></small>
-                    <%= render 'storefront/products/discount_condition', discount: discount, live: discount[:source].equal?(@live_discount&.dig(:source)) %>
+                    <small class="text-muted d-block">Exclusive pricing just for you</small>
                   <% end %>
                   <% if discount[:valid_until].present? %>
                     <small class="text-warning d-block">
@@ -192,11 +153,8 @@
                   <% end %>
                 </div>
                 <div class="text-end">
-                  <% unmet = discount[:condition] && !discount[:meets_condition] %>
-                  <% is_live = discount[:source].equal?(@live_discount&.dig(:source)) %>
-                  <span class="badge fs-6 <%= unmet ? 'bg-warning text-dark' : 'bg-success' %>"
-                        <%= 'data-product-pricing-target=panelBadge'.html_safe if is_live %>>
-                    -<%= discount[:discount_type] == 'percentage' ? "#{(discount[:value] * 100).round(0)}%" : money_amount(Money.new((discount[:value] * 100).to_i, @current_organisation.currency)) %>
+                  <span class="badge bg-success fs-6">
+                    -<%= discount[:discount_type] == 'percentage' ? "#{(discount[:value] * 100).round(0)}%" : humanized_money_with_symbol(Money.new((discount[:value] * 100).to_i, @current_organisation.currency)) %>
                   </span>
                   <% if discount[:stackable] %>
                     <small class="text-muted d-block"><%= t('storefront.products.show.stackable') %></small>
@@ -206,292 +164,131 @@
             <% end %>
             <div class="mt-3 pt-2 border-top">
               <div class="d-flex justify-content-between">
-                <strong><%= t('storefront.products.show.you_save', amount: @display_savings || money_amount(discount_breakdown[:savings])) %></strong>
+                <strong><%= t('storefront.products.show.you_save', amount: humanized_money_with_symbol(discount_breakdown[:savings])) %></strong>
               </div>
             </div>
           </div>
         <% end %>
 
-        <!-- SKU + save-to-list (kept together so the list action is always visible,
-             including in grid add-to-cart mode) -->
-        <% display_sku = @product.variable? ? (@default_variant&.sku || @product.sku) : @product.sku %>
-        <% show_sku = current_organisation.show_product_sku? && display_sku.present? %>
-        <% show_save_list = current_customer && !browsing_as_member? %>
-        <% if show_sku || show_save_list %>
-          <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <div class="text-muted">
-              <% if show_sku %>
-                <span class="sku-container"><i class="fa-solid fa-barcode me-2"></i>SKU: <span data-variant-selector-target="sku"><%= display_sku %></span></span>
-              <% end %>
-            </div>
-            <% if show_save_list %>
-              <%= render 'storefront/products/add_to_list_dropdown', product: @product, default_variant: @default_variant, has_variants: @product.variable?, wrapper_class: '' %>
-            <% end %>
-          </div>
-        <% end %>
+        <!-- Additional Price Info -->
+        <div class="mb-4 text-muted">
+          <% display_sku = @product.variable? ? (@default_variant&.sku || @product.sku) : @product.sku %>
+          <div class="sku-container <%= 'd-none' unless display_sku.present? %>"><i class="fa-solid fa-barcode me-2"></i>SKU: <span data-variant-selector-target="sku"><%= display_sku || '-' %></span></div>
+        </div>
 
         <!-- Info Grid -->
-        <% show_min_qty = current_organisation.show_product_min_quantity? %>
-        <% show_category = current_organisation.show_product_category? %>
-        <% show_availability = current_organisation.show_product_availability? %>
-        <% if show_min_qty || show_category || show_availability %>
-          <div class="row g-3 mb-4 py-3 border-top border-bottom">
-            <% if show_min_qty %>
-              <div class="col-6 col-md-4">
-                <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.min_order') %></div>
-                <div>
-                  <i class="fa-solid fa-layer-group me-1 text-muted"></i>
-                  <%= @product.min_quantity || 1 %> <%= @product.min_quantity_type || @product.unit_description || 'unit' %>
-                </div>
-              </div>
-            <% end %>
-            <% if show_category %>
-              <div class="col-6 col-md-4">
-                <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.category') %></div>
-                <div>
-                  <% if @product.categories.any? %>
-                    <%= @product.categories.first.name %>
-                    <% if @product.categories.size > 1 %>
-                      <span class="text-muted small" role="button" title="<%= @product.categories.drop(1).map(&:name).join(', ') %>" data-bs-toggle="tooltip">+<%= t('storefront.products.show.n_more_categories', count: @product.categories.size - 1) %></span>
-                    <% end %>
-                  <% else %>
-                    -
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-            <% if show_availability %>
-              <div class="col-6 col-md-4">
-                <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.availability') %></div>
-                <div data-variant-selector-target="stock">
-                  <% if @product.available? %>
-                    <i class="fa-solid fa-circle-check me-1 text-success"></i>
-                    <%= t('storefront.products.show.in_stock') %>
-                  <% else %>
-                    <i class="fa-solid fa-circle-xmark me-1 text-danger"></i>
-                    <%= t('storefront.products.show.out_of_stock') %>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
+        <div class="row g-3 mb-4 py-3 border-top border-bottom">
+          <div class="col-4">
+            <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.min_order') %></div>
+            <div>
+              <i class="fa-solid fa-layer-group me-1 text-muted"></i>
+              <%= @product.min_quantity || 1 %> <%= @product.min_quantity_type || @product.unit_description || 'unit' %>
+            </div>
           </div>
-        <% end %>
-
-        <!-- Attributes display (for simple products) -->
-        <% if !@product.has_variants? && @simple_attribute_values.present? %>
-          <div class="mb-4">
-            <% @simple_attribute_values.group_by(&:product_attribute).each do |attribute, values| %>
-              <div class="mb-2">
-                <span class="fw-semibold"><%= attribute.name %>:</span>
-                <span class="text-muted"><%= values.map(&:value).join(', ') %></span>
-              </div>
-            <% end %>
+          <div class="col-4">
+            <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.category') %></div>
+            <div>
+              <i class="fa-solid fa-folder me-1 text-muted"></i>
+              <%= @product.category&.name || '-' %>
+            </div>
           </div>
-        <% end %>
+          <div class="col-4">
+            <div class="text-muted small fw-semibold mb-1"><%= t('storefront.products.show.availability') %></div>
+            <div>
+              <% if @product.available? %>
+                <i class="fa-solid fa-circle-check me-1 text-success"></i>
+                <%= t('storefront.products.show.in_stock') %>
+              <% else %>
+                <i class="fa-solid fa-circle-xmark me-1 text-danger"></i>
+                <%= t('storefront.products.show.out_of_stock') %>
+              <% end %>
+            </div>
+          </div>
+        </div>
 
         <!-- Variant Selector (for variable products) -->
-        <% if @product.grid_add_to_cart? %>
-          <%= render "storefront/products/grid_add_to_cart", product: @product %>
-        <% elsif @product.has_variants? && @attributes_with_values.present? %>
+        <% if @product.has_variants? && @attributes_with_values.present? %>
           <div class="mb-4">
             <h6 class="text-muted mb-3"><%= t('storefront.products.show.select_options') %></h6>
 
             <% @attributes_with_values.each do |attribute, values| %>
               <div class="mb-3">
-                <% if values.size == 1 %>
-                  <span class="fw-semibold"><%= attribute.name %>:</span>
-                  <span class="text-muted"><%= values.first.value %></span>
-                  <input type="hidden" data-single-attribute-value="<%= values.first.id %>">
-                <% elsif attribute.display_type == 'color_swatches' %>
-                  <% max_visible = 9 %>
-                  <div <%= "data-controller=expandable" if values.size > max_visible %>>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <label class="form-label fw-semibold mb-0"><%= attribute.name %></label>
-                      <% if values.size > max_visible %>
-                        <a href="#" class="text-primary text-decoration-none small"
-                           style="font-size: 0.85rem;"
-                           data-expandable-target="toggle"
-                           data-collapse-label="<%= t('storefront.products.show.less_options') %> <i class='fa-solid fa-chevron-up fa-xs'></i>"
-                           data-action="click->expandable#toggle">
-                          +<%= values.size - max_visible %> <%= t('storefront.products.show.more_options') %> <i class="fa-solid fa-chevron-down fa-xs"></i>
-                        </a>
-                      <% end %>
-                    </div>
-                    <div class="d-flex flex-wrap gap-2" data-variant-selector-target="group">
-                      <% values.each_with_index do |value, idx| %>
-                        <% is_default = @default_variant&.purchasable? && @default_variant&.attribute_values&.include?(value) %>
-                        <button type="button"
-                                class="btn btn-outline-secondary position-relative <%= 'active' if is_default %>"
-                                style="width: 42px; height: 42px; padding: 3px; border-radius: 50%; border-width: 2px;<%= ' display: none;' if idx >= max_visible && values.size > max_visible %>"
-                                data-variant-selector-target="button"
-                                data-value-id="<%= value.id %>"
-                                data-action="click->variant-selector#selectOption"
-                                title="<%= value.value %>"
-                                <% if idx >= max_visible && values.size > max_visible %>data-expandable-target="item"<% end %>>
-                          <span class="d-block w-100 h-100 rounded-circle" style="background-color: <%= value.color_hex.presence || '#ccc' %>;"></span>
-                        </button>
-                      <% end %>
-                    </div>
-                  </div>
-                <% elsif attribute.display_type == 'buttons' %>
-                  <% max_visible = 9 %>
-                  <div <%= "data-controller=expandable" if values.size > max_visible %>>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <label class="form-label fw-semibold mb-0"><%= attribute.name %></label>
-                      <% if values.size > max_visible %>
-                        <a href="#" class="text-primary text-decoration-none small"
-                           style="font-size: 0.85rem;"
-                           data-expandable-target="toggle"
-                           data-collapse-label="<%= t('storefront.products.show.less_options') %> <i class='fa-solid fa-chevron-up fa-xs'></i>"
-                           data-action="click->expandable#toggle">
-                          +<%= values.size - max_visible %> <%= t('storefront.products.show.more_options') %> <i class="fa-solid fa-chevron-down fa-xs"></i>
-                        </a>
-                      <% end %>
-                    </div>
-                    <div class="d-flex flex-wrap gap-2" data-variant-selector-target="group">
-                      <% values.each_with_index do |value, idx| %>
-                        <% is_default = @default_variant&.purchasable? && @default_variant&.attribute_values&.include?(value) %>
-                        <button type="button"
-                                class="btn btn-outline-secondary <%= 'active' if is_default %>"
-                                style="min-width: 48px; border-radius: 8px; padding: 6px 12px; font-weight: 500; text-align: center;<%= ' display: none;' if idx >= max_visible && values.size > max_visible %>"
-                                data-variant-selector-target="button"
-                                data-value-id="<%= value.id %>"
-                                data-action="click->variant-selector#selectOption"
-                                <% if idx >= max_visible && values.size > max_visible %>data-expandable-target="item"<% end %>>
-                          <%= value.value %>
-                        </button>
-                      <% end %>
-                    </div>
-                  </div>
-                <% else %>
-                  <%# dropdown (default) %>
-                  <label class="form-label fw-semibold"><%= attribute.name %></label>
-                  <select class="form-select" data-variant-selector-target="select" data-action="change->variant-selector#change">
-                    <option value=""><%= t('storefront.products.show.select_option', attribute: attribute.name) %></option>
-                    <% values.each do |value| %>
-                      <option value="<%= value.id %>"
-                              <%= 'selected' if @default_variant&.purchasable? && @default_variant&.attribute_values&.include?(value) %>>
-                        <%= value.value %>
-                      </option>
-                    <% end %>
-                  </select>
-                <% end %>
+                <label class="form-label fw-semibold"><%= attribute.name %></label>
+                <select class="form-select" data-variant-selector-target="select" data-action="change->variant-selector#change">
+                  <option value=""><%= t('storefront.products.show.select_option', attribute: attribute.name) %></option>
+                  <% values.each do |value| %>
+                    <option value="<%= value.id %>"
+                            <%= 'selected' if @default_variant&.attribute_values&.include?(value) %>
+                            <% if value.color_hex.present? %>
+                              data-color="<%= value.color_hex %>"
+                            <% end %>>
+                      <%= value.value %>
+                    </option>
+                  <% end %>
+                </select>
               </div>
             <% end %>
 
             <!-- Add to Cart Section -->
-            <% combined_counter = @product.min_quantity_combined? && @product.enforced_min_quantity.present? && @product.combined_min_reachable? %>
-            <% in_cart_qty = combined_counter ? current_cart&.order_items&.where(product_id: @product.id)&.sum(:quantity).to_i : 0 %>
-            <% counter_data = combined_counter ? {
-                 controller: "min-quantity-counter",
-                 min_quantity_counter_min_value: @product.enforced_min_quantity,
-                 min_quantity_counter_in_cart_value: in_cart_qty,
-                 min_quantity_counter_label_value: @product.minimum_quantity_label,
-                 min_quantity_counter_below_value: t('storefront.products.show.grid.min_counter_below'),
-                 min_quantity_counter_met_value: t('storefront.products.show.grid.min_counter_met')
-               } : {} %>
-            <% unless browsing_as_member? || @product.price_on_request? %>
-              <%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, local: true, class: "w-100", data: counter_data do |f| %>
+            <% unless browsing_as_member? %>
+              <%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, local: true, class: "d-flex align-items-center gap-3 flex-wrap" do |f| %>
                 <%= hidden_field_tag :product_id, @product.id %>
                 <%= hidden_field_tag :variant_id, @default_variant&.id, data: { variant_selector_target: "variantId" } %>
-                <%= hidden_field_tag :category, params[:category] if params[:category].present? %>
-                <%= hidden_field_tag :queries, params[:queries] if params[:queries].present? %>
-                <%= hidden_field_tag :page, params[:page] if params[:page].present? %>
-                <%= hidden_field_tag :promo, params[:promo] if params[:promo].present? %>
-                <%= render 'storefront/products/attrs_hidden_fields' %>
 
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
-                  <div class="d-flex align-items-center">
-                    <label class="text-muted small me-2 mb-0"><%= t('storefront.products.show.quantity') %></label>
-                    <% qty_action = "change->variant-selector#updateTotal input->variant-selector#updateTotal input->product-pricing#update" %>
-                    <% qty_action += " input->min-quantity-counter#update" if combined_counter %>
-                    <%= number_field_tag "order_item[quantity]", @product.quantity_input_min, min: @product.quantity_input_min, class: "form-control text-center", style: "width: 70px;", data: { variant_selector_target: "quantity", product_pricing_target: "quantity", min_quantity_counter_target: ("input" if combined_counter), action: qty_action } %>
-                  </div>
-                  <% if show_prices? %>
-                    <small class="text-success fw-semibold" data-product-pricing-target="discountNote"></small>
-                  <% end %>
+                <div class="d-flex align-items-center">
+                  <label class="text-muted small me-2"><%= t('storefront.products.show.quantity') %></label>
+                  <%= number_field_tag "order_item[quantity]", @product.min_quantity || 1, min: @product.min_quantity || 1, class: "form-control text-center", style: "width: 70px;", data: { variant_selector_target: "quantity", action: "change->variant-selector#updateTotal input->variant-selector#updateTotal" } %>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-lg w-100" style="border-radius: 8px;"
+                <button type="submit" class="btn btn-primary btn-lg px-4" style="border-radius: 8px;"
                         data-variant-selector-target="addToCart"
                         <%= 'disabled' unless @default_variant&.purchasable? %>>
-                  <i class="fa-solid fa-cart-plus me-2"></i><%= t('storefront.products.show.add_to_cart') %><% if show_prices? %><span data-variant-selector-target="price" data-product-pricing-target="total"></span><% end %>
+                  <i class="fa-solid fa-cart-plus me-2"></i><%= t('storefront.products.show.add_to_cart') %>
                 </button>
 
-                <% if combined_counter %>
-                  <div class="w-100 small mt-2">
-                    <i class="fa-solid fa-layer-group me-1 text-muted"></i><span class="text-muted" data-min-quantity-counter-target="output"></span>
-                  </div>
-                <% end %>
+                <div class="text-muted">
+                  <i class="fa-solid fa-calculator me-2"></i><%= t('storefront.products.show.estimated_total') %>
+                  <span data-variant-selector-target="price">
+                    <% if discount_breakdown[:has_discount] %>
+                      <%= humanized_money_with_symbol(discount_breakdown[:final_price]) %>
+                    <% else %>
+                      <%= humanized_money_with_symbol(@default_variant&.price || @product.price) %>
+                    <% end %>
+                  </span>
+                </div>
               <% end %>
             <% end %>
           </div>
+          </div><%# Close variant-selector controller wrapper %>
         <% else %>
           <!-- Add to Cart Section (simple product) -->
-          <% unless browsing_as_member? || @product.price_on_request? %>
-            <% pp = @product_pricing %>
-            <%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, local: true, class: "w-100" do |f| %>
+          <% unless browsing_as_member? %>
+            <%= form_with url: order_items_path(org_slug: params[:org_slug]), method: :post, local: true, class: "d-flex align-items-center gap-3 flex-wrap" do |f| %>
               <%= hidden_field_tag :product_id, @product.id %>
               <%= hidden_field_tag :variant_id, @default_variant&.id %>
-              <%= hidden_field_tag :category, params[:category] if params[:category].present? %>
-              <%= hidden_field_tag :queries, params[:queries] if params[:queries].present? %>
-              <%= hidden_field_tag :page, params[:page] if params[:page].present? %>
-              <%= hidden_field_tag :promo, params[:promo] if params[:promo].present? %>
-              <%= render 'storefront/products/attrs_hidden_fields' %>
-              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
-                <div class="d-flex align-items-center">
-                  <label class="text-muted small me-2 mb-0"><%= t('storefront.products.show.quantity') %></label>
-                  <%= number_field_tag "order_item[quantity]", @product.quantity_input_min, min: @product.quantity_input_min, class: "form-control text-center", style: "width: 70px;", data: (pp ? { product_pricing_target: "quantity", action: "input->product-pricing#update" } : {}) %>
-                </div>
-                <% if show_prices? %>
-                  <small class="text-success fw-semibold" data-product-pricing-target="discountNote"></small>
-                <% end %>
+              <div class="d-flex align-items-center">
+                <label class="text-muted small me-2"><%= t('storefront.products.show.quantity') %></label>
+                <%= number_field_tag "order_item[quantity]", @product.min_quantity || 1, min: @product.min_quantity || 1, class: "form-control text-center", style: "width: 70px;" %>
               </div>
 
-              <button type="submit" class="btn btn-primary btn-lg w-100" style="border-radius: 8px;" <%= 'disabled' unless @product.purchasable? %>>
-                <i class="fa-solid fa-cart-plus me-2"></i><%= t('storefront.products.show.add_to_cart') %><% if show_prices? %><span data-product-pricing-target="total"> · <%= money_amount((@actual_breakdown ? @actual_breakdown[:final_price] : @product.price) * @product.quantity_input_min) %></span><% end %>
+              <button type="submit" class="btn btn-primary btn-lg px-4" style="border-radius: 8px;" <%= 'disabled' unless @product.available? %>>
+                <i class="fa-solid fa-cart-plus me-2"></i><%= t('storefront.products.show.add_to_cart') %>
               </button>
+
+              <div class="text-muted">
+                <i class="fa-solid fa-calculator me-2"></i><%= t('storefront.products.show.estimated_total') %>
+                <% if discount_breakdown[:has_discount] %>
+                  <%= humanized_money_with_symbol(discount_breakdown[:final_price]) %>
+                  <small class="text-success">(-<%= (discount_breakdown[:effective_discount][:percentage] * 100).round(0) %>%)</small>
+                <% else %>
+                  <%= humanized_money_with_symbol(@product.price) %>
+                <% end %>
+              </div>
             <% end %>
           <% end %>
         <% end %>
 
-        <% if @product.price_on_request? %>
-          <%
-            price_request_subject = t('storefront.products.show.price_request_email_subject', product: @product.name)
-            price_request_body = t('storefront.products.show.price_request_email_body',
-              product: @product.name,
-              sku: @product.sku.presence || '-',
-              customer: current_customer&.contact_name || (current_member ? "#{current_member.first_name} #{current_member.last_name}" : ''))
-            whatsapp_message = t('storefront.products.show.price_request_whatsapp_body',
-              product: @product.name,
-              sku: @product.sku.presence || '-')
-          %>
-          <div class="card border-0 shadow-sm mt-3" style="border-radius: 10px; background-color: #f0f7ff;">
-            <div class="card-body text-center py-4">
-              <h6 class="mb-2"><i class="fa-solid fa-tag me-2"></i><%= t('storefront.products.show.price_on_request_cta_title') %></h6>
-              <p class="text-muted small mb-3"><%= t('storefront.products.show.price_on_request_cta_subtitle') %></p>
-              <div class="d-flex justify-content-center gap-2 flex-wrap">
-                <% if current_organisation.contact_email.present? %>
-                  <%= mail_to current_organisation.contact_email, nil,
-                        subject: price_request_subject,
-                        body: price_request_body,
-                        class: "btn btn-primary px-4",
-                        style: "border-radius: 8px;" do %>
-                    <i class="fa-solid fa-envelope me-2"></i><%= t('storefront.products.show.price_request_email_btn') %>
-                  <% end %>
-                <% end %>
-                <% if current_organisation.whatsapp.present? %>
-                  <%= link_to "https://wa.me/#{current_organisation.whatsapp.gsub(/\D/, '')}?text=#{ERB::Util.url_encode(whatsapp_message)}",
-                        target: "_blank",
-                        class: "btn btn-success px-4",
-                        style: "border-radius: 8px;" do %>
-                    <i class="fa-brands fa-whatsapp me-2"></i><%= t('storefront.products.show.price_request_whatsapp_btn') %>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        <% elsif !@product.available? %>
+        <% unless @product.available? %>
           <small class="text-danger d-block mt-3">
             <i class="fa-solid fa-circle-xmark me-1"></i><%= t('storefront.products.show.out_of_stock_message') %>
           </small>
@@ -501,82 +298,35 @@
   </div>
 </div>
 
-<%= render 'related_products' if @related_products&.any? %>
-
 <!-- Image Zoom Modal -->
-<% if all_photos.any? %>
-  <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true"
-       data-controller="modal-gallery"
-       data-modal-gallery-photos-value="<%= all_photos.map { |p| url_for(p) }.to_json %>"
-       data-action="keydown@document->modal-gallery#keydown">
+<% if @product.photo_attached? %>
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
-      <div class="modal-content bg-white">
-        <div class="d-flex h-100">
-
-          <!-- Mobile close button (visible only on mobile, where the sidebar with close is hidden) -->
-          <button type="button" class="btn d-md-none position-absolute d-flex align-items-center justify-content-center"
-                  style="top: 16px; right: 16px; width: 44px; height: 44px; background: white; border: 1px solid #dee2e6; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 10;"
-                  data-bs-dismiss="modal" aria-label="Close">
-            <i class="fa-solid fa-xmark fa-lg"></i>
-          </button>
-
-          <!-- Left: Main Image -->
-          <div class="flex-grow-1 d-flex align-items-center justify-content-center position-relative"
-               style="background: #f8f9fa; min-height: 100vh;"
-               data-controller="image-zoom"
-               data-action="wheel->image-zoom#wheel mousedown->image-zoom#mousedown mousemove->image-zoom#mousemove mouseup->image-zoom#mouseup mouseleave->image-zoom#mouseleave dblclick->image-zoom#dblclick touchstart->image-zoom#touchstart touchmove->image-zoom#touchmove touchend->image-zoom#touchend">
-            <%= image_tag all_photos.first, id: "zoomModalImage",
-                style: "max-height: 90vh; max-width: 100%; object-fit: contain; cursor: zoom-in; transition: opacity 0.15s;",
-                loading: "lazy",
-                data: { image_zoom_target: "image", variant_selector_target: "zoomImage", modal_gallery_target: "image" } %>
-
-            <% if all_photos.size > 1 %>
-              <button type="button" class="btn position-absolute d-flex align-items-center justify-content-center"
-                      style="left: 16px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: white; border: 1px solid #dee2e6; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.1); z-index: 5;"
-                      data-action="click->modal-gallery#prev">
-                <i class="fa-solid fa-chevron-left text-muted"></i>
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-0 bg-dark position-relative" style="z-index: 10;">
+          <h5 class="modal-title text-white" id="imageModalLabel"><%= @product.name %></h5>
+          <div class="d-flex align-items-center gap-2">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-outline-light btn-sm" data-action="image-zoom#zoomOut" title="Zoom out">
+                <i class="fa-solid fa-minus"></i>
               </button>
-              <button type="button" class="btn position-absolute d-flex align-items-center justify-content-center"
-                      style="right: 16px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: white; border: 1px solid #dee2e6; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.1); z-index: 5;"
-                      data-action="click->modal-gallery#next">
-                <i class="fa-solid fa-chevron-right text-muted"></i>
+              <button type="button" class="btn btn-outline-light btn-sm" data-action="image-zoom#reset" title="Reset">
+                <i class="fa-solid fa-expand"></i>
               </button>
-            <% end %>
+              <button type="button" class="btn btn-outline-light btn-sm" data-action="image-zoom#zoomIn" title="Zoom in">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+            <button type="button" class="btn-close btn-close-white ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-
-          <!-- Right: Info + Thumbnails -->
-          <div class="d-none d-md-flex flex-column" style="width: 320px; border-left: 1px solid #e5e5e5;">
-            <!-- Close button -->
-            <div class="d-flex justify-content-end p-3">
-              <button type="button" class="btn btn-link text-muted p-0" data-bs-dismiss="modal" aria-label="Close">
-                <i class="fa-solid fa-xmark fa-lg"></i>
-              </button>
-            </div>
-
-            <!-- Product name -->
-            <div class="px-4 pb-3">
-              <h6 class="fw-semibold mb-1"><%= @product.name %></h6>
-              <% if all_photos.size > 1 %>
-                <small class="text-muted" data-modal-gallery-target="counter"></small>
-              <% end %>
-            </div>
-
-            <!-- Thumbnails grid -->
-            <div class="px-4 pb-4">
-              <div class="d-flex flex-wrap gap-2">
-                <% all_photos.each_with_index do |photo, i| %>
-                  <div class="rounded overflow-hidden"
-                       style="width: 64px; height: 64px; cursor: pointer; border: 2px solid <%= i == 0 ? '#0d6efd' : '#dee2e6' %>; transition: border-color 0.2s;"
-                       data-modal-gallery-target="thumbnail"
-                       data-action="click->modal-gallery#goTo"
-                       data-index="<%= i %>">
-                    <%= image_tag photo, style: "width: 100%; height: 100%; object-fit: cover;", loading: "lazy" %>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-          </div>
-
+        </div>
+        <div class="modal-body overflow-hidden d-flex align-items-center justify-content-center p-0"
+             data-controller="image-zoom"
+             data-action="wheel->image-zoom#wheel mousedown->image-zoom#mousedown mousemove->image-zoom#mousemove mouseup->image-zoom#mouseup mouseleave->image-zoom#mouseleave dblclick->image-zoom#dblclick touchstart->image-zoom#touchstart touchmove->image-zoom#touchmove touchend->image-zoom#touchend">
+          <%= image_tag @product.photo, id: "zoomModalImage", style: "max-height: 90vh; cursor: zoom-in;", data: { image_zoom_target: "image" } %>
+        </div>
+        <div class="modal-footer border-0 bg-dark justify-content-center py-2">
+          <small class="text-white-50">Scroll to zoom • Double-click to toggle • Drag to pan</small>
         </div>
       </div>
     </div>

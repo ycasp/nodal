@@ -48,16 +48,16 @@
                 <th><%= t('bo.product_variants.index.sku') %></th>
                 <th><%= t('bo.product_variants.index.price') %></th>
                 <th><%= t('bo.product_variants.index.stock') %></th>
-                <th><%= t('bo.product_variants.index.storefront') %></th>
+                <th><%= t('bo.product_variants.index.status') %></th>
                 <th style="width: 100px;"></th>
               </tr>
             </thead>
             <tbody>
               <% @variants.each do |variant| %>
-                <tr style="cursor: pointer;" onclick="window.location='<%= edit_bo_product_variant_path(params[:org_slug], @product, variant) %>'">
+                <tr>
                   <td>
                     <% if variant.effective_photo.present? %>
-                      <%= image_tag variant.effective_photo.variant(resize_to_limit: [40, 40]), class: "rounded", loading: "lazy" %>
+                      <%= image_tag variant.effective_photo.variant(resize_to_limit: [40, 40]), class: "rounded" %>
                     <% else %>
                       <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                         <i class="fa-solid fa-image text-muted"></i>
@@ -88,30 +88,32 @@
                     <% end %>
                   </td>
                   <td>
-                    <% if variant.is_default? && @product.has_variants? %>
-                      <span class="badge bg-light text-muted"><%= t('bo.product_variants.index.base_variant') %></span>
-                    <% elsif !variant.published? %>
-                      <span class="badge bg-secondary"><%= t('bo.product_variants.index.unpublished') %></span>
-                    <% elsif variant.purchasable? %>
-                      <span class="badge bg-success"><%= t('bo.product_variants.index.purchasable') %></span>
-                    <% elsif !variant.in_stock? && variant.effective_stock_policy == 'show_badge' %>
-                      <span class="badge bg-warning text-dark"><%= t('bo.product_variants.index.badge_no_stock') %></span>
-                    <% elsif !variant.in_stock? && variant.effective_stock_policy == 'hide' %>
-                      <span class="badge bg-danger"><%= t('bo.product_variants.index.hidden') %></span>
+                    <% if variant.available? %>
+                      <span class="badge bg-success"><%= t('bo.common.status.active') %></span>
                     <% else %>
-                      <span class="badge bg-success"><%= t('bo.product_variants.index.purchasable') %></span>
+                      <span class="badge bg-secondary"><%= t('bo.common.status.inactive') %></span>
                     <% end %>
                   </td>
-                  <td onclick="event.stopPropagation();">
-                    <div class="d-flex gap-1">
-                      <%= link_to edit_bo_product_variant_path(params[:org_slug], @product, variant), class: "btn btn-outline-secondary btn-sm" do %>
-                        <i class="fa-solid fa-pen" style="font-size: 0.7rem;"></i>
-                      <% end %>
-                      <% unless variant.is_default? || variant.order_items.any? %>
-                        <%= button_to bo_product_variant_path(params[:org_slug], @product, variant), method: :delete, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: t('bo.common.confirm.delete_variant') } do %>
-                          <i class="fa-solid fa-trash" style="font-size: 0.7rem;"></i>
+                  <td>
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                          <%= link_to edit_bo_product_variant_path(params[:org_slug], @product, variant), class: "dropdown-item" do %>
+                            <i class="fa-solid fa-pen me-2"></i> <%= t('bo.common.actions.edit') %>
+                          <% end %>
+                        </li>
+                        <% unless variant.is_default? || variant.order_items.any? %>
+                          <li><hr class="dropdown-divider"></li>
+                          <li>
+                            <%= button_to bo_product_variant_path(params[:org_slug], @product, variant), method: :delete, class: "dropdown-item text-danger", data: { turbo_confirm: t('bo.common.confirm.delete_variant') } do %>
+                              <i class="fa-solid fa-trash me-2"></i> <%= t('bo.common.actions.delete') %>
+                            <% end %>
+                          </li>
                         <% end %>
-                      <% end %>
+                      </ul>
                     </div>
                   </td>
                 </tr>

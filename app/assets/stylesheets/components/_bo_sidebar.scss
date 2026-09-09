@@ -31,7 +31,7 @@ $bo-sidebar-border: #334155;
     width: $bo-sidebar-collapsed-width;
 
     .bo-logo-text,
-    .bo-sidebar-item span:not(.badge) {
+    .bo-sidebar-item span {
       opacity: 0;
       width: 0;
       overflow: hidden;
@@ -40,25 +40,6 @@ $bo-sidebar-border: #334155;
     .bo-sidebar-item a {
       justify-content: center;
       padding: 12px;
-    }
-
-    // Notification badges collapse to a compact dot on the top-right of the
-    // icon (not the link). The icon is centered by `justify-content: center`
-    // so we anchor the dot to the link's center and shift it right + up to
-    // sit on the icon corner.
-    .bo-sidebar-item a .badge {
-      position: absolute;
-      top: 8px;
-      left: 50%;
-      transform: translateX(6px);
-      min-width: 10px;
-      width: 10px;
-      height: 10px;
-      padding: 0;
-      font-size: 0;
-      line-height: 1;
-      margin: 0 !important;
-      border: 1.5px solid $bo-sidebar-bg;
     }
 
     .bo-sidebar-header {
@@ -165,7 +146,6 @@ $bo-sidebar-border: #334155;
     font-weight: 500;
     transition: all 0.2s ease;
     border-radius: 10px;
-    position: relative; // anchor for absolute-positioned notification badge
 
     i {
       font-size: 1.125rem;
@@ -175,23 +155,9 @@ $bo-sidebar-border: #334155;
       transition: color 0.2s ease;
     }
 
-    span:not(.badge) {
+    span {
       transition: all 0.3s ease;
       white-space: nowrap;
-      flex: 1 1 auto;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    // Expanded state: badge sits at the right edge of the link with safe
-    // padding instead of being pushed out by `ms-auto` + long labels.
-    .badge {
-      margin-left: auto;
-      flex-shrink: 0;
-      font-size: 0.75rem;
-      line-height: 1;
-      padding: 0.25rem 0.5rem;
     }
 
     &:hover {
@@ -422,7 +388,7 @@ $bo-sidebar-border: #334155;
 // Sticky page header
 .bo-page-header {
   position: sticky;
-  top: $navbar-height;
+  top: 0;
   background: #ffffff;
   z-index: 99;
   padding: 20px 24px;

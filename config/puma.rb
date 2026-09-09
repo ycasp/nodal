@@ -42,14 +42,3 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
-
-# Pre-load vips before Solid Queue forks workers, so the FFI binding is
-# inherited correctly by child processes (avoids SIGABRT on fork).
-begin
-  require "vips"
-rescue LoadError
-  # vips not installed — image processing will use fallback or fail gracefully
-end
-
-# Run Solid Queue in the same process (no separate worker dyno needed)
-plugin :solid_queue

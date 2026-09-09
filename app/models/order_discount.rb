@@ -1,6 +1,4 @@
 class OrderDiscount < ApplicationRecord
-  include HasEmailNotification
-
   DISCOUNT_TYPES = %w[percentage fixed].freeze
 
   belongs_to :organisation

@@ -1,0 +1,23 @@
+erp_scheduled_sync_hourly:
+  cron: '0 * * * *'
+  class: ErpScheduledSyncJob
+  queue: erp_sync
+  args:
+    - hourly
+  description: "Run hourly ERP sync for organisations with hourly frequency"
+
+erp_scheduled_sync_daily:
+  cron: '0 2 * * *'
+  class: ErpScheduledSyncJob
+  queue: erp_sync
+  args:
+    - daily
+  description: "Run daily ERP sync for organisations with daily frequency (2 AM)"
+
+erp_scheduled_sync_weekly:
+  cron: '0 3 * * 0'
+  class: ErpScheduledSyncJob
+  queue: erp_sync
+  args:
+    - weekly
+  description: "Run weekly ERP sync for organisations with weekly frequency (Sunday 3 AM)"

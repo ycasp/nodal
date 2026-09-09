@@ -6,7 +6,7 @@ class Bo::CategoriesController < Bo::BaseController
   end
 
   def show
-    @products = @category.products.includes(photos_attachments: :blob)
+    @products = @category.products.includes(:photo_attachment)
     @subcategories = @category.children.kept.by_position
   end
 
@@ -107,7 +107,6 @@ class Bo::CategoriesController < Bo::BaseController
   end
 
   def category_params
-    params.require(:category).permit(:name, :description, :color, :parent_id, :slug, :metadata, :photo,
-                                     :default_product_sort, :published, :nav_bold, :nav_italic)
+    params.require(:category).permit(:name, :description, :color, :parent_id, :slug, :metadata)
   end
 end

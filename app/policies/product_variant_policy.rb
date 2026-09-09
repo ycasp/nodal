@@ -8,23 +8,23 @@ class ProductVariantPolicy < ApplicationPolicy
   end
 
   def new?
-    !pure_sales_rep? && belongs_to_organisation?
+    belongs_to_organisation?
   end
 
   def create?
-    !pure_sales_rep? && belongs_to_organisation?
+    belongs_to_organisation?
   end
 
   def edit?
-    !pure_sales_rep? && belongs_to_organisation?
+    belongs_to_organisation?
   end
 
   def update?
-    edit?
+    belongs_to_organisation?
   end
 
   def destroy?
-    !pure_sales_rep? && belongs_to_organisation? && record.order_items.empty?
+    belongs_to_organisation? && record.order_items.empty?
   end
 
   private

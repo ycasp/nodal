@@ -6,31 +6,27 @@ class CustomerProductDiscountPolicy < ApplicationPolicy
   # https://gist.github.com/Burgestrand/4b4bc22f31c8a95c425fc0e30d7ef1f5
 
   def create?
-    !pure_sales_rep? && user_works_for_records_organisation?
+    user_works_for_records_organisation?
   end
 
   def new?
-    !pure_sales_rep?
-  end
-
-  def variant_overrides?
-    !pure_sales_rep?
+    true
   end
 
   def edit?
-    !pure_sales_rep? && user_works_for_records_organisation?
+    user_works_for_records_organisation?
   end
 
   def update?
-    edit?
+    user_works_for_records_organisation?
   end
 
   def destroy?
-    !pure_sales_rep? && user_works_for_records_organisation?
+    user_works_for_records_organisation?
   end
 
   def toggle_active?
-    !pure_sales_rep? && user_works_for_records_organisation?
+    user_works_for_records_organisation?
   end
 
   class Scope < ApplicationPolicy::Scope

@@ -21,15 +21,9 @@
       <button class="btn btn-outline-secondary">
         <i class="fa-solid fa-upload"></i> <%= t('bo.common.actions.import') %>
       </button>
-      <div class="btn-group">
-        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-          <i class="fa-solid fa-download"></i> <%= t('bo.common.actions.export') %>
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exportModal"><%= t('bo.export.export_orders') %></a></li>
-          <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exportItemsModal"><%= t('bo.export.export_order_items') %></a></li>
-        </ul>
-      </div>
+      <button class="btn btn-outline-secondary">
+        <i class="fa-solid fa-download"></i> <%= t('bo.common.actions.export') %>
+      </button>
       <%= link_to new_bo_order_path(org_slug: @current_organisation.slug), class: "btn btn-primary" do %>
         <i class="fa-solid fa-plus"></i> <%= t('bo.common.actions.add_new') %>
       <% end %>
@@ -39,114 +33,25 @@
 
 <!-- Page Body -->
 <div class="bo-page-body">
-  <!-- Search & Filters -->
+  <!-- Search -->
   <div class="card mb-4">
     <div class="card-body">
-      <%= form_with url: bo_orders_path(org_slug: @current_organisation.slug), method: :get do %>
-        <%= hidden_field_tag :sort_dir, params[:sort_dir] if params[:sort_dir].present? %>
-        <div class="d-flex align-items-center mb-0">
-          <div class="input-group flex-grow-1 me-3">
-            <span class="input-group-text bg-white border-end-0">
-              <i class="fa-solid fa-magnifying-glass text-muted"></i>
-            </span>
-            <%= text_field_tag :search, params[:search], class: "form-control border-start-0", placeholder: t('bo.orders.index.search_placeholder') %>
-          </div>
-          <button type="submit" class="btn btn-outline-secondary me-2">
-            <i class="fa-solid fa-magnifying-glass"></i> <%= t('bo.common.actions.search') %>
-          </button>
-          <% if filter_params_hash.except(:sort_dir).any? %>
-            <%= link_to bo_orders_path(org_slug: @current_organisation.slug), class: "btn btn-outline-danger" do %>
-              <i class="fa-solid fa-xmark"></i> <%= t('bo.common.actions.clear') %>
-            <% end %>
-          <% end %>
+      <%= form_with url: bo_orders_path(org_slug: @current_organisation.slug), method: :get, class: "d-flex align-items-center" do %>
+        <div class="input-group flex-grow-1 me-3">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="fa-solid fa-magnifying-glass text-muted"></i>
+          </span>
+          <%= text_field_tag :search, params[:search], class: "form-control border-start-0", placeholder: t('bo.orders.index.search_placeholder') %>
         </div>
-        <div class="row g-2 mt-3">
-          <div class="col-md-6 col-lg-4">
-            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-              <option value=""><%= t('bo.orders.index.filters.all_statuses') %></option>
-              <% Order::STATUSES.each do |s| %>
-                <option value="<%= s %>" <%= 'selected' if params[:status] == s %>><%= t("bo.common.statuses.#{s}") %></option>
-              <% end %>
-            </select>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <select name="payment_status" class="form-select form-select-sm" onchange="this.form.submit()">
-              <option value=""><%= t('bo.orders.index.filters.all_payments') %></option>
-              <% Order::PAYMENT_STATUSES.each do |s| %>
-                <option value="<%= s %>" <%= 'selected' if params[:payment_status] == s %>><%= t("bo.common.statuses.#{s}") %></option>
-              <% end %>
-            </select>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <select name="customer_id" class="form-select form-select-sm" onchange="this.form.submit()" data-controller="tom-select">
-              <option value=""><%= t('bo.orders.index.filters.all_customers') %></option>
-              <% @customers.each do |customer| %>
-                <option value="<%= customer.id %>" <%= 'selected' if params[:customer_id].to_s == customer.id.to_s %>><%= customer.company_name %></option>
-              <% end %>
-            </select>
-          </div>
-          <% if @current_organisation.erp_configuration&.sync_orders? %>
-            <div class="col-md-6 col-lg-4">
-              <select name="push_status" class="form-select form-select-sm" onchange="this.form.submit()">
-                <option value=""><%= t('bo.orders.index.filters.all_push_statuses', default: 'All ERP statuses') %></option>
-                <% Order::PUSH_STATUSES.each do |s| %>
-                  <option value="<%= s %>" <%= 'selected' if params[:push_status] == s %>><%= t("bo.orders.push_status.#{s}", default: s.titleize) %></option>
-                <% end %>
-              </select>
-            </div>
-          <% end %>
-          <div class="col-12 d-flex gap-2 align-items-center flex-wrap">
-            <small class="text-muted text-nowrap"><%= t('bo.common.time.from') %></small>
-            <%= date_field_tag :date_from, params[:date_from], class: "form-control form-control-sm", style: "max-width: 180px;", onchange: "this.form.submit()" %>
-            <small class="text-muted text-nowrap"><%= t('bo.common.time.to') %></small>
-            <%= date_field_tag :date_to, params[:date_to], class: "form-control form-control-sm", style: "max-width: 180px;", onchange: "this.form.submit()" %>
-          </div>
-        </div>
+        <button type="submit" class="btn btn-outline-secondary me-2">
+          <i class="fa-solid fa-magnifying-glass"></i> <%= t('bo.common.actions.search') %>
+        </button>
+        <% if params[:search].present? %>
+          <%= link_to t('bo.common.actions.clear'), bo_orders_path(org_slug: @current_organisation.slug), class: "btn btn-outline-secondary" %>
+        <% end %>
       <% end %>
     </div>
   </div>
-
-  <% if filter_params_hash.except(:sort_dir).any? %>
-    <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
-      <small class="text-muted"><%= t('bo.orders.index.filters.active_filters') %>:</small>
-      <% if params[:search].present? %>
-        <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash.except(:search, :page)), class: "badge bg-secondary text-decoration-none" do %>
-          "<%= params[:search] %>" <i class="fa-solid fa-xmark ms-1"></i>
-        <% end %>
-      <% end %>
-      <% if params[:status].present? %>
-        <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash.except(:status, :page)), class: "badge bg-secondary text-decoration-none" do %>
-          <%= t("bo.common.statuses.#{params[:status]}") %> <i class="fa-solid fa-xmark ms-1"></i>
-        <% end %>
-      <% end %>
-      <% if params[:payment_status].present? %>
-        <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash.except(:payment_status, :page)), class: "badge bg-secondary text-decoration-none" do %>
-          <%= t("bo.common.statuses.#{params[:payment_status]}") %> <i class="fa-solid fa-xmark ms-1"></i>
-        <% end %>
-      <% end %>
-      <% if params[:customer_id].present? %>
-        <% selected_customer = @customers.find { |c| c.id.to_s == params[:customer_id] } %>
-        <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash.except(:customer_id, :page)), class: "badge bg-secondary text-decoration-none" do %>
-          <%= selected_customer&.company_name %> <i class="fa-solid fa-xmark ms-1"></i>
-        <% end %>
-      <% end %>
-      <% if params[:date_from].present? %>
-        <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash.except(:date_from, :page)), class: "badge bg-secondary text-decoration-none" do %>
-          <%= t('bo.common.time.from') %>: <%= params[:date_from] %> <i class="fa-solid fa-xmark ms-1"></i>
-        <% end %>
-      <% end %>
-      <% if params[:date_to].present? %>
-        <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash.except(:date_to, :page)), class: "badge bg-secondary text-decoration-none" do %>
-          <%= t('bo.common.time.to') %>: <%= params[:date_to] %> <i class="fa-solid fa-xmark ms-1"></i>
-        <% end %>
-      <% end %>
-      <% if params[:push_status].present? %>
-        <%= link_to bo_orders_path(org_slug: @current_organisation.slug, **filter_params_hash.except(:push_status, :page)), class: "badge bg-secondary text-decoration-none" do %>
-          ERP: <%= t("bo.orders.push_status.#{params[:push_status]}", default: params[:push_status].titleize) %> <i class="fa-solid fa-xmark ms-1"></i>
-        <% end %>
-      <% end %>
-    </div>
-  <% end %>
 
   <!-- Orders Table -->
   <div class="card">
@@ -156,56 +61,26 @@
           <tr>
             <th><%= t('bo.orders.index.table.order_id') %></th>
             <th><%= t('bo.orders.index.table.client') %></th>
-            <th><%= t('bo.orders.index.table.placed_by') %></th>
-            <th>
-              <% next_dir = params[:sort_dir] == "asc" ? "desc" : "asc" %>
-              <%= link_to bo_orders_path(org_slug: @current_organisation.slug, search: params[:search], status: params[:status], payment_status: params[:payment_status], sort_dir: next_dir), class: "text-decoration-none text-dark" do %>
-                <%= t('bo.orders.index.table.date') %>
-                <% if params[:sort_dir] == "asc" %>
-                  <i class="fa-solid fa-arrow-up-short-wide fa-xs"></i>
-                <% else %>
-                  <i class="fa-solid fa-arrow-down-wide-short fa-xs"></i>
-                <% end %>
-              <% end %>
-            </th>
+            <th><%= t('bo.orders.index.table.date') %></th>
             <th><%= t('bo.orders.index.table.items') %></th>
             <th><%= t('bo.common.total') %></th>
             <th><%= t('bo.common.tables.status') %></th>
-            <% if @current_organisation.erp_configuration&.sync_orders? %>
-              <th><%= t('bo.orders.index.table.erp', default: 'ERP') %></th>
-            <% end %>
-            <th class="text-end" style="min-width: 150px;"><%= t('bo.common.actions_column') %></th>
+            <th><%= t('bo.orders.index.table.payment') %></th>
+            <th class="text-end"><%= t('bo.common.actions_column') %></th>
           </tr>
         </thead>
         <tbody>
           <% @orders.each do |order| %>
-            <tr class="order-row<%= ' table-active fw-semibold' if order.viewed_at.nil? %>" data-href="<%= bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash) %>" style="cursor: pointer;">
+            <tr class="order-row" data-href="<%= bo_order_path(org_slug: @current_organisation.slug, id: order.id) %>" style="cursor: pointer;">
               <td>
-                <div class="fw-semibold" title="<%= order.order_number %>">
-                  <%= order.order_number.split('-').last(2).join('-') %>
-                  <% if order.viewed_at.nil? %>
-                    <span class="badge bg-danger ms-1" style="font-size: 0.65rem; vertical-align: middle;"><%= t('bo.orders.index.new_badge', default: 'New') %></span>
-                  <% end %>
-                </div>
+                <div class="fw-semibold"><%= order.order_number %></div>
               </td>
               <td>
                 <div><%= order.customer.company_name %></div>
-              </td>
-              <td>
-                <% pb = order.placed_by %>
-                <% if pb.is_a?(Member) %>
-                  <%= "#{pb.first_name} #{pb.last_name}".strip.presence || pb.email %>
-                  <span class="badge bg-info ms-1" title="Colocada por vendedor"><i class="fa-solid fa-user-tie"></i></span>
-                <% elsif pb.is_a?(CustomerUser) %>
-                  <%= pb.contact_name.presence || pb.email %>
-                <% elsif order.customer_user %>
-                  <%= order.customer_user.contact_name.presence || order.customer_user.email %>
-                <% else %>
-                  <span class="text-muted">—</span>
-                <% end %>
+                <small class="text-muted"><%= order.customer.contact_name %></small>
               </td>
               <td><%= order.placed_at&.strftime("%m/%d/%Y") || order.created_at.strftime("%m/%d/%Y") %></td>
-              <td><%= order.order_items.size %></td>
+              <td><%= order.order_items.count %></td>
               <td><%= humanized_money_with_symbol(order.total_amount) %></td>
               <td>
                 <% status_class = case order.status
@@ -217,49 +92,35 @@
                   <%= order.status.titleize %>
                 </span>
               </td>
-              <% if @current_organisation.erp_configuration&.sync_orders? %>
-                <td>
-                  <% push_badge = case order.push_status
-                     when 'synced' then { class: 'bg-success-subtle text-success', icon: 'fa-check' }
-                     when 'syncing' then { class: 'bg-info-subtle text-info', icon: 'fa-spinner fa-spin' }
-                     when 'failed' then { class: 'bg-danger-subtle text-danger', icon: 'fa-triangle-exclamation' }
-                     else { class: 'bg-secondary-subtle text-secondary', icon: 'fa-clock' }
-                     end %>
-                  <span class="badge <%= push_badge[:class] %>" title="<%= order.sync_error %>">
-                    <i class="fa-solid <%= push_badge[:icon] %> me-1"></i><%= t("bo.orders.push_status.#{order.push_status}", default: order.push_status.titleize) %>
-                  </span>
-                  <% if order.external_id.present? %>
-                    <small class="d-block text-muted">#<%= order.external_id %></small>
-                  <% end %>
-                </td>
-              <% end %>
+              <td>
+                <% payment_class = case order.payment_status
+                   when 'paid' then 'text-success'
+                   when 'pending' then 'text-warning'
+                   when 'failed' then 'text-danger'
+                   when 'refunded' then 'text-info'
+                   else 'text-muted'
+                   end %>
+                <span class="<%= payment_class %>">
+                  <%= order.payment_status.titleize %>
+                </span>
+              </td>
               <td class="text-end order-actions" onclick="event.stopPropagation();">
-                <div class="d-inline-flex align-items-center gap-1 flex-nowrap justify-content-end">
-                  <%# Any order that will not move on its own, not just `failed`: an order that
-                      ran out of attempts sat at `pending` and the button vanished exactly
-                      when it was needed. %>
-                  <% if @current_organisation.erp_configuration&.sync_orders? && order.push_stuck? %>
-                    <%= button_to retry_push_bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash), method: :post, form: { class: "d-inline m-0" }, class: "btn btn-sm btn-link text-warning p-1", title: t('bo.orders.push_retry.button', default: 'Retry ERP push') do %>
-                      <i class="fa-solid fa-rotate-right"></i>
-                    <% end %>
-                  <% end %>
-                  <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash), class: "btn btn-sm btn-link text-muted p-1" do %>
-                    <i class="fa-solid fa-eye"></i>
-                  <% end %>
-                  <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash), class: "btn btn-sm btn-link text-muted p-1" do %>
-                    <i class="fa-solid fa-pen-to-square"></i>
-                  <% end %>
-                  <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: order.id, **filter_params_hash), method: :delete, form: { class: "d-inline m-0" }, class: "btn btn-sm btn-link text-danger p-1", data: { turbo_confirm: t('bo.common.confirm.delete_order', number: order.order_number) } do %>
-                    <i class="fa-solid fa-trash"></i>
-                  <% end %>
-                </div>
+                <%= link_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
+                  <i class="fa-solid fa-eye"></i>
+                <% end %>
+                <%= link_to edit_bo_order_path(org_slug: @current_organisation.slug, id: order.id), class: "btn btn-sm btn-link text-muted" do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+                <%= button_to bo_order_path(org_slug: @current_organisation.slug, id: order.id), method: :delete, form: { class: "d-inline" }, class: "btn btn-sm btn-link text-danger", data: { turbo_confirm: t('bo.common.confirm.delete_order', number: order.order_number) } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
               </td>
             </tr>
           <% end %>
 
           <% if @orders.empty? %>
             <tr>
-              <td colspan="<%= @current_organisation.erp_configuration&.sync_orders? ? 8 : 7 %>" class="text-center py-4 text-muted">
+              <td colspan="8" class="text-center py-4 text-muted">
                 <%= t('bo.orders.index.no_orders') %>
               </td>
             </tr>
@@ -267,24 +128,8 @@
         </tbody>
       </table>
     </div>
-    <% if @pagy.pages > 1 %>
-      <div class="card-footer d-flex justify-content-center">
-        <%== pagy_bootstrap_nav(@pagy) %>
-      </div>
-    <% end %>
   </div>
 </div>
 
-<%= render "bo/shared/export_modal",
-    columns: Order.exportable_columns,
-    export_path: export_bo_orders_path(org_slug: @current_organisation.slug),
-    filter_params: filter_params_hash %>
-
-<%= render "bo/shared/export_modal",
-    columns: OrderItem.exportable_columns,
-    export_path: export_items_bo_orders_path(org_slug: @current_organisation.slug),
-    filter_params: filter_params_hash,
-    modal_id: "exportItemsModal",
-    title: t('bo.export.export_order_items') %>
 
 <% end %>

@@ -1,5 +1,5 @@
 class Bo::ErpSettingsController < Bo::BaseController
-  skip_before_action :verify_authenticity_token, only: [:test_connection, :fetch_sample, :test_filter]
+  skip_before_action :verify_authenticity_token, only: [:test_connection, :fetch_sample]
   before_action :set_erp_configuration
 
   def edit
@@ -39,12 +39,11 @@ class Bo::ErpSettingsController < Bo::BaseController
     # Build a temporary adapter using credentials from the request params
     raw_credentials = fetch_sample_params[:credentials] || {}
     temp_credentials = raw_credentials.is_a?(Hash) ? raw_credentials.deep_symbolize_keys : {}
-    adapter_type = fetch_sample_params[:adapter_type].presence || @erp_configuration.adapter_type || 'custom_api'
 
-    adapter = Erp::AdapterRegistry.build(adapter_type, temp_credentials)
+    adapter = Erp::Adapters::CustomApiAdapter.new(temp_credentials)
 
-    unless adapter&.valid_credentials?
-      render json: { success: false, error: 'Missing required credentials' }
+    unless adapter.valid_credentials?
+      render json: { success: false, error: 'Missing required credentials (base_url and api_key)' }
       return
     end
 
@@ -66,43 +65,7 @@ class Bo::ErpSettingsController < Bo::BaseController
       result[:customers_error] = e.message
     end
 
-    # Fetch order/order_item table samples for adapters that support push
-    if adapter.supports_push?
-      begin
-        result[:orders] = adapter.fetch_sample_order if adapter.respond_to?(:fetch_sample_order)
-      rescue => e
-        result[:orders_error] = e.message
-      end
-
-      begin
-        result[:order_items] = adapter.fetch_sample_order_item if adapter.respond_to?(:fetch_sample_order_item)
-      rescue => e
-        result[:order_items_error] = e.message
-      end
-    end
-
     render json: result
-  end
-
-  def test_filter
-    authorize @erp_configuration, policy_class: ErpSettingPolicy
-
-    adapter = @erp_configuration.adapter
-    unless adapter&.respond_to?(:count_rows)
-      render json: { success: false, error: 'Filter testing not supported for this adapter' }
-      return
-    end
-
-    entity_type = params[:entity_type].to_s
-    unless %w[products customers].include?(entity_type)
-      render json: { success: false, error: 'Invalid entity type' }
-      return
-    end
-
-    count = adapter.count_rows(entity_type, params[:filter])
-    render json: { success: true, count: count }
-  rescue => e
-    render json: { success: false, error: e.message }
   end
 
   def sync_now
@@ -114,16 +77,18 @@ class Bo::ErpSettingsController < Bo::BaseController
       return
     end
 
-    ErpSyncJob.perform_later(current_organisation.id, sync_type: 'manual')
+    # Using perform_now for synchronous execution (no Redis/Sidekiq needed)
+    # Change to perform_later when Redis + worker dyno are configured
+    ErpSyncJob.perform_now(current_organisation.id, sync_type: 'manual')
 
     redirect_to edit_bo_erp_settings_path(org_slug: current_organisation.slug),
-                notice: "Sync started. Refresh the page to check progress."
+                notice: "Sync completed. Check the sync logs for details."
   end
 
   def sync_logs
     authorize @erp_configuration, policy_class: ErpSettingPolicy
 
-    @pagy, @sync_logs = pagy(current_organisation.erp_sync_logs.recent, items: 20)
+    @sync_logs = current_organisation.erp_sync_logs.recent.limit(50)
   end
 
   private
@@ -140,8 +105,7 @@ class Bo::ErpSettingsController < Bo::BaseController
       :sync_products,
       :sync_customers,
       :sync_orders,
-      :sync_frequency,
-      :product_sync_mode
+      :sync_frequency
     ).tap do |p|
       # Handle credentials separately to support nested field_mappings
       if params[:erp_configuration][:credentials].present?
@@ -155,55 +119,20 @@ class Bo::ErpSettingsController < Bo::BaseController
   def extract_credentials(credentials_params)
     credentials = {}
 
-    # Dynamically extract credential fields from the adapter's schema
-    adapter_type = params.dig(:erp_configuration, :adapter_type) || @erp_configuration.adapter_type
-    schema = Erp::AdapterRegistry.credentials_schema(adapter_type)
-
-    schema.each_key do |key|
-      str_key = key.to_s
-      credentials[str_key] = credentials_params[str_key] if credentials_params[str_key].present?
+    # Extract simple credential fields
+    %w[base_url api_key auth_type products_endpoint customers_endpoint].each do |key|
+      credentials[key] = credentials_params[key] if credentials_params[key].present?
     end
-
-    # Also allow auth_type (used by custom_api but not in schema)
-    credentials['auth_type'] = credentials_params['auth_type'] if credentials_params['auth_type'].present?
 
     # Extract nested field_mappings
     if credentials_params[:field_mappings].present?
-      field_mappings = {}
-      %w[products customers orders order_items].each do |entity|
-        mapping = extract_field_mapping(credentials_params.dig(:field_mappings, entity.to_sym) || credentials_params.dig(:field_mappings, entity))
-        field_mappings[entity] = mapping if mapping.present?
-      end
-      credentials['field_mappings'] = field_mappings if field_mappings.any?
-    end
-
-    # Extract order_static_values: list of {column, value} pairs → hash
-    if credentials_params[:order_static_values].present?
-      statics = extract_order_static_values(credentials_params[:order_static_values])
-      credentials['order_static_values'] = statics if statics.any?
-    end
-
-    # Extract orders_table (used by both pull and push flows)
-    if credentials_params[:orders_table].present?
-      credentials['orders_table'] = credentials_params[:orders_table]
+      credentials['field_mappings'] = {
+        'products' => extract_field_mapping(credentials_params.dig(:field_mappings, :products)),
+        'customers' => extract_field_mapping(credentials_params.dig(:field_mappings, :customers))
+      }
     end
 
     credentials
-  end
-
-  # Accepts either a nested hash {"0" => {column: X, value: Y}, "1" => ...}
-  # or a flat hash {column => value}. Returns {COLUMN => VALUE} with blanks dropped.
-  def extract_order_static_values(raw)
-    rows = raw.respond_to?(:values) ? raw.values : raw
-    result = {}
-    Array(rows).each do |row|
-      next unless row.respond_to?(:[])
-      column = row[:column] || row['column']
-      value = row[:value] || row['value']
-      next if column.blank?
-      result[column.to_s.strip.upcase] = value.to_s
-    end
-    result
   end
 
   def extract_field_mapping(mapping_params)
@@ -214,7 +143,7 @@ class Bo::ErpSettingsController < Bo::BaseController
   end
 
   def fetch_sample_params
-    result = params.permit(:fetch_products, :fetch_customers, :adapter_type).to_h
+    result = params.permit(:fetch_products, :fetch_customers).to_h
     # Handle credentials hash separately to allow arbitrary keys
     if params[:credentials].present?
       result[:credentials] = params[:credentials].to_unsafe_h
